@@ -1,5 +1,5 @@
 import { applications as mockApplications, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
-import type { Application, Friend, LeaderboardUser, Profile } from "./types";
+import type { Application, Friend, LeaderboardUser, Profile, PublicProfile } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
 
 type DbApplication = {
@@ -223,4 +223,59 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
     xp: profile.xp ?? 0,
     streak: profile.streak_count ?? 0
   }));
+}
+
+export async function getPublicProfile(profileId: string): Promise<PublicProfile | null> {
+  const supabase = getSupabaseServerClient();
+
+  if (!supabase) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, full_name, school, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied")
+    .eq("id", profileId)
+    .maybeSingle<Pick<DbProfile, "id" | "full_name" | "school" | "major" | "graduation_year" | "target_roles" | "target_locations" | "xp" | "streak_count" | "applications_applied">>();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.full_name ?? "CareerUp Student",
+    school: data.school ?? "Student",
+    major: data.major ?? "",
+    graduationYear: data.graduation_year ?? "",
+    targetRoles: data.target_roles ?? [],
+    targetLocations: data.target_locations ?? [],
+    xp: data.xp ?? 0,
+    streak: data.streak_count ?? 0,
+    applicationsApplied: data.applications_applied ?? 0
+  };
+}
+
+export async function getFriendshipWith(profileId: string): Promise<Pick<Friend, "status" | "direction"> | null> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user || user.id === profileId) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("friends")
+    .select("requester_id, status")
+    .or(`and(requester_id.eq.${user.id},addressee_id.eq.${profileId}),and(requester_id.eq.${profileId},addressee_id.eq.${user.id})`)
+    .maybeSingle<Pick<DbFriend, "requester_id" | "status">>();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    status: data.status,
+    direction: data.requester_id === user.id ? "outgoing" : "incoming"
+  };
 }

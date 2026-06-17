@@ -126,6 +126,7 @@ alter table public.completed_challenges enable row level security;
 alter table public.friends enable row level security;
 
 grant usage on schema public to anon, authenticated;
+grant select (id, full_name, school, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied) on public.profiles to anon;
 grant select on public.profiles to authenticated;
 grant update on public.profiles to authenticated;
 grant select, insert, update, delete on public.applications to authenticated;
@@ -137,6 +138,11 @@ grant execute on function public.award_xp(integer) to authenticated;
 create policy "Users can read leaderboard profiles"
 on public.profiles for select
 to authenticated
+using (true);
+
+create policy "Anyone can read public profile summaries"
+on public.profiles for select
+to anon
 using (true);
 
 create policy "Users can update own profile"

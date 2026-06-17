@@ -58,6 +58,19 @@ export type Friend = {
   direction: "incoming" | "outgoing";
 };
 
+export type PublicProfile = {
+  id: string;
+  name: string;
+  school: string;
+  major: string;
+  graduationYear: string;
+  targetRoles: string[];
+  targetLocations: string[];
+  xp: number;
+  streak: number;
+  applicationsApplied: number;
+};
+
 export type Profile = {
   name: string;
   school: string;

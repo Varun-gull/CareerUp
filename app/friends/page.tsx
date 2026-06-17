@@ -1,4 +1,6 @@
 import { Check, MailPlus, Share2, Trash2, UserPlus, UsersRound } from "lucide-react";
+import { headers } from "next/headers";
+import { CopyInviteLink } from "@/components/CopyInviteLink";
 import { Navbar } from "@/components/Navbar";
 import { RankBadge } from "@/components/RankBadge";
 import { acceptFriendRequest, removeFriend, sendFriendRequest, sendFriendRequestById } from "@/lib/friends/actions";
@@ -9,7 +11,11 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
   const acceptedFriends = friends.filter((friend) => friend.status === "accepted");
   const incomingRequests = friends.filter((friend) => friend.status === "pending" && friend.direction === "incoming");
   const outgoingRequests = friends.filter((friend) => friend.status === "pending" && friend.direction === "outgoing");
-  const shareLink = user ? `/friends?invite=${user.id}` : "/friends";
+  const headerList = headers();
+  const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "";
+  const protocol = headerList.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
+  const origin = host ? `${protocol}://${host}` : "";
+  const shareLink = user ? `${origin}/u/${user.id}` : `${origin}/friends`;
   const inviteId = searchParams?.invite && searchParams.invite !== user?.id ? searchParams.invite : "";
 
   return (
@@ -69,9 +75,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
                 <p className="text-sm text-slate-600">Share your CareerUp friend link.</p>
               </div>
             </div>
-            <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-bold text-slate-700">
-              {shareLink}
-            </div>
+            <CopyInviteLink url={shareLink} />
           </div>
         </section>
 

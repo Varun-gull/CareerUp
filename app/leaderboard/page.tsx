@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { LeaderboardTable } from "@/components/LeaderboardTable";
 import { Navbar } from "@/components/Navbar";
-import { getFriendLeaderboard, getLeaderboard } from "@/lib/data";
+import { getCurrentUser, getFriendLeaderboard, getLeaderboard } from "@/lib/data";
 
 export default async function LeaderboardPage({ searchParams }: { searchParams?: { scope?: string } }) {
   const scope = searchParams?.scope === "friends" ? "friends" : "global";
-  const leaderboard = scope === "friends" ? await getFriendLeaderboard() : await getLeaderboard();
+  const [leaderboard, user] = await Promise.all([scope === "friends" ? getFriendLeaderboard() : getLeaderboard(), getCurrentUser()]);
 
   return (
     <>
@@ -23,7 +23,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
           </Link>
         </div>
         <section className="mt-6">
-          <LeaderboardTable users={leaderboard} />
+          <LeaderboardTable users={leaderboard} currentUserId={user?.id} emptyMode={scope} />
         </section>
       </main>
     </>

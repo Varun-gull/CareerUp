@@ -1,16 +1,50 @@
-import { BriefcaseBusiness, CheckCircle2, Clock3, MessageSquareText, Plus } from "lucide-react";
+import { BriefcaseBusiness, CheckCircle2, Clock3, MessageSquareText, Plus, Search, Trophy } from "lucide-react";
 import Link from "next/link";
 import { ApplicationCard } from "@/components/ApplicationCard";
 import { DashboardCard } from "@/components/DashboardCard";
 import { EmptyState } from "@/components/EmptyState";
 import { Navbar } from "@/components/Navbar";
 import { getApplications } from "@/lib/data";
+import type { Application, ApplicationStatus } from "@/lib/types";
 
-export default async function ApplicationsPage() {
+const pipelineColumns: Array<{
+  status: ApplicationStatus;
+  title: string;
+  helper: string;
+}> = [
+  { status: "saved", title: "Saved", helper: "Ready to review" },
+  { status: "applied", title: "Applied", helper: "Submitted" },
+  { status: "interviewing", title: "Interviewing", helper: "Active loops" },
+  { status: "offer", title: "Offer", helper: "Wins" },
+  { status: "rejected", title: "Rejected", helper: "Closed" }
+];
+
+function matchesSearch(application: Application, query: string) {
+  if (!query) {
+    return true;
+  }
+
+  const haystack = `${application.company} ${application.role} ${application.location}`.toLowerCase();
+  return haystack.includes(query.toLowerCase());
+}
+
+export default async function ApplicationsPage({
+  searchParams
+}: {
+  searchParams?: {
+    q?: string;
+    status?: ApplicationStatus | "all";
+    message?: string;
+  };
+}) {
   const applications = await getApplications();
+  const query = searchParams?.q?.trim() ?? "";
+  const statusFilter = pipelineColumns.some((column) => column.status === searchParams?.status) ? searchParams?.status : "all";
+  const visibleApplications = applications.filter((application) => matchesSearch(application, query) && (statusFilter === "all" || application.status === statusFilter));
   const savedCount = applications.filter((application) => application.status === "saved").length;
   const appliedCount = applications.filter((application) => application.status === "applied").length;
   const interviewingCount = applications.filter((application) => application.status === "interviewing").length;
+  const offerCount = applications.filter((application) => application.status === "offer").length;
 
   return (
     <>
@@ -26,19 +60,67 @@ export default async function ApplicationsPage() {
             <Plus className="mr-2" size={18} /> Add role
           </Link>
         </div>
+        {searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
         {applications.length > 0 ? (
           <>
-            <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
               <DashboardCard title="Tracked" value={applications.length.toString()} helper="Total roles in your pipeline." icon={BriefcaseBusiness} />
               <DashboardCard title="Saved" value={savedCount.toString()} helper="Review and apply when ready." icon={Clock3} />
               <DashboardCard title="Applied" value={appliedCount.toString()} helper="Applications submitted." icon={CheckCircle2} />
               <DashboardCard title="Interviewing" value={interviewingCount.toString()} helper="Active interview loops." icon={MessageSquareText} />
+              <DashboardCard title="Offers" value={offerCount.toString()} helper="Unlocked wins." icon={Trophy} />
             </section>
-            <div className="mt-6 grid gap-4">
-              {applications.map((application) => (
-                <ApplicationCard key={application.id} application={application} />
-              ))}
-            </div>
+
+            <form className="card mt-6 grid gap-4 p-5 md:grid-cols-[1fr_220px_auto]">
+              <label className="grid gap-2 text-sm font-bold text-slate-700">
+                Search
+                <input name="q" defaultValue={query} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Company, role, or location" />
+              </label>
+              <label className="grid gap-2 text-sm font-bold text-slate-700">
+                Status
+                <select name="status" defaultValue={statusFilter} className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-blue-500">
+                  <option value="all">All statuses</option>
+                  {pipelineColumns.map((column) => (
+                    <option key={column.status} value={column.status}>
+                      {column.title}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button type="submit" className="primary-button self-end">
+                <Search className="mr-2" size={18} /> Filter
+              </button>
+            </form>
+
+            <section className="mt-6 overflow-x-auto pb-4">
+              <div className="grid min-w-[1120px] gap-4 xl:grid-cols-5">
+                {pipelineColumns.map((column) => {
+                  const columnApplications = visibleApplications.filter((application) => application.status === column.status);
+
+                  return (
+                    <div key={column.status} className="rounded-lg border border-slate-200 bg-white/70 p-3">
+                      <div className="mb-3 flex items-center justify-between gap-3">
+                        <div>
+                          <h2 className="text-sm font-black text-ink">{column.title}</h2>
+                          <p className="text-xs font-bold text-slate-500">{column.helper}</p>
+                        </div>
+                        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700">{columnApplications.length}</span>
+                      </div>
+
+                      {columnApplications.length > 0 ? (
+                        <div className="grid gap-3">
+                          {columnApplications.map((application) => (
+                            <ApplicationCard key={application.id} application={application} compact />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="rounded-lg border border-dashed border-slate-200 bg-white/70 p-4 text-sm font-bold text-slate-500">No roles here yet.</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
           </>
         ) : (
           <div className="mt-8">

@@ -172,7 +172,6 @@ async function searchAdzunaPostings(searchQuery: string, targetLocation: string,
     return null;
   }
 
-  let jobs: AdzunaJob[] = [];
   const locationAttempts = targetLocation ? [targetLocation, ""] : [""];
 
   for (const locationAttempt of locationAttempts) {
@@ -198,54 +197,43 @@ async function searchAdzunaPostings(searchQuery: string, targetLocation: string,
       }
 
       const payload = (await response.json()) as { results?: AdzunaJob[] };
-      jobs = payload.results ?? [];
+      const jobs = payload.results ?? [];
+      const postings = jobs
+        .map((job): InternshipPosting => {
+          const description = stripHtml(job.description ?? "");
+          const tags = [job.category?.label, job.contract_time, job.contract_type].filter(Boolean) as string[];
+          const posting = {
+            id: `adzuna-${job.id}`,
+            company: job.company?.display_name ?? "Unknown company",
+            title: job.title,
+            location: job.location?.display_name ?? (locationAttempt || targetLocation || "United States"),
+            source: "Adzuna",
+            url: job.redirect_url,
+            remote: /remote/i.test(`${job.title} ${job.location?.display_name ?? ""} ${description}`),
+            postedAt: job.created ? new Date(job.created).toLocaleDateString() : "Recently",
+            tags: tags.slice(0, 5),
+            description: description.slice(0, 220)
+          };
 
-      if (jobs.length > 0) {
-        break;
+          return {
+            ...posting,
+            fitScore: getFitScore(posting, profile)
+          };
+        })
+        .filter((posting) => /intern|internship|student|new grad|graduate/i.test(`${posting.title} ${posting.description}`))
+        .slice(0, 12);
+
+      if (postings.length > 0) {
+        return {
+          provider: "Adzuna",
+          usingFallback: false,
+          postings
+        };
       }
-    }
-
-    if (jobs.length > 0) {
-      break;
     }
   }
 
-  if (jobs.length === 0) {
-    return null;
-  }
-
-  const postings = jobs
-    .map((job): InternshipPosting => {
-      const description = stripHtml(job.description ?? "");
-      const tags = [job.category?.label, job.contract_time, job.contract_type].filter(Boolean) as string[];
-      const posting = {
-        id: `adzuna-${job.id}`,
-        company: job.company?.display_name ?? "Unknown company",
-        title: job.title,
-        location: job.location?.display_name ?? (targetLocation || "United States"),
-        source: "Adzuna",
-        url: job.redirect_url,
-        remote: /remote/i.test(`${job.title} ${job.location?.display_name ?? ""} ${description}`),
-        postedAt: job.created ? new Date(job.created).toLocaleDateString() : "Recently",
-        tags: tags.slice(0, 5),
-        description: description.slice(0, 220)
-      };
-
-      return {
-        ...posting,
-        fitScore: getFitScore(posting, profile)
-      };
-    })
-    .filter((posting) => /intern|internship|student|new grad|graduate/i.test(`${posting.title} ${posting.description}`))
-    .slice(0, 12);
-
-  return postings.length > 0
-    ? {
-        provider: "Adzuna",
-        usingFallback: false,
-        postings
-      }
-    : null;
+  return null;
 }
 
 async function searchRemotivePostings(searchQuery: string, targetLocation: string, profile?: Profile): Promise<PostingSearchResult | null> {

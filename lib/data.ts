@@ -1,5 +1,5 @@
 import { applications as mockApplications, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
-import type { Application, LeaderboardUser, Profile } from "./types";
+import type { Application, Friend, LeaderboardUser, Profile } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
 
 type DbApplication = {
@@ -27,6 +27,13 @@ type DbProfile = {
   xp: number | null;
   streak_count: number | null;
   applications_applied: number | null;
+};
+
+type DbFriend = {
+  id: string;
+  requester_id: string;
+  addressee_id: string;
+  status: Friend["status"];
 };
 
 export async function getCurrentUser() {
@@ -127,5 +134,93 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
     school: user.school ?? "Student",
     xp: user.xp ?? 0,
     streak: user.streak_count ?? 0
+  }));
+}
+
+export async function getFriends(): Promise<Friend[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return [];
+  }
+
+  const { data: friendships, error } = await supabase
+    .from("friends")
+    .select("id, requester_id, addressee_id, status")
+    .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`)
+    .returns<DbFriend[]>();
+
+  if (error || !friendships?.length) {
+    return [];
+  }
+
+  const profileIds = Array.from(new Set(friendships.map((friendship) => (friendship.requester_id === user.id ? friendship.addressee_id : friendship.requester_id))));
+
+  const { data: profiles, error: profilesError } = await supabase
+    .from("profiles")
+    .select("id, full_name, email, school, xp, streak_count")
+    .in("id", profileIds)
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "email" | "school" | "xp" | "streak_count">>>();
+
+  if (profilesError || !profiles) {
+    return [];
+  }
+
+  const profilesById = new Map(profiles.map((profile) => [profile.id, profile]));
+
+  return friendships
+    .map((friendship) => {
+      const friendId = friendship.requester_id === user.id ? friendship.addressee_id : friendship.requester_id;
+      const profile = profilesById.get(friendId);
+
+      if (!profile) {
+        return null;
+      }
+
+      return {
+        id: friendship.id,
+        userId: friendId,
+        name: profile.full_name ?? profile.email ?? "CareerUp Student",
+        email: profile.email ?? "",
+        school: profile.school ?? "Student",
+        xp: profile.xp ?? 0,
+        streak: profile.streak_count ?? 0,
+        status: friendship.status,
+        direction: friendship.requester_id === user.id ? "outgoing" : "incoming"
+      } satisfies Friend;
+    })
+    .filter((friend): friend is Friend => Boolean(friend));
+}
+
+export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return mockLeaderboard;
+  }
+
+  const friends = await getFriends();
+  const acceptedFriendIds = friends.filter((friend) => friend.status === "accepted").map((friend) => friend.userId);
+  const ids = [user.id, ...acceptedFriendIds];
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, full_name, school, xp, streak_count")
+    .in("id", ids)
+    .order("xp", { ascending: false })
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "xp" | "streak_count">>>();
+
+  if (error || !data) {
+    return [];
+  }
+
+  return data.map((profile) => ({
+    id: profile.id,
+    name: profile.full_name ?? "CareerUp Student",
+    school: profile.school ?? "Student",
+    xp: profile.xp ?? 0,
+    streak: profile.streak_count ?? 0
   }));
 }

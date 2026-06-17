@@ -1,4 +1,5 @@
 import { Save, Share2 } from "lucide-react";
+import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { RankBadge } from "@/components/RankBadge";
 import { XpProgressBar } from "@/components/XpProgressBar";
@@ -24,9 +25,9 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                   <p className="text-slate-300">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "Complete your profile"}</p>
                 </div>
               </div>
-              <button className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold hover:border-blue-300">
+              <Link href="/friends" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold hover:border-blue-300">
                 <Share2 className="mr-2" size={18} /> Share profile
-              </button>
+              </Link>
             </div>
           </div>
           <div className="grid gap-6 p-6 lg:grid-cols-[1fr_360px]">

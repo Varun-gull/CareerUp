@@ -46,6 +46,18 @@ export type LeaderboardUser = {
   streak: number;
 };
 
+export type Friend = {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  school: string;
+  xp: number;
+  streak: number;
+  status: "pending" | "accepted" | "blocked";
+  direction: "incoming" | "outgoing";
+};
+
 export type Profile = {
   name: string;
   school: string;

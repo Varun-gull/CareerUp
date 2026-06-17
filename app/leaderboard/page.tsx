@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { LeaderboardTable } from "@/components/LeaderboardTable";
 import { Navbar } from "@/components/Navbar";
-import { getLeaderboard } from "@/lib/data";
+import { getFriendLeaderboard, getLeaderboard } from "@/lib/data";
 
-export default async function LeaderboardPage() {
-  const leaderboard = await getLeaderboard();
+export default async function LeaderboardPage({ searchParams }: { searchParams?: { scope?: string } }) {
+  const scope = searchParams?.scope === "friends" ? "friends" : "global";
+  const leaderboard = scope === "friends" ? await getFriendLeaderboard() : await getLeaderboard();
 
   return (
     <>
@@ -12,7 +14,15 @@ export default async function LeaderboardPage() {
         <p className="eyebrow">Friendly competition</p>
         <h1 className="mt-2 text-4xl font-black text-ink">Leaderboard</h1>
         <p className="mt-2 max-w-2xl text-slate-600">Compare XP with friends and stay accountable during recruiting season.</p>
-        <section className="mt-8">
+        <div className="mt-6 flex flex-wrap gap-2">
+          <Link href="/leaderboard" className={scope === "global" ? "primary-button" : "secondary-button"}>
+            All users
+          </Link>
+          <Link href="/leaderboard?scope=friends" className={scope === "friends" ? "primary-button" : "secondary-button"}>
+            Friends
+          </Link>
+        </div>
+        <section className="mt-6">
           <LeaderboardTable users={leaderboard} />
         </section>
       </main>

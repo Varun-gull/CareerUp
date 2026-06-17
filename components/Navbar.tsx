@@ -6,6 +6,7 @@ const navItems = [
   { href: "/applications", label: "Applications" },
   { href: "/postings", label: "Postings" },
   { href: "/challenges", label: "Challenges" },
+  { href: "/friends", label: "Friends" },
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/profile", label: "Profile" }
 ];

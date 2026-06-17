@@ -1,31 +1,56 @@
 # CareerUp
 
-CareerUp is a gamified internship tracking website for students. The first prototype is a static web app with profile-based internship matching, application tracking, points, streaks, ranks, daily challenges, unlockable interview prep tools, and a friends leaderboard.
+CareerUp is a gamified internship application tracker for students. The MVP focuses on the core solo loop: track applications, mark roles as applied, earn XP, build streaks, level up through ranks, and complete simple challenges.
 
-## Run locally
+## Tech Stack
 
-Open `index.html` in a browser, or serve the folder with any static server:
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- Supabase client placeholder for authentication and database integration
+
+## MVP Screens
+
+- Home
+- Sign up
+- Log in
+- Dashboard
+- Applications
+- Add application
+- Profile
+- Challenges
+- Leaderboard
+
+## Run Locally
 
 ```bash
-python3 -m http.server 5173
+npm install
+npm run dev
 ```
 
-Then visit `http://localhost:5173`.
+Then open:
 
-## What is included
+```text
+http://localhost:3000
+```
 
-- Resume and preference inputs that recalculate internship match scores.
-- A live-postings-style feed using seeded internship data and freshness indicators.
-- Application logging with point rewards and streak increases.
-- Rank progression and next-rank progress.
-- Daily challenges with claimable point rewards.
-- Interview prep tools unlockable with points.
-- Friends leaderboard with competitive scoring.
+## Supabase Setup Later
 
-## Next build steps
+Create `.env.local` when you have a Supabase project:
 
-- Replace seeded postings with a backend feed from APIs, scrapers, or partner sources.
-- Add accounts, authentication, and durable cloud storage.
-- Parse uploaded resumes into structured skills and preferences.
-- Add real interview prep modules and point purchase flows.
-- Add friend requests, teams, seasons, and anti-spam limits for points.
+```bash
+NEXT_PUBLIC_SUPABASE_URL="your-supabase-url"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
+```
+
+Then open Supabase SQL Editor and run:
+
+```text
+supabase/schema.sql
+```
+
+The app falls back to mock data until Supabase env vars are added.
+
+## Live Postings
+
+The `/postings` page uses Adzuna first when `ADZUNA_APP_ID` and `ADZUNA_APP_KEY` are set. If those keys are missing or Adzuna returns no internship-style roles, it falls back to Remotive's public API, then sample postings.

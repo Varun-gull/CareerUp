@@ -1,0 +1,89 @@
+import type { Application, Challenge, LeaderboardUser, Profile } from "./types";
+
+export const profile: Profile = {
+  name: "Varun",
+  school: "Student Builder",
+  major: "Computer Science",
+  graduationYear: "2027",
+  targetRoles: ["Software Engineering", "Product", "Data"],
+  targetLocations: ["New York", "Remote", "San Francisco"],
+  xp: 430,
+  streak: 6,
+  applicationsApplied: 14
+};
+
+export const applications: Application[] = [
+  {
+    id: "1",
+    company: "Northstar Labs",
+    role: "Software Engineering Intern",
+    location: "New York, NY",
+    source: "Handshake",
+    status: "applied",
+    fitScore: 92,
+    xp: 20,
+    deadline: "2026-07-01",
+    updatedAt: "Today"
+  },
+  {
+    id: "2",
+    company: "BlueGrid AI",
+    role: "Product Intern",
+    location: "Remote",
+    source: "Company site",
+    status: "interviewing",
+    fitScore: 86,
+    xp: 35,
+    deadline: "2026-06-25",
+    updatedAt: "Yesterday"
+  },
+  {
+    id: "3",
+    company: "Summit Capital",
+    role: "Data Analyst Intern",
+    location: "Chicago, IL",
+    source: "LinkedIn",
+    status: "saved",
+    fitScore: 79,
+    xp: 5,
+    deadline: "2026-07-10",
+    updatedAt: "2 days ago"
+  }
+];
+
+export const challenges: Challenge[] = [
+  {
+    id: "daily-apply",
+    title: "Daily Apply Sprint",
+    description: "Submit one high-quality application today.",
+    xp: 40,
+    progress: 1,
+    target: 1,
+    completed: true
+  },
+  {
+    id: "profile-polish",
+    title: "Profile Polish",
+    description: "Add target roles, locations, and resume keywords.",
+    xp: 30,
+    progress: 2,
+    target: 3,
+    completed: false
+  },
+  {
+    id: "pipeline-builder",
+    title: "Pipeline Builder",
+    description: "Save five internships that match your goals.",
+    xp: 60,
+    progress: 3,
+    target: 5,
+    completed: false
+  }
+];
+
+export const leaderboard: LeaderboardUser[] = [
+  { id: "u1", name: "Maya", school: "Rutgers", xp: 910, streak: 11 },
+  { id: "u2", name: "Jordan", school: "NYU", xp: 710, streak: 8 },
+  { id: "u3", name: "Varun", school: "Student Builder", xp: profile.xp, streak: profile.streak },
+  { id: "u4", name: "Ari", school: "Stevens", xp: 360, streak: 4 }
+];

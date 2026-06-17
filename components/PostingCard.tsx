@@ -4,6 +4,7 @@ import type { InternshipPosting } from "@/lib/types";
 
 export function PostingCard({ posting }: { posting: InternshipPosting }) {
   const fitTone = posting.fitScore >= 80 ? "bg-emerald-50 text-emerald-700" : posting.fitScore >= 70 ? "bg-blue-50 text-blue-700" : "bg-slate-100 text-slate-700";
+  const workModeLabel = posting.workMode === "remote" ? "Remote" : posting.workMode === "hybrid" ? "Hybrid" : "On-site";
 
   return (
     <article className="card p-5">
@@ -21,11 +22,9 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
         <span className="inline-flex items-center gap-2">
           <MapPin size={16} /> {posting.location}
         </span>
-        {posting.remote && (
-          <span className="inline-flex items-center gap-2">
-            <Radio size={16} /> Remote
-          </span>
-        )}
+        <span className="inline-flex items-center gap-2">
+          <Radio size={16} /> {workModeLabel}
+        </span>
         <span className="inline-flex items-center gap-2 text-blue-700">
           <Sparkles size={16} /> {posting.source}
         </span>

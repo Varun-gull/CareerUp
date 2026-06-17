@@ -7,12 +7,12 @@ import { getCurrentProfile } from "@/lib/data";
 import { searchInternshipPostings } from "@/lib/postings";
 import type { InternshipPosting } from "@/lib/types";
 
-type RemoteFilter = "all" | "remote" | "onsite";
+type RemoteFilter = "all" | "remote" | "hybrid" | "onsite";
 type PostingSort = "fit" | "newest" | "company";
 
 function filterPostings(postings: InternshipPosting[], remote: RemoteFilter, minFit: number) {
   return postings.filter((posting) => {
-    const remoteMatch = remote === "all" || (remote === "remote" ? posting.remote : !posting.remote);
+    const remoteMatch = remote === "all" || posting.workMode === remote;
     return remoteMatch && posting.fitScore >= minFit;
   });
 }
@@ -46,7 +46,7 @@ export default async function PostingsPage({
   };
 }) {
   const profile = await getCurrentProfile();
-  const remoteFilter = searchParams?.remote === "remote" || searchParams?.remote === "onsite" ? searchParams.remote : "all";
+  const remoteFilter = searchParams?.remote === "remote" || searchParams?.remote === "hybrid" || searchParams?.remote === "onsite" ? searchParams.remote : "all";
   const sort = searchParams?.sort === "newest" || searchParams?.sort === "company" ? searchParams.sort : "fit";
   const minFit = Math.min(95, Math.max(0, Number(searchParams?.minFit ?? 0) || 0));
   const searchResult = await searchInternshipPostings({
@@ -94,6 +94,7 @@ export default async function PostingsPage({
             <select name="remote" defaultValue={remoteFilter} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500">
               <option value="all">All roles</option>
               <option value="remote">Remote only</option>
+              <option value="hybrid">Hybrid only</option>
               <option value="onsite">On-site only</option>
             </select>
           </label>

@@ -21,6 +21,7 @@ export type InternshipPosting = {
   source: string;
   url: string;
   remote: boolean;
+  workMode: "remote" | "hybrid" | "onsite";
   postedAt: string;
   tags: string[];
   description: string;

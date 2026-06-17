@@ -173,30 +173,37 @@ async function searchAdzunaPostings(searchQuery: string, targetLocation: string,
   }
 
   let jobs: AdzunaJob[] = [];
+  const locationAttempts = targetLocation ? [targetLocation, ""] : [""];
 
-  for (const variant of buildAdzunaQueryVariants(searchQuery)) {
-    const url = new URL("https://api.adzuna.com/v1/api/jobs/us/search/1");
-    url.searchParams.set("app_id", appId);
-    url.searchParams.set("app_key", appKey);
-    url.searchParams.set("results_per_page", "24");
-    url.searchParams.set("content-type", "application/json");
-    url.searchParams.set("sort_by", "date");
-    url.searchParams.set("what", variant);
+  for (const locationAttempt of locationAttempts) {
+    for (const variant of buildAdzunaQueryVariants(searchQuery)) {
+      const url = new URL("https://api.adzuna.com/v1/api/jobs/us/search/1");
+      url.searchParams.set("app_id", appId);
+      url.searchParams.set("app_key", appKey);
+      url.searchParams.set("results_per_page", "24");
+      url.searchParams.set("content-type", "application/json");
+      url.searchParams.set("sort_by", "date");
+      url.searchParams.set("what", variant);
 
-    if (targetLocation) {
-      url.searchParams.set("where", targetLocation);
+      if (locationAttempt) {
+        url.searchParams.set("where", locationAttempt);
+      }
+
+      const response = await fetch(url, {
+        cache: "no-store"
+      });
+
+      if (!response.ok) {
+        continue;
+      }
+
+      const payload = (await response.json()) as { results?: AdzunaJob[] };
+      jobs = payload.results ?? [];
+
+      if (jobs.length > 0) {
+        break;
+      }
     }
-
-    const response = await fetch(url, {
-      next: { revalidate: 900 }
-    });
-
-    if (!response.ok) {
-      continue;
-    }
-
-    const payload = (await response.json()) as { results?: AdzunaJob[] };
-    jobs = payload.results ?? [];
 
     if (jobs.length > 0) {
       break;

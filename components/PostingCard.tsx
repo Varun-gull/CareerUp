@@ -1,8 +1,10 @@
-import { BookmarkPlus, ExternalLink, MapPin, Radio, Sparkles } from "lucide-react";
+import { BookmarkPlus, CalendarDays, ExternalLink, MapPin, Radio, Sparkles } from "lucide-react";
 import { savePostingApplication } from "@/lib/applications/actions";
 import type { InternshipPosting } from "@/lib/types";
 
 export function PostingCard({ posting }: { posting: InternshipPosting }) {
+  const fitTone = posting.fitScore >= 80 ? "bg-emerald-50 text-emerald-700" : posting.fitScore >= 70 ? "bg-blue-50 text-blue-700" : "bg-slate-100 text-slate-700";
+
   return (
     <article className="card p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -10,7 +12,7 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
           <p className="text-sm font-black text-blue-600">{posting.company}</p>
           <h3 className="mt-1 text-xl font-black text-ink">{posting.title}</h3>
         </div>
-        <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-700">
+        <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${fitTone}`}>
           {posting.fitScore}% fit
         </span>
       </div>
@@ -26,6 +28,9 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
         )}
         <span className="inline-flex items-center gap-2 text-blue-700">
           <Sparkles size={16} /> {posting.source}
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <CalendarDays size={16} /> {posting.postedAt}
         </span>
       </div>
 
@@ -52,7 +57,7 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
           <input type="hidden" name="sourceUrl" value={posting.url} />
           <input type="hidden" name="fitScore" value={posting.fitScore} />
           <button type="submit" className="primary-button">
-            <BookmarkPlus className="mr-2" size={18} /> Save to tracker
+            <BookmarkPlus className="mr-2" size={18} /> Save +5 XP
           </button>
         </form>
       </div>

@@ -81,6 +81,39 @@ function normalizeQuery(searchQuery: string) {
   return query.trim();
 }
 
+function buildAdzunaQueryVariants(searchQuery: string) {
+  const cleanQuery = searchQuery.trim();
+  const variants = [
+    cleanQuery,
+    cleanQuery.toLowerCase().includes("intern") ? cleanQuery : `${cleanQuery} intern`,
+    normalizeQuery(cleanQuery)
+  ];
+
+  if (/data scientist/i.test(cleanQuery)) {
+    variants.push(cleanQuery.replace(/data scientist/gi, "data intern"));
+    variants.push("data analyst intern");
+  }
+
+  if (/software engineer/i.test(cleanQuery)) {
+    variants.push(cleanQuery.replace(/software engineer/gi, "software intern"));
+    variants.push("software engineering intern");
+  }
+
+  if (/product manager|product management/i.test(cleanQuery)) {
+    variants.push("product intern");
+    variants.push("product management intern");
+  }
+
+  const firstWord = cleanQuery.split(/\s+/)[0];
+  if (firstWord && !/intern/i.test(firstWord)) {
+    variants.push(`${firstWord} intern`);
+  }
+
+  variants.push("internship");
+
+  return Array.from(new Set(variants.map((variant) => variant.trim()).filter(Boolean)));
+}
+
 function fallbackPostings(profile?: Profile): PostingSearchResult {
   const seed = [
     {
@@ -139,28 +172,40 @@ async function searchAdzunaPostings(searchQuery: string, targetLocation: string,
     return null;
   }
 
-  const url = new URL("https://api.adzuna.com/v1/api/jobs/us/search/1");
-  url.searchParams.set("app_id", appId);
-  url.searchParams.set("app_key", appKey);
-  url.searchParams.set("results_per_page", "24");
-  url.searchParams.set("content-type", "application/json");
-  url.searchParams.set("sort_by", "date");
-  url.searchParams.set("what", normalizeQuery(searchQuery));
+  let jobs: AdzunaJob[] = [];
 
-  if (targetLocation) {
-    url.searchParams.set("where", targetLocation);
+  for (const variant of buildAdzunaQueryVariants(searchQuery)) {
+    const url = new URL("https://api.adzuna.com/v1/api/jobs/us/search/1");
+    url.searchParams.set("app_id", appId);
+    url.searchParams.set("app_key", appKey);
+    url.searchParams.set("results_per_page", "24");
+    url.searchParams.set("content-type", "application/json");
+    url.searchParams.set("sort_by", "date");
+    url.searchParams.set("what", variant);
+
+    if (targetLocation) {
+      url.searchParams.set("where", targetLocation);
+    }
+
+    const response = await fetch(url, {
+      next: { revalidate: 900 }
+    });
+
+    if (!response.ok) {
+      continue;
+    }
+
+    const payload = (await response.json()) as { results?: AdzunaJob[] };
+    jobs = payload.results ?? [];
+
+    if (jobs.length > 0) {
+      break;
+    }
   }
 
-  const response = await fetch(url, {
-    next: { revalidate: 900 }
-  });
-
-  if (!response.ok) {
+  if (jobs.length === 0) {
     return null;
   }
-
-  const payload = (await response.json()) as { results?: AdzunaJob[] };
-  const jobs = payload.results ?? [];
 
   const postings = jobs
     .map((job): InternshipPosting => {

@@ -26,6 +26,31 @@ function getNextStreak(lastAppliedOn: string | null, currentStreak: number) {
   return lastAppliedOn === yesterdayKey ? currentStreak + 1 : 1;
 }
 
+async function updateDailyStreak(supabase: NonNullable<ReturnType<typeof getSupabaseServerClient>>, userId: string) {
+  const { data: profile, error: loadError } = await supabase
+    .from("profiles")
+    .select("streak_count, last_applied_on")
+    .eq("id", userId)
+    .single<{ streak_count: number | null; last_applied_on: string | null }>();
+
+  if (loadError) {
+    return loadError;
+  }
+
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const streakCount = getNextStreak(profile?.last_applied_on ?? null, profile?.streak_count ?? 0);
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      streak_count: streakCount,
+      last_applied_on: todayKey
+    })
+    .eq("id", userId);
+
+  return error;
+}
+
 export async function createApplication(formData: FormData) {
   const supabase = getSupabaseServerClient();
 
@@ -67,6 +92,16 @@ export async function createApplication(formData: FormData) {
   }
 
   await supabase.rpc("award_xp", { amount: 5 });
+  const streakError = await updateDailyStreak(supabase, user.id);
+
+  if (streakError) {
+    redirectWithMessage("/applications", streakError.message);
+  }
+
+  revalidatePath("/applications");
+  revalidatePath("/dashboard");
+  revalidatePath("/leaderboard");
+  revalidatePath("/profile");
   redirect("/applications");
 }
 
@@ -122,6 +157,16 @@ export async function savePostingApplication(formData: FormData) {
   }
 
   await supabase.rpc("award_xp", { amount: 5 });
+  const streakError = await updateDailyStreak(supabase, user.id);
+
+  if (streakError) {
+    redirectWithMessage("/applications", streakError.message);
+  }
+
+  revalidatePath("/applications");
+  revalidatePath("/dashboard");
+  revalidatePath("/leaderboard");
+  revalidatePath("/profile");
   redirectWithMessage("/applications", "Posting saved to your tracker. You earned 5 XP.");
 }
 

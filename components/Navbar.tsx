@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Plus } from "lucide-react";
+import { BriefcaseBusiness, Plus, UserRound } from "lucide-react";
 import Link from "next/link";
 import { getCurrentProfile, getCurrentUser } from "@/lib/data";
 
@@ -25,7 +25,7 @@ function getInitials(name: string) {
 export async function Navbar() {
   const user = await getCurrentUser();
   const profile = user ? await getCurrentProfile() : null;
-  const initials = getInitials(profile?.name ?? user?.email ?? "CareerUp");
+  const initials = user ? getInitials(profile?.name ?? user.email ?? "CareerUp") : "";
 
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
@@ -52,7 +52,7 @@ export async function Navbar() {
             className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-slate-200 px-2 text-sm font-black text-slate-700 transition hover:border-blue-300 hover:text-blue-700"
             aria-label={user ? "Open profile" : "Log in"}
           >
-            {initials}
+            {user ? initials : <UserRound size={20} />}
           </Link>
         </div>
       </nav>

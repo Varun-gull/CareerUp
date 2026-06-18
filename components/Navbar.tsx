@@ -6,9 +6,8 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/applications", label: "Applications" },
   { href: "/postings", label: "Postings" },
-  { href: "/challenges", label: "Challenges" },
   { href: "/rewards", label: "Rewards" },
-  { href: "/interview", label: "Interview" },
+  { href: "/interview", label: "Interview Prep" },
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/friends", label: "Friends" }
 ];

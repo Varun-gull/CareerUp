@@ -1,9 +1,11 @@
 import { ArrowRight, Gift, LockKeyhole, Sparkles, Trophy, UnlockKeyhole } from "lucide-react";
 import Link from "next/link";
+import { ChallengeCard } from "@/components/ChallengeCard";
 import { Navbar } from "@/components/Navbar";
 import { RankBadge } from "@/components/RankBadge";
 import { unlockReward } from "@/lib/rewards/actions";
 import { getCurrentProfile, getRewards } from "@/lib/data";
+import { challenges } from "@/lib/mock-data";
 
 export default async function RewardsPage({ searchParams }: { searchParams?: { message?: string } }) {
   const [profile, rewards] = await Promise.all([getCurrentProfile(), getRewards()]);
@@ -42,6 +44,21 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
             <div className="mt-2">
               <RankBadge xp={profile.xp} />
             </div>
+          </div>
+        </section>
+
+        <section className="mt-6">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Earn more XP</p>
+              <h2 className="mt-2 text-2xl font-black text-ink">Challenges</h2>
+              <p className="mt-2 text-slate-600">Complete quests to build enough XP for the next unlock.</p>
+            </div>
+          </div>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            {challenges.map((challenge) => (
+              <ChallengeCard key={challenge.id} challenge={challenge} />
+            ))}
           </div>
         </section>
 

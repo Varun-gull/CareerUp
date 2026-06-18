@@ -16,7 +16,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Prep tool</p>
-            <h1 className="mt-2 text-4xl font-black text-ink">Interview Builder</h1>
+            <h1 className="mt-2 text-4xl font-black text-ink">Interview Prep</h1>
             <p className="mt-2 max-w-2xl text-slate-600">Draft STAR answers for behavioral interviews and keep your best stories ready.</p>
           </div>
           <Link href="/rewards" className="secondary-button">
@@ -44,7 +44,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
         ) : (
           <>
             <section className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
-              <form action={saveInterviewAnswer} className="card p-5">
+              <form action={saveInterviewAnswer} className="card min-w-0 p-5">
                 <div className="mb-5 flex items-start gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
                     <MessageSquareText size={22} />
@@ -55,9 +55,9 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                   </div>
                 </div>
 
-                <label className="grid gap-2 text-sm font-bold text-slate-700">
+                <label className="grid min-w-0 gap-2 text-sm font-bold text-slate-700">
                   Prompt
-                  <select name="prompt" className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-blue-500">
+                  <select name="prompt" className="w-full min-w-0 max-w-full truncate rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-blue-500">
                     {behavioralInterviewPrompts.map((prompt) => (
                       <option key={prompt} value={prompt}>
                         {prompt}
@@ -106,7 +106,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
               <div className="flex items-end justify-between gap-4">
                 <div>
                   <p className="eyebrow">Saved stories</p>
-                  <h2 className="mt-2 text-2xl font-black text-ink">Answer bank</h2>
+                  <h2 className="mt-2 text-2xl font-black text-ink">Saved answers</h2>
                 </div>
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-black text-slate-700">{answers.length} saved</span>
               </div>

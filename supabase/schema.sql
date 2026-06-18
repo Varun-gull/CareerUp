@@ -67,6 +67,19 @@ create table public.user_rewards (
   unique (user_id, reward_id)
 );
 
+create table public.interview_answers (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  prompt text not null,
+  situation text not null,
+  task text not null,
+  action_taken text not null,
+  result_outcome text not null,
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table public.friends (
   id uuid primary key default gen_random_uuid(),
   requester_id uuid not null references public.profiles(id) on delete cascade,
@@ -115,6 +128,9 @@ create trigger profiles_set_updated_at before update on public.profiles
 create trigger applications_set_updated_at before update on public.applications
   for each row execute procedure public.set_updated_at();
 
+create trigger interview_answers_set_updated_at before update on public.interview_answers
+  for each row execute procedure public.set_updated_at();
+
 create or replace function public.award_xp(amount integer)
 returns void
 language sql
@@ -132,6 +148,7 @@ alter table public.applications enable row level security;
 alter table public.challenges enable row level security;
 alter table public.completed_challenges enable row level security;
 alter table public.user_rewards enable row level security;
+alter table public.interview_answers enable row level security;
 alter table public.friends enable row level security;
 
 grant usage on schema public to anon, authenticated;
@@ -142,6 +159,7 @@ grant select, insert, update, delete on public.applications to authenticated;
 grant select on public.challenges to authenticated;
 grant select, insert, update, delete on public.completed_challenges to authenticated;
 grant select, insert, delete on public.user_rewards to authenticated;
+grant select, insert, update, delete on public.interview_answers to authenticated;
 grant select, insert, update, delete on public.friends to authenticated;
 grant execute on function public.award_xp(integer) to authenticated;
 
@@ -180,6 +198,12 @@ with check (auth.uid() = user_id);
 
 create policy "Users can manage own rewards"
 on public.user_rewards for all
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create policy "Users can manage own interview answers"
+on public.interview_answers for all
 to authenticated
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);

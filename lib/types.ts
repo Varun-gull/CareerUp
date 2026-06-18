@@ -48,6 +48,17 @@ export type Reward = {
   unlocked: boolean;
 };
 
+export type InterviewAnswer = {
+  id: string;
+  prompt: string;
+  situation: string;
+  task: string;
+  action: string;
+  result: string;
+  notes: string;
+  createdAt: string;
+};
+
 export type LeaderboardUser = {
   id: string;
   name: string;

@@ -1,4 +1,5 @@
-import { Gift, LockKeyhole, Sparkles, Trophy, UnlockKeyhole } from "lucide-react";
+import { ArrowRight, Gift, LockKeyhole, Sparkles, Trophy, UnlockKeyhole } from "lucide-react";
+import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { RankBadge } from "@/components/RankBadge";
 import { unlockReward } from "@/lib/rewards/actions";
@@ -73,6 +74,11 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                         </li>
                       ))}
                     </ul>
+                    {reward.id === "behavioral-interview-pack" && (
+                      <Link href="/interview" className="primary-button mt-4">
+                        Open builder <ArrowRight className="ml-2" size={18} />
+                      </Link>
+                    )}
                   </div>
                 ) : (
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4">

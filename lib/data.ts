@@ -1,6 +1,6 @@
 import { applications as mockApplications, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
 import { rewardCatalog } from "./rewards/catalog";
-import type { Application, Friend, LeaderboardUser, Profile, PublicProfile, Reward } from "./types";
+import type { Application, Friend, InterviewAnswer, LeaderboardUser, Profile, PublicProfile, Reward } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
 
 type DbApplication = {
@@ -39,6 +39,17 @@ type DbFriend = {
 
 type DbUserReward = {
   reward_id: string;
+};
+
+type DbInterviewAnswer = {
+  id: string;
+  prompt: string;
+  situation: string | null;
+  task: string | null;
+  action_taken: string | null;
+  result_outcome: string | null;
+  notes: string | null;
+  created_at: string;
 };
 
 export async function getCurrentUser() {
@@ -304,5 +315,36 @@ export async function getRewards(): Promise<Reward[]> {
   return rewardCatalog.map((reward) => ({
     ...reward,
     unlocked: unlockedIds.has(reward.id)
+  }));
+}
+
+export async function getInterviewAnswers(): Promise<InterviewAnswer[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from("interview_answers")
+    .select("id, prompt, situation, task, action_taken, result_outcome, notes, created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .returns<DbInterviewAnswer[]>();
+
+  if (error || !data) {
+    return [];
+  }
+
+  return data.map((answer) => ({
+    id: answer.id,
+    prompt: answer.prompt,
+    situation: answer.situation ?? "",
+    task: answer.task ?? "",
+    action: answer.action_taken ?? "",
+    result: answer.result_outcome ?? "",
+    notes: answer.notes ?? "",
+    createdAt: new Date(answer.created_at).toLocaleDateString()
   }));
 }

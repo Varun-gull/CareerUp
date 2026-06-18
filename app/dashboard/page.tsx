@@ -54,22 +54,16 @@ export default async function DashboardPage() {
           </div>
           <aside className="space-y-5">
             <StreakCard streak={profile.streak} />
-          </aside>
-        </section>
-
-        <section className="mt-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="eyebrow">XP quests</p>
               <h2 className="mt-2 text-2xl font-black text-ink">Challenges</h2>
-              <p className="mt-2 text-slate-600">Small missions keep your internship search moving without needing a separate page.</p>
+              <div className="mt-4 grid gap-4">
+                {challenges.map((challenge) => (
+                  <ChallengeCard key={challenge.id} challenge={challenge} />
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {challenges.map((challenge) => (
-              <ChallengeCard key={challenge.id} challenge={challenge} />
-            ))}
-          </div>
+          </aside>
         </section>
       </main>
     </>

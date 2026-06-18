@@ -38,6 +38,16 @@ export type Challenge = {
   completed: boolean;
 };
 
+export type Reward = {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  xpCost: number;
+  contents: string[];
+  unlocked: boolean;
+};
+
 export type LeaderboardUser = {
   id: string;
   name: string;

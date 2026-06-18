@@ -59,6 +59,14 @@ create table public.completed_challenges (
   unique (user_id, challenge_id)
 );
 
+create table public.user_rewards (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  reward_id text not null,
+  unlocked_at timestamptz not null default now(),
+  unique (user_id, reward_id)
+);
+
 create table public.friends (
   id uuid primary key default gen_random_uuid(),
   requester_id uuid not null references public.profiles(id) on delete cascade,
@@ -123,6 +131,7 @@ alter table public.profiles enable row level security;
 alter table public.applications enable row level security;
 alter table public.challenges enable row level security;
 alter table public.completed_challenges enable row level security;
+alter table public.user_rewards enable row level security;
 alter table public.friends enable row level security;
 
 grant usage on schema public to anon, authenticated;
@@ -132,6 +141,7 @@ grant update on public.profiles to authenticated;
 grant select, insert, update, delete on public.applications to authenticated;
 grant select on public.challenges to authenticated;
 grant select, insert, update, delete on public.completed_challenges to authenticated;
+grant select, insert, delete on public.user_rewards to authenticated;
 grant select, insert, update, delete on public.friends to authenticated;
 grant execute on function public.award_xp(integer) to authenticated;
 
@@ -164,6 +174,12 @@ using (active = true);
 
 create policy "Users can manage own completed challenges"
 on public.completed_challenges for all
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create policy "Users can manage own rewards"
+on public.user_rewards for all
 to authenticated
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);

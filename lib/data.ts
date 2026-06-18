@@ -1,5 +1,6 @@
 import { applications as mockApplications, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
-import type { Application, Friend, LeaderboardUser, Profile, PublicProfile } from "./types";
+import { rewardCatalog } from "./rewards/catalog";
+import type { Application, Friend, LeaderboardUser, Profile, PublicProfile, Reward } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
 
 type DbApplication = {
@@ -34,6 +35,10 @@ type DbFriend = {
   requester_id: string;
   addressee_id: string;
   status: Friend["status"];
+};
+
+type DbUserReward = {
+  reward_id: string;
 };
 
 export async function getCurrentUser() {
@@ -278,4 +283,26 @@ export async function getFriendshipWith(profileId: string): Promise<Pick<Friend,
     status: data.status,
     direction: data.requester_id === user.id ? "outgoing" : "incoming"
   };
+}
+
+export async function getRewards(): Promise<Reward[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return rewardCatalog.map((reward) => ({ ...reward, unlocked: false }));
+  }
+
+  const { data, error } = await supabase.from("user_rewards").select("reward_id").eq("user_id", user.id).returns<DbUserReward[]>();
+
+  if (error || !data) {
+    return rewardCatalog.map((reward) => ({ ...reward, unlocked: false }));
+  }
+
+  const unlockedIds = new Set(data.map((reward) => reward.reward_id));
+
+  return rewardCatalog.map((reward) => ({
+    ...reward,
+    unlocked: unlockedIds.has(reward.id)
+  }));
 }

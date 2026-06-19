@@ -4,10 +4,10 @@ import { getCurrentProfile, getCurrentUser } from "@/lib/data";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/applications", label: "Applications" },
   { href: "/postings", label: "Postings" },
-  { href: "/rewards", label: "Rewards" },
+  { href: "/applications", label: "Applications" },
   { href: "/interview", label: "Interview Prep" },
+  { href: "/rewards", label: "Rewards" },
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/friends", label: "Friends" }
 ];

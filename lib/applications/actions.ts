@@ -235,10 +235,10 @@ export async function updateApplicationStatus(formData: FormData) {
 
   const { data: application, error: loadError } = await supabase
     .from("applications")
-    .select("id, status, xp_awarded")
+    .select("id, status, xp_awarded, company, role")
     .eq("id", applicationId)
     .eq("user_id", user.id)
-    .single<{ id: string; status: ApplicationStatus; xp_awarded: number | null }>();
+    .single<{ id: string; status: ApplicationStatus; xp_awarded: number | null; company: string; role: string }>();
 
   if (loadError || !application) {
     redirectWithMessage("/applications", "Application not found.");
@@ -285,10 +285,24 @@ export async function updateApplicationStatus(formData: FormData) {
     }
   }
 
+  if (nextStatus === "applied" && application.status !== "applied") {
+    const today = new Date().toISOString().slice(0, 10);
+    await supabase.from("calendar_events").insert({
+      user_id: user.id,
+      application_id: applicationId,
+      company: application.company,
+      role: application.role,
+      status: "applied",
+      event_type: "submitted",
+      date: today,
+    });
+  }
+
   revalidatePath("/applications");
   revalidatePath("/dashboard");
   revalidatePath("/leaderboard");
   revalidatePath("/profile");
+  revalidatePath("/calendar");
 }
 
 export async function deleteApplication(formData: FormData) {

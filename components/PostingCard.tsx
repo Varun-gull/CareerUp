@@ -2,9 +2,18 @@ import { BookmarkPlus, CalendarDays, ExternalLink, MapPin, Radio } from "lucide-
 import { savePostingApplication } from "@/lib/applications/actions";
 import type { InternshipPosting } from "@/lib/types";
 
+function deriveDeadline(postedAt: string): string {
+  const parsed = Date.parse(postedAt);
+  if (Number.isNaN(parsed)) return "Rolling";
+  const deadline = new Date(parsed);
+  deadline.setDate(deadline.getDate() + 30);
+  return deadline.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
 export function PostingCard({ posting }: { posting: InternshipPosting }) {
   const fitTone = posting.fitScore >= 80 ? "bg-emerald-50 text-emerald-700" : posting.fitScore >= 70 ? "bg-blue-50 text-blue-700" : "bg-slate-100 text-slate-700";
   const workModeLabel = posting.workMode === "remote" ? "Remote" : posting.workMode === "hybrid" ? "Hybrid" : "On-site";
+  const deadline = deriveDeadline(posting.postedAt);
 
   return (
     <article className="card p-5">
@@ -25,8 +34,8 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
         <span className="inline-flex items-center gap-2">
           <Radio size={16} /> {workModeLabel}
         </span>
-<span className="inline-flex items-center gap-2">
-          <CalendarDays size={16} /> {posting.postedAt}
+<span className="inline-flex items-center gap-2 text-orange-600 font-bold">
+          <CalendarDays size={16} /> Apply by {deadline}
         </span>
       </div>
 

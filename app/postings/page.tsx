@@ -1,9 +1,9 @@
-import { ArrowUpDown, CalendarDays, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
+import { ArrowUpDown, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import { EmptyState } from "@/components/EmptyState";
 import { Navbar } from "@/components/Navbar";
 import { PostingCard } from "@/components/PostingCard";
-import { getApplications, getCurrentProfile } from "@/lib/data";
+import { getCurrentProfile } from "@/lib/data";
 import { searchInternshipPostings } from "@/lib/postings";
 import type { InternshipPosting } from "@/lib/types";
 
@@ -45,11 +45,7 @@ export default async function PostingsPage({
     message?: string;
   };
 }) {
-  const [profile, applications] = await Promise.all([getCurrentProfile(), getApplications()]);
-  const upcomingDeadlines = applications
-    .filter((a) => a.deadline && a.status !== "rejected")
-    .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
-    .slice(0, 5);
+  const profile = await getCurrentProfile();
   const remoteFilter = searchParams?.remote === "remote" || searchParams?.remote === "hybrid" || searchParams?.remote === "onsite" ? searchParams.remote : "all";
   const sort = searchParams?.sort === "newest" || searchParams?.sort === "company" ? searchParams.sort : "fit";
   const minFit = Math.min(95, Math.max(0, Number(searchParams?.minFit ?? 0) || 0));
@@ -72,25 +68,7 @@ export default async function PostingsPage({
           </div>
         </div>
 
-        {upcomingDeadlines.length > 0 && (
-          <div className="mt-6 card p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <CalendarDays size={16} className="text-blue-600" />
-              <p className="text-sm font-black text-ink">Upcoming deadlines</p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {upcomingDeadlines.map((a) => (
-                <Link key={a.id} href="/applications" className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-700 hover:border-blue-300 hover:text-blue-700 transition-colors">
-                  <span className="font-black text-ink">{a.company}</span>
-                  <span className="text-slate-400">·</span>
-                  <span>{a.deadline}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
+{searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
 
         <div className="mt-5 grid gap-3 md:grid-cols-[1fr_auto]">
           <div className="rounded-lg border border-slate-200 bg-white/80 px-4 py-3 text-sm font-bold text-slate-600">

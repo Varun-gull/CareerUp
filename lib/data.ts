@@ -1,6 +1,6 @@
 import { applications as mockApplications, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
 import { rewardCatalog } from "./rewards/catalog";
-import type { Application, Friend, InterviewAnswer, LeaderboardUser, Profile, PublicProfile, Reward } from "./types";
+import type { Application, CalendarEvent, Friend, InterviewAnswer, LeaderboardUser, Profile, PublicProfile, Reward } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
 
 type DbApplication = {
@@ -322,6 +322,43 @@ export async function getRewards(): Promise<Reward[]> {
   return rewardCatalog.map((reward) => ({
     ...reward,
     unlocked: unlockedIds.has(reward.id)
+  }));
+}
+
+export async function getCalendarEvents(): Promise<CalendarEvent[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    const today = new Date().toISOString().slice(0, 10);
+    return mockApplications.flatMap((a) => {
+      const events: CalendarEvent[] = [
+        { id: `mock-sub-${a.id}`, applicationId: a.id, company: a.company, role: a.role, status: a.status, eventType: "submitted", date: today },
+      ];
+      if (a.deadline && /^\d{4}-\d{2}-\d{2}$/.test(a.deadline)) {
+        events.push({ id: `mock-dl-${a.id}`, applicationId: a.id, company: a.company, role: a.role, status: a.status, eventType: "deadline", date: a.deadline });
+      }
+      return events;
+    });
+  }
+
+  const { data, error } = await supabase
+    .from("calendar_events")
+    .select("id, application_id, company, role, status, event_type, date")
+    .eq("user_id", user.id)
+    .order("date", { ascending: true })
+    .returns<Array<{ id: string; application_id: string; company: string; role: string; status: string; event_type: string; date: string }>>();
+
+  if (error || !data) return [];
+
+  return data.map((e) => ({
+    id: e.id,
+    applicationId: e.application_id,
+    company: e.company,
+    role: e.role,
+    status: e.status as CalendarEvent["status"],
+    eventType: e.event_type as CalendarEvent["eventType"],
+    date: e.date,
   }));
 }
 

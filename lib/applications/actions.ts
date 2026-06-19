@@ -98,10 +98,30 @@ export async function createApplication(formData: FormData) {
     redirectWithMessage("/applications", streakError.message);
   }
 
+  const { data: newApp } = await supabase
+    .from("applications")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("company", company)
+    .eq("role", role)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle<{ id: string }>();
+
+  if (newApp) {
+    const today = new Date().toISOString().slice(0, 10);
+    const calEvents = [{ user_id: user.id, application_id: newApp.id, company, role, status: "saved", event_type: "submitted", date: today }];
+    if (deadline && /^\d{4}-\d{2}-\d{2}$/.test(deadline)) {
+      calEvents.push({ user_id: user.id, application_id: newApp.id, company, role, status: "saved", event_type: "deadline", date: deadline });
+    }
+    await supabase.from("calendar_events").insert(calEvents);
+  }
+
   revalidatePath("/applications");
   revalidatePath("/dashboard");
   revalidatePath("/leaderboard");
   revalidatePath("/profile");
+  revalidatePath("/calendar");
   redirect("/applications");
 }
 
@@ -163,10 +183,31 @@ export async function savePostingApplication(formData: FormData) {
     redirectWithMessage("/applications", streakError.message);
   }
 
+  const { data: newApp } = await supabase
+    .from("applications")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("source_url", sourceUrl)
+    .maybeSingle<{ id: string }>();
+
+  if (newApp) {
+    const today = new Date().toISOString().slice(0, 10);
+    await supabase.from("calendar_events").insert({
+      user_id: user.id,
+      application_id: newApp.id,
+      company,
+      role,
+      status: "saved",
+      event_type: "submitted",
+      date: today,
+    });
+  }
+
   revalidatePath("/applications");
   revalidatePath("/dashboard");
   revalidatePath("/leaderboard");
   revalidatePath("/profile");
+  revalidatePath("/calendar");
   redirectWithMessage("/applications", "Posting saved to your tracker. You earned 5 XP.");
 }
 

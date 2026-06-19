@@ -92,6 +92,16 @@ export type PublicProfile = {
   applicationsApplied: number;
 };
 
+export type CalendarEvent = {
+  id: string;
+  applicationId: string;
+  company: string;
+  role: string;
+  status: ApplicationStatus;
+  eventType: "deadline" | "submitted" | "custom";
+  date: string; // YYYY-MM-DD
+};
+
 export type Profile = {
   name: string;
   school: string;

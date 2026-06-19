@@ -1,4 +1,4 @@
-import { BookmarkPlus, CalendarDays, ExternalLink, MapPin, Radio, Sparkles } from "lucide-react";
+import { BookmarkPlus, CalendarDays, ExternalLink, MapPin, Radio } from "lucide-react";
 import { savePostingApplication } from "@/lib/applications/actions";
 import type { InternshipPosting } from "@/lib/types";
 
@@ -25,10 +25,7 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
         <span className="inline-flex items-center gap-2">
           <Radio size={16} /> {workModeLabel}
         </span>
-        <span className="inline-flex items-center gap-2 text-blue-700">
-          <Sparkles size={16} /> {posting.source}
-        </span>
-        <span className="inline-flex items-center gap-2">
+<span className="inline-flex items-center gap-2">
           <CalendarDays size={16} /> {posting.postedAt}
         </span>
       </div>

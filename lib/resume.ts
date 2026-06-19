@@ -93,7 +93,13 @@ export function normalizeResumeText(value: string) {
   return value.replace(/\s+/g, " ").trim().slice(0, 18_000);
 }
 
-export async function extractResumeTextFromFile(file: File) {
+type UploadedResumeFile = {
+  name: string;
+  arrayBuffer: () => Promise<ArrayBuffer>;
+  text: () => Promise<string>;
+};
+
+export async function extractResumeTextFromFile(file: UploadedResumeFile) {
   const fileName = file.name.toLowerCase();
   const buffer = Buffer.from(await file.arrayBuffer());
 

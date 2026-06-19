@@ -6,6 +6,8 @@ import { XpProgressBar } from "@/components/XpProgressBar";
 import { getCurrentProfile } from "@/lib/data";
 import { saveResumeProfile, updateProfile } from "@/lib/profile/actions";
 
+export const runtime = "nodejs";
+
 export default async function ProfilePage({ searchParams }: { searchParams?: { message?: string } }) {
   const profile = await getCurrentProfile();
 

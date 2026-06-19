@@ -17,6 +17,20 @@ function parseList(value: FormDataEntryValue | null) {
     .slice(0, 8);
 }
 
+function isUploadedFile(value: FormDataEntryValue | null): value is File {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      "name" in value &&
+      "size" in value &&
+      "arrayBuffer" in value &&
+      "text" in value &&
+      typeof value.arrayBuffer === "function" &&
+      typeof value.text === "function" &&
+      Number(value.size) > 0
+  );
+}
+
 export async function updateProfile(formData: FormData) {
   const supabase = getSupabaseServerClient();
 
@@ -96,9 +110,13 @@ export async function saveResumeProfile(formData: FormData) {
   let resumeText = pastedText;
   let fileName = "";
 
-  if (resumeFile instanceof File && resumeFile.size > 0) {
+  if (isUploadedFile(resumeFile)) {
     fileName = resumeFile.name;
-    resumeText = await extractResumeTextFromFile(resumeFile);
+    try {
+      resumeText = await extractResumeTextFromFile(resumeFile);
+    } catch {
+      redirectWithMessage("/profile", "CareerUp could not read that file. Try pasting your resume text instead.");
+    }
   }
 
   const normalizedText = normalizeResumeText(resumeText);

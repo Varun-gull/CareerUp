@@ -92,6 +92,12 @@ function getFitScore(job: Pick<InternshipPosting, "title" | "location" | "descri
     score += 8;
   }
 
+  const resumeMatches = profile.resumeKeywords.filter((keyword) => includesAny(haystack, [keyword]));
+
+  if (resumeMatches.length > 0) {
+    score += Math.min(18, resumeMatches.length * 4);
+  }
+
   return Math.min(98, score);
 }
 

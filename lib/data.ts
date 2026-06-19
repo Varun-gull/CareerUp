@@ -25,6 +25,10 @@ type DbProfile = {
   graduation_year: string | null;
   target_roles: string[] | null;
   target_locations: string[] | null;
+  resume_text: string | null;
+  resume_keywords: string[] | null;
+  resume_file_name: string | null;
+  resume_updated_at: string | null;
   xp: number | null;
   streak_count: number | null;
   applications_applied: number | null;
@@ -87,6 +91,9 @@ export async function getCurrentProfile(): Promise<Profile> {
     graduationYear: data.graduation_year ?? "",
     targetRoles: data.target_roles ?? [],
     targetLocations: data.target_locations ?? [],
+    resumeKeywords: data.resume_keywords ?? [],
+    resumeFileName: data.resume_file_name ?? "",
+    resumeUpdatedAt: data.resume_updated_at ? new Date(data.resume_updated_at).toLocaleDateString() : "",
     xp: data.xp ?? 0,
     streak: data.streak_count ?? 0,
     applicationsApplied: data.applications_applied ?? 0

@@ -80,6 +80,12 @@ export default async function PostingsPage({
           </div>
         </div>
 
+        {profile.resumeKeywords.length > 0 && (
+          <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-800">
+            Resume matching active with {profile.resumeKeywords.length} keywords.
+          </div>
+        )}
+
         <form className="card mt-8 grid gap-4 p-5 lg:grid-cols-[1.15fr_1fr_0.75fr_0.75fr_0.75fr_auto]">
           <label className="grid gap-2 text-sm font-bold text-slate-700">
             Role or keyword

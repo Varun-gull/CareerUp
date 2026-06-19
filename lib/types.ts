@@ -99,6 +99,9 @@ export type Profile = {
   graduationYear: string;
   targetRoles: string[];
   targetLocations: string[];
+  resumeKeywords: string[];
+  resumeFileName: string;
+  resumeUpdatedAt: string;
   xp: number;
   streak: number;
   applicationsApplied: number;

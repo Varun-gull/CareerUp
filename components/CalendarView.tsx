@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, CalendarDays, List, X } from "lucide-react";
-import { useOptimistic, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import clsx from "clsx";
 import { addCalendarEvent, deleteCalendarEvent, moveCalendarEvent } from "@/lib/calendar/actions";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
@@ -19,7 +19,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 const EVENT_TYPE_LABEL: Record<string, string> = {
   deadline: "Deadline",
-  submitted: "Submitted",
+  submitted: "Applied",
   custom: "Event",
 };
 
@@ -65,22 +65,15 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
   const today = new Date();
   const [view, setView] = useState<View>("month");
   const [anchor, setAnchor] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
+  const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
   const [dragApp, setDragApp] = useState<Application | null>(null);
   const [dragEvent, setDragEvent] = useState<CalendarEvent | null>(null);
   const [activeDate, setActiveDate] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
-  const [events, setEvents] = useOptimistic(
-    initialEvents,
-    (current, action: { type: "add"; event: CalendarEvent } | { type: "move"; id: string; date: string } | { type: "delete"; id: string }) => {
-      if (action.type === "add") return [...current, action.event];
-      if (action.type === "move") return current.map((e) => (e.id === action.id ? { ...e, date: action.date } : e));
-      if (action.type === "delete") return current.filter((e) => e.id !== action.id);
-      return current;
-    }
-  );
-
-  const days = view === "month" ? getMonthGrid(anchor.getFullYear(), anchor.getMonth()) : getWeekDays(anchor);
+  const days = view === "month"
+    ? getMonthGrid(anchor.getFullYear(), anchor.getMonth())
+    : getWeekDays(anchor);
 
   function navigate(dir: -1 | 1) {
     setAnchor((prev) => {
@@ -95,7 +88,7 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
     setActiveDate(null);
 
     if (dragApp) {
-      const tempId = `optimistic-${Date.now()}`;
+      const tempId = `temp-${Date.now()}`;
       const newEvent: CalendarEvent = {
         id: tempId,
         applicationId: dragApp.id,
@@ -105,8 +98,10 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
         eventType: "custom",
         date: dateStr,
       };
+      // Add immediately to local state
+      setEvents((prev) => [...prev, newEvent]);
+
       startTransition(async () => {
-        setEvents({ type: "add", event: newEvent });
         const fd = new FormData();
         fd.set("applicationId", dragApp.id);
         fd.set("company", dragApp.company);
@@ -120,8 +115,10 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
     }
 
     if (dragEvent && dragEvent.date !== dateStr) {
+      // Move immediately in local state
+      setEvents((prev) => prev.map((e) => e.id === dragEvent.id ? { ...e, date: dateStr } : e));
+
       startTransition(async () => {
-        setEvents({ type: "move", id: dragEvent.id, date: dateStr });
         await moveCalendarEvent(dragEvent.id, dateStr);
       });
       setDragEvent(null);
@@ -129,8 +126,9 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
   }
 
   function handleDelete(id: string) {
+    // Remove immediately from local state
+    setEvents((prev) => prev.filter((e) => e.id !== id));
     startTransition(async () => {
-      setEvents({ type: "delete", id });
       await deleteCalendarEvent(id);
     });
   }
@@ -159,10 +157,13 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
             <div
               key={app.id}
               draggable
-              onDragStart={() => setDragApp(app)}
+              onDragStart={(e) => {
+                e.dataTransfer.effectAllowed = "move";
+                setDragApp(app);
+              }}
               onDragEnd={() => setDragApp(null)}
               className={clsx(
-                "cursor-grab select-none rounded-lg border border-slate-200 bg-white p-3 shadow-sm transition active:cursor-grabbing active:opacity-60",
+                "cursor-grab select-none rounded-lg border border-slate-200 bg-white p-3 shadow-sm transition active:cursor-grabbing",
                 dragApp?.id === app.id && "opacity-40"
               )}
             >
@@ -186,15 +187,21 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
         {/* Toolbar */}
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <button onClick={() => navigate(-1)} className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700 transition-colors">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700 transition-colors"
+            >
               <ChevronLeft size={18} />
             </button>
             <span className="min-w-56 text-center text-lg font-black text-ink">{headerLabel}</span>
-            <button onClick={() => navigate(1)} className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700 transition-colors">
+            <button
+              onClick={() => navigate(1)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700 transition-colors"
+            >
               <ChevronRight size={18} />
             </button>
             <button
-              onClick={() => { setAnchor(new Date(today.getFullYear(), today.getMonth(), 1)); }}
+              onClick={() => setAnchor(new Date(today.getFullYear(), today.getMonth(), 1))}
               className="ml-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600 hover:border-blue-300 hover:text-blue-700 transition-colors"
             >
               Today
@@ -204,13 +211,19 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
           <div className="flex rounded-lg border border-slate-200 bg-white p-1">
             <button
               onClick={() => setView("month")}
-              className={clsx("flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors", view === "month" ? "bg-blue-600 text-white" : "text-slate-600 hover:text-blue-700")}
+              className={clsx(
+                "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors",
+                view === "month" ? "bg-blue-600 text-white" : "text-slate-600 hover:text-blue-700"
+              )}
             >
               <CalendarDays size={14} /> Month
             </button>
             <button
               onClick={() => setView("week")}
-              className={clsx("flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors", view === "week" ? "bg-blue-600 text-white" : "text-slate-600 hover:text-blue-700")}
+              className={clsx(
+                "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors",
+                view === "week" ? "bg-blue-600 text-white" : "text-slate-600 hover:text-blue-700"
+              )}
             >
               <List size={14} /> Week
             </button>
@@ -227,7 +240,7 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
         </div>
 
         {/* Grid */}
-        <div className={clsx("flex-1 overflow-y-auto", view === "month" ? "grid grid-cols-7 gap-1" : "grid grid-cols-7 gap-1")}>
+        <div className="grid flex-1 grid-cols-7 gap-1 overflow-y-auto">
           {days.map((day) => {
             const dateStr = toYMD(day);
             const isToday = dateStr === toYMD(today);
@@ -239,8 +252,12 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
               <div
                 key={dateStr}
                 onDragOver={(e) => { e.preventDefault(); setActiveDate(dateStr); }}
-                onDragLeave={() => setActiveDate(null)}
-                onDrop={() => handleDrop(dateStr)}
+                onDragLeave={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                    setActiveDate(null);
+                  }
+                }}
+                onDrop={(e) => { e.preventDefault(); handleDrop(dateStr); }}
                 className={clsx(
                   "min-h-[90px] rounded-lg border p-1.5 transition-colors",
                   isActive ? "border-blue-400 bg-blue-50" : "border-slate-100 bg-white/70",
@@ -259,7 +276,10 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
                     <div
                       key={ev.id}
                       draggable
-                      onDragStart={() => setDragEvent(ev)}
+                      onDragStart={(e) => {
+                        e.dataTransfer.effectAllowed = "move";
+                        setDragEvent(ev);
+                      }}
                       onDragEnd={() => setDragEvent(null)}
                       className={clsx(
                         "group flex cursor-grab items-start justify-between gap-1 rounded border px-1.5 py-0.5 text-xs font-bold active:cursor-grabbing active:opacity-50",
@@ -268,7 +288,7 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
                     >
                       <div className="min-w-0">
                         <p className="truncate leading-tight">{ev.company}</p>
-                        <p className="truncate font-normal opacity-75">{EVENT_TYPE_LABEL[ev.eventType]}</p>
+                        <p className="truncate font-normal opacity-75">{EVENT_TYPE_LABEL[ev.eventType] ?? ev.eventType}</p>
                       </div>
                       <button
                         onClick={() => handleDelete(ev.id)}

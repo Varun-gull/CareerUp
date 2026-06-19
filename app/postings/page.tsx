@@ -1,4 +1,4 @@
-import { ArrowUpDown, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
+import { RotateCcw, Search } from "lucide-react";
 import Link from "next/link";
 import { EmptyState } from "@/components/EmptyState";
 import { Navbar } from "@/components/Navbar";
@@ -117,17 +117,9 @@ export default async function PostingsPage({
         </form>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-2">
-              <SlidersHorizontal size={16} /> Search controls
-            </span>
-            <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200">
-              <ArrowUpDown className="mr-1" size={14} /> {sort === "fit" ? "Best fit" : sort === "newest" ? "Newest" : "Company"}
-            </span>
-            <Link href="/postings" className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200 hover:text-blue-700">
-              <RotateCcw className="mr-1" size={14} /> Reset
-            </Link>
-          </div>
+          <Link href="/postings" className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200 hover:text-blue-700">
+            <RotateCcw className="mr-1" size={14} /> Reset
+          </Link>
           <span className="text-sm font-bold text-slate-600">
             Showing <span className="text-ink">{postings.length}</span> of <span className="text-ink">{searchResult.postings.length}</span> results
           </span>

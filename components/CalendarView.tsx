@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, CalendarDays, List, X } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import clsx from "clsx";
 import { addCalendarEvent, deleteCalendarEvent, moveCalendarEvent } from "@/lib/calendar/actions";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
@@ -66,6 +66,15 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
   const [view, setView] = useState<View>("month");
   const [anchor, setAnchor] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
+
+  // Merge in any new events pushed from the server (e.g. status changed to applied)
+  useEffect(() => {
+    setEvents((prev) => {
+      const existingIds = new Set(prev.map((e) => e.id));
+      const incoming = initialEvents.filter((e) => !existingIds.has(e.id));
+      return incoming.length > 0 ? [...prev, ...incoming] : prev;
+    });
+  }, [initialEvents]);
   const [dragApp, setDragApp] = useState<Application | null>(null);
   const [dragEvent, setDragEvent] = useState<CalendarEvent | null>(null);
   const [activeDate, setActiveDate] = useState<string | null>(null);

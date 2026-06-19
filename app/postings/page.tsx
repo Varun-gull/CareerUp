@@ -70,18 +70,8 @@ export default async function PostingsPage({
 
 {searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
 
-        <div className="mt-5 grid gap-3 md:grid-cols-[1fr_auto]">
-          <div className="rounded-lg border border-slate-200 bg-white/80 px-4 py-3 text-sm font-bold text-slate-600">
-            Source: <span className="text-blue-700">{searchResult.provider}</span>
-            {searchResult.usingFallback ? " fallback results" : " live results"}
-          </div>
-          <div className="rounded-lg border border-slate-200 bg-white/80 px-4 py-3 text-sm font-bold text-slate-600">
-            Showing <span className="text-ink">{postings.length}</span> of <span className="text-ink">{searchResult.postings.length}</span> results
-          </div>
-        </div>
-
         {profile.resumeKeywords.length > 0 && (
-          <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-800">
+          <div className="mt-5 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-800">
             Resume matching active with {profile.resumeKeywords.length} keywords.
           </div>
         )}
@@ -127,10 +117,10 @@ export default async function PostingsPage({
         </form>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
-          <span className="inline-flex items-center gap-2">
-            <SlidersHorizontal size={16} /> Search controls
-          </span>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-2">
+              <SlidersHorizontal size={16} /> Search controls
+            </span>
             <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200">
               <ArrowUpDown className="mr-1" size={14} /> {sort === "fit" ? "Best fit" : sort === "newest" ? "Newest" : "Company"}
             </span>
@@ -138,6 +128,9 @@ export default async function PostingsPage({
               <RotateCcw className="mr-1" size={14} /> Reset
             </Link>
           </div>
+          <span className="text-sm font-bold text-slate-600">
+            Showing <span className="text-ink">{postings.length}</span> of <span className="text-ink">{searchResult.postings.length}</span> results
+          </span>
         </div>
 
         {postings.length > 0 ? (

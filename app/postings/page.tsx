@@ -10,6 +10,24 @@ import type { InternshipPosting } from "@/lib/types";
 type RemoteFilter = "all" | "remote" | "hybrid" | "onsite";
 type PostingSort = "fit" | "newest" | "company";
 
+const roleExamples = [
+  "Software Engineering Intern",
+  "Data Science Intern",
+  "Machine Learning Intern",
+  "AI Intern",
+  "Product Management Intern",
+  "Data Analyst Intern",
+  "Frontend Intern",
+  "Backend Intern",
+  "Cybersecurity Intern"
+];
+
+const locationExamples = ["Remote", "Hybrid", "New York", "San Francisco", "Washington DC", "Seattle", "Boston", "Austin", "Chicago"];
+
+function uniqueExamples(values: string[]) {
+  return Array.from(new Set(values.map((value) => value.trim()).filter(Boolean))).slice(0, 12);
+}
+
 function filterPostings(postings: InternshipPosting[], remote: RemoteFilter, minFit: number) {
   return postings.filter((posting) => {
     const remoteMatch = remote === "all" || posting.workMode === remote;
@@ -49,6 +67,8 @@ export default async function PostingsPage({
   const remoteFilter = searchParams?.remote === "remote" || searchParams?.remote === "hybrid" || searchParams?.remote === "onsite" ? searchParams.remote : "all";
   const sort = searchParams?.sort === "newest" || searchParams?.sort === "company" ? searchParams.sort : "fit";
   const minFit = Math.min(95, Math.max(0, Number(searchParams?.minFit ?? 0) || 0));
+  const roleSuggestions = uniqueExamples([...profile.targetRoles, ...profile.resumeKeywords, ...roleExamples]);
+  const locationSuggestions = uniqueExamples([...profile.targetLocations, ...locationExamples]);
   const searchResult = await searchInternshipPostings({
     query: searchParams?.q,
     location: searchParams?.location,
@@ -76,14 +96,25 @@ export default async function PostingsPage({
           </div>
         )}
 
-        <form className="card mt-8 grid gap-4 p-5 lg:grid-cols-[1.15fr_1fr_0.75fr_0.75fr_0.75fr_auto]">
+        <form className="card mt-8 grid gap-4 p-5 lg:grid-cols-[1.15fr_1fr_0.75fr_0.75fr_auto]">
+          <input type="hidden" name="sort" value="fit" />
           <label className="grid gap-2 text-sm font-bold text-slate-700">
             Role or keyword
-            <input name="q" defaultValue={searchParams?.q ?? profile.targetRoles[0] ?? ""} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Data science intern" />
+            <input name="q" list="role-keyword-examples" defaultValue={searchParams?.q ?? profile.targetRoles[0] ?? ""} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Data science intern" />
+            <datalist id="role-keyword-examples">
+              {roleSuggestions.map((example) => (
+                <option key={example} value={example} />
+              ))}
+            </datalist>
           </label>
           <label className="grid gap-2 text-sm font-bold text-slate-700">
             Location
-            <input name="location" defaultValue={searchParams?.location ?? profile.targetLocations[0] ?? ""} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Remote" />
+            <input name="location" list="location-examples" defaultValue={searchParams?.location ?? profile.targetLocations[0] ?? ""} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Remote" />
+            <datalist id="location-examples">
+              {locationSuggestions.map((example) => (
+                <option key={example} value={example} />
+              ))}
+            </datalist>
           </label>
           <label className="grid gap-2 text-sm font-bold text-slate-700">
             Work mode
@@ -101,14 +132,6 @@ export default async function PostingsPage({
               <option value="60">60%+</option>
               <option value="70">70%+</option>
               <option value="80">80%+</option>
-            </select>
-          </label>
-          <label className="grid gap-2 text-sm font-bold text-slate-700">
-            Sort
-            <select name="sort" defaultValue={sort} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500">
-              <option value="fit">Best fit</option>
-              <option value="newest">Newest</option>
-              <option value="company">Company</option>
             </select>
           </label>
           <button type="submit" className="primary-button self-end">

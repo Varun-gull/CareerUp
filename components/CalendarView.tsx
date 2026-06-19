@@ -291,21 +291,22 @@ export function CalendarView({ applications, initialEvents }: { applications: Ap
                       }}
                       onDragEnd={() => setDragEvent(null)}
                       className={clsx(
-                        "group flex cursor-grab items-start justify-between gap-1 rounded border px-1.5 py-0.5 text-xs font-bold active:cursor-grabbing active:opacity-50",
+                        "group cursor-grab rounded border px-1.5 py-1 active:cursor-grabbing active:opacity-50",
                         STATUS_COLORS[ev.status] ?? STATUS_COLORS.saved
                       )}
                     >
-                      <div className="min-w-0">
-                        <p className="truncate leading-tight">{ev.company}</p>
-                        <p className="truncate font-normal opacity-75">{EVENT_TYPE_LABEL[ev.eventType] ?? ev.eventType}</p>
+                      <div className="flex items-start justify-between gap-1">
+                        <p className="truncate text-xs font-black leading-tight">{ev.company}</p>
+                        <button
+                          onClick={() => handleDelete(ev.id)}
+                          className="flex-none opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-label="Remove event"
+                        >
+                          <X size={10} />
+                        </button>
                       </div>
-                      <button
-                        onClick={() => handleDelete(ev.id)}
-                        className="mt-0.5 flex-none opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-label="Remove event"
-                      >
-                        <X size={10} />
-                      </button>
+                      <p className="truncate text-xs font-medium opacity-80 leading-tight mt-0.5">{ev.role}</p>
+                      <p className="text-xs opacity-60 leading-tight mt-0.5">{EVENT_TYPE_LABEL[ev.eventType] ?? ev.eventType}</p>
                     </div>
                   ))}
                 </div>

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
 const navItems = [
-  { href: "/postings", label: "Postings" },
+  { href: "/postings/internships", label: "Postings" },
   { href: "/applications", label: "Applications" },
   { href: "/interview", label: "Interview Prep" },
   { href: "/rewards", label: "Rewards" },
@@ -17,7 +17,7 @@ export function NavLinks() {
   return (
     <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
       {navItems.map((item) => {
-        const active = pathname.startsWith(item.href);
+        const active = item.label === "Postings" ? pathname.startsWith("/postings") : pathname.startsWith(item.href);
         return (
           <Link
             key={item.href}

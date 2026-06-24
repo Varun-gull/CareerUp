@@ -23,8 +23,10 @@ type SearchPostingsOptions = {
   query?: string;
   location?: string;
   profile?: Profile;
+  kind?: PostingKind;
 };
 
+export type PostingKind = "internship" | "new-grad";
 export type PostingProvider = "Jobright / Intern-list" | "Jobright / Intern-list + GitHub" | "Jobright / Intern-list + Adzuna" | "Jobright / Intern-list + GitHub + Adzuna" | "Curated GitHub" | "Curated GitHub + Adzuna" | "Adzuna" | "CareerUp sample";
 
 export type PostingSearchResult = {
@@ -154,20 +156,64 @@ function getRoleTags(title: string, source: string) {
   return Array.from(tags).slice(0, 5);
 }
 
-function normalizeQuery(searchQuery: string) {
+function normalizeQuery(searchQuery: string, kind: PostingKind = "internship") {
+  if (kind === "new-grad") {
+    const query = /new grad|new graduate|entry level|university grad|college grad/i.test(searchQuery) ? searchQuery : `${searchQuery} new grad`;
+    return query.trim();
+  }
+
   const query = searchQuery.toLowerCase().includes("intern") ? searchQuery : `${searchQuery} internship`;
   return query.trim();
 }
 
-function matchesPostingSearch(posting: InternshipPosting, searchQuery: string, targetLocation: string) {
+function buildPostingQueryVariants(searchQuery: string, kind: PostingKind = "internship") {
+  const cleanQuery = searchQuery.trim();
+  const variants = [
+    cleanQuery,
+    kind === "new-grad"
+      ? /new grad|new graduate|entry level|university grad|college grad/i.test(cleanQuery)
+        ? cleanQuery
+        : `${cleanQuery} new grad`
+      : cleanQuery.toLowerCase().includes("intern")
+        ? cleanQuery
+        : `${cleanQuery} intern`,
+    normalizeQuery(cleanQuery, kind)
+  ];
+
+  if (/data scientist/i.test(cleanQuery)) {
+    variants.push(cleanQuery.replace(/data scientist/gi, kind === "new-grad" ? "data analyst new grad" : "data intern"));
+    variants.push(kind === "new-grad" ? "data analyst new grad" : "data analyst intern");
+  }
+
+  if (/software engineer/i.test(cleanQuery)) {
+    variants.push(cleanQuery.replace(/software engineer/gi, kind === "new-grad" ? "software engineer new grad" : "software intern"));
+    variants.push(kind === "new-grad" ? "software engineer new grad" : "software engineering intern");
+  }
+
+  if (/product manager|product management/i.test(cleanQuery)) {
+    variants.push(kind === "new-grad" ? "associate product manager" : "product intern");
+    variants.push(kind === "new-grad" ? "product management new grad" : "product management intern");
+  }
+
+  const firstWord = cleanQuery.split(/\s+/)[0];
+  if (firstWord && !/intern|grad/i.test(firstWord)) {
+    variants.push(`${firstWord} ${kind === "new-grad" ? "new grad" : "intern"}`);
+  }
+
+  variants.push(kind === "new-grad" ? "new grad" : "internship");
+
+  return Array.from(new Set(variants.map((variant) => variant.trim()).filter(Boolean)));
+}
+
+function matchesPostingSearch(posting: InternshipPosting, searchQuery: string, targetLocation: string, kind: PostingKind = "internship") {
   const query = searchQuery.trim();
   const location = targetLocation.trim();
   const haystack = `${posting.company} ${posting.title} ${posting.location} ${posting.description} ${posting.tags.join(" ")}`.toLowerCase();
   const normalizedQuery = query.toLowerCase();
   const companyMatch = Boolean(normalizedQuery && posting.company.toLowerCase().includes(normalizedQuery));
-  const queryTerms = buildAdzunaQueryVariants(query)
+  const queryTerms = buildPostingQueryVariants(query, kind)
     .flatMap((variant) => variant.toLowerCase().split(/\s+/))
-    .filter((term) => term.length > 2 && !["intern", "internship"].includes(term));
+    .filter((term) => term.length > 2 && !["intern", "internship", "grad", "graduate"].includes(term));
   const queryMatch = !queryTerms.length || queryTerms.some((term) => haystack.includes(term));
   const locationMatch = companyMatch || !location || includesAny(posting.location, [location, "remote", "united states", "usa"]);
 
@@ -339,18 +385,26 @@ async function fetchText(url: string) {
   return response.text();
 }
 
-async function searchCuratedGithubPostings(searchQuery: string, targetLocation: string, profile?: Profile): Promise<PostingSearchResult | null> {
-  const [simplifyReadme, speedySweReadme, speedyAiReadme] = await Promise.all([
-    fetchText("https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md"),
-    fetchText("https://raw.githubusercontent.com/speedyapply/2026-SWE-College-Jobs/main/README.md"),
-    fetchText("https://raw.githubusercontent.com/speedyapply/2026-AI-College-Jobs/main/README.md")
-  ]);
+async function searchCuratedGithubPostings(searchQuery: string, targetLocation: string, profile?: Profile, kind: PostingKind = "internship"): Promise<PostingSearchResult | null> {
+  const sourceUrls =
+    kind === "new-grad"
+      ? [
+          "https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md",
+          "https://raw.githubusercontent.com/speedyapply/2026-SWE-College-Jobs/main/NEW_GRAD_USA.md",
+          "https://raw.githubusercontent.com/speedyapply/2026-AI-College-Jobs/main/NEW_GRAD_USA.md"
+        ]
+      : [
+          "https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md",
+          "https://raw.githubusercontent.com/speedyapply/2026-SWE-College-Jobs/main/README.md",
+          "https://raw.githubusercontent.com/speedyapply/2026-AI-College-Jobs/main/README.md"
+        ];
+  const [simplifyReadme, speedySweReadme, speedyAiReadme] = await Promise.all(sourceUrls.map((url) => fetchText(url)));
 
   const postings = [
     ...parseSimplifyReadme(simplifyReadme, profile),
-    ...parseSpeedyApplyReadme(speedySweReadme, "SpeedyApply SWE", profile),
-    ...parseSpeedyApplyReadme(speedyAiReadme, "SpeedyApply AI", profile)
-  ].filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation));
+    ...parseSpeedyApplyReadme(speedySweReadme, kind === "new-grad" ? "SpeedyApply SWE New Grad" : "SpeedyApply SWE", profile),
+    ...parseSpeedyApplyReadme(speedyAiReadme, kind === "new-grad" ? "SpeedyApply AI New Grad" : "SpeedyApply AI", profile)
+  ].filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation, kind));
 
   const deduped = dedupePostings(postings);
 
@@ -363,19 +417,28 @@ async function searchCuratedGithubPostings(searchQuery: string, targetLocation: 
     : null;
 }
 
-async function searchJobrightPostings(searchQuery: string, targetLocation: string, profile?: Profile): Promise<PostingSearchResult | null> {
-  const jobrightSources = [
-    ["https://raw.githubusercontent.com/jobright-ai/2026-Software-Engineer-Internship/master/README.md", "Jobright SWE"],
-    ["https://raw.githubusercontent.com/jobright-ai/2026-Engineer-Internship/master/README.md", "Jobright Engineering"],
-    ["https://raw.githubusercontent.com/jobright-ai/2026-Data-Analysis-Internship/master/README.md", "Jobright Data"],
-    ["https://raw.githubusercontent.com/jobright-ai/2026-Product-Management-Internship/master/README.md", "Jobright Product"],
-    ["https://raw.githubusercontent.com/jobright-ai/2026-Business-Analyst-Internship/master/README.md", "Jobright Business"],
-  ] as const;
+async function searchJobrightPostings(searchQuery: string, targetLocation: string, profile?: Profile, kind: PostingKind = "internship"): Promise<PostingSearchResult | null> {
+  const jobrightSources =
+    kind === "new-grad"
+      ? ([
+          ["https://raw.githubusercontent.com/jobright-ai/2026-Software-Engineer-New-Grad/master/README.md", "Jobright SWE New Grad"],
+          ["https://raw.githubusercontent.com/jobright-ai/2026-Engineering-New-Grad/master/README.md", "Jobright Engineering New Grad"],
+          ["https://raw.githubusercontent.com/jobright-ai/2026-Data-Analysis-New-Grad/master/README.md", "Jobright Data New Grad"],
+          ["https://raw.githubusercontent.com/jobright-ai/2026-Product-Management-New-Grad/master/README.md", "Jobright Product New Grad"],
+          ["https://raw.githubusercontent.com/jobright-ai/2026-Business-Analyst-New-Grad/master/README.md", "Jobright Business New Grad"],
+        ] as const)
+      : ([
+          ["https://raw.githubusercontent.com/jobright-ai/2026-Software-Engineer-Internship/master/README.md", "Jobright SWE"],
+          ["https://raw.githubusercontent.com/jobright-ai/2026-Engineer-Internship/master/README.md", "Jobright Engineering"],
+          ["https://raw.githubusercontent.com/jobright-ai/2026-Data-Analysis-Internship/master/README.md", "Jobright Data"],
+          ["https://raw.githubusercontent.com/jobright-ai/2026-Product-Management-Internship/master/README.md", "Jobright Product"],
+          ["https://raw.githubusercontent.com/jobright-ai/2026-Business-Analyst-Internship/master/README.md", "Jobright Business"],
+        ] as const);
 
   const readmes = await Promise.all(jobrightSources.map(([url]) => fetchText(url)));
   const postings = readmes
     .flatMap((readme, index) => parseJobrightReadme(readme, jobrightSources[index][1], profile))
-    .filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation));
+    .filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation, kind));
   const deduped = dedupePostings(postings);
 
   return deduped.length > 0
@@ -426,39 +489,6 @@ function parsePostingAge(value: string) {
 
   const parsedDate = Date.parse(value);
   return Number.isNaN(parsedDate) ? 999 : Math.max(0, Math.round((Date.now() - parsedDate) / 86_400_000));
-}
-
-function buildAdzunaQueryVariants(searchQuery: string) {
-  const cleanQuery = searchQuery.trim();
-  const variants = [
-    cleanQuery,
-    cleanQuery.toLowerCase().includes("intern") ? cleanQuery : `${cleanQuery} intern`,
-    normalizeQuery(cleanQuery)
-  ];
-
-  if (/data scientist/i.test(cleanQuery)) {
-    variants.push(cleanQuery.replace(/data scientist/gi, "data intern"));
-    variants.push("data analyst intern");
-  }
-
-  if (/software engineer/i.test(cleanQuery)) {
-    variants.push(cleanQuery.replace(/software engineer/gi, "software intern"));
-    variants.push("software engineering intern");
-  }
-
-  if (/product manager|product management/i.test(cleanQuery)) {
-    variants.push("product intern");
-    variants.push("product management intern");
-  }
-
-  const firstWord = cleanQuery.split(/\s+/)[0];
-  if (firstWord && !/intern/i.test(firstWord)) {
-    variants.push(`${firstWord} intern`);
-  }
-
-  variants.push("internship");
-
-  return Array.from(new Set(variants.map((variant) => variant.trim()).filter(Boolean)));
 }
 
 function fallbackPostings(profile?: Profile): PostingSearchResult {
@@ -514,7 +544,7 @@ function fallbackPostings(profile?: Profile): PostingSearchResult {
   };
 }
 
-async function searchAdzunaPostings(searchQuery: string, targetLocation: string, profile?: Profile): Promise<PostingSearchResult | null> {
+async function searchAdzunaPostings(searchQuery: string, targetLocation: string, profile?: Profile, kind: PostingKind = "internship"): Promise<PostingSearchResult | null> {
   const appId = process.env.ADZUNA_APP_ID;
   const appKey = process.env.ADZUNA_APP_KEY;
 
@@ -526,7 +556,7 @@ async function searchAdzunaPostings(searchQuery: string, targetLocation: string,
   const collectedPostings = new Map<string, InternshipPosting>();
 
   for (const locationAttempt of locationAttempts) {
-    for (const variant of buildAdzunaQueryVariants(searchQuery)) {
+    for (const variant of buildPostingQueryVariants(searchQuery, kind)) {
       const url = new URL("https://api.adzuna.com/v1/api/jobs/us/search/1");
       url.searchParams.set("app_id", appId);
       url.searchParams.set("app_key", appKey);
@@ -573,7 +603,11 @@ async function searchAdzunaPostings(searchQuery: string, targetLocation: string,
             fitScore: getFitScore(posting, profile)
           };
         })
-        .filter((posting) => /intern|internship|student|new grad|graduate|emerging talent|early career/i.test(`${posting.title} ${posting.description}`))
+        .filter((posting) =>
+          kind === "new-grad"
+            ? /new grad|new graduate|university grad|college grad|entry level|early career|associate/i.test(`${posting.title} ${posting.description}`)
+            : /intern|internship|student|co-op|coop/i.test(`${posting.title} ${posting.description}`)
+        )
         .forEach((posting) => {
           collectedPostings.set(posting.url, posting);
         });
@@ -603,17 +637,17 @@ async function searchAdzunaPostings(searchQuery: string, targetLocation: string,
   return null;
 }
 
-export async function searchInternshipPostings({ query, location, profile }: SearchPostingsOptions = {}): Promise<PostingSearchResult> {
+export async function searchInternshipPostings({ query, location, profile, kind = "internship" }: SearchPostingsOptions = {}): Promise<PostingSearchResult> {
   const rawQuery = typeof query === "string" ? query.trim() : "";
   const rawLocation = typeof location === "string" ? location.trim() : "";
   const hasSubmittedSearch = typeof query === "string" || typeof location === "string";
-  const searchQuery = rawQuery || (hasSubmittedSearch ? "intern" : profile?.targetRoles[0] || "intern");
+  const searchQuery = rawQuery || (hasSubmittedSearch ? (kind === "new-grad" ? "new grad" : "intern") : profile?.targetRoles[0] || (kind === "new-grad" ? "new grad" : "intern"));
   const targetLocation = rawLocation || (hasSubmittedSearch || rawQuery ? "" : profile?.targetLocations[0] || "");
 
   try {
-    const jobrightResults = await searchJobrightPostings(searchQuery, targetLocation, profile);
-    const curatedResults = await searchCuratedGithubPostings(searchQuery, targetLocation, profile);
-    const adzunaResults = await searchAdzunaPostings(searchQuery, targetLocation, profile);
+    const jobrightResults = await searchJobrightPostings(searchQuery, targetLocation, profile, kind);
+    const curatedResults = await searchCuratedGithubPostings(searchQuery, targetLocation, profile, kind);
+    const adzunaResults = await searchAdzunaPostings(searchQuery, targetLocation, profile, kind);
 
     if (jobrightResults && curatedResults && adzunaResults) {
       return {

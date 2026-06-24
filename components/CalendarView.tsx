@@ -78,7 +78,7 @@ function buildEvents(applications: Application[], dbEvents: CalendarEvent[], tod
     if (["applied", "interviewing", "offer"].includes(app.status)) {
       derived.push({ id: `derived-sub-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "submitted", date: todayStr });
     }
-    if (app.status === "interviewing") {
+    if (app.status === "interviewing" || app.status === "offer") {
       const storedDate = getStoredInterviewDate(app.id);
       derived.push({ id: `derived-int-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "interview", date: storedDate ?? todayStr });
     }

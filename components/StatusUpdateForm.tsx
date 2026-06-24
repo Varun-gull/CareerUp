@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { InterviewModal } from "@/components/InterviewModal";
 import { addInterviewEvent } from "@/lib/calendar/actions";
 import { updateApplicationStatus } from "@/lib/applications/actions";
-import type { Application } from "@/lib/types";
+import type { Application, CalendarEvent } from "@/lib/types";
 
 const statusOptions = [
   { value: "saved", label: "Saved" },
@@ -15,7 +15,7 @@ const statusOptions = [
   { value: "rejected", label: "Rejected" },
 ] as const;
 
-export function StatusUpdateForm({ application, compact }: { application: Application; compact?: boolean }) {
+export function StatusUpdateForm({ application, compact, onInterviewScheduled }: { application: Application; compact?: boolean; onInterviewScheduled?: (event: CalendarEvent) => void }) {
   const router = useRouter();
   const [selected, setSelected] = useState(application.status);
   const [showModal, setShowModal] = useState(false);
@@ -42,6 +42,17 @@ export function StatusUpdateForm({ application, compact }: { application: Applic
   async function handleModalConfirm(date: string, time: string, notes: string) {
     setShowModal(false);
     submitStatus("interviewing");
+    onInterviewScheduled?.({
+      id: `pending-${Date.now()}`,
+      applicationId: application.id,
+      company: application.company,
+      role: application.role,
+      status: "interviewing",
+      eventType: "interview",
+      date,
+      time,
+      notes,
+    });
     startTransition(async () => {
       await addInterviewEvent({
         applicationId: application.id,

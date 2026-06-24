@@ -2,9 +2,9 @@ import { CalendarDays, ExternalLink, MapPin, Sparkles, Trash2 } from "lucide-rea
 import { ApplicationStatusBadge } from "./ApplicationStatusBadge";
 import { StatusUpdateForm } from "./StatusUpdateForm";
 import { deleteApplication } from "@/lib/applications/actions";
-import type { Application } from "@/lib/types";
+import type { Application, CalendarEvent } from "@/lib/types";
 
-export function ApplicationCard({ application, compact = false }: { application: Application; compact?: boolean }) {
+export function ApplicationCard({ application, compact = false, onInterviewScheduled }: { application: Application; compact?: boolean; onInterviewScheduled?: (event: CalendarEvent) => void }) {
   const sourceIsUrl = application.source.startsWith("http://") || application.source.startsWith("https://");
 
   return (
@@ -37,7 +37,7 @@ export function ApplicationCard({ application, compact = false }: { application:
         </span>
       </div>
       <div className={compact ? "mt-5 grid gap-3 border-t border-slate-100 pt-4" : "mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4"}>
-        <StatusUpdateForm application={application} compact={compact} />
+        <StatusUpdateForm application={application} compact={compact} onInterviewScheduled={onInterviewScheduled} />
         <form action={deleteApplication} className={compact ? "justify-self-end" : undefined}>
           <input type="hidden" name="applicationId" value={application.id} />
           <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:text-red-600" aria-label={`Delete ${application.company} application`}>

@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, CalendarDays, List, X } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import clsx from "clsx";
 import { addCalendarEvent, deleteCalendarEvent, moveCalendarEvent } from "@/lib/calendar/actions";
-import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
+import { ApplicationCard } from "@/components/ApplicationCard";
 import type { Application, CalendarEvent } from "@/lib/types";
 
 type View = "month" | "week";
@@ -187,20 +187,15 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               }}
               onDragEnd={() => setDragApp(null)}
               className={clsx(
-                "cursor-grab select-none rounded-lg border border-slate-200 bg-white p-3 shadow-sm transition active:cursor-grabbing",
+                "select-none transition",
                 dragApp?.id === app.id && "opacity-40"
               )}
             >
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-black text-blue-600">{app.company}</p>
-                  <p className="truncate text-sm font-bold text-slate-700">{app.role}</p>
-                </div>
-                <ApplicationStatusBadge status={app.status} />
-              </div>
-              {app.deadline && app.deadline !== "No deadline" && (
-                <p className="mt-2 text-xs font-bold text-slate-400">Due {app.deadline}</p>
-              )}
+              <ApplicationCard
+                application={app}
+                compact
+                onInterviewScheduled={(ev) => setEvents((prev) => [...prev, ev])}
+              />
             </div>
           ))}
         </div>

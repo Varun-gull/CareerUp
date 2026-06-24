@@ -3,6 +3,7 @@ import Link from "next/link";
 import { EmptyState } from "@/components/EmptyState";
 import { Navbar } from "@/components/Navbar";
 import { PostingCard } from "@/components/PostingCard";
+import { PostingsSearchForm } from "@/components/PostingsSearchForm";
 import { getCurrentProfile } from "@/lib/data";
 import { searchInternshipPostings } from "@/lib/postings";
 import type { InternshipPosting } from "@/lib/types";
@@ -67,11 +68,13 @@ export default async function PostingsPage({
   const remoteFilter = searchParams?.remote === "remote" || searchParams?.remote === "hybrid" || searchParams?.remote === "onsite" ? searchParams.remote : "all";
   const sort = searchParams?.sort === "newest" || searchParams?.sort === "company" ? searchParams.sort : "fit";
   const minFit = Math.min(95, Math.max(0, Number(searchParams?.minFit ?? 0) || 0));
+  const submittedQuery = typeof searchParams?.q === "string" ? searchParams.q.trim() : "";
+  const submittedLocation = typeof searchParams?.location === "string" ? searchParams.location.trim() : "";
   const roleSuggestions = uniqueExamples([...profile.targetRoles, ...profile.resumeKeywords, ...roleExamples]);
   const locationSuggestions = uniqueExamples([...profile.targetLocations, ...locationExamples]);
   const searchResult = await searchInternshipPostings({
-    query: searchParams?.q,
-    location: searchParams?.location,
+    query: submittedQuery,
+    location: submittedLocation,
     profile
   });
   const postings = sortPostings(filterPostings(searchResult.postings, remoteFilter, minFit), sort);
@@ -96,48 +99,15 @@ export default async function PostingsPage({
           </div>
         )}
 
-        <form className="card mt-8 grid gap-4 p-5 lg:grid-cols-[1.15fr_1fr_0.75fr_0.75fr_auto]">
-          <input type="hidden" name="sort" value="fit" />
-          <label className="grid gap-2 text-sm font-bold text-slate-700">
-            Role or keyword
-            <input name="q" list="role-keyword-examples" defaultValue={searchParams?.q ?? profile.targetRoles[0] ?? ""} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Data science intern" />
-            <datalist id="role-keyword-examples">
-              {roleSuggestions.map((example) => (
-                <option key={example} value={example} />
-              ))}
-            </datalist>
-          </label>
-          <label className="grid gap-2 text-sm font-bold text-slate-700">
-            Location
-            <input name="location" list="location-examples" defaultValue={searchParams?.location ?? ""} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder={profile.targetLocations[0] ?? "Remote"} />
-            <datalist id="location-examples">
-              {locationSuggestions.map((example) => (
-                <option key={example} value={example} />
-              ))}
-            </datalist>
-          </label>
-          <label className="grid gap-2 text-sm font-bold text-slate-700">
-            Work mode
-            <select name="remote" defaultValue={remoteFilter} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500">
-              <option value="all">All roles</option>
-              <option value="remote">Remote only</option>
-              <option value="hybrid">Hybrid only</option>
-              <option value="onsite">On-site only</option>
-            </select>
-          </label>
-          <label className="grid gap-2 text-sm font-bold text-slate-700">
-            Minimum fit
-            <select name="minFit" defaultValue={minFit.toString()} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500">
-              <option value="0">Any fit</option>
-              <option value="60">60%+</option>
-              <option value="70">70%+</option>
-              <option value="80">80%+</option>
-            </select>
-          </label>
-          <button type="submit" className="primary-button self-end">
-            <Search className="mr-2" size={18} /> Search
-          </button>
-        </form>
+        <PostingsSearchForm
+          roleSuggestions={roleSuggestions}
+          locationSuggestions={locationSuggestions}
+          defaultQuery={submittedQuery}
+          defaultLocation={submittedLocation}
+          locationPlaceholder={profile.targetLocations[0] ?? "Remote"}
+          remoteFilter={remoteFilter}
+          minFit={minFit}
+        />
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
           <Link href="/postings" className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200 hover:text-blue-700">

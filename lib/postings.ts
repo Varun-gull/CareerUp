@@ -604,8 +604,11 @@ async function searchAdzunaPostings(searchQuery: string, targetLocation: string,
 }
 
 export async function searchInternshipPostings({ query, location, profile }: SearchPostingsOptions = {}): Promise<PostingSearchResult> {
-  const searchQuery = query?.trim() || profile?.targetRoles[0] || "intern";
-  const targetLocation = typeof location === "string" ? location.trim() : query?.trim() ? "" : profile?.targetLocations[0] || "";
+  const rawQuery = typeof query === "string" ? query.trim() : "";
+  const rawLocation = typeof location === "string" ? location.trim() : "";
+  const hasSubmittedSearch = typeof query === "string" || typeof location === "string";
+  const searchQuery = rawQuery || (hasSubmittedSearch ? "intern" : profile?.targetRoles[0] || "intern");
+  const targetLocation = rawLocation || (hasSubmittedSearch || rawQuery ? "" : profile?.targetLocations[0] || "");
 
   try {
     const jobrightResults = await searchJobrightPostings(searchQuery, targetLocation, profile);

@@ -19,7 +19,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
           <div className="bg-ink px-6 py-10 text-white">
             <div className="flex flex-wrap items-center justify-between gap-5">
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-blue-600 text-2xl font-black">
+                <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-brand text-2xl font-black">
                   {profile.name.charAt(0)}
                 </div>
                 <div>
@@ -27,7 +27,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                   <p className="text-slate-300">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "Complete your profile"}</p>
                 </div>
               </div>
-              <Link href="/friends" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold hover:border-blue-300">
+              <Link href="/friends" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold hover:border-accent">
                 <Share2 className="mr-2" size={18} /> Share profile
               </Link>
             </div>
@@ -36,33 +36,33 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
             <div>
               <h2 className="text-xl font-black text-ink">Profile setup</h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">These preferences will power personalized internship recommendations later.</p>
-              {searchParams?.message && <p className="mt-4 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
+              {searchParams?.message && <p className="mt-4 rounded-lg bg-lavender/50 p-3 text-sm font-bold text-charcoal">{searchParams.message}</p>}
               <form action={updateProfile} className="mt-5 grid gap-5">
                 <label className="grid gap-2 text-sm font-bold text-slate-700">
                   Name
-                  <input name="fullName" defaultValue={profile.name} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" required />
+                  <input name="fullName" defaultValue={profile.name} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-brand" required />
                 </label>
                 <div className="grid gap-5 sm:grid-cols-2">
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     School
-                    <input name="school" defaultValue={profile.school} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Rutgers University" />
+                    <input name="school" defaultValue={profile.school} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-brand" placeholder="Rutgers University" />
                   </label>
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Major
-                    <input name="major" defaultValue={profile.major} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Computer Science" />
+                    <input name="major" defaultValue={profile.major} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-brand" placeholder="Computer Science" />
                   </label>
                 </div>
                 <label className="grid gap-2 text-sm font-bold text-slate-700">
                   Graduation year
-                  <input name="graduationYear" defaultValue={profile.graduationYear} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="2027" inputMode="numeric" />
+                  <input name="graduationYear" defaultValue={profile.graduationYear} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-brand" placeholder="2027" inputMode="numeric" />
                 </label>
                 <label className="grid gap-2 text-sm font-bold text-slate-700">
                   Target roles
-                  <input name="targetRoles" defaultValue={profile.targetRoles.join(", ")} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Software Engineering, Data Science, Product" />
+                  <input name="targetRoles" defaultValue={profile.targetRoles.join(", ")} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-brand" placeholder="Software Engineering, Data Science, Product" />
                 </label>
                 <label className="grid gap-2 text-sm font-bold text-slate-700">
                   Target locations
-                  <input name="targetLocations" defaultValue={profile.targetLocations.join(", ")} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="New York, Remote, Washington DC" />
+                  <input name="targetLocations" defaultValue={profile.targetLocations.join(", ")} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-brand" placeholder="New York, Remote, Washington DC" />
                 </label>
                 <button type="submit" className="primary-button w-full sm:w-auto">
                   <Save className="mr-2" size={18} /> Save profile
@@ -77,7 +77,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
               <XpProgressBar xp={profile.xp} />
               <div className="rounded-lg border border-slate-200 p-4">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-lavender/50 text-brand">
                     <FileText size={20} />
                   </div>
                   <div>
@@ -89,11 +89,11 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                 <form action={saveResumeProfile} className="mt-5 grid gap-4">
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Upload resume
-                    <input name="resumeFile" type="file" accept=".txt,.md,.csv,.pdf,.docx" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500" />
+                    <input name="resumeFile" type="file" accept=".txt,.md,.csv,.pdf,.docx" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand" />
                   </label>
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Paste text fallback
-                    <textarea name="resumeText" rows={6} className="resize-none rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-500" placeholder="Paste resume text if the upload cannot be read." />
+                    <textarea name="resumeText" rows={6} className="resize-none rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand" placeholder="Paste resume text if the upload cannot be read." />
                   </label>
                   <button type="submit" className="primary-button w-full">
                     <Upload className="mr-2" size={18} /> Save resume

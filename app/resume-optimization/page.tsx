@@ -46,7 +46,7 @@ export default async function ResumeOptimizationPage({
     <>
       <Navbar />
       <main className="page-shell">
-        <Link href="/postings" className="inline-flex items-center text-sm font-black text-blue-700 hover:text-blue-900">
+        <Link href="/postings" className="inline-flex items-center text-sm font-black text-brand hover:text-blue-900">
           <ArrowLeft className="mr-2" size={16} /> Back to postings
         </Link>
 
@@ -59,9 +59,9 @@ export default async function ResumeOptimizationPage({
             </p>
 
             {!resume.resumeText ? (
-              <div className="mt-6 rounded-lg border border-blue-100 bg-blue-50 p-5">
+              <div className="mt-6 rounded-lg border border-blue-100 bg-lavender/50 p-5">
                 <h2 className="font-black text-blue-900">Upload your resume first</h2>
-                <p className="mt-2 text-sm leading-6 text-blue-800">CareerUp needs a saved resume before it can suggest an optimized version for a job posting.</p>
+                <p className="mt-2 text-sm leading-6 text-charcoal">CareerUp needs a saved resume before it can suggest an optimized version for a job posting.</p>
                 <Link href="/profile" className="primary-button mt-4 w-fit">
                   <FileText className="mr-2" size={18} /> Go to profile
                 </Link>
@@ -87,7 +87,7 @@ export default async function ResumeOptimizationPage({
           <aside className="space-y-4">
             <div className="card p-5">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
+                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-lavender/50 text-brand">
                   <Sparkles size={22} />
                 </div>
                 <div>
@@ -95,7 +95,7 @@ export default async function ResumeOptimizationPage({
                   <h2 className="text-lg font-black text-ink">{role}</h2>
                 </div>
               </div>
-              <p className="mt-4 text-sm font-black text-blue-700">{company}</p>
+              <p className="mt-4 text-sm font-black text-brand">{company}</p>
               {tags.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
                   {tags.map((tag) => (

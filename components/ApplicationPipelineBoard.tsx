@@ -133,7 +133,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
               }}
               className={clsx(
                 "rounded-lg border border-slate-200 bg-white/70 p-3 transition",
-                isActive && "border-blue-300 bg-blue-50/70 shadow-lg shadow-blue-200/40",
+                isActive && "border-accent bg-lavender/50/70 shadow-lg shadow-blue-200/40",
                 isPending && "opacity-90"
               )}
             >

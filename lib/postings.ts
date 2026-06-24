@@ -149,11 +149,13 @@ function matchesPostingSearch(posting: InternshipPosting, searchQuery: string, t
   const query = searchQuery.trim();
   const location = targetLocation.trim();
   const haystack = `${posting.company} ${posting.title} ${posting.location} ${posting.description} ${posting.tags.join(" ")}`.toLowerCase();
+  const normalizedQuery = query.toLowerCase();
+  const companyMatch = Boolean(normalizedQuery && posting.company.toLowerCase().includes(normalizedQuery));
   const queryTerms = buildAdzunaQueryVariants(query)
     .flatMap((variant) => variant.toLowerCase().split(/\s+/))
     .filter((term) => term.length > 2 && !["intern", "internship"].includes(term));
   const queryMatch = !queryTerms.length || queryTerms.some((term) => haystack.includes(term));
-  const locationMatch = !location || includesAny(posting.location, [location, "remote", "united states", "usa"]);
+  const locationMatch = companyMatch || !location || includesAny(posting.location, [location, "remote", "united states", "usa"]);
 
   return queryMatch && locationMatch;
 }
@@ -528,7 +530,7 @@ async function searchAdzunaPostings(searchQuery: string, targetLocation: string,
 
 export async function searchInternshipPostings({ query, location, profile }: SearchPostingsOptions = {}): Promise<PostingSearchResult> {
   const searchQuery = query?.trim() || profile?.targetRoles[0] || "intern";
-  const targetLocation = location?.trim() || profile?.targetLocations[0] || "";
+  const targetLocation = typeof location === "string" ? location.trim() : query?.trim() ? "" : profile?.targetLocations[0] || "";
 
   try {
     const curatedResults = await searchCuratedGithubPostings(searchQuery, targetLocation, profile);

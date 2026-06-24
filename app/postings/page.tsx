@@ -109,7 +109,7 @@ export default async function PostingsPage({
           </label>
           <label className="grid gap-2 text-sm font-bold text-slate-700">
             Location
-            <input name="location" list="location-examples" defaultValue={searchParams?.location ?? profile.targetLocations[0] ?? ""} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Remote" />
+            <input name="location" list="location-examples" defaultValue={searchParams?.location ?? ""} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder={profile.targetLocations[0] ?? "Remote"} />
             <datalist id="location-examples">
               {locationSuggestions.map((example) => (
                 <option key={example} value={example} />

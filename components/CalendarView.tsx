@@ -64,20 +64,31 @@ function getWeekDays(anchor: Date): Date[] {
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-export function CalendarView({ applications, initialEvents }: { applications: Application[]; initialEvents: CalendarEvent[] }) {
+function buildEvents(applications: Application[], dbEvents: CalendarEvent[], todayStr: string): CalendarEvent[] {
+  const derived: CalendarEvent[] = [];
+  for (const app of applications) {
+    if (app.deadline && /^\d{4}-\d{2}-\d{2}$/.test(app.deadline)) {
+      derived.push({ id: `derived-dl-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "deadline", date: app.deadline });
+    }
+    if (["applied", "interviewing", "offer"].includes(app.status)) {
+      derived.push({ id: `derived-sub-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "submitted", date: todayStr });
+    }
+  }
+  const dbKeys = new Set(dbEvents.map((e) => `${e.applicationId}-${e.eventType}`));
+  return [...dbEvents, ...derived.filter((e) => !dbKeys.has(`${e.applicationId}-${e.eventType}`))];
+}
+
+export function CalendarView({ applications, dbEvents }: { applications: Application[]; dbEvents: CalendarEvent[] }) {
   const today = new Date();
+  const todayStr = toYMD(today);
   const [view, setView] = useState<View>("month");
   const [anchor, setAnchor] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
-  const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
+  const [events, setEvents] = useState<CalendarEvent[]>(() => buildEvents(applications, dbEvents, todayStr));
 
-  // Merge in any new events pushed from the server (e.g. status changed to applied)
+  // Re-derive when server pushes fresh dbEvents (e.g. after drag to applied)
   useEffect(() => {
-    setEvents((prev) => {
-      const existingIds = new Set(prev.map((e) => e.id));
-      const incoming = initialEvents.filter((e) => !existingIds.has(e.id));
-      return incoming.length > 0 ? [...prev, ...incoming] : prev;
-    });
-  }, [initialEvents]);
+    setEvents(buildEvents(applications, dbEvents, todayStr));
+  }, [dbEvents]);
   const [dragApp, setDragApp] = useState<Application | null>(null);
   const [dragEvent, setDragEvent] = useState<CalendarEvent | null>(null);
   const [activeDate, setActiveDate] = useState<string | null>(null);

@@ -66,6 +66,19 @@ function activeTabClass(active: boolean) {
   return active ? "bg-purple-800 text-white shadow-lg shadow-purple-800/20" : "bg-white text-slate-700 ring-1 ring-slate-200 hover:text-purple-800";
 }
 
+function buildReturnHref(kind: PostingKind, searchParams?: { q?: string; location?: string; remote?: RemoteFilter; minFit?: string; sort?: PostingSort }) {
+  const basePath = kind === "new-grad" ? "/postings/new-grad" : "/postings/internships";
+  const params = new URLSearchParams();
+
+  if (searchParams?.q) params.set("q", searchParams.q);
+  if (searchParams?.location) params.set("location", searchParams.location);
+  if (searchParams?.remote) params.set("remote", searchParams.remote);
+  if (searchParams?.minFit) params.set("minFit", searchParams.minFit);
+  params.set("sort", "fit");
+
+  return `${basePath}?${params.toString()}`;
+}
+
 export async function PostingsPageView({
   kind,
   searchParams,
@@ -102,6 +115,7 @@ export async function PostingsPageView({
       ? "Search current entry-level and new graduate roles from Jobright, Intern-list, GitHub, and live job APIs."
       : "Search current internship-style roles from Jobright, Intern-list, GitHub, and live job APIs.";
   const resetHref = kind === "new-grad" ? "/postings/new-grad" : "/postings/internships";
+  const returnHref = buildReturnHref(kind, searchParams);
 
   return (
     <>
@@ -148,7 +162,7 @@ export async function PostingsPageView({
         </div>
 
         {postings.length > 0 ? (
-          <PostingsTable postings={postings} />
+          <PostingsTable postings={postings} returnTo={returnHref} />
         ) : (
           <div className="mt-8">
             <EmptyState icon={Search} title="No postings found" description="Try a broader keyword, clear the location, or lower the minimum fit." actionHref={resetHref} actionLabel="Reset search" />

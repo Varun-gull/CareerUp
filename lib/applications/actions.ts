@@ -7,7 +7,18 @@ import { getDateKeyStartUtcIso, getNextStreak, getTodayKey, isBrokenStreak } fro
 import type { ApplicationStatus } from "@/lib/types";
 
 function redirectWithMessage(path: string, message: string): never {
-  redirect(`${path}?message=${encodeURIComponent(message)}`);
+  const separator = path.includes("?") ? "&" : "?";
+  redirect(`${path}${separator}message=${encodeURIComponent(message)}`);
+}
+
+function getSafePostingsReturnTo(value: FormDataEntryValue | null) {
+  const returnTo = String(value ?? "");
+
+  if (returnTo.startsWith("/postings/internships") || returnTo.startsWith("/postings/new-grad")) {
+    return returnTo;
+  }
+
+  return "/postings/internships";
 }
 
 const validStatuses: ApplicationStatus[] = ["saved", "applied", "interviewing", "offer", "rejected"];
@@ -196,9 +207,10 @@ export async function savePostingApplication(formData: FormData) {
   const location = String(formData.get("location") ?? "").trim();
   const sourceUrl = String(formData.get("sourceUrl") ?? "").trim();
   const fitScore = Number(formData.get("fitScore") ?? 75);
+  const returnTo = getSafePostingsReturnTo(formData.get("returnTo"));
 
   if (!company || !role || !sourceUrl) {
-    redirectWithMessage("/postings", "This posting is missing required details.");
+    redirectWithMessage(returnTo, "This posting is missing required details.");
   }
 
   const { data: existing } = await supabase
@@ -209,7 +221,7 @@ export async function savePostingApplication(formData: FormData) {
     .maybeSingle<{ id: string }>();
 
   if (existing) {
-    redirectWithMessage("/applications", "That posting is already in your tracker.");
+    redirectWithMessage(returnTo, "That posting is already in your tracker.");
   }
 
   const { error } = await supabase.from("applications").insert({
@@ -224,7 +236,7 @@ export async function savePostingApplication(formData: FormData) {
   });
 
   if (error) {
-    redirectWithMessage("/postings", error.message);
+    redirectWithMessage(returnTo, error.message);
   }
 
   await supabase.rpc("award_xp", { amount: 5 });
@@ -254,7 +266,10 @@ export async function savePostingApplication(formData: FormData) {
   revalidatePath("/leaderboard");
   revalidatePath("/profile");
   revalidatePath("/calendar");
-  redirectWithMessage("/applications", "Posting saved to your tracker. You earned 5 XP.");
+  revalidatePath("/postings");
+  revalidatePath("/postings/internships");
+  revalidatePath("/postings/new-grad");
+  redirectWithMessage(returnTo, "Posting saved to your tracker. You earned 5 XP.");
 }
 
 export async function updateApplicationStatus(formData: FormData) {

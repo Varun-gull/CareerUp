@@ -1,4 +1,4 @@
-import { BookmarkPlus, ExternalLink, FileText } from "lucide-react";
+import { BookmarkPlus, ExternalLink } from "lucide-react";
 import { savePostingApplication } from "@/lib/applications/actions";
 import type { InternshipPosting } from "@/lib/types";
 
@@ -30,29 +30,29 @@ function workModeLabel(workMode: InternshipPosting["workMode"]) {
   return workMode === "remote" ? "Remote" : workMode === "hybrid" ? "Hybrid" : "On-site";
 }
 
-export function PostingsTable({ postings }: { postings: InternshipPosting[] }) {
+export function PostingsTable({ postings, returnTo }: { postings: InternshipPosting[]; returnTo: string }) {
   return (
     <div className="mt-6 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[980px] border-collapse text-left text-sm">
+        <table className="w-full min-w-[1060px] border-collapse text-left text-sm">
           <thead className="bg-slate-50 text-xs font-black uppercase tracking-wide text-slate-500">
             <tr>
               <th className="w-12 border-b border-slate-200 px-4 py-3">#</th>
-              <th className="border-b border-slate-200 px-4 py-3">Position Title</th>
-              <th className="border-b border-slate-200 px-4 py-3">Date</th>
-              <th className="border-b border-slate-200 px-4 py-3">Apply</th>
-              <th className="border-b border-slate-200 px-4 py-3">Work Model</th>
-              <th className="border-b border-slate-200 px-4 py-3">Location</th>
-              <th className="border-b border-slate-200 px-4 py-3">Company</th>
-              <th className="border-b border-slate-200 px-4 py-3">Fit</th>
-              <th className="border-b border-slate-200 px-4 py-3">CareerUp</th>
+              <th className="w-[32%] border-b border-slate-200 px-4 py-3">Position Title</th>
+              <th className="w-24 border-b border-slate-200 px-4 py-3">Date</th>
+              <th className="w-28 border-b border-slate-200 px-4 py-3">Apply</th>
+              <th className="w-32 border-b border-slate-200 px-4 py-3">Work Model</th>
+              <th className="w-[18%] border-b border-slate-200 px-4 py-3">Location</th>
+              <th className="w-[17%] border-b border-slate-200 px-4 py-3">Company</th>
+              <th className="w-20 border-b border-slate-200 px-4 py-3">Fit</th>
+              <th className="w-28 border-b border-slate-200 px-4 py-3">Save</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {postings.map((posting, index) => (
               <tr key={posting.id} className="align-middle transition hover:bg-purple-50/40">
                 <td className="px-4 py-3 text-center font-bold text-slate-400">{index + 1}</td>
-                <td className="max-w-[340px] px-4 py-3">
+                <td className="max-w-[420px] px-4 py-3">
                   <p className="truncate font-black text-ink" title={posting.title}>
                     {posting.title}
                   </p>
@@ -86,34 +86,20 @@ export function PostingsTable({ postings }: { postings: InternshipPosting[] }) {
                   <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-black ${fitTone(posting.fitScore)}`}>{posting.fitScore}%</span>
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <form action="/resume-optimization" method="get">
-                      <input type="hidden" name="company" value={posting.company} />
-                      <input type="hidden" name="role" value={posting.title} />
-                      <input type="hidden" name="description" value={posting.description.slice(0, 1200)} />
-                      <input type="hidden" name="tags" value={posting.tags.join(", ")} />
-                      <input type="hidden" name="url" value={posting.url} />
-                      <button
-                        type="submit"
-                        className="inline-flex min-h-8 items-center justify-center rounded-md border border-slate-200 px-2.5 text-xs font-black text-slate-700 transition hover:border-purple-300 hover:text-purple-800"
-                      >
-                        <FileText size={14} />
-                      </button>
-                    </form>
-                    <form action={savePostingApplication}>
-                      <input type="hidden" name="company" value={posting.company} />
-                      <input type="hidden" name="role" value={posting.title} />
-                      <input type="hidden" name="location" value={posting.location} />
-                      <input type="hidden" name="sourceUrl" value={posting.url} />
-                      <input type="hidden" name="fitScore" value={posting.fitScore} />
-                      <button
-                        type="submit"
-                        className="inline-flex min-h-8 items-center justify-center rounded-md bg-purple-800 px-2.5 text-xs font-black text-white shadow-sm transition hover:bg-purple-900"
-                      >
-                        <BookmarkPlus className="mr-1" size={14} /> Save
-                      </button>
-                    </form>
-                  </div>
+                  <form action={savePostingApplication}>
+                    <input type="hidden" name="company" value={posting.company} />
+                    <input type="hidden" name="role" value={posting.title} />
+                    <input type="hidden" name="location" value={posting.location} />
+                    <input type="hidden" name="sourceUrl" value={posting.url} />
+                    <input type="hidden" name="fitScore" value={posting.fitScore} />
+                    <input type="hidden" name="returnTo" value={returnTo} />
+                    <button
+                      type="submit"
+                      className="inline-flex min-h-8 w-full items-center justify-center rounded-md bg-purple-800 px-3 text-xs font-black text-white shadow-sm transition hover:bg-purple-900"
+                    >
+                      <BookmarkPlus className="mr-1" size={14} /> Save
+                    </button>
+                  </form>
                 </td>
               </tr>
             ))}

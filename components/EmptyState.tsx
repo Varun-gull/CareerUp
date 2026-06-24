@@ -16,7 +16,7 @@ export function EmptyState({
 }) {
   return (
     <section className="card flex flex-col items-center px-6 py-12 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-slate-100 text-[#2F4156]">
+      <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-slate-100 text-blue-700">
         <Icon size={28} />
       </div>
       <h2 className="mt-5 text-2xl font-black text-ink">{title}</h2>

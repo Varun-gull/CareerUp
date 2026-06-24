@@ -91,10 +91,10 @@ export default async function PostingsPage({
           </div>
         </div>
 
-{searchParams?.message && <p className="mt-5 rounded-lg bg-[#C8D9E6]/40 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
+{searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
 
         {profile.resumeKeywords.length > 0 && (
-          <div className="mt-5 rounded-lg border border-blue-100 bg-[#C8D9E6]/40 px-4 py-3 text-sm font-bold text-blue-800">
+          <div className="mt-5 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-800">
             Resume matching active with {profile.resumeKeywords.length} keywords.
           </div>
         )}
@@ -110,7 +110,7 @@ export default async function PostingsPage({
         />
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
-          <Link href="/postings" className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200 hover:text-[#2F4156]">
+          <Link href="/postings" className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200 hover:text-blue-700">
             <RotateCcw className="mr-1" size={14} /> Reset
           </Link>
           <span className="text-sm font-bold text-slate-600">

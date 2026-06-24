@@ -3,14 +3,14 @@ import { savePostingApplication } from "@/lib/applications/actions";
 import type { InternshipPosting } from "@/lib/types";
 
 export function PostingCard({ posting }: { posting: InternshipPosting }) {
-  const fitTone = posting.fitScore >= 80 ? "bg-emerald-50 text-emerald-700" : posting.fitScore >= 70 ? "bg-[#C8D9E6]/40 text-[#2F4156]" : "bg-slate-100 text-slate-700";
+  const fitTone = posting.fitScore >= 80 ? "bg-emerald-50 text-emerald-700" : posting.fitScore >= 70 ? "bg-blue-50 text-blue-700" : "bg-slate-100 text-slate-700";
   const workModeLabel = posting.workMode === "remote" ? "Remote" : posting.workMode === "hybrid" ? "Hybrid" : "On-site";
 
   return (
     <article className="card p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-black text-[#567C8D]">{posting.company}</p>
+          <p className="text-sm font-black text-blue-600">{posting.company}</p>
           <h3 className="mt-1 text-xl font-black text-ink">{posting.title}</h3>
         </div>
         <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${fitTone}`}>

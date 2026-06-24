@@ -20,11 +20,11 @@ export default async function PublicProfilePage({
     <>
       <Navbar />
       <main className="page-shell">
-        <Link href="/friends" className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-[#2F4156]">
+        <Link href="/friends" className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-blue-700">
           <ArrowLeft className="mr-2" size={16} /> Friends
         </Link>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-[#C8D9E6]/40 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
 
         {!profile ? (
           <section className="card mt-6 p-8 text-center">
@@ -36,7 +36,7 @@ export default async function PublicProfilePage({
             <div className="bg-ink px-6 py-10 text-white">
               <div className="flex flex-wrap items-center justify-between gap-5">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#567C8D] text-2xl font-black">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-blue-600 text-2xl font-black">
                     {profile.name.charAt(0)}
                   </div>
                   <div>
@@ -47,7 +47,7 @@ export default async function PublicProfilePage({
                 </div>
 
                 {isOwnProfile ? (
-                  <Link href="/profile" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold hover:border-[#8AAEC0]">
+                  <Link href="/profile" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold hover:border-blue-300">
                     Edit profile
                   </Link>
                 ) : friendship ? (
@@ -57,12 +57,12 @@ export default async function PublicProfilePage({
                 ) : user ? (
                   <form action={sendFriendRequestById}>
                     <input type="hidden" name="profileId" value={profile.id} />
-                    <button className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#567C8D] px-5 font-bold text-white shadow-lg shadow-[#567C8D]/20 hover:bg-[#4a6b7a]">
+                    <button className="inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-5 font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700">
                       <UserPlus className="mr-2" size={18} /> Add friend
                     </button>
                   </form>
                 ) : (
-                  <Link href={`/login?message=${encodeURIComponent("Log in to add this profile as a friend.")}`} className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#567C8D] px-5 font-bold text-white shadow-lg shadow-[#567C8D]/20 hover:bg-[#4a6b7a]">
+                  <Link href={`/login?message=${encodeURIComponent("Log in to add this profile as a friend.")}`} className="inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-5 font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700">
                     Log in to add
                   </Link>
                 )}
@@ -99,7 +99,7 @@ export default async function PublicProfilePage({
 function StatCard({ icon: Icon, label, value }: { icon: typeof Sparkles; label: string; value: string }) {
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
-      <Icon size={20} className="text-[#567C8D]" />
+      <Icon size={20} className="text-blue-600" />
       <p className="mt-4 text-sm font-bold text-slate-500">{label}</p>
       <p className="mt-1 text-2xl font-black text-ink">{value}</p>
     </div>
@@ -110,7 +110,7 @@ function ProfileTags({ icon: Icon, title, values, empty }: { icon: typeof Target
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
       <div className="flex items-center gap-2">
-        <Icon size={18} className="text-[#567C8D]" />
+        <Icon size={18} className="text-blue-600" />
         <h2 className="font-black text-ink">{title}</h2>
       </div>
       {values.length > 0 ? (

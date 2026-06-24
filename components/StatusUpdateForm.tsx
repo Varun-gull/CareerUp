@@ -76,13 +76,13 @@ export function StatusUpdateForm({ application, compact }: { application: Applic
           name="status"
           value={selected}
           onChange={(e) => setSelected(e.target.value as Application["status"])}
-          className="min-h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 outline-none focus:border-[#567C8D]"
+          className="min-h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 outline-none focus:border-blue-500"
         >
           {statusOptions.map((s) => (
             <option key={s.value} value={s.value}>{s.label}</option>
           ))}
         </select>
-        <button type="submit" className="min-h-10 rounded-lg bg-ink px-4 text-sm font-bold text-white transition hover:bg-[#4a6b7a]">
+        <button type="submit" className="min-h-10 rounded-lg bg-ink px-4 text-sm font-bold text-white transition hover:bg-blue-700">
           Update
         </button>
       </form>

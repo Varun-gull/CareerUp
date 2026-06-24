@@ -25,7 +25,7 @@ export function StreakCard({
   return (
     <section className="card bg-ink p-5 text-white">
       <div className="flex items-center gap-4">
-        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-[#567C8D]">
+        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-blue-600">
           <Flame size={28} />
         </div>
         <div>
@@ -40,7 +40,7 @@ export function StreakCard({
         </div>
         <p className="mt-2 text-sm leading-6 text-slate-300">{reviveHelper}</p>
         {reviveRequiredApplications > 0 && (
-          <p className="mt-2 rounded-lg bg-[#567C8D]/20 px-3 py-2 text-xs font-black text-blue-100">
+          <p className="mt-2 rounded-lg bg-blue-600/20 px-3 py-2 text-xs font-black text-blue-100">
             Revive in progress: apply to {reviveRequiredApplications} roles today.
           </p>
         )}
@@ -53,7 +53,7 @@ export function StreakCard({
             <button
               type="submit"
               disabled={!canUnlockPaidRevive}
-              className="w-full rounded-lg bg-white px-3 py-2 text-sm font-black text-ink transition hover:bg-[#C8D9E6]/40 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-slate-400"
+              className="w-full rounded-lg bg-white px-3 py-2 text-sm font-black text-ink transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-slate-400"
             >
               Unlock revive - 250 XP
             </button>

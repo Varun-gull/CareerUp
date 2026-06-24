@@ -9,7 +9,7 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
   if (sorted.length === 0) {
     return (
       <div className="card p-8 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-[#C8D9E6]/40 text-[#2F4156]">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
           <UserPlus size={22} />
         </div>
         <h2 className="mt-4 text-2xl font-black text-ink">{emptyMode === "friends" ? "No friends on the board yet" : "No leaderboard data yet"}</h2>
@@ -45,16 +45,16 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
           <div>
             <p className="font-black text-ink">
               {user.name}
-              {currentUserId === user.id && <span className="ml-2 rounded-full bg-[#C8D9E6]/40 px-2 py-0.5 text-xs font-black text-[#2F4156]">You</span>}
+              {currentUserId === user.id && <span className="ml-2 rounded-full bg-blue-50 px-2 py-0.5 text-xs font-black text-blue-700">You</span>}
             </p>
             <p className="text-sm text-slate-500">{user.school}</p>
           </div>
           <div className="space-y-2">
-            <p className="font-black text-[#2F4156]">{user.xp.toLocaleString()} XP</p>
+            <p className="font-black text-blue-700">{user.xp.toLocaleString()} XP</p>
             <RankBadge xp={user.xp} />
           </div>
           <span className="hidden items-center gap-1 font-bold text-slate-600 sm:inline-flex">
-            <Flame size={16} className="text-[#567C8D]" /> {user.streak} days
+            <Flame size={16} className="text-blue-600" /> {user.streak} days
           </span>
         </div>
       ))}

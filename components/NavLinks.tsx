@@ -25,8 +25,8 @@ export function NavLinks() {
             className={clsx(
               "rounded-lg px-4 py-2 text-sm font-bold transition-colors",
               active
-                ? "bg-white text-[#6b3fa0] shadow-sm ring-1 ring-purple-200 font-extrabold"
-                : "text-slate-600 hover:bg-white/60 hover:text-[#6b3fa0]"
+                ? "bg-white text-ink shadow-sm ring-1 ring-slate-200"
+                : "text-slate-600 hover:bg-white/70 hover:text-ink"
             )}
           >
             {item.label}

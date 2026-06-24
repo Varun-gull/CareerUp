@@ -125,25 +125,6 @@ export async function PostingsPageView({
 
         {searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
 
-        <section className="mt-6 grid gap-4 rounded-lg border border-slate-200 bg-white p-5 md:grid-cols-[1fr_1fr_1.3fr]">
-          <div>
-            <p className="text-sm font-black text-slate-500">Source</p>
-            <p className="mt-1 text-lg font-black text-ink">{searchResult.provider}</p>
-          </div>
-          <div>
-            <p className="text-sm font-black text-slate-500">Showing</p>
-            <p className="mt-1 text-lg font-black text-ink">
-              {postings.length} of {searchResult.postings.length}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm font-black text-slate-500">Matching</p>
-            <p className="mt-1 text-sm font-bold text-slate-600">
-              {profile.resumeKeywords.length > 0 ? `Resume matching active with ${profile.resumeKeywords.length} saved keywords.` : "Upload a resume to improve fit scores."}
-            </p>
-          </div>
-        </section>
-
         <PostingsSearchForm
           roleSuggestions={roleSuggestions}
           locationSuggestions={locationSuggestions}
@@ -158,7 +139,12 @@ export async function PostingsPageView({
           <Link href={resetHref} className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200 hover:text-blue-700">
             <RotateCcw className="mr-1" size={14} /> Reset
           </Link>
-          <span>Sorted by best fit</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span>
+              Showing {postings.length} of {searchResult.postings.length} results
+            </span>
+            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-700 ring-1 ring-blue-100">Sorted by best fit</span>
+          </div>
         </div>
 
         {postings.length > 0 ? (

@@ -35,24 +35,30 @@ function getInitials(name: string) {
   return initials || "CU";
 }
 
+function getFirstName(name: string) {
+  return name.split(/\s+/).filter(Boolean)[0] ?? "";
+}
+
 export async function Navbar() {
   const user = await getCurrentUser();
   const profile = user ? await getCurrentProfile() : null;
-  const initials = user ? getInitials(profile?.name ?? user.email ?? "CareerUp") : "";
+  const profileName = profile?.name ?? user?.email ?? "CareerUp";
+  const initials = user ? getInitials(profileName) : "";
+  const firstName = user ? getFirstName(profile?.name ?? "") : "";
 
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-slate-50/95 backdrop-blur">
-      <nav className="page-shell flex items-center justify-between gap-4 py-4">
-        <Link href="/dashboard" className="flex items-center gap-3 font-black text-ink">
+      <nav className="flex w-full items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+        <Link href="/dashboard" className="flex shrink-0 items-center gap-3 font-black text-ink">
           <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-ink text-white">
             <BriefcaseBusiness size={22} />
           </span>
           <span>CareerUp</span>
         </Link>
         <NavLinks />
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <CalendarWidget />
-          <ProfileDropdown initials={initials} loggedIn={!!user} />
+          <ProfileDropdown initials={initials} displayName={firstName} loggedIn={!!user} />
         </div>
       </nav>
     </header>

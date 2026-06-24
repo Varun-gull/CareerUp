@@ -4,7 +4,7 @@ import { UserRound, Users, User, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-export function ProfileDropdown({ initials, loggedIn }: { initials: string; loggedIn: boolean }) {
+export function ProfileDropdown({ initials, displayName, loggedIn }: { initials: string; displayName?: string; loggedIn: boolean }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -33,10 +33,10 @@ export function ProfileDropdown({ initials, loggedIn }: { initials: string; logg
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-slate-200 px-2 text-sm font-black text-slate-700 transition hover:border-blue-300 hover:text-blue-700"
+        className="flex h-10 min-w-10 max-w-32 items-center justify-center truncate rounded-lg border border-slate-200 bg-white px-3 text-sm font-black text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"
         aria-label="Open profile menu"
       >
-        {initials}
+        {displayName || initials}
       </button>
 
       {open && (

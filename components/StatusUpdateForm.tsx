@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { InterviewModal } from "@/components/InterviewModal";
 import { addInterviewEvent } from "@/lib/calendar/actions";
 import { updateApplicationStatus } from "@/lib/applications/actions";
+import { dispatchInterviewScheduled } from "@/lib/interviewEvents";
 import type { Application } from "@/lib/types";
 
 const statusOptions = [
@@ -42,6 +43,17 @@ export function StatusUpdateForm({ application, compact }: { application: Applic
   async function handleModalConfirm(date: string, time: string, notes: string) {
     setShowModal(false);
     submitStatus("interviewing");
+    dispatchInterviewScheduled({
+      id: `pending-${Date.now()}`,
+      applicationId: application.id,
+      company: application.company,
+      role: application.role,
+      status: "interviewing",
+      eventType: "interview",
+      date,
+      time,
+      notes,
+    });
     startTransition(async () => {
       await addInterviewEvent({
         applicationId: application.id,

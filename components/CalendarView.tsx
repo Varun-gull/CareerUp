@@ -5,6 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import clsx from "clsx";
 import { addCalendarEvent, deleteCalendarEvent, moveCalendarEvent } from "@/lib/calendar/actions";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
+import { INTERVIEW_SCHEDULED_EVENT } from "@/lib/interviewEvents";
 import type { Application, CalendarEvent } from "@/lib/types";
 
 type View = "month" | "week";
@@ -90,6 +91,19 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
   useEffect(() => {
     setEvents(buildEvents(applications, dbEvents, todayStr));
   }, [dbEvents]);
+
+  // Immediately add interview event to calendar when modal is confirmed anywhere in the app
+  useEffect(() => {
+    function handleInterviewScheduled(e: Event) {
+      const ev = (e as CustomEvent<CalendarEvent>).detail;
+      setEvents((prev) => {
+        const alreadyExists = prev.some((p) => p.applicationId === ev.applicationId && p.eventType === "interview");
+        return alreadyExists ? prev : [...prev, ev];
+      });
+    }
+    window.addEventListener(INTERVIEW_SCHEDULED_EVENT, handleInterviewScheduled);
+    return () => window.removeEventListener(INTERVIEW_SCHEDULED_EVENT, handleInterviewScheduled);
+  }, []);
   const [dragApp, setDragApp] = useState<Application | null>(null);
   const [dragEvent, setDragEvent] = useState<CalendarEvent | null>(null);
   const [activeDate, setActiveDate] = useState<string | null>(null);

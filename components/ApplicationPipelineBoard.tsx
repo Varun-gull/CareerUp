@@ -7,6 +7,7 @@ import { ApplicationCard } from "@/components/ApplicationCard";
 import { InterviewModal } from "@/components/InterviewModal";
 import { addInterviewEvent } from "@/lib/calendar/actions";
 import { updateApplicationStatus } from "@/lib/applications/actions";
+import { dispatchInterviewScheduled } from "@/lib/interviewEvents";
 import type { Application, ApplicationStatus } from "@/lib/types";
 
 type PipelineColumn = {
@@ -76,6 +77,17 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
     const { applicationId, app } = pendingInterview;
     setPendingInterview(null);
     setBoardApplications((curr) => curr.map((item) => item.id === applicationId ? { ...item, status: "interviewing" } : item));
+    dispatchInterviewScheduled({
+      id: `pending-${Date.now()}`,
+      applicationId,
+      company: app.company,
+      role: app.role,
+      status: "interviewing",
+      eventType: "interview",
+      date,
+      time,
+      notes,
+    });
     startTransition(async () => {
       const fd = new FormData();
       fd.set("applicationId", applicationId);

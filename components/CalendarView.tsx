@@ -87,9 +87,18 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
   const [anchor, setAnchor] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const [events, setEvents] = useState<CalendarEvent[]>(() => buildEvents(applications, dbEvents, todayStr));
 
-  // Re-derive when server pushes fresh dbEvents (e.g. after drag to applied)
+  // Re-derive when server pushes fresh dbEvents, but preserve any locally-added interview events
+  // that haven't been persisted to DB yet (pending-* ids from dispatchInterviewScheduled)
   useEffect(() => {
-    setEvents(buildEvents(applications, dbEvents, todayStr));
+    setEvents((prev) => {
+      const rebuilt = buildEvents(applications, dbEvents, todayStr);
+      const dbInterviewKeys = new Set(dbEvents.filter((e) => e.eventType === "interview").map((e) => e.applicationId));
+      // Keep locally-dispatched interview events that aren't in DB yet
+      const pendingInterviews = prev.filter(
+        (e) => e.eventType === "interview" && e.id.startsWith("pending-") && !dbInterviewKeys.has(e.applicationId)
+      );
+      return [...rebuilt, ...pendingInterviews];
+    });
   }, [dbEvents]);
 
   // Immediately add interview event to calendar when modal is confirmed anywhere in the app
@@ -97,8 +106,8 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
     function handleInterviewScheduled(e: Event) {
       const ev = (e as CustomEvent<CalendarEvent>).detail;
       setEvents((prev) => {
-        const alreadyExists = prev.some((p) => p.applicationId === ev.applicationId && p.eventType === "interview");
-        return alreadyExists ? prev : [...prev, ev];
+        const alreadyExists = prev.some((p) => p.applicationId === ev.applicationId && p.eventType === "interview" && !p.id.startsWith("pending-"));
+        return alreadyExists ? prev : [...prev.filter((p) => !(p.applicationId === ev.applicationId && p.eventType === "interview" && p.id.startsWith("pending-"))), ev];
       });
     }
     window.addEventListener(INTERVIEW_SCHEDULED_EVENT, handleInterviewScheduled);

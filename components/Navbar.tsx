@@ -48,7 +48,7 @@ export async function Navbar() {
   const initials = user ? getInitials(profile?.name ?? user.email ?? "CareerUp") : "";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-slate-200 bg-slate-50/95 backdrop-blur">
       <nav className="page-shell flex items-center justify-between gap-4 py-4">
         <Link href="/dashboard" className="flex items-center gap-3 font-black text-ink">
           <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-ink text-white">

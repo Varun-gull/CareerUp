@@ -12,18 +12,19 @@ import type { Application, CalendarEvent } from "@/lib/types";
 
 type View = "month" | "week";
 
-const STATUS_COLORS: Record<string, string> = {
-  saved: "bg-slate-100 text-slate-600 border-slate-300",
-  applied: "bg-slate-200 text-slate-700 border-slate-400",
-  interviewing: "bg-yellow-100 text-yellow-800 border-yellow-300",
+const EVENT_TYPE_COLORS: Record<string, string> = {
+  submitted: "bg-slate-200 text-slate-700 border-slate-400",
+  interview: "bg-yellow-100 text-yellow-800 border-yellow-300",
   offer: "bg-green-100 text-green-800 border-green-300",
-  rejected: "bg-red-50 text-red-600 border-red-200",
+  deadline: "bg-slate-100 text-slate-600 border-slate-300",
+  custom: "bg-blue-50 text-blue-700 border-blue-200",
 };
 
 const EVENT_TYPE_LABEL: Record<string, string> = {
   deadline: "Deadline",
   submitted: "Applied",
   interview: "Interview",
+  offer: "Offer",
   custom: "Event",
 };
 
@@ -80,6 +81,9 @@ function buildEvents(applications: Application[], dbEvents: CalendarEvent[], tod
     if (app.status === "interviewing") {
       const storedDate = getStoredInterviewDate(app.id);
       derived.push({ id: `derived-int-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "interview", date: storedDate ?? todayStr });
+    }
+    if (app.status === "offer") {
+      derived.push({ id: `derived-offer-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "offer", date: todayStr });
     }
   }
   const dbKeys = new Set(dbEvents.map((e) => `${e.applicationId}-${e.eventType}`));
@@ -388,7 +392,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                       onDragEnd={() => setDragEvent(null)}
                       className={clsx(
                         "group cursor-grab rounded border px-1.5 py-1 active:cursor-grabbing active:opacity-50",
-                        STATUS_COLORS[ev.status] ?? STATUS_COLORS.saved
+                        EVENT_TYPE_COLORS[ev.eventType] ?? EVENT_TYPE_COLORS.custom
                       )}
                     >
                       <div className="flex items-start justify-between gap-1">

@@ -327,6 +327,19 @@ export async function updateApplicationStatus(formData: FormData) {
     });
   }
 
+  if (nextStatus === "offer" && application.status !== "offer") {
+    const today = getTodayKey();
+    await supabase.from("calendar_events").insert({
+      user_id: user.id,
+      application_id: applicationId,
+      company: application.company,
+      role: application.role,
+      status: "offer",
+      event_type: "offer",
+      date: today,
+    });
+  }
+
   revalidatePath("/applications");
   revalidatePath("/dashboard");
   revalidatePath("/leaderboard");

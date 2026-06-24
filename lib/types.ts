@@ -98,7 +98,7 @@ export type CalendarEvent = {
   company: string;
   role: string;
   status: ApplicationStatus;
-  eventType: "deadline" | "submitted" | "custom" | "interview";
+  eventType: "deadline" | "submitted" | "custom" | "interview" | "offer";
   date: string; // YYYY-MM-DD
   time?: string;
   notes?: string;

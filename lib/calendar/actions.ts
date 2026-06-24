@@ -14,7 +14,7 @@ export async function addInterviewEvent({
   if (!supabase) return;
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
-  await supabase.from("calendar_events").insert({
+  const { error } = await supabase.from("calendar_events").insert({
     user_id: user.id,
     application_id: applicationId,
     company,
@@ -25,6 +25,20 @@ export async function addInterviewEvent({
     time: time || null,
     notes: notes || null,
   });
+
+  // If time/notes columns don't exist yet, retry without them
+  if (error) {
+    await supabase.from("calendar_events").insert({
+      user_id: user.id,
+      application_id: applicationId,
+      company,
+      role,
+      status: "interviewing",
+      event_type: "interview",
+      date,
+    });
+  }
+
   revalidatePath("/calendar");
 }
 

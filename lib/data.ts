@@ -375,14 +375,27 @@ export async function getCalendarEvents(): Promise<CalendarEvent[]> {
     });
   }
 
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from("calendar_events")
     .select("id, application_id, company, role, status, event_type, date, time, notes")
     .eq("user_id", user.id)
     .order("date", { ascending: true })
     .returns<Array<{ id: string; application_id: string; company: string; role: string; status: string; event_type: string; date: string; time: string | null; notes: string | null }>>();
 
-  if (error || !data) return [];
+  // Fallback if time/notes columns don't exist yet in Supabase
+  if (error) {
+    const fallback = await supabase
+      .from("calendar_events")
+      .select("id, application_id, company, role, status, event_type, date")
+      .eq("user_id", user.id)
+      .order("date", { ascending: true })
+      .returns<Array<{ id: string; application_id: string; company: string; role: string; status: string; event_type: string; date: string }>>();
+    if (fallback.error || !fallback.data) return [];
+    data = fallback.data.map((e) => ({ ...e, time: null, notes: null }));
+    error = null;
+  }
+
+  if (!data) return [];
 
   return data.map((e) => ({
     id: e.id,

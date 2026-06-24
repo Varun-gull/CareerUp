@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Flame } from "lucide-react";
+import { BriefcaseBusiness, Flame, CalendarDays } from "lucide-react";
 import Link from "next/link";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { getCurrentProfile, getCurrentUser } from "@/lib/data";
@@ -9,7 +9,6 @@ const navItems = [
   { href: "/interview", label: "Interview Prep" },
   { href: "/rewards", label: "Rewards" },
   { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/calendar", label: "Calendar" },
 ];
 
 function getInitials(name: string) {
@@ -37,14 +36,21 @@ export async function Navbar() {
           </span>
           <span>CareerUp</span>
         </Link>
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className="rounded-lg px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-ink">
+            <Link key={item.href} href={item.href} className="rounded-lg px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-ink">
               {item.label}
             </Link>
           ))}
         </div>
         <div className="flex items-center gap-2">
+          <Link
+            href="/calendar"
+            className="hidden h-10 w-10 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-ink sm:inline-flex"
+            aria-label="Calendar"
+          >
+            <CalendarDays size={18} />
+          </Link>
           {user && profile && (
             <Link
               href="/dashboard"

@@ -1,11 +1,13 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, CalendarDays, List, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarDays, List, X, CalendarPlus } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import clsx from "clsx";
 import { addCalendarEvent, deleteCalendarEvent, moveCalendarEvent } from "@/lib/calendar/actions";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
-import { INTERVIEW_SCHEDULED_EVENT } from "@/lib/interviewEvents";
+import { InterviewModal } from "@/components/InterviewModal";
+import { addInterviewEvent } from "@/lib/calendar/actions";
+import { INTERVIEW_SCHEDULED_EVENT, dispatchInterviewScheduled } from "@/lib/interviewEvents";
 import type { Application, CalendarEvent } from "@/lib/types";
 
 type View = "month" | "week";
@@ -116,7 +118,30 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
   const [dragApp, setDragApp] = useState<Application | null>(null);
   const [dragEvent, setDragEvent] = useState<CalendarEvent | null>(null);
   const [activeDate, setActiveDate] = useState<string | null>(null);
+  const [scheduleApp, setScheduleApp] = useState<Application | null>(null);
   const [, startTransition] = useTransition();
+
+  const scheduledAppIds = new Set(events.filter((e) => e.eventType === "interview").map((e) => e.applicationId));
+
+  function handleScheduleInterview(date: string, time: string, notes: string) {
+    if (!scheduleApp) return;
+    const app = scheduleApp;
+    setScheduleApp(null);
+    dispatchInterviewScheduled({
+      id: `pending-${Date.now()}`,
+      applicationId: app.id,
+      company: app.company,
+      role: app.role,
+      status: "interviewing",
+      eventType: "interview",
+      date,
+      time,
+      notes,
+    });
+    startTransition(async () => {
+      await addInterviewEvent({ applicationId: app.id, company: app.company, role: app.role, date, time, notes });
+    });
+  }
 
   const days = view === "month"
     ? getMonthGrid(anchor.getFullYear(), anchor.getMonth())
@@ -190,6 +215,14 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
 
   return (
     <div className="flex h-[calc(100vh-80px)] gap-5 overflow-hidden">
+      {scheduleApp && (
+        <InterviewModal
+          company={scheduleApp.company}
+          role={scheduleApp.role}
+          onConfirm={handleScheduleInterview}
+          onCancel={() => setScheduleApp(null)}
+        />
+      )}
       {/* Left sidebar */}
       <aside className="flex w-72 flex-none flex-col rounded-xl border border-slate-200 bg-white/80 backdrop-blur">
         <div className="border-b border-slate-100 px-4 py-4">
@@ -223,6 +256,14 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               </div>
               {app.deadline && app.deadline !== "No deadline" && (
                 <p className="mt-2 text-xs font-bold text-slate-400">Due {app.deadline}</p>
+              )}
+              {app.status === "interviewing" && !scheduledAppIds.has(app.id) && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); setScheduleApp(app); }}
+                  className="mt-2 flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-800 transition-colors"
+                >
+                  <CalendarPlus size={12} /> Add interview date
+                </button>
               )}
             </div>
           ))}

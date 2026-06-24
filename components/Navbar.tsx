@@ -20,14 +20,12 @@ function CalendarWidget() {
   return (
     <Link
       href="/calendar"
-      className="relative hidden h-10 w-10 select-none items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow sm:flex flex-col gap-0"
+      className="relative hidden h-10 w-10 select-none items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow sm:flex flex-col gap-0"
       aria-label="Calendar"
     >
-      {/* Red header strip like iOS calendar icon */}
-      <span className="absolute top-0 left-0 right-0 h-[13px] bg-blue-600 flex items-center justify-center">
-        <span className="text-[7px] font-black tracking-widest text-white uppercase leading-none">{month}</span>
+      <span className="absolute top-0 left-0 right-0 h-[16px] bg-blue-600 flex items-center justify-center">
+        <span className="text-[8px] font-black tracking-widest text-white uppercase leading-none">{month}</span>
       </span>
-      <CalendarDays size={28} className="absolute inset-0 m-auto text-slate-100" strokeWidth={1.2} />
       <span className="relative mt-3 text-[15px] font-black text-ink leading-none">{day}</span>
     </Link>
   );

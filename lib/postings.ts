@@ -25,7 +25,7 @@ type SearchPostingsOptions = {
   profile?: Profile;
 };
 
-export type PostingProvider = "Curated GitHub" | "Curated GitHub + Adzuna" | "Adzuna" | "CareerUp sample";
+export type PostingProvider = "Jobright / Intern-list" | "Jobright / Intern-list + GitHub" | "Jobright / Intern-list + Adzuna" | "Jobright / Intern-list + GitHub + Adzuna" | "Curated GitHub" | "Curated GitHub + Adzuna" | "Adzuna" | "CareerUp sample";
 
 export type PostingSearchResult = {
   postings: InternshipPosting[];
@@ -59,6 +59,20 @@ function decodeHtml(value: string) {
 function getFirstHref(value: string) {
   const match = value.match(/href=["']([^"']+)["']/i);
   return match ? decodeHtml(match[1]) : "";
+}
+
+function getMarkdownHref(value: string) {
+  const match = value.match(/\[[^\]]+\]\(([^)]+)\)/);
+  return match ? decodeHtml(match[1]) : "";
+}
+
+function stripMarkdown(value: string) {
+  return decodeHtml(value)
+    .replace(/\*\*/g, "")
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function makePostingId(source: string, company: string, title: string, url: string) {
@@ -276,6 +290,43 @@ function parseSpeedyApplyReadme(markdown: string, source: string, profile?: Prof
     .filter((posting): posting is InternshipPosting => Boolean(posting));
 }
 
+function parseJobrightReadme(markdown: string, source: string, profile?: Profile) {
+  return markdown
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith("|") && /\]\(https?:\/\//.test(line) && !/^\|\s*-/.test(line))
+    .map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim()))
+    .map((cells) => {
+      const company = stripMarkdown(cells[0] ?? "");
+      const title = stripMarkdown(cells[1] ?? "");
+      const location = stripMarkdown(cells[2] ?? "");
+      const workModel = stripMarkdown(cells[3] ?? "");
+      const postedAt = stripMarkdown(cells[4] ?? "");
+      const url = getMarkdownHref(cells[1] ?? "");
+      const workMode = getWorkMode(`${workModel} ${location}`);
+      const posting = makeCuratedPosting({
+        source,
+        company,
+        title,
+        location,
+        url,
+        age: postedAt,
+        profile
+      });
+
+      return posting
+        ? {
+            ...posting,
+            workMode,
+            remote: workMode === "remote",
+            tags: Array.from(new Set([...posting.tags, workModel].filter(Boolean))).slice(0, 5),
+            description: `${title} at ${company}. Curated from Intern-list/Jobright with a recent posting date and application link.`
+          }
+        : null;
+    })
+    .filter((posting): posting is InternshipPosting => Boolean(posting));
+}
+
 async function fetchText(url: string) {
   const response = await fetch(url, {
     next: { revalidate: 1800 }
@@ -308,6 +359,30 @@ async function searchCuratedGithubPostings(searchQuery: string, targetLocation: 
         provider: "Curated GitHub",
         usingFallback: false,
         postings: deduped.slice(0, 50)
+      }
+    : null;
+}
+
+async function searchJobrightPostings(searchQuery: string, targetLocation: string, profile?: Profile): Promise<PostingSearchResult | null> {
+  const jobrightSources = [
+    ["https://raw.githubusercontent.com/jobright-ai/2026-Software-Engineer-Internship/master/README.md", "Jobright SWE"],
+    ["https://raw.githubusercontent.com/jobright-ai/2026-Engineer-Internship/master/README.md", "Jobright Engineering"],
+    ["https://raw.githubusercontent.com/jobright-ai/2026-Data-Analysis-Internship/master/README.md", "Jobright Data"],
+    ["https://raw.githubusercontent.com/jobright-ai/2026-Product-Management-Internship/master/README.md", "Jobright Product"],
+    ["https://raw.githubusercontent.com/jobright-ai/2026-Business-Analyst-Internship/master/README.md", "Jobright Business"],
+  ] as const;
+
+  const readmes = await Promise.all(jobrightSources.map(([url]) => fetchText(url)));
+  const postings = readmes
+    .flatMap((readme, index) => parseJobrightReadme(readme, jobrightSources[index][1], profile))
+    .filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation));
+  const deduped = dedupePostings(postings);
+
+  return deduped.length > 0
+    ? {
+        provider: "Jobright / Intern-list",
+        usingFallback: false,
+        postings: deduped.slice(0, 75)
       }
     : null;
 }
@@ -533,8 +608,37 @@ export async function searchInternshipPostings({ query, location, profile }: Sea
   const targetLocation = typeof location === "string" ? location.trim() : query?.trim() ? "" : profile?.targetLocations[0] || "";
 
   try {
+    const jobrightResults = await searchJobrightPostings(searchQuery, targetLocation, profile);
     const curatedResults = await searchCuratedGithubPostings(searchQuery, targetLocation, profile);
     const adzunaResults = await searchAdzunaPostings(searchQuery, targetLocation, profile);
+
+    if (jobrightResults && curatedResults && adzunaResults) {
+      return {
+        provider: "Jobright / Intern-list + GitHub + Adzuna",
+        usingFallback: false,
+        postings: dedupePostings([...jobrightResults.postings, ...curatedResults.postings, ...adzunaResults.postings]).slice(0, 90)
+      };
+    }
+
+    if (jobrightResults && curatedResults) {
+      return {
+        provider: "Jobright / Intern-list + GitHub",
+        usingFallback: false,
+        postings: dedupePostings([...jobrightResults.postings, ...curatedResults.postings]).slice(0, 90)
+      };
+    }
+
+    if (jobrightResults && adzunaResults) {
+      return {
+        provider: "Jobright / Intern-list + Adzuna",
+        usingFallback: false,
+        postings: dedupePostings([...jobrightResults.postings, ...adzunaResults.postings]).slice(0, 90)
+      };
+    }
+
+    if (jobrightResults) {
+      return jobrightResults;
+    }
 
     if (curatedResults && adzunaResults) {
       return {

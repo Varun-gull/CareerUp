@@ -13,11 +13,11 @@ export function ApplicationCard({ application, compact = false }: { application:
 
   if (compact) {
     return (
-      <article className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <article className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
         <button
           type="button"
           onClick={() => setExpanded((current) => !current)}
-          className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left transition hover:bg-purple-50/50"
+          className="flex w-full min-w-0 items-center justify-between gap-2 px-3 py-3 text-left transition hover:bg-purple-50/50"
           aria-expanded={expanded}
         >
           <div className="min-w-0">
@@ -25,8 +25,7 @@ export function ApplicationCard({ application, compact = false }: { application:
             <h3 className="mt-0.5 truncate text-sm font-black text-ink">{application.role}</h3>
             <p className="mt-1 truncate text-xs font-bold text-slate-500">{application.location}</p>
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <ApplicationStatusBadge status={application.status} />
+          <div className="flex shrink-0 items-center">
             <ChevronDown className={`text-slate-400 transition ${expanded ? "rotate-180" : ""}`} size={18} />
           </div>
         </button>

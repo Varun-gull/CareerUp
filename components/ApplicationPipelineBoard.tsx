@@ -132,7 +132,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
                 }
               }}
               className={clsx(
-                "rounded-lg border border-slate-200 bg-white/70 p-3 transition",
+                "min-w-0 rounded-lg border border-slate-200 bg-white/70 p-3 transition",
                 isActive && "border-purple-300 bg-purple-50/70 shadow-lg shadow-purple-300/40",
                 isPending && "opacity-90"
               )}
@@ -146,7 +146,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
               </div>
 
               {columnApplications.length > 0 ? (
-                <div className="grid gap-3">
+                <div className="grid min-w-0 gap-3">
                   {columnApplications.map((application) => (
                     <div
                       key={application.id}
@@ -160,7 +160,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
                         setDraggedId(null);
                         setActiveStatus(null);
                       }}
-                      className={clsx("cursor-grab active:cursor-grabbing", draggedId === application.id && "opacity-50")}
+                      className={clsx("min-w-0 cursor-grab active:cursor-grabbing", draggedId === application.id && "opacity-50")}
                     >
                       <ApplicationCard application={application} compact />
                     </div>

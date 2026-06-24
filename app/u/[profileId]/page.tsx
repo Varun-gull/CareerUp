@@ -20,11 +20,11 @@ export default async function PublicProfilePage({
     <>
       <Navbar />
       <main className="page-shell">
-        <Link href="/friends" className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-blue-700">
+        <Link href="/friends" className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-purple-800">
           <ArrowLeft className="mr-2" size={16} /> Friends
         </Link>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
 
         {!profile ? (
           <section className="card mt-6 p-8 text-center">
@@ -36,33 +36,33 @@ export default async function PublicProfilePage({
             <div className="bg-ink px-6 py-10 text-white">
               <div className="flex flex-wrap items-center justify-between gap-5">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-blue-600 text-2xl font-black">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-purple-700 text-2xl font-black">
                     {profile.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="text-xs font-black uppercase text-blue-200">CareerUp profile</p>
+                    <p className="text-xs font-black uppercase text-purple-200">CareerUp profile</p>
                     <h1 className="mt-1 text-3xl font-black">{profile.name}</h1>
                     <p className="text-slate-300">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "CareerUp Student"}</p>
                   </div>
                 </div>
 
                 {isOwnProfile ? (
-                  <Link href="/profile" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold hover:border-blue-300">
+                  <Link href="/profile" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold hover:border-purple-300">
                     Edit profile
                   </Link>
                 ) : friendship ? (
-                  <span className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold text-blue-100">
+                  <span className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold text-purple-100">
                     {friendship.status === "accepted" ? "Friends" : friendship.direction === "incoming" ? "Request received" : "Request sent"}
                   </span>
                 ) : user ? (
                   <form action={sendFriendRequestById}>
                     <input type="hidden" name="profileId" value={profile.id} />
-                    <button className="inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-5 font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700">
+                    <button className="inline-flex min-h-11 items-center justify-center rounded-lg bg-purple-700 px-5 font-bold text-white shadow-lg shadow-purple-800/20 hover:bg-purple-800">
                       <UserPlus className="mr-2" size={18} /> Add friend
                     </button>
                   </form>
                 ) : (
-                  <Link href={`/login?message=${encodeURIComponent("Log in to add this profile as a friend.")}`} className="inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-5 font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700">
+                  <Link href={`/login?message=${encodeURIComponent("Log in to add this profile as a friend.")}`} className="inline-flex min-h-11 items-center justify-center rounded-lg bg-purple-700 px-5 font-bold text-white shadow-lg shadow-purple-800/20 hover:bg-purple-800">
                     Log in to add
                   </Link>
                 )}
@@ -99,7 +99,7 @@ export default async function PublicProfilePage({
 function StatCard({ icon: Icon, label, value }: { icon: typeof Sparkles; label: string; value: string }) {
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
-      <Icon size={20} className="text-blue-600" />
+      <Icon size={20} className="text-purple-700" />
       <p className="mt-4 text-sm font-bold text-slate-500">{label}</p>
       <p className="mt-1 text-2xl font-black text-ink">{value}</p>
     </div>
@@ -110,7 +110,7 @@ function ProfileTags({ icon: Icon, title, values, empty }: { icon: typeof Target
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
       <div className="flex items-center gap-2">
-        <Icon size={18} className="text-blue-600" />
+        <Icon size={18} className="text-purple-700" />
         <h2 className="font-black text-ink">{title}</h2>
       </div>
       {values.length > 0 ? (

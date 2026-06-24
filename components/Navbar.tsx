@@ -16,7 +16,7 @@ function CalendarWidget() {
       className="relative hidden h-10 w-10 select-none items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-md sm:flex flex-col gap-0"
       aria-label="Calendar"
     >
-      <span className="absolute top-0 left-0 right-0 h-[16px] bg-violet-600 flex items-center justify-center">
+      <span className="absolute top-0 left-0 right-0 h-[16px] bg-purple-700 flex items-center justify-center">
         <span className="text-[8px] font-black tracking-widest text-white uppercase leading-none">{month}</span>
       </span>
       <span className="relative mt-3 text-[15px] font-black text-ink leading-none">{day}</span>
@@ -47,10 +47,10 @@ export async function Navbar() {
   const firstName = user ? getFirstName(profile?.name ?? "") : "";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-violet-500/20 bg-slate-950/95 shadow-lg shadow-slate-950/10 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-purple-500/20 bg-slate-950/95 shadow-lg shadow-slate-950/10 backdrop-blur">
       <nav className="flex w-full items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/dashboard" className="flex shrink-0 items-center gap-3 font-black text-white">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-600 text-white shadow-lg shadow-violet-900/30">
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-700 text-white shadow-lg shadow-purple-950/30">
             <BriefcaseBusiness size={22} />
           </span>
           <span>CareerUp</span>

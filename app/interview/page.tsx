@@ -24,7 +24,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
           </Link>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
 
         {!isUnlocked ? (
           <section className="card mt-8 p-6">
@@ -46,7 +46,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
             <section className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
               <form action={saveInterviewAnswer} className="card min-w-0 p-5">
                 <div className="mb-5 flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
                     <MessageSquareText size={22} />
                   </div>
                   <div>
@@ -57,7 +57,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
 
                 <label className="grid min-w-0 gap-2 text-sm font-bold text-slate-700">
                   Prompt
-                  <select name="prompt" className="w-full min-w-0 max-w-full truncate rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-blue-500">
+                  <select name="prompt" className="w-full min-w-0 max-w-full truncate rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-purple-600">
                     {behavioralInterviewPrompts.map((prompt) => (
                       <option key={prompt} value={prompt}>
                         {prompt}
@@ -75,7 +75,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
 
                 <label className="mt-4 grid gap-2 text-sm font-bold text-slate-700">
                   Notes
-                  <textarea name="notes" rows={3} className="resize-none rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Keywords, company tie-in, or follow-up examples." />
+                  <textarea name="notes" rows={3} className="resize-none rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Keywords, company tie-in, or follow-up examples." />
                 </label>
 
                 <button type="submit" className="primary-button mt-5 w-full">
@@ -84,7 +84,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
               </form>
 
               <aside className="card p-5">
-                <p className="text-sm font-black text-blue-600">Answer formula</p>
+                <p className="text-sm font-black text-purple-700">Answer formula</p>
                 <h2 className="mt-1 text-xl font-black text-ink">What a strong answer needs</h2>
                 <div className="mt-4 grid gap-3">
                   {[
@@ -117,7 +117,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                     <article key={answer.id} className="card p-5">
                       <div className="flex flex-wrap items-start justify-between gap-4">
                         <div>
-                          <p className="text-sm font-black text-blue-600">{answer.createdAt}</p>
+                          <p className="text-sm font-black text-purple-700">{answer.createdAt}</p>
                           <h3 className="mt-1 text-xl font-black text-ink">{answer.prompt}</h3>
                         </div>
                         <form action={deleteInterviewAnswer}>
@@ -133,13 +133,13 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                         <AnswerSection title="Action" body={answer.action} />
                         <AnswerSection title="Result" body={answer.result} />
                       </div>
-                      {answer.notes && <p className="mt-4 rounded-lg bg-blue-50 p-3 text-sm leading-6 text-slate-700">{answer.notes}</p>}
+                      {answer.notes && <p className="mt-4 rounded-lg bg-purple-50 p-3 text-sm leading-6 text-slate-700">{answer.notes}</p>}
                     </article>
                   ))}
                 </div>
               ) : (
                 <div className="card mt-4 flex flex-col items-center px-6 py-10 text-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-slate-100 text-blue-700">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-slate-100 text-purple-800">
                     <MessageSquareText size={28} />
                   </div>
                   <h3 className="mt-5 text-2xl font-black text-ink">No answers saved yet</h3>
@@ -158,7 +158,7 @@ function StarTextarea({ name, label, placeholder }: { name: string; label: strin
   return (
     <label className="grid gap-2 text-sm font-bold text-slate-700">
       {label}
-      <textarea name={name} rows={5} className="resize-none rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder={placeholder} />
+      <textarea name={name} rows={5} className="resize-none rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder={placeholder} />
     </label>
   );
 }

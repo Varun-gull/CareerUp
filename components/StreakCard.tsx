@@ -25,26 +25,26 @@ export function StreakCard({
   return (
     <section className="card bg-ink p-5 text-white">
       <div className="flex items-center gap-4">
-        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-blue-600">
+        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-purple-700">
           <Flame size={28} />
         </div>
         <div>
-          <p className="text-sm font-bold text-blue-200">Current streak</p>
+          <p className="text-sm font-bold text-purple-200">Current streak</p>
           <p className="text-3xl font-black">{streak} days</p>
         </div>
       </div>
       <p className="mt-5 text-sm leading-6 text-slate-300">Apply to at least one role each day to keep the streak alive.</p>
       <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3">
-        <div className="flex items-center gap-2 text-sm font-black text-blue-100">
+        <div className="flex items-center gap-2 text-sm font-black text-purple-100">
           <ShieldCheck size={16} /> Streak revive
         </div>
         <p className="mt-2 text-sm leading-6 text-slate-300">{reviveHelper}</p>
         {reviveRequiredApplications > 0 && (
-          <p className="mt-2 rounded-lg bg-blue-600/20 px-3 py-2 text-xs font-black text-blue-100">
+          <p className="mt-2 rounded-lg bg-purple-700/20 px-3 py-2 text-xs font-black text-purple-100">
             Revive in progress: apply to {reviveRequiredApplications} roles today.
           </p>
         )}
-        <div className="mt-3 flex flex-wrap gap-2 text-xs font-black text-blue-100">
+        <div className="mt-3 flex flex-wrap gap-2 text-xs font-black text-purple-100">
           <span className="rounded-full bg-white/10 px-3 py-1">Free: {hasFreeRevive ? "available" : "used"}</span>
           <span className="rounded-full bg-white/10 px-3 py-1">Paid: {paidRevives}</span>
         </div>
@@ -53,7 +53,7 @@ export function StreakCard({
             <button
               type="submit"
               disabled={!canUnlockPaidRevive}
-              className="w-full rounded-lg bg-white px-3 py-2 text-sm font-black text-ink transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-slate-400"
+              className="w-full rounded-lg bg-white px-3 py-2 text-sm font-black text-ink transition hover:bg-purple-50 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-slate-400"
             >
               Unlock revive - 250 XP
             </button>

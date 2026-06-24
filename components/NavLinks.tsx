@@ -25,7 +25,7 @@ export function NavLinks() {
             className={clsx(
               "rounded-lg px-4 py-2.5 text-base font-black transition-colors",
               active
-                ? "bg-violet-600 text-white shadow-lg shadow-violet-900/30"
+                ? "bg-purple-700 text-white shadow-lg shadow-purple-950/30"
                 : "text-slate-300 hover:bg-white/10 hover:text-white"
             )}
             aria-current={active ? "page" : undefined}

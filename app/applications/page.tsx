@@ -60,7 +60,7 @@ export default async function ApplicationsPage({
             <Plus className="mr-2" size={18} /> Add role
           </Link>
         </div>
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
         {applications.length > 0 ? (
           <>
             <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
@@ -74,11 +74,11 @@ export default async function ApplicationsPage({
             <form className="card mt-6 grid gap-4 p-5 md:grid-cols-[1fr_220px_auto]">
               <label className="grid gap-2 text-sm font-bold text-slate-700">
                 Search
-                <input name="q" defaultValue={query} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Company, role, or location" />
+                <input name="q" defaultValue={query} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Company, role, or location" />
               </label>
               <label className="grid gap-2 text-sm font-bold text-slate-700">
                 Status
-                <select name="status" defaultValue={statusFilter} className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-blue-500">
+                <select name="status" defaultValue={statusFilter} className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-purple-600">
                   <option value="all">All statuses</option>
                   {pipelineColumns.map((column) => (
                     <option key={column.status} value={column.status}>

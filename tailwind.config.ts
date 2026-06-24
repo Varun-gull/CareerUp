@@ -13,8 +13,8 @@ const config: Config = {
         navy: "#111827",
         panel: "#ffffff",
         muted: "#64748b",
-        brand: "#2563eb",
-        sky: "#38bdf8",
+        brand: "#581c87",
+        sky: "#a78bfa",
         success: "#10b981",
         warning: "#f59e0b"
       },

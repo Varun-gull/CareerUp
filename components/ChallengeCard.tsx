@@ -8,7 +8,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
   return (
     <article className="card p-5">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-blue-600 text-white">
+        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-purple-700 text-white">
           {challenge.completed ? <CheckCircle2 size={22} /> : <Trophy size={22} />}
         </div>
         <span className="rounded-full bg-ink px-3 py-1 text-xs font-black text-white">+{challenge.xp} XP</span>
@@ -24,7 +24,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-slate-100">
           <div
-            className={clsx("h-full rounded-full", challenge.completed ? "bg-emerald-500" : "bg-blue-600")}
+            className={clsx("h-full rounded-full", challenge.completed ? "bg-emerald-500" : "bg-purple-700")}
             style={{ width: `${percent}%` }}
           />
         </div>

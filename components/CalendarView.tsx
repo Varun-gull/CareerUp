@@ -17,7 +17,7 @@ const EVENT_TYPE_COLORS: Record<string, string> = {
   interview: "bg-yellow-100 text-yellow-800 border-yellow-300",
   offer: "bg-green-100 text-green-800 border-green-300",
   deadline: "bg-slate-100 text-slate-600 border-slate-300",
-  custom: "bg-blue-50 text-blue-700 border-blue-200",
+  custom: "bg-purple-50 text-purple-800 border-purple-200",
 };
 
 const EVENT_TYPE_LABEL: Record<string, string> = {
@@ -270,7 +270,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-black text-blue-600">{app.company}</p>
+                  <p className="truncate text-sm font-black text-purple-700">{app.company}</p>
                   <p className="truncate text-sm font-bold text-slate-700">{app.role}</p>
                 </div>
                 <ApplicationStatusBadge status={app.status} />
@@ -298,20 +298,20 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate(-1)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-purple-300 hover:text-purple-800 transition-colors"
             >
               <ChevronLeft size={18} />
             </button>
             <span className="min-w-56 text-center text-lg font-black text-ink">{headerLabel}</span>
             <button
               onClick={() => navigate(1)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-purple-300 hover:text-purple-800 transition-colors"
             >
               <ChevronRight size={18} />
             </button>
             <button
               onClick={() => setAnchor(new Date(today.getFullYear(), today.getMonth(), 1))}
-              className="ml-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600 hover:border-blue-300 hover:text-blue-700 transition-colors"
+              className="ml-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600 hover:border-purple-300 hover:text-purple-800 transition-colors"
             >
               Today
             </button>
@@ -322,7 +322,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               onClick={() => setView("month")}
               className={clsx(
                 "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors",
-                view === "month" ? "bg-blue-600 text-white" : "text-slate-600 hover:text-blue-700"
+                view === "month" ? "bg-purple-700 text-white" : "text-slate-600 hover:text-purple-800"
               )}
             >
               <CalendarDays size={14} /> Month
@@ -331,7 +331,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               onClick={() => setView("week")}
               className={clsx(
                 "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors",
-                view === "week" ? "bg-blue-600 text-white" : "text-slate-600 hover:text-blue-700"
+                view === "week" ? "bg-purple-700 text-white" : "text-slate-600 hover:text-purple-800"
               )}
             >
               <List size={14} /> Week
@@ -369,13 +369,13 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                 onDrop={(e) => { e.preventDefault(); handleDrop(dateStr); }}
                 className={clsx(
                   "min-h-[90px] rounded-lg border p-1.5 transition-colors",
-                  isActive ? "border-blue-400 bg-blue-50" : "border-slate-100 bg-white/70",
+                  isActive ? "border-purple-500 bg-purple-50" : "border-slate-100 bg-white/70",
                   !isCurrentMonth && "opacity-40"
                 )}
               >
                 <span className={clsx(
                   "inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold",
-                  isToday ? "bg-blue-600 text-white" : "text-slate-500"
+                  isToday ? "bg-purple-700 text-white" : "text-slate-500"
                 )}>
                   {day.getDate()}
                 </span>

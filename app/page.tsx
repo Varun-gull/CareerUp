@@ -35,7 +35,7 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        <Link href="/dashboard" className="mt-8 inline-flex items-center text-sm font-black text-blue-700 hover:text-blue-800">
+        <Link href="/dashboard" className="mt-8 inline-flex items-center text-sm font-black text-purple-800 hover:text-purple-900">
           Already signed in? Open dashboard <ArrowRight className="ml-1" size={16} />
         </Link>
       </section>

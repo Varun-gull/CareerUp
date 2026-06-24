@@ -10,12 +10,12 @@ export function XpProgressBar({ xp }: { xp: number }) {
           <p className="text-sm font-bold text-slate-500">Rank progress</p>
           <h2 className="mt-1 text-2xl font-black text-ink">{xp.toLocaleString()} XP</h2>
         </div>
-        <p className="text-sm font-bold text-blue-700">
+        <p className="text-sm font-bold text-purple-800">
           {progress.next ? `${progress.remaining} XP to ${progress.next.name}` : "Max rank unlocked"}
         </p>
       </div>
       <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100">
-        <div className="h-full rounded-full bg-blue-600" style={{ width: `${progress.percent}%` }} />
+        <div className="h-full rounded-full bg-purple-700" style={{ width: `${progress.percent}%` }} />
       </div>
       <p className="mt-3 text-sm text-slate-500">{progress.current.name}</p>
     </section>

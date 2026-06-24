@@ -63,7 +63,7 @@ function sortPostings(postings: InternshipPosting[], sort: PostingSort) {
 }
 
 function activeTabClass(active: boolean) {
-  return active ? "bg-violet-700 text-white shadow-lg shadow-violet-700/20" : "bg-white text-slate-700 ring-1 ring-slate-200 hover:text-violet-700";
+  return active ? "bg-purple-800 text-white shadow-lg shadow-purple-800/20" : "bg-white text-slate-700 ring-1 ring-slate-200 hover:text-purple-800";
 }
 
 export async function PostingsPageView({
@@ -123,7 +123,7 @@ export async function PostingsPageView({
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
 
         <PostingsSearchForm
           roleSuggestions={roleSuggestions}
@@ -136,14 +136,14 @@ export async function PostingsPageView({
         />
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
-          <Link href={resetHref} className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200 hover:text-blue-700">
+          <Link href={resetHref} className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200 hover:text-purple-800">
             <RotateCcw className="mr-1" size={14} /> Reset
           </Link>
           <div className="flex flex-wrap items-center gap-3">
             <span>
               Showing {postings.length} of {searchResult.postings.length} results
             </span>
-            <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-black text-violet-700 ring-1 ring-violet-100">Sorted by best fit</span>
+            <span className="rounded-full bg-purple-50 px-3 py-1 text-xs font-black text-purple-800 ring-1 ring-purple-100">Sorted by best fit</span>
           </div>
         </div>
 

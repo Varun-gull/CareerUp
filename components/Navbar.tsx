@@ -1,15 +1,8 @@
 import { BriefcaseBusiness, CalendarDays } from "lucide-react";
 import Link from "next/link";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
+import { NavLinks } from "@/components/NavLinks";
 import { getCurrentProfile, getCurrentUser } from "@/lib/data";
-
-const navItems = [
-  { href: "/postings", label: "Postings" },
-  { href: "/applications", label: "Applications" },
-  { href: "/interview", label: "Interview Prep" },
-  { href: "/rewards", label: "Rewards" },
-  { href: "/leaderboard", label: "Leaderboard" },
-];
 
 const MONTH_ABBR = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 
@@ -56,13 +49,7 @@ export async function Navbar() {
           </span>
           <span>CareerUp</span>
         </Link>
-        <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
-          {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className="rounded-lg px-5 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-ink">
-              {item.label}
-            </Link>
-          ))}
-        </div>
+        <NavLinks />
         <div className="flex items-center gap-2">
           <CalendarWidget />
           <ProfileDropdown initials={initials} loggedIn={!!user} />

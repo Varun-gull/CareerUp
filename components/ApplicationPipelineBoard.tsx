@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { ApplicationCard } from "@/components/ApplicationCard";
 import { updateApplicationStatus } from "@/lib/applications/actions";
@@ -13,6 +14,7 @@ type PipelineColumn = {
 };
 
 export function ApplicationPipelineBoard({ applications, columns }: { applications: Application[]; columns: PipelineColumn[] }) {
+  const router = useRouter();
   const [boardApplications, setBoardApplications] = useState(applications);
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [activeStatus, setActiveStatus] = useState<ApplicationStatus | null>(null);
@@ -53,6 +55,9 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
 
       try {
         await updateApplicationStatus(formData);
+        if (nextStatus === "applied") {
+          router.refresh();
+        }
       } catch {
         setBoardApplications(previousApplications);
       }

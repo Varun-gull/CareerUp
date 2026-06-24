@@ -3,6 +3,8 @@ import { CalendarView } from "@/components/CalendarView";
 import { getApplications, getCalendarEvents } from "@/lib/data";
 import type { CalendarEvent } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+
 export default async function CalendarPage() {
   const [applications, dbEvents] = await Promise.all([getApplications(), getCalendarEvents()]);
 

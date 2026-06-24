@@ -2,7 +2,7 @@ import { applications as mockApplications, leaderboard as mockLeaderboard, profi
 import { rewardCatalog } from "./rewards/catalog";
 import type { Application, CalendarEvent, Friend, InterviewAnswer, LeaderboardUser, Profile, PublicProfile, Reward } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
-import { getVisibleStreak } from "./streak";
+import { getVisibleStreak, isBrokenStreak } from "./streak";
 
 type DbApplication = {
   id: string;
@@ -101,6 +101,7 @@ export async function getCurrentProfile(): Promise<Profile> {
     resumeUpdatedAt: data.resume_updated_at ? new Date(data.resume_updated_at).toLocaleDateString() : "",
     xp: data.xp ?? 0,
     streak: getVisibleStreak(data.last_applied_on ?? null, data.streak_count ?? 0),
+    streakBroken: isBrokenStreak(data.last_applied_on ?? null, data.streak_count ?? 0),
     streakFreeReviveUsed: data.streak_free_revive_used ?? false,
     streakPaidRevives: data.streak_paid_revives ?? 0,
     streakReviveRequiredApplications: data.streak_revive_required_applications ?? 0,

@@ -24,7 +24,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
             <p className="mt-2 text-slate-600">Today’s goal: move one internship forward and protect your streak.</p>
           </div>
           <Link href="/applications/new" className="primary-button">
-            Add internship
+            Add role
           </Link>
         </div>
         {searchParams?.message && <p className="mt-5 rounded-lg bg-white p-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">{searchParams.message}</p>}
@@ -57,6 +57,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
             <StreakCard
               streak={profile.streak}
               xp={profile.xp}
+              streakBroken={profile.streakBroken}
               freeReviveUsed={profile.streakFreeReviveUsed}
               paidRevives={profile.streakPaidRevives}
               reviveRequiredApplications={profile.streakReviveRequiredApplications}

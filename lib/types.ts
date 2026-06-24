@@ -116,6 +116,7 @@ export type Profile = {
   resumeUpdatedAt: string;
   xp: number;
   streak: number;
+  streakBroken: boolean;
   streakFreeReviveUsed: boolean;
   streakPaidRevives: number;
   streakReviveRequiredApplications: number;

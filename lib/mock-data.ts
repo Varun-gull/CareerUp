@@ -12,6 +12,7 @@ export const profile: Profile = {
   resumeUpdatedAt: "Sample",
   xp: 430,
   streak: 6,
+  streakBroken: false,
   streakFreeReviveUsed: false,
   streakPaidRevives: 0,
   streakReviveRequiredApplications: 0,

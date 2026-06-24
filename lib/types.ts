@@ -114,5 +114,8 @@ export type Profile = {
   resumeUpdatedAt: string;
   xp: number;
   streak: number;
+  streakFreeReviveUsed: boolean;
+  streakPaidRevives: number;
+  streakReviveRequiredApplications: number;
   applicationsApplied: number;
 };

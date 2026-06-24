@@ -1,10 +1,9 @@
-import { BriefcaseBusiness, Plus } from "lucide-react";
+import { BriefcaseBusiness, Flame } from "lucide-react";
 import Link from "next/link";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { getCurrentProfile, getCurrentUser } from "@/lib/data";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard" },
   { href: "/postings", label: "Postings" },
   { href: "/applications", label: "Applications" },
   { href: "/interview", label: "Interview Prep" },
@@ -46,9 +45,15 @@ export async function Navbar() {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <Link href="/applications/new" className="hidden rounded-lg bg-blue-600 p-2 text-white shadow-lg shadow-blue-600/20 sm:inline-flex" aria-label="Add application">
-            <Plus size={20} />
-          </Link>
+          {user && profile && (
+            <Link
+              href="/dashboard"
+              className="hidden h-10 items-center gap-2 rounded-lg bg-blue-600 px-3 text-sm font-black text-white shadow-lg shadow-blue-600/20 sm:inline-flex"
+              aria-label={`${profile.streak} day streak`}
+            >
+              <Flame size={18} /> {profile.streak}
+            </Link>
+          )}
           <ProfileDropdown initials={initials} loggedIn={!!user} />
         </div>
       </nav>

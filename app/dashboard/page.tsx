@@ -9,7 +9,7 @@ import { XpProgressBar } from "@/components/XpProgressBar";
 import { getApplications, getCurrentProfile } from "@/lib/data";
 import { challenges } from "@/lib/mock-data";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams?: { message?: string } }) {
   const [applications, profile] = await Promise.all([getApplications(), getCurrentProfile()]);
   const appliedCount = applications.filter((application) => application.status !== "saved").length;
 
@@ -27,6 +27,7 @@ export default async function DashboardPage() {
             Add internship
           </Link>
         </div>
+        {searchParams?.message && <p className="mt-5 rounded-lg bg-white p-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">{searchParams.message}</p>}
 
         <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <DashboardCard title="Total XP" value={profile.xp.toString()} helper="Earned from applications and challenges." icon={Trophy} />
@@ -53,7 +54,13 @@ export default async function DashboardPage() {
             </div>
           </div>
           <aside className="space-y-5">
-            <StreakCard streak={profile.streak} />
+            <StreakCard
+              streak={profile.streak}
+              xp={profile.xp}
+              freeReviveUsed={profile.streakFreeReviveUsed}
+              paidRevives={profile.streakPaidRevives}
+              reviveRequiredApplications={profile.streakReviveRequiredApplications}
+            />
             <div>
               <p className="eyebrow">XP quests</p>
               <h2 className="mt-2 text-2xl font-black text-ink">Challenges</h2>

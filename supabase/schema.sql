@@ -24,6 +24,11 @@ create table public.profiles (
   streak_count integer not null default 0,
   applications_applied integer not null default 0,
   last_applied_on date,
+  streak_free_revive_used boolean not null default false,
+  streak_paid_revives integer not null default 0 check (streak_paid_revives >= 0),
+  streak_revive_started_on date,
+  streak_revive_base_count integer,
+  streak_revive_required_applications integer not null default 0,
   role text not null default 'user' check (role in ('user', 'admin')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

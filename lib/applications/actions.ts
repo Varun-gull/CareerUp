@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { getDateKeyStartUtcIso, getNextStreak, getTodayKey, isBrokenStreak } from "@/lib/streak";
 import type { ApplicationStatus } from "@/lib/types";
 
 function redirectWithMessage(path: string, message: string): never {
@@ -10,44 +11,99 @@ function redirectWithMessage(path: string, message: string): never {
 }
 
 const validStatuses: ApplicationStatus[] = ["saved", "applied", "interviewing", "offer", "rejected"];
+const PAID_STREAK_REVIVE_COST = 250;
 
-function getNextStreak(lastAppliedOn: string | null, currentStreak: number) {
-  const today = new Date();
-  const todayKey = today.toISOString().slice(0, 10);
+async function countApplicationsAppliedToday(supabase: NonNullable<ReturnType<typeof getSupabaseServerClient>>, userId: string) {
+  const { count } = await supabase
+    .from("applications")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("status", "applied")
+    .gte("updated_at", getDateKeyStartUtcIso());
 
-  if (lastAppliedOn === todayKey) {
-    return currentStreak;
-  }
-
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-  const yesterdayKey = yesterday.toISOString().slice(0, 10);
-
-  return lastAppliedOn === yesterdayKey ? currentStreak + 1 : 1;
+  return count ?? 0;
 }
 
-async function updateDailyStreak(supabase: NonNullable<ReturnType<typeof getSupabaseServerClient>>, userId: string) {
+async function updateAppliedStreakAndStats({
+  supabase,
+  userId,
+  xpBonus,
+}: {
+  supabase: NonNullable<ReturnType<typeof getSupabaseServerClient>>;
+  userId: string;
+  xpBonus: number;
+}) {
   const { data: profile, error: loadError } = await supabase
     .from("profiles")
-    .select("streak_count, last_applied_on")
+    .select(
+      "xp, streak_count, applications_applied, last_applied_on, streak_free_revive_used, streak_paid_revives, streak_revive_started_on, streak_revive_base_count, streak_revive_required_applications"
+    )
     .eq("id", userId)
-    .single<{ streak_count: number | null; last_applied_on: string | null }>();
+    .single<{
+      xp: number | null;
+      streak_count: number | null;
+      applications_applied: number | null;
+      last_applied_on: string | null;
+      streak_free_revive_used: boolean | null;
+      streak_paid_revives: number | null;
+      streak_revive_started_on: string | null;
+      streak_revive_base_count: number | null;
+      streak_revive_required_applications: number | null;
+    }>();
 
   if (loadError) {
     return loadError;
   }
 
-  const todayKey = new Date().toISOString().slice(0, 10);
-  const streakCount = getNextStreak(profile?.last_applied_on ?? null, profile?.streak_count ?? 0);
+  const todayKey = getTodayKey();
+  const currentStreak = profile?.streak_count ?? 0;
+  const lastAppliedOn = profile?.last_applied_on ?? null;
+  const freeReviveUsed = profile?.streak_free_revive_used ?? false;
+  const paidRevives = profile?.streak_paid_revives ?? 0;
+  const applicationsAppliedToday = await countApplicationsAppliedToday(supabase, userId);
+  const inProgressReviveStartedToday = profile?.streak_revive_started_on === todayKey;
+  const missedStreak = isBrokenStreak(lastAppliedOn, currentStreak) || inProgressReviveStartedToday;
+  const updates: Record<string, string | number | boolean | null> = {
+    xp: (profile?.xp ?? 0) + xpBonus,
+    applications_applied: (profile?.applications_applied ?? 0) + 1,
+    last_applied_on: todayKey,
+  };
 
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      streak_count: streakCount,
-      last_applied_on: todayKey
-    })
-    .eq("id", userId);
+  if (!missedStreak) {
+    updates.streak_count = getNextStreak(lastAppliedOn, currentStreak);
+    updates.streak_revive_started_on = null;
+    updates.streak_revive_base_count = null;
+    updates.streak_revive_required_applications = null;
+  } else if (!freeReviveUsed) {
+    updates.streak_count = currentStreak + 1;
+    updates.streak_free_revive_used = true;
+    updates.streak_revive_started_on = null;
+    updates.streak_revive_base_count = null;
+    updates.streak_revive_required_applications = null;
+  } else if (paidRevives > 0) {
+    const reviveBaseCount = inProgressReviveStartedToday ? profile?.streak_revive_base_count ?? currentStreak : currentStreak;
+    const requiredApplications = inProgressReviveStartedToday ? profile?.streak_revive_required_applications ?? 2 : 2;
 
+    if (applicationsAppliedToday >= requiredApplications) {
+      updates.streak_count = reviveBaseCount + 1;
+      updates.streak_paid_revives = Math.max(0, paidRevives - 1);
+      updates.streak_revive_started_on = null;
+      updates.streak_revive_base_count = null;
+      updates.streak_revive_required_applications = null;
+    } else {
+      updates.streak_count = 1;
+      updates.streak_revive_started_on = todayKey;
+      updates.streak_revive_base_count = reviveBaseCount;
+      updates.streak_revive_required_applications = requiredApplications;
+    }
+  } else {
+    updates.streak_count = 1;
+    updates.streak_revive_started_on = null;
+    updates.streak_revive_base_count = null;
+    updates.streak_revive_required_applications = null;
+  }
+
+  const { error } = await supabase.from("profiles").update(updates).eq("id", userId);
   return error;
 }
 
@@ -92,11 +148,6 @@ export async function createApplication(formData: FormData) {
   }
 
   await supabase.rpc("award_xp", { amount: 5 });
-  const streakError = await updateDailyStreak(supabase, user.id);
-
-  if (streakError) {
-    redirectWithMessage("/applications", streakError.message);
-  }
 
   const { data: newApp } = await supabase
     .from("applications")
@@ -177,11 +228,6 @@ export async function savePostingApplication(formData: FormData) {
   }
 
   await supabase.rpc("award_xp", { amount: 5 });
-  const streakError = await updateDailyStreak(supabase, user.id);
-
-  if (streakError) {
-    redirectWithMessage("/applications", streakError.message);
-  }
 
   const { data: newApp } = await supabase
     .from("applications")
@@ -261,24 +307,7 @@ export async function updateApplicationStatus(formData: FormData) {
   }
 
   if (applyingForFirstTime) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("xp, streak_count, applications_applied, last_applied_on")
-      .eq("id", user.id)
-      .single<{ xp: number | null; streak_count: number | null; applications_applied: number | null; last_applied_on: string | null }>();
-
-    const todayKey = new Date().toISOString().slice(0, 10);
-    const streakCount = getNextStreak(profile?.last_applied_on ?? null, profile?.streak_count ?? 0);
-
-    const { error: profileError } = await supabase
-      .from("profiles")
-      .update({
-        xp: (profile?.xp ?? 0) + xpBonus,
-        streak_count: streakCount,
-        applications_applied: (profile?.applications_applied ?? 0) + 1,
-        last_applied_on: todayKey
-      })
-      .eq("id", user.id);
+    const profileError = await updateAppliedStreakAndStats({ supabase, userId: user.id, xpBonus });
 
     if (profileError) {
       redirectWithMessage("/applications", profileError.message);
@@ -286,7 +315,7 @@ export async function updateApplicationStatus(formData: FormData) {
   }
 
   if (nextStatus === "applied" && application.status !== "applied") {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = getTodayKey();
     await supabase.from("calendar_events").insert({
       user_id: user.id,
       application_id: applicationId,
@@ -334,4 +363,51 @@ export async function deleteApplication(formData: FormData) {
 
   revalidatePath("/applications");
   revalidatePath("/dashboard");
+}
+
+export async function unlockStreakRevive() {
+  const supabase = getSupabaseServerClient();
+
+  if (!supabase) {
+    redirectWithMessage("/dashboard", "Connect Supabase before unlocking streak revives.");
+  }
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirectWithMessage("/login", "Log in before unlocking a streak revive.");
+  }
+
+  const { data: profile, error: loadError } = await supabase
+    .from("profiles")
+    .select("xp, streak_paid_revives")
+    .eq("id", user.id)
+    .single<{ xp: number | null; streak_paid_revives: number | null }>();
+
+  if (loadError || !profile) {
+    redirectWithMessage("/dashboard", "Profile not found.");
+  }
+
+  if ((profile.xp ?? 0) < PAID_STREAK_REVIVE_COST) {
+    redirectWithMessage("/dashboard", "You need 250 XP to unlock another streak revive.");
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      xp: (profile.xp ?? 0) - PAID_STREAK_REVIVE_COST,
+      streak_paid_revives: (profile.streak_paid_revives ?? 0) + 1,
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    redirectWithMessage("/dashboard", error.message);
+  }
+
+  revalidatePath("/dashboard");
+  revalidatePath("/profile");
+  revalidatePath("/leaderboard");
+  redirectWithMessage("/dashboard", "Streak revive unlocked. Apply to 2 roles in one day to use it.");
 }

@@ -2,6 +2,7 @@ import { applications as mockApplications, leaderboard as mockLeaderboard, profi
 import { rewardCatalog } from "./rewards/catalog";
 import type { Application, CalendarEvent, Friend, InterviewAnswer, LeaderboardUser, Profile, PublicProfile, Reward } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
+import { getVisibleStreak } from "./streak";
 
 type DbApplication = {
   id: string;
@@ -31,6 +32,10 @@ type DbProfile = {
   resume_updated_at: string | null;
   xp: number | null;
   streak_count: number | null;
+  last_applied_on: string | null;
+  streak_free_revive_used: boolean | null;
+  streak_paid_revives: number | null;
+  streak_revive_required_applications: number | null;
   applications_applied: number | null;
 };
 
@@ -95,7 +100,10 @@ export async function getCurrentProfile(): Promise<Profile> {
     resumeFileName: data.resume_file_name ?? "",
     resumeUpdatedAt: data.resume_updated_at ? new Date(data.resume_updated_at).toLocaleDateString() : "",
     xp: data.xp ?? 0,
-    streak: data.streak_count ?? 0,
+    streak: getVisibleStreak(data.last_applied_on ?? null, data.streak_count ?? 0),
+    streakFreeReviveUsed: data.streak_free_revive_used ?? false,
+    streakPaidRevives: data.streak_paid_revives ?? 0,
+    streakReviveRequiredApplications: data.streak_revive_required_applications ?? 0,
     applicationsApplied: data.applications_applied ?? 0
   };
 }
@@ -142,10 +150,10 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, xp, streak_count")
+    .select("id, full_name, school, xp, streak_count, last_applied_on")
     .order("xp", { ascending: false })
     .limit(25)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "xp" | "streak_count">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "xp" | "streak_count" | "last_applied_on">>>();
 
   if (error || !data) {
     return mockLeaderboard;
@@ -156,7 +164,7 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
     name: user.full_name ?? "CareerUp Student",
     school: user.school ?? "Student",
     xp: user.xp ?? 0,
-    streak: user.streak_count ?? 0
+    streak: getVisibleStreak(user.last_applied_on ?? null, user.streak_count ?? 0)
   }));
 }
 
@@ -182,9 +190,9 @@ export async function getFriends(): Promise<Friend[]> {
 
   const { data: profiles, error: profilesError } = await supabase
     .from("profiles")
-    .select("id, full_name, email, school, xp, streak_count")
+    .select("id, full_name, email, school, xp, streak_count, last_applied_on")
     .in("id", profileIds)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "email" | "school" | "xp" | "streak_count">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "email" | "school" | "xp" | "streak_count" | "last_applied_on">>>();
 
   if (profilesError || !profiles) {
     return [];
@@ -208,7 +216,7 @@ export async function getFriends(): Promise<Friend[]> {
         email: profile.email ?? "",
         school: profile.school ?? "Student",
         xp: profile.xp ?? 0,
-        streak: profile.streak_count ?? 0,
+        streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0),
         status: friendship.status,
         direction: friendship.requester_id === user.id ? "outgoing" : "incoming"
       } satisfies Friend;
@@ -230,10 +238,10 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, xp, streak_count")
+    .select("id, full_name, school, xp, streak_count, last_applied_on")
     .in("id", ids)
     .order("xp", { ascending: false })
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "xp" | "streak_count">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "xp" | "streak_count" | "last_applied_on">>>();
 
   if (error || !data) {
     return [];
@@ -244,7 +252,7 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
     name: profile.full_name ?? "CareerUp Student",
     school: profile.school ?? "Student",
     xp: profile.xp ?? 0,
-    streak: profile.streak_count ?? 0
+    streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0)
   }));
 }
 
@@ -257,9 +265,9 @@ export async function getPublicProfile(profileId: string): Promise<PublicProfile
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied")
+    .select("id, full_name, school, major, graduation_year, target_roles, target_locations, xp, streak_count, last_applied_on, applications_applied")
     .eq("id", profileId)
-    .maybeSingle<Pick<DbProfile, "id" | "full_name" | "school" | "major" | "graduation_year" | "target_roles" | "target_locations" | "xp" | "streak_count" | "applications_applied">>();
+    .maybeSingle<Pick<DbProfile, "id" | "full_name" | "school" | "major" | "graduation_year" | "target_roles" | "target_locations" | "xp" | "streak_count" | "last_applied_on" | "applications_applied">>();
 
   if (error || !data) {
     return null;
@@ -274,7 +282,7 @@ export async function getPublicProfile(profileId: string): Promise<PublicProfile
     targetRoles: data.target_roles ?? [],
     targetLocations: data.target_locations ?? [],
     xp: data.xp ?? 0,
-    streak: data.streak_count ?? 0,
+    streak: getVisibleStreak(data.last_applied_on ?? null, data.streak_count ?? 0),
     applicationsApplied: data.applications_applied ?? 0
   };
 }

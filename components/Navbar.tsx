@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Flame, CalendarDays } from "lucide-react";
+import { BriefcaseBusiness } from "lucide-react";
 import Link from "next/link";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { getCurrentProfile, getCurrentUser } from "@/lib/data";
@@ -10,6 +10,26 @@ const navItems = [
   { href: "/rewards", label: "Rewards" },
   { href: "/leaderboard", label: "Leaderboard" },
 ];
+
+const MONTH_ABBR = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+
+function CalendarWidget() {
+  const now = new Date();
+  const month = MONTH_ABBR[now.getMonth()];
+  const day = now.getDate();
+  return (
+    <Link
+      href="/calendar"
+      className="relative hidden h-10 w-10 select-none items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-white hover:bg-slate-50 sm:flex"
+      aria-label="Calendar"
+    >
+      <span className="absolute inset-0 flex items-end justify-center pb-0.5 text-[11px] font-black uppercase tracking-widest text-slate-200 select-none">
+        {month}
+      </span>
+      <span className="relative text-base font-black text-ink leading-none">{day}</span>
+    </Link>
+  );
+}
 
 function getInitials(name: string) {
   const initials = name
@@ -44,22 +64,7 @@ export async function Navbar() {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <Link
-            href="/calendar"
-            className="hidden h-10 w-10 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-ink sm:inline-flex"
-            aria-label="Calendar"
-          >
-            <CalendarDays size={18} />
-          </Link>
-          {user && profile && (
-            <Link
-              href="/dashboard"
-              className="hidden h-10 items-center gap-2 rounded-lg bg-blue-600 px-3 text-sm font-black text-white shadow-lg shadow-blue-600/20 sm:inline-flex"
-              aria-label={`${profile.streak} day streak`}
-            >
-              <Flame size={18} /> {profile.streak}
-            </Link>
-          )}
+          <CalendarWidget />
           <ProfileDropdown initials={initials} loggedIn={!!user} />
         </div>
       </nav>

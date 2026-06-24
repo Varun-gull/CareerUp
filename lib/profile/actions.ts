@@ -109,13 +109,20 @@ export async function saveResumeProfile(formData: FormData) {
   const pastedText = String(formData.get("resumeText") ?? "");
   let resumeText = pastedText;
   let fileName = "";
+  let fileReadFailed = false;
 
   if (isUploadedFile(resumeFile)) {
     fileName = resumeFile.name;
+
+    if (Number(resumeFile.size) > 8 * 1024 * 1024) {
+      redirectWithMessage("/profile", "Resume file is too large. Upload a file under 8 MB or paste the text instead.");
+    }
+
     try {
       resumeText = await extractResumeTextFromFile(resumeFile);
     } catch {
-      redirectWithMessage("/profile", "CareerUp could not read that file. Try pasting your resume text instead.");
+      fileReadFailed = true;
+      resumeText = pastedText;
     }
   }
 
@@ -123,7 +130,12 @@ export async function saveResumeProfile(formData: FormData) {
   const keywords = extractResumeKeywords(normalizedText);
 
   if (!normalizedText || keywords.length === 0) {
-    redirectWithMessage("/profile", "Add resume text from a text-based resume before saving.");
+    redirectWithMessage(
+      "/profile",
+      fileReadFailed
+        ? "CareerUp could not read that file. Paste your resume text in the box and save again."
+        : "Add resume text from a text-based resume before saving."
+    );
   }
 
   const { error } = await supabase
@@ -142,5 +154,5 @@ export async function saveResumeProfile(formData: FormData) {
 
   revalidatePath("/profile");
   revalidatePath("/postings");
-  redirectWithMessage("/profile", `Resume saved. CareerUp found ${keywords.length} keywords for matching.`);
+  redirectWithMessage("/profile", fileReadFailed ? "Resume text saved from the pasted box because the file could not be read." : "Resume saved.");
 }

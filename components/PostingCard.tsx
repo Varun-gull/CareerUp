@@ -1,4 +1,4 @@
-import { BookmarkPlus, CalendarDays, ExternalLink, MapPin, Radio } from "lucide-react";
+import { BookmarkPlus, CalendarDays, ExternalLink, FileText, MapPin, Radio } from "lucide-react";
 import { savePostingApplication } from "@/lib/applications/actions";
 import type { InternshipPosting } from "@/lib/types";
 
@@ -25,7 +25,7 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
         <span className="inline-flex items-center gap-2">
           <Radio size={16} /> {workModeLabel}
         </span>
-<span className="inline-flex items-center gap-2">
+        <span className="inline-flex items-center gap-2">
           <CalendarDays size={16} /> {posting.postedAt}
         </span>
       </div>
@@ -46,16 +46,28 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
         <a href={posting.url} target="_blank" rel="noreferrer" className="secondary-button">
           <ExternalLink className="mr-2" size={18} /> Open posting
         </a>
-        <form action={savePostingApplication}>
-          <input type="hidden" name="company" value={posting.company} />
-          <input type="hidden" name="role" value={posting.title} />
-          <input type="hidden" name="location" value={posting.location} />
-          <input type="hidden" name="sourceUrl" value={posting.url} />
-          <input type="hidden" name="fitScore" value={posting.fitScore} />
-          <button type="submit" className="primary-button">
-            <BookmarkPlus className="mr-2" size={18} /> Save +5 XP
-          </button>
-        </form>
+        <div className="flex flex-wrap justify-end gap-3">
+          <form action="/resume-optimization" method="get">
+            <input type="hidden" name="company" value={posting.company} />
+            <input type="hidden" name="role" value={posting.title} />
+            <input type="hidden" name="description" value={posting.description.slice(0, 1200)} />
+            <input type="hidden" name="tags" value={posting.tags.join(", ")} />
+            <input type="hidden" name="url" value={posting.url} />
+            <button type="submit" className="secondary-button">
+              <FileText className="mr-2" size={18} /> Resume optimization
+            </button>
+          </form>
+          <form action={savePostingApplication}>
+            <input type="hidden" name="company" value={posting.company} />
+            <input type="hidden" name="role" value={posting.title} />
+            <input type="hidden" name="location" value={posting.location} />
+            <input type="hidden" name="sourceUrl" value={posting.url} />
+            <input type="hidden" name="fitScore" value={posting.fitScore} />
+            <button type="submit" className="primary-button">
+              <BookmarkPlus className="mr-2" size={18} /> Save +5 XP
+            </button>
+          </form>
+        </div>
       </div>
     </article>
   );

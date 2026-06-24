@@ -108,6 +108,31 @@ export async function getCurrentProfile(): Promise<Profile> {
   };
 }
 
+export async function getCurrentResumeForOptimization() {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return {
+      resumeText: "",
+      resumeKeywords: [],
+      resumeFileName: "",
+    };
+  }
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("resume_text, resume_keywords, resume_file_name")
+    .eq("id", user.id)
+    .single<Pick<DbProfile, "resume_text" | "resume_keywords" | "resume_file_name">>();
+
+  return {
+    resumeText: data?.resume_text ?? "",
+    resumeKeywords: data?.resume_keywords ?? [],
+    resumeFileName: data?.resume_file_name ?? "",
+  };
+}
+
 export async function getApplications(): Promise<Application[]> {
   const supabase = getSupabaseServerClient();
   const user = await getCurrentUser();

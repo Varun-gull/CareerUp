@@ -8,9 +8,9 @@ const navItems = [
   { href: "/postings", label: "Postings" },
   { href: "/applications", label: "Applications" },
   { href: "/interview", label: "Interview Prep" },
-  { href: "/calendar", label: "Calendar" },
   { href: "/rewards", label: "Rewards" },
   { href: "/leaderboard", label: "Leaderboard" },
+  { href: "/calendar", label: "Calendar" },
 ];
 
 function getInitials(name: string) {

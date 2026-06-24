@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { InterviewModal } from "@/components/InterviewModal";
 import { addInterviewEvent } from "@/lib/calendar/actions";
 import { updateApplicationStatus } from "@/lib/applications/actions";
@@ -15,6 +16,7 @@ const statusOptions = [
 ] as const;
 
 export function StatusUpdateForm({ application, compact }: { application: Application; compact?: boolean }) {
+  const router = useRouter();
   const [selected, setSelected] = useState(application.status);
   const [showModal, setShowModal] = useState(false);
   const [, startTransition] = useTransition();
@@ -49,6 +51,7 @@ export function StatusUpdateForm({ application, compact }: { application: Applic
         time,
         notes,
       });
+      router.refresh();
     });
   }
 

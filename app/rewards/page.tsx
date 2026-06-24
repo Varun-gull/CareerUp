@@ -23,23 +23,23 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-lavender/50 p-3 text-sm font-bold text-charcoal">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-lg bg-blue-50 p-3 text-sm font-bold text-blue-800">{searchParams.message}</p>}
 
         <section className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="card p-5">
-            <Sparkles size={22} className="text-brand" />
+            <Sparkles size={22} className="text-blue-600" />
             <p className="mt-4 text-sm font-bold text-slate-500">Available XP</p>
             <p className="mt-1 text-3xl font-black text-ink">{profile.xp.toLocaleString()}</p>
           </div>
           <div className="card p-5">
-            <Gift size={22} className="text-brand" />
+            <Gift size={22} className="text-blue-600" />
             <p className="mt-4 text-sm font-bold text-slate-500">Unlocked</p>
             <p className="mt-1 text-3xl font-black text-ink">
               {unlockedCount}/{rewards.length}
             </p>
           </div>
           <div className="card p-5">
-            <Trophy size={22} className="text-brand" />
+            <Trophy size={22} className="text-blue-600" />
             <p className="mt-4 text-sm font-bold text-slate-500">Current rank</p>
             <div className="mt-2">
               <RankBadge xp={profile.xp} />
@@ -70,7 +70,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
               <article key={reward.id} className="card p-5">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-black text-brand">{reward.category}</p>
+                    <p className="text-sm font-black text-blue-600">{reward.category}</p>
                     <h2 className="mt-1 text-xl font-black text-ink">{reward.title}</h2>
                     <p className="mt-2 text-sm leading-6 text-slate-600">{reward.description}</p>
                   </div>

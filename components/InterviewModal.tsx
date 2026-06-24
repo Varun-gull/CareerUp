@@ -47,7 +47,7 @@ export function InterviewModal({ company, role, onConfirm, onCancel }: Props) {
               ref={dateRef}
               type="date"
               defaultValue={todayLocal()}
-              className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-brand"
+              className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500"
             />
           </label>
           <label className="grid gap-1.5 text-sm font-bold text-slate-700">
@@ -55,7 +55,7 @@ export function InterviewModal({ company, role, onConfirm, onCancel }: Props) {
             <input
               ref={timeRef}
               type="time"
-              className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-brand"
+              className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500"
             />
           </label>
           <label className="grid gap-1.5 text-sm font-bold text-slate-700">
@@ -64,7 +64,7 @@ export function InterviewModal({ company, role, onConfirm, onCancel }: Props) {
               ref={notesRef}
               rows={3}
               placeholder="Interviewer name, format, things to prepare..."
-              className="resize-none rounded-lg border border-slate-200 px-4 py-3 text-sm outline-none focus:border-brand"
+              className="resize-none rounded-lg border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
             />
           </label>
         </div>

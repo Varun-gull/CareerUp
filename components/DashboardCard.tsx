@@ -18,7 +18,7 @@ export function DashboardCard({
           <p className="text-sm font-bold text-slate-500">{title}</p>
           <p className="mt-2 text-3xl font-black text-ink">{value}</p>
         </div>
-        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-lavender/50 text-brand">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
           <Icon size={23} />
         </div>
       </div>

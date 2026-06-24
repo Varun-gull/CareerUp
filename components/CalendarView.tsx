@@ -77,6 +77,9 @@ function buildEvents(applications: Application[], dbEvents: CalendarEvent[], tod
     if (["applied", "interviewing", "offer"].includes(app.status)) {
       derived.push({ id: `derived-sub-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "submitted", date: todayStr });
     }
+    if (app.status === "interviewing") {
+      derived.push({ id: `derived-int-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "interview", date: todayStr });
+    }
   }
   const dbKeys = new Set(dbEvents.map((e) => `${e.applicationId}-${e.eventType}`));
   return [...dbEvents, ...derived.filter((e) => !dbKeys.has(`${e.applicationId}-${e.eventType}`))];
@@ -127,7 +130,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
     if (!scheduleApp) return;
     const app = scheduleApp;
     setScheduleApp(null);
-    dispatchInterviewScheduled({
+    const newEvent: CalendarEvent = {
       id: `pending-${Date.now()}`,
       applicationId: app.id,
       company: app.company,
@@ -137,7 +140,12 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
       date,
       time,
       notes,
-    });
+    };
+    // Replace any existing interview event (derived or pending) for this app
+    setEvents((prev) => [
+      ...prev.filter((e) => !(e.applicationId === app.id && e.eventType === "interview")),
+      newEvent,
+    ]);
     startTransition(async () => {
       await addInterviewEvent({ applicationId: app.id, company: app.company, role: app.role, date, time, notes });
     });
@@ -257,12 +265,12 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               {app.deadline && app.deadline !== "No deadline" && (
                 <p className="mt-2 text-xs font-bold text-slate-400">Due {app.deadline}</p>
               )}
-              {app.status === "interviewing" && !scheduledAppIds.has(app.id) && (
+              {app.status === "interviewing" && (
                 <button
                   onClick={(e) => { e.stopPropagation(); setScheduleApp(app); }}
                   className="mt-2 flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-800 transition-colors"
                 >
-                  <CalendarPlus size={12} /> Add interview date
+                  <CalendarPlus size={12} /> {scheduledAppIds.has(app.id) ? "Edit interview date" : "Set interview date"}
                 </button>
               )}
             </div>

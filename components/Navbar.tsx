@@ -1,5 +1,6 @@
-import { BriefcaseBusiness, Plus, UserRound } from "lucide-react";
+import { BriefcaseBusiness, Plus } from "lucide-react";
 import Link from "next/link";
+import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { getCurrentProfile, getCurrentUser } from "@/lib/data";
 
 const navItems = [
@@ -10,7 +11,6 @@ const navItems = [
   { href: "/calendar", label: "Calendar" },
   { href: "/rewards", label: "Rewards" },
   { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/friends", label: "Friends" }
 ];
 
 function getInitials(name: string) {
@@ -49,13 +49,7 @@ export async function Navbar() {
           <Link href="/applications/new" className="hidden rounded-lg bg-blue-600 p-2 text-white shadow-lg shadow-blue-600/20 sm:inline-flex" aria-label="Add application">
             <Plus size={20} />
           </Link>
-          <Link
-            href={user ? "/profile" : "/login"}
-            className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-slate-200 px-2 text-sm font-black text-slate-700 transition hover:border-blue-300 hover:text-blue-700"
-            aria-label={user ? "Open profile" : "Log in"}
-          >
-            {user ? initials : <UserRound size={20} />}
-          </Link>
+          <ProfileDropdown initials={initials} loggedIn={!!user} />
         </div>
       </nav>
     </header>

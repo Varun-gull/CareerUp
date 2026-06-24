@@ -15,7 +15,7 @@ const navItems = [
 export function NavLinks() {
   const pathname = usePathname();
   return (
-    <div className="hidden min-w-0 flex-1 items-center justify-center gap-1 md:flex">
+    <div className="hidden min-w-0 flex-1 items-center justify-center gap-3 md:flex">
       {navItems.map((item) => {
         const active = item.label === "Postings" ? pathname.startsWith("/postings") : pathname.startsWith(item.href);
         return (
@@ -23,10 +23,10 @@ export function NavLinks() {
             key={item.href}
             href={item.href}
             className={clsx(
-              "rounded-lg px-4 py-2 text-sm font-black transition-colors",
+              "rounded-lg px-4 py-2.5 text-base font-black transition-colors",
               active
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-                : "text-slate-600 hover:bg-white hover:text-blue-700 hover:shadow-sm"
+                ? "bg-violet-600 text-white shadow-lg shadow-violet-900/30"
+                : "text-slate-300 hover:bg-white/10 hover:text-white"
             )}
             aria-current={active ? "page" : undefined}
           >

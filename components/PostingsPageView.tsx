@@ -63,7 +63,7 @@ function sortPostings(postings: InternshipPosting[], sort: PostingSort) {
 }
 
 function activeTabClass(active: boolean) {
-  return active ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" : "bg-white text-slate-700 ring-1 ring-slate-200 hover:text-blue-700";
+  return active ? "bg-violet-700 text-white shadow-lg shadow-violet-700/20" : "bg-white text-slate-700 ring-1 ring-slate-200 hover:text-violet-700";
 }
 
 export async function PostingsPageView({
@@ -143,7 +143,7 @@ export async function PostingsPageView({
             <span>
               Showing {postings.length} of {searchResult.postings.length} results
             </span>
-            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-700 ring-1 ring-blue-100">Sorted by best fit</span>
+            <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-black text-violet-700 ring-1 ring-violet-100">Sorted by best fit</span>
           </div>
         </div>
 

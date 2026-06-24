@@ -8,7 +8,7 @@ function workModeTone(workMode: InternshipPosting["workMode"]) {
   }
 
   if (workMode === "hybrid") {
-    return "bg-blue-50 text-blue-700 ring-blue-200";
+    return "bg-violet-50 text-violet-700 ring-violet-200";
   }
 
   return "bg-violet-50 text-violet-700 ring-violet-200";
@@ -20,7 +20,7 @@ function fitTone(fitScore: number) {
   }
 
   if (fitScore >= 70) {
-    return "bg-blue-50 text-blue-700";
+    return "bg-violet-50 text-violet-700";
   }
 
   return "bg-slate-100 text-slate-700";
@@ -50,7 +50,7 @@ export function PostingsTable({ postings }: { postings: InternshipPosting[] }) {
           </thead>
           <tbody className="divide-y divide-slate-100">
             {postings.map((posting, index) => (
-              <tr key={posting.id} className="align-middle transition hover:bg-blue-50/40">
+              <tr key={posting.id} className="align-middle transition hover:bg-violet-50/40">
                 <td className="px-4 py-3 text-center font-bold text-slate-400">{index + 1}</td>
                 <td className="max-w-[340px] px-4 py-3">
                   <p className="truncate font-black text-ink" title={posting.title}>
@@ -78,7 +78,7 @@ export function PostingsTable({ postings }: { postings: InternshipPosting[] }) {
                   </p>
                 </td>
                 <td className="max-w-[220px] px-4 py-3">
-                  <p className="truncate font-black text-blue-700" title={posting.company}>
+                  <p className="truncate font-black text-violet-700" title={posting.company}>
                     {posting.company}
                   </p>
                 </td>
@@ -95,7 +95,7 @@ export function PostingsTable({ postings }: { postings: InternshipPosting[] }) {
                       <input type="hidden" name="url" value={posting.url} />
                       <button
                         type="submit"
-                        className="inline-flex min-h-8 items-center justify-center rounded-md border border-slate-200 px-2.5 text-xs font-black text-slate-700 transition hover:border-blue-300 hover:text-blue-700"
+                        className="inline-flex min-h-8 items-center justify-center rounded-md border border-slate-200 px-2.5 text-xs font-black text-slate-700 transition hover:border-violet-300 hover:text-violet-700"
                       >
                         <FileText size={14} />
                       </button>
@@ -108,7 +108,7 @@ export function PostingsTable({ postings }: { postings: InternshipPosting[] }) {
                       <input type="hidden" name="fitScore" value={posting.fitScore} />
                       <button
                         type="submit"
-                        className="inline-flex min-h-8 items-center justify-center rounded-md bg-blue-600 px-2.5 text-xs font-black text-white shadow-sm transition hover:bg-blue-700"
+                        className="inline-flex min-h-8 items-center justify-center rounded-md bg-violet-700 px-2.5 text-xs font-black text-white shadow-sm transition hover:bg-violet-800"
                       >
                         <BookmarkPlus className="mr-1" size={14} /> Save
                       </button>

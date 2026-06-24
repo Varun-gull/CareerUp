@@ -22,7 +22,7 @@ export function ProfileDropdown({ initials, displayName, loggedIn }: { initials:
     return (
       <Link
         href="/login"
-        className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-slate-200 px-2 text-sm font-black text-slate-700 transition hover:border-blue-300 hover:text-blue-700"
+        className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-white/20 bg-white px-2 text-sm font-black text-slate-700 shadow-sm transition hover:border-violet-300 hover:text-violet-700"
       >
         <UserRound size={20} />
       </Link>
@@ -33,7 +33,7 @@ export function ProfileDropdown({ initials, displayName, loggedIn }: { initials:
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex h-10 min-w-10 max-w-32 items-center justify-center truncate rounded-lg border border-slate-200 bg-white px-3 text-sm font-black text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"
+        className="flex h-10 min-w-10 max-w-32 items-center justify-center truncate rounded-lg border border-white/20 bg-white px-3 text-sm font-black text-slate-700 shadow-sm transition hover:border-violet-300 hover:text-violet-700"
         aria-label="Open profile menu"
       >
         {displayName || initials}
@@ -44,14 +44,14 @@ export function ProfileDropdown({ initials, displayName, loggedIn }: { initials:
           <Link
             href="/profile"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-blue-700"
+            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-violet-50 hover:text-violet-700"
           >
             <User size={16} /> Profile
           </Link>
           <Link
             href="/friends"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-blue-700"
+            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-violet-50 hover:text-violet-700"
           >
             <Users size={16} /> Friends
           </Link>

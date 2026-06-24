@@ -14,8 +14,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 10% 0%, rgba(37, 99, 235, 0.12), transparent 28%),
-    linear-gradient(180deg, #f8fafc 0%, #eef3fb 100%);
+    radial-gradient(circle at 12% 0%, rgba(124, 58, 237, 0.16), transparent 28%),
+    radial-gradient(circle at 90% 8%, rgba(37, 99, 235, 0.12), transparent 30%),
+    linear-gradient(180deg, #e8edf7 0%, #dfe7f3 100%);
   color: #0f172a;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -38,18 +39,18 @@ textarea {
   }
 
   .card {
-    @apply rounded-lg border border-slate-200 bg-white/90 shadow-soft backdrop-blur;
+    @apply rounded-lg border border-slate-200 bg-white/95 shadow-soft backdrop-blur;
   }
 
   .eyebrow {
-    @apply text-xs font-extrabold uppercase tracking-wide text-blue-600;
+    @apply text-xs font-extrabold uppercase tracking-wide text-violet-700;
   }
 
   .primary-button {
-    @apply inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-5 font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700;
+    @apply inline-flex min-h-11 items-center justify-center rounded-lg bg-violet-700 px-5 font-bold text-white shadow-lg shadow-violet-700/20 transition hover:bg-violet-800;
   }
 
   .secondary-button {
-    @apply inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-200 bg-white px-5 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700;
+    @apply inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-200 bg-white px-5 font-bold text-slate-900 transition hover:border-violet-300 hover:text-violet-700;
   }
 }

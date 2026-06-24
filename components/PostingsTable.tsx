@@ -1,4 +1,4 @@
-import { BookmarkPlus, ExternalLink } from "lucide-react";
+import { BookmarkPlus, CheckCircle2, ExternalLink } from "lucide-react";
 import { savePostingApplication } from "@/lib/applications/actions";
 import type { InternshipPosting } from "@/lib/types";
 
@@ -30,36 +30,49 @@ function workModeLabel(workMode: InternshipPosting["workMode"]) {
   return workMode === "remote" ? "Remote" : workMode === "hybrid" ? "Hybrid" : "On-site";
 }
 
-export function PostingsTable({ postings, returnTo }: { postings: InternshipPosting[]; returnTo: string }) {
+export function PostingsTable({
+  postings,
+  returnTo,
+  savedSourceUrls,
+}: {
+  postings: InternshipPosting[];
+  returnTo: string;
+  savedSourceUrls: Set<string>;
+}) {
   return (
     <div className="mt-6 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[1060px] border-collapse text-left text-sm">
+      <div className="overflow-hidden">
+        <table className="w-full table-fixed border-collapse text-left text-sm">
           <thead className="bg-slate-50 text-xs font-black uppercase tracking-wide text-slate-500">
             <tr>
-              <th className="w-12 border-b border-slate-200 px-4 py-3">#</th>
-              <th className="w-[32%] border-b border-slate-200 px-4 py-3">Position Title</th>
-              <th className="w-24 border-b border-slate-200 px-4 py-3">Date</th>
-              <th className="w-28 border-b border-slate-200 px-4 py-3">Apply</th>
-              <th className="w-32 border-b border-slate-200 px-4 py-3">Work Model</th>
-              <th className="w-[18%] border-b border-slate-200 px-4 py-3">Location</th>
-              <th className="w-[17%] border-b border-slate-200 px-4 py-3">Company</th>
-              <th className="w-20 border-b border-slate-200 px-4 py-3">Fit</th>
-              <th className="w-28 border-b border-slate-200 px-4 py-3">Save</th>
+              <th className="hidden w-10 border-b border-slate-200 px-2 py-3 lg:table-cell">#</th>
+              <th className="w-[32%] border-b border-slate-200 px-3 py-3">Position Title</th>
+              <th className="hidden w-20 border-b border-slate-200 px-2 py-3 xl:table-cell">Date</th>
+              <th className="w-24 border-b border-slate-200 px-2 py-3">Apply</th>
+              <th className="hidden w-28 border-b border-slate-200 px-2 py-3 md:table-cell">Work Model</th>
+              <th className="w-[20%] border-b border-slate-200 px-3 py-3">Location</th>
+              <th className="hidden w-[16%] border-b border-slate-200 px-3 py-3 lg:table-cell">Company</th>
+              <th className="w-16 border-b border-slate-200 px-2 py-3">Fit</th>
+              <th className="w-24 border-b border-slate-200 px-2 py-3">Save</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {postings.map((posting, index) => (
+            {postings.map((posting, index) => {
+              const saved = savedSourceUrls.has(posting.url);
+
+              return (
               <tr key={posting.id} className="align-middle transition hover:bg-purple-50/40">
-                <td className="px-4 py-3 text-center font-bold text-slate-400">{index + 1}</td>
-                <td className="max-w-[420px] px-4 py-3">
+                <td className="hidden px-2 py-3 text-center font-bold text-slate-400 lg:table-cell">{index + 1}</td>
+                <td className="px-3 py-3">
                   <p className="truncate font-black text-ink" title={posting.title}>
                     {posting.title}
                   </p>
-                  <p className="mt-1 truncate text-xs font-bold text-slate-500">{posting.source}</p>
+                  <p className="mt-1 truncate text-xs font-bold text-slate-500" title={`${posting.company} · ${posting.source}`}>
+                    {posting.company} · {posting.source}
+                  </p>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 font-bold text-slate-600">{posting.postedAt}</td>
-                <td className="px-4 py-3">
+                <td className="hidden whitespace-nowrap px-2 py-3 font-bold text-slate-600 xl:table-cell">{posting.postedAt}</td>
+                <td className="px-2 py-3">
                   <a
                     href={posting.url}
                     target="_blank"
@@ -69,23 +82,23 @@ export function PostingsTable({ postings, returnTo }: { postings: InternshipPost
                     <ExternalLink className="mr-1" size={14} /> Apply
                   </a>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3">
+                <td className="hidden whitespace-nowrap px-2 py-3 md:table-cell">
                   <span className={`inline-flex rounded-md px-2.5 py-1 text-xs font-black ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
                 </td>
-                <td className="max-w-[230px] px-4 py-3">
+                <td className="px-3 py-3">
                   <p className="truncate font-bold text-slate-700" title={posting.location}>
                     {posting.location}
                   </p>
                 </td>
-                <td className="max-w-[220px] px-4 py-3">
+                <td className="hidden px-3 py-3 lg:table-cell">
                   <p className="truncate font-black text-purple-800" title={posting.company}>
                     {posting.company}
                   </p>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3">
+                <td className="whitespace-nowrap px-2 py-3">
                   <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-black ${fitTone(posting.fitScore)}`}>{posting.fitScore}%</span>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-2 py-3">
                   <form action={savePostingApplication}>
                     <input type="hidden" name="company" value={posting.company} />
                     <input type="hidden" name="role" value={posting.title} />
@@ -95,14 +108,21 @@ export function PostingsTable({ postings, returnTo }: { postings: InternshipPost
                     <input type="hidden" name="returnTo" value={returnTo} />
                     <button
                       type="submit"
-                      className="inline-flex min-h-8 w-full items-center justify-center rounded-md bg-purple-800 px-3 text-xs font-black text-white shadow-sm transition hover:bg-purple-900"
+                      disabled={saved}
+                      className={
+                        saved
+                          ? "inline-flex min-h-8 w-full cursor-default items-center justify-center rounded-md bg-emerald-50 px-2 text-xs font-black text-emerald-700 ring-1 ring-emerald-200"
+                          : "inline-flex min-h-8 w-full items-center justify-center rounded-md bg-purple-800 px-2 text-xs font-black text-white shadow-sm transition hover:bg-purple-900"
+                      }
                     >
-                      <BookmarkPlus className="mr-1" size={14} /> Save
+                      {saved ? <CheckCircle2 className="mr-1" size={14} /> : <BookmarkPlus className="mr-1" size={14} />}
+                      {saved ? "Saved" : "Save"}
                     </button>
                   </form>
                 </td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
       </div>

@@ -4,7 +4,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { Navbar } from "@/components/Navbar";
 import { PostingsSearchForm } from "@/components/PostingsSearchForm";
 import { PostingsTable } from "@/components/PostingsTable";
-import { getCurrentProfile } from "@/lib/data";
+import { getApplications, getCurrentProfile } from "@/lib/data";
 import { searchInternshipPostings, type PostingKind } from "@/lib/postings";
 import type { InternshipPosting } from "@/lib/types";
 
@@ -108,6 +108,8 @@ export async function PostingsPageView({
     profile,
     kind
   });
+  const applications = await getApplications();
+  const savedSourceUrls = new Set(applications.map((application) => application.source).filter((source) => source.startsWith("http")));
   const postings = sortPostings(filterPostings(searchResult.postings, remoteFilter, minFit), sort);
   const pageTitle = kind === "new-grad" ? "New grad postings" : "Internship postings";
   const pageCopy =
@@ -162,7 +164,7 @@ export async function PostingsPageView({
         </div>
 
         {postings.length > 0 ? (
-          <PostingsTable postings={postings} returnTo={returnHref} />
+          <PostingsTable postings={postings} returnTo={returnHref} savedSourceUrls={savedSourceUrls} />
         ) : (
           <div className="mt-8">
             <EmptyState icon={Search} title="No postings found" description="Try a broader keyword, clear the location, or lower the minimum fit." actionHref={resetHref} actionLabel="Reset search" />

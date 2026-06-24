@@ -42,7 +42,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
             <div>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-2xl font-black text-ink">Recent applications</h2>
-                <Link href="/applications" className="text-sm font-bold text-blue-700">
+                <Link href="/applications" className="text-sm font-bold text-[#2F4156]">
                   View all
                 </Link>
               </div>

@@ -11,7 +11,7 @@ export function ApplicationCard({ application, compact = false }: { application:
     <article className={compact ? "rounded-lg border border-slate-200 bg-white p-4 shadow-sm" : "card p-5"}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-bold text-blue-600">{application.company}</p>
+          <p className="text-sm font-bold text-[#567C8D]">{application.company}</p>
           <h3 className="mt-1 text-lg font-black text-ink">{application.role}</h3>
         </div>
         {!compact && <ApplicationStatusBadge status={application.status} />}
@@ -24,7 +24,7 @@ export function ApplicationCard({ application, compact = false }: { application:
           <CalendarDays size={16} /> Due {application.deadline}
         </span>
         {sourceIsUrl ? (
-          <a className="inline-flex items-center gap-2 font-bold text-blue-700 hover:text-blue-900" href={application.source} target="_blank" rel="noreferrer">
+          <a className="inline-flex items-center gap-2 font-bold text-[#2F4156] hover:text-[#2F4156]" href={application.source} target="_blank" rel="noreferrer">
             <ExternalLink size={16} /> Posting
           </a>
         ) : (
@@ -32,7 +32,7 @@ export function ApplicationCard({ application, compact = false }: { application:
             <ExternalLink size={16} /> {application.source}
           </span>
         )}
-        <span className="inline-flex items-center gap-2 font-bold text-blue-700">
+        <span className="inline-flex items-center gap-2 font-bold text-[#2F4156]">
           <Sparkles size={16} /> {application.fitScore}% fit
         </span>
       </div>

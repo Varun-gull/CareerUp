@@ -9,17 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0f172a",
-        navy: "#111827",
-        panel: "#ffffff",
-        muted: "#64748b",
-        brand: "#2563eb",
-        sky: "#38bdf8",
+        ink: "#2F4156",
+        navy: "#2F4156",
+        panel: "#F5EFEB",
+        muted: "#7a9aad",
+        brand: "#567C8D",
+        sky: "#C8D9E6",
         success: "#10b981",
         warning: "#f59e0b"
       },
       boxShadow: {
-        soft: "0 20px 60px rgba(15, 23, 42, 0.10)"
+        soft: "0 20px 60px rgba(47, 65, 86, 0.10)"
       }
     }
   },

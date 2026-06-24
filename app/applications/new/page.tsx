@@ -13,25 +13,25 @@ export default function NewApplicationPage({ searchParams }: { searchParams?: { 
         <form action={createApplication} className="card mt-8 grid gap-5 p-6">
           <label className="grid gap-2 text-sm font-bold text-slate-700">
             Company
-            <input name="company" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="BlueGrid AI" required />
+            <input name="company" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-[#567C8D]" placeholder="BlueGrid AI" required />
           </label>
           <label className="grid gap-2 text-sm font-bold text-slate-700">
             Role
-            <input name="role" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Software Engineering Intern" required />
+            <input name="role" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-[#567C8D]" placeholder="Software Engineering Intern" required />
           </label>
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="grid gap-2 text-sm font-bold text-slate-700">
               Location
-              <input name="location" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="Remote" />
+              <input name="location" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-[#567C8D]" placeholder="Remote" />
             </label>
             <label className="grid gap-2 text-sm font-bold text-slate-700">
               Deadline
-              <input name="deadline" type="date" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" />
+              <input name="deadline" type="date" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-[#567C8D]" />
             </label>
           </div>
           <label className="grid gap-2 text-sm font-bold text-slate-700">
             Source link
-            <input name="sourceUrl" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-500" placeholder="https://..." />
+            <input name="sourceUrl" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-[#567C8D]" placeholder="https://..." />
           </label>
           <button type="submit" className="primary-button w-full sm:w-auto">
             <Save className="mr-2" size={18} /> Save and earn 5 XP

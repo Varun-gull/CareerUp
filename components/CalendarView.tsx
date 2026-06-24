@@ -13,10 +13,10 @@ import type { Application, CalendarEvent } from "@/lib/types";
 type View = "month" | "week";
 
 const STATUS_COLORS: Record<string, string> = {
-  saved: "bg-slate-100 text-slate-700 border-slate-300",
-  applied: "bg-blue-50 text-blue-700 border-blue-300",
-  interviewing: "bg-emerald-50 text-emerald-700 border-emerald-300",
-  offer: "bg-amber-50 text-amber-700 border-amber-300",
+  saved: "bg-slate-100 text-slate-600 border-slate-300",
+  applied: "bg-slate-200 text-slate-700 border-slate-400",
+  interviewing: "bg-yellow-100 text-yellow-800 border-yellow-300",
+  offer: "bg-green-100 text-green-800 border-green-300",
   rejected: "bg-red-50 text-red-600 border-red-200",
 };
 

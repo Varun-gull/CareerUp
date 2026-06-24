@@ -98,8 +98,10 @@ export type CalendarEvent = {
   company: string;
   role: string;
   status: ApplicationStatus;
-  eventType: "deadline" | "submitted" | "custom";
+  eventType: "deadline" | "submitted" | "custom" | "interview";
   date: string; // YYYY-MM-DD
+  time?: string;
+  notes?: string;
 };
 
 export type Profile = {

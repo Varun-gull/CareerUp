@@ -352,10 +352,10 @@ export async function getCalendarEvents(): Promise<CalendarEvent[]> {
 
   const { data, error } = await supabase
     .from("calendar_events")
-    .select("id, application_id, company, role, status, event_type, date")
+    .select("id, application_id, company, role, status, event_type, date, time, notes")
     .eq("user_id", user.id)
     .order("date", { ascending: true })
-    .returns<Array<{ id: string; application_id: string; company: string; role: string; status: string; event_type: string; date: string }>>();
+    .returns<Array<{ id: string; application_id: string; company: string; role: string; status: string; event_type: string; date: string; time: string | null; notes: string | null }>>();
 
   if (error || !data) return [];
 
@@ -367,6 +367,8 @@ export async function getCalendarEvents(): Promise<CalendarEvent[]> {
     status: e.status as CalendarEvent["status"],
     eventType: e.event_type as CalendarEvent["eventType"],
     date: e.date,
+    time: e.time ?? undefined,
+    notes: e.notes ?? undefined,
   }));
 }
 

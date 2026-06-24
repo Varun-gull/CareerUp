@@ -1,15 +1,8 @@
 import { CalendarDays, ExternalLink, MapPin, Sparkles, Trash2 } from "lucide-react";
 import { ApplicationStatusBadge } from "./ApplicationStatusBadge";
-import { deleteApplication, updateApplicationStatus } from "@/lib/applications/actions";
+import { StatusUpdateForm } from "./StatusUpdateForm";
+import { deleteApplication } from "@/lib/applications/actions";
 import type { Application } from "@/lib/types";
-
-const statusOptions = [
-  { value: "saved", label: "Saved" },
-  { value: "applied", label: "Applied" },
-  { value: "interviewing", label: "Interviewing" },
-  { value: "offer", label: "Offer" },
-  { value: "rejected", label: "Rejected" }
-] as const;
 
 export function ApplicationCard({ application, compact = false }: { application: Application; compact?: boolean }) {
   const sourceIsUrl = application.source.startsWith("http://") || application.source.startsWith("https://");
@@ -44,19 +37,7 @@ export function ApplicationCard({ application, compact = false }: { application:
         </span>
       </div>
       <div className={compact ? "mt-5 grid gap-3 border-t border-slate-100 pt-4" : "mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4"}>
-        <form action={updateApplicationStatus} className={compact ? "grid gap-2" : "flex flex-wrap items-center gap-2"}>
-          <input type="hidden" name="applicationId" value={application.id} />
-          <select name="status" defaultValue={application.status} className="min-h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 outline-none focus:border-blue-500">
-            {statusOptions.map((status) => (
-              <option key={status.value} value={status.value}>
-                {status.label}
-              </option>
-            ))}
-          </select>
-          <button type="submit" className="min-h-10 rounded-lg bg-ink px-4 text-sm font-bold text-white transition hover:bg-blue-700">
-            Update
-          </button>
-        </form>
+        <StatusUpdateForm application={application} compact={compact} />
         <form action={deleteApplication} className={compact ? "justify-self-end" : undefined}>
           <input type="hidden" name="applicationId" value={application.id} />
           <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:text-red-600" aria-label={`Delete ${application.company} application`}>

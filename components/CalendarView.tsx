@@ -20,6 +20,7 @@ const STATUS_COLORS: Record<string, string> = {
 const EVENT_TYPE_LABEL: Record<string, string> = {
   deadline: "Deadline",
   submitted: "Applied",
+  interview: "Interview",
   custom: "Event",
 };
 
@@ -320,7 +321,11 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                         </button>
                       </div>
                       <p className="truncate text-xs font-medium opacity-80 leading-tight mt-0.5">{ev.role}</p>
-                      <p className="text-xs opacity-60 leading-tight mt-0.5">{EVENT_TYPE_LABEL[ev.eventType] ?? ev.eventType}</p>
+                      <p className="text-xs opacity-60 leading-tight mt-0.5">
+                        {EVENT_TYPE_LABEL[ev.eventType] ?? ev.eventType}
+                        {ev.time && ` · ${ev.time}`}
+                      </p>
+                      {ev.notes && <p className="truncate text-xs opacity-50 leading-tight mt-0.5 italic">{ev.notes}</p>}
                     </div>
                   ))}
                 </div>

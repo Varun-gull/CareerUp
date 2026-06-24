@@ -4,6 +4,30 @@ import { revalidatePath } from "next/cache";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import type { ApplicationStatus } from "@/lib/types";
 
+export async function addInterviewEvent({
+  applicationId, company, role, date, time, notes,
+}: {
+  applicationId: string; company: string; role: string;
+  date: string; time: string; notes: string;
+}) {
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  await supabase.from("calendar_events").insert({
+    user_id: user.id,
+    application_id: applicationId,
+    company,
+    role,
+    status: "interviewing",
+    event_type: "interview",
+    date,
+    time: time || null,
+    notes: notes || null,
+  });
+  revalidatePath("/calendar");
+}
+
 export async function addCalendarEvent(formData: FormData) {
   const supabase = getSupabaseServerClient();
   if (!supabase) return;

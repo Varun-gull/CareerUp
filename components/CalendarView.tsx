@@ -7,7 +7,7 @@ import { addCalendarEvent, deleteCalendarEvent, moveCalendarEvent } from "@/lib/
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
 import { InterviewModal } from "@/components/InterviewModal";
 import { addInterviewEvent } from "@/lib/calendar/actions";
-import { INTERVIEW_SCHEDULED_EVENT, dispatchInterviewScheduled } from "@/lib/interviewEvents";
+import { INTERVIEW_SCHEDULED_EVENT, dispatchInterviewScheduled, getStoredInterviewDate, clearStoredInterview } from "@/lib/interviewEvents";
 import type { Application, CalendarEvent } from "@/lib/types";
 
 type View = "month" | "week";
@@ -78,7 +78,8 @@ function buildEvents(applications: Application[], dbEvents: CalendarEvent[], tod
       derived.push({ id: `derived-sub-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "submitted", date: todayStr });
     }
     if (app.status === "interviewing") {
-      derived.push({ id: `derived-int-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "interview", date: todayStr });
+      const storedDate = getStoredInterviewDate(app.id);
+      derived.push({ id: `derived-int-${app.id}`, applicationId: app.id, company: app.company, role: app.role, status: app.status, eventType: "interview", date: storedDate ?? todayStr });
     }
   }
   const dbKeys = new Set(dbEvents.map((e) => `${e.applicationId}-${e.eventType}`));
@@ -98,6 +99,8 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
     setEvents((prev) => {
       const rebuilt = buildEvents(applications, dbEvents, todayStr);
       const dbInterviewKeys = new Set(dbEvents.filter((e) => e.eventType === "interview").map((e) => e.applicationId));
+      // Once DB has the real event, clear localStorage so derived events stop overriding
+      dbInterviewKeys.forEach((appId) => clearStoredInterview(appId));
       // Keep pending interview events (from modal) that haven't reached DB yet
       const pendingInterviews = prev.filter(
         (e) => e.eventType === "interview" && e.id.startsWith("pending-") && !dbInterviewKeys.has(e.applicationId)

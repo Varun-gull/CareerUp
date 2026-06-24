@@ -7,7 +7,6 @@ type Props = {
   company: string;
   role: string;
   onConfirm: (date: string, time: string, notes: string) => void;
-  onSkip: () => void;
   onCancel: () => void;
 };
 
@@ -16,7 +15,7 @@ function todayLocal() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-export function InterviewModal({ company, role, onConfirm, onSkip, onCancel }: Props) {
+export function InterviewModal({ company, role, onConfirm, onCancel }: Props) {
   const dateRef = useRef<HTMLInputElement>(null);
   const timeRef = useRef<HTMLInputElement>(null);
   const notesRef = useRef<HTMLTextAreaElement>(null);
@@ -73,9 +72,6 @@ export function InterviewModal({ company, role, onConfirm, onSkip, onCancel }: P
         <div className="mt-6 flex gap-3">
           <button onClick={handleConfirm} className="primary-button flex-1">
             Add to Calendar
-          </button>
-          <button onClick={onSkip} className="secondary-button">
-            Skip
           </button>
         </div>
       </div>

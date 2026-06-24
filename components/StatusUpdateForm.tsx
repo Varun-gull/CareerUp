@@ -52,11 +52,6 @@ export function StatusUpdateForm({ application, compact }: { application: Applic
     });
   }
 
-  function handleModalSkip() {
-    setShowModal(false);
-    submitStatus("interviewing");
-  }
-
   return (
     <>
       {showModal && (
@@ -64,7 +59,6 @@ export function StatusUpdateForm({ application, compact }: { application: Applic
           company={application.company}
           role={application.role}
           onConfirm={handleModalConfirm}
-          onSkip={handleModalSkip}
           onCancel={() => setShowModal(false)}
         />
       )}

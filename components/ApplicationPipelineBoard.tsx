@@ -47,7 +47,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
       return;
     }
 
-    // Intercept interviewing drop — show modal first
+    // Intercept interviewing drop — show modal to collect date/time/notes
     if (nextStatus === "interviewing" && application.status !== "interviewing") {
       setPendingInterview({ applicationId, app: application });
       return;
@@ -64,9 +64,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
 
       try {
         await updateApplicationStatus(formData);
-        if (nextStatus === "applied") {
-          router.refresh();
-        }
+        if (nextStatus === "applied") router.refresh();
       } catch {
         setBoardApplications(previousApplications);
       }
@@ -88,19 +86,6 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
     });
   }
 
-  function skipInterview() {
-    if (!pendingInterview) return;
-    const { applicationId } = pendingInterview;
-    setPendingInterview(null);
-    setBoardApplications((curr) => curr.map((item) => item.id === applicationId ? { ...item, status: "interviewing" } : item));
-    startTransition(async () => {
-      const fd = new FormData();
-      fd.set("applicationId", applicationId);
-      fd.set("status", "interviewing");
-      await updateApplicationStatus(fd);
-    });
-  }
-
   return (
     <>
     {pendingInterview && (
@@ -108,7 +93,6 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
         company={pendingInterview.app.company}
         role={pendingInterview.app.role}
         onConfirm={confirmInterview}
-        onSkip={skipInterview}
         onCancel={() => setPendingInterview(null)}
       />
     )}

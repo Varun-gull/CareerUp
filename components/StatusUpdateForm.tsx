@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { InterviewModal } from "@/components/InterviewModal";
 import { addInterviewEvent } from "@/lib/calendar/actions";
 import { updateApplicationStatus } from "@/lib/applications/actions";
 import { dispatchInterviewScheduled } from "@/lib/interviewEvents";
@@ -18,28 +19,15 @@ const statusOptions = [
 export function StatusUpdateForm({ application, compact }: { application: Application; compact?: boolean }) {
   const router = useRouter();
   const [selected, setSelected] = useState(application.status);
+  const [showModal, setShowModal] = useState(false);
   const [, startTransition] = useTransition();
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    submitStatus(selected);
     if (selected === "interviewing" && application.status !== "interviewing") {
-      const today = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
-      dispatchInterviewScheduled({
-        id: `pending-${Date.now()}`,
-        applicationId: application.id,
-        company: application.company,
-        role: application.role,
-        status: "interviewing",
-        eventType: "interview",
-        date: today,
-        time: undefined,
-        notes: undefined,
-      });
-      startTransition(async () => {
-        await addInterviewEvent({ applicationId: application.id, company: application.company, role: application.role, date: today, time: "", notes: "" });
-        router.refresh();
-      });
+      setShowModal(true);
+    } else {
+      submitStatus(selected);
     }
   }
 
@@ -52,8 +40,36 @@ export function StatusUpdateForm({ application, compact }: { application: Applic
     });
   }
 
+  function handleModalConfirm(date: string, time: string, notes: string) {
+    setShowModal(false);
+    submitStatus("interviewing");
+    dispatchInterviewScheduled({
+      id: `pending-${Date.now()}`,
+      applicationId: application.id,
+      company: application.company,
+      role: application.role,
+      status: "interviewing",
+      eventType: "interview",
+      date,
+      time,
+      notes,
+    });
+    startTransition(async () => {
+      await addInterviewEvent({ applicationId: application.id, company: application.company, role: application.role, date, time, notes });
+      router.refresh();
+    });
+  }
+
   return (
     <>
+      {showModal && (
+        <InterviewModal
+          company={application.company}
+          role={application.role}
+          onConfirm={handleModalConfirm}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
       <form onSubmit={handleSubmit} className={compact ? "grid gap-2" : "flex flex-wrap items-center gap-2"}>
         <input type="hidden" name="applicationId" value={application.id} />
         <select

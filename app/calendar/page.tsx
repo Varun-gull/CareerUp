@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
 export default async function CalendarPage() {
   const [applications, dbEvents] = await Promise.all([getApplications(), getCalendarEvents()]);
 
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
   // Derive events directly from applications so they always show up
   const derivedEvents: CalendarEvent[] = [];

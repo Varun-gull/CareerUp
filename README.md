@@ -51,6 +51,20 @@ supabase/schema.sql
 
 The app falls back to mock data until Supabase env vars are added.
 
+## Verify Profile Messages
+
+To test direct profile messaging against Supabase RLS, use two confirmed test accounts and run:
+
+```bash
+CAREERUP_TEST_SENDER_EMAIL="sender@example.com" \
+CAREERUP_TEST_SENDER_PASSWORD="password" \
+CAREERUP_TEST_RECIPIENT_EMAIL="recipient@example.com" \
+CAREERUP_TEST_RECIPIENT_PASSWORD="password" \
+npm run verify:profile-messages
+```
+
+The script sends a profile-scoped message, verifies the recipient can read it, and checks the unread count used by the notification badge.
+
 ## Live Postings
 
 The `/postings` page uses Adzuna first when `ADZUNA_APP_ID` and `ADZUNA_APP_KEY` are set. If those keys are missing or Adzuna returns no internship-style roles, it falls back to Remotive's public API, then sample postings.

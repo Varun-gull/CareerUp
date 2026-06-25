@@ -1,6 +1,6 @@
 import { applications as mockApplications, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
 import { rewardCatalog } from "./rewards/catalog";
-import type { Application, CalendarEvent, Friend, InterviewAnswer, LeaderboardUser, Profile, PublicProfile, Reward } from "./types";
+import type { Application, CalendarEvent, Friend, InterviewAnswer, LeaderboardUser, MutualFriend, Profile, PublicProfile, Reward } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
 import { getVisibleStreak, isBrokenStreak } from "./streak";
 
@@ -30,6 +30,7 @@ type DbProfile = {
   resume_keywords: string[] | null;
   resume_file_name: string | null;
   resume_updated_at: string | null;
+  share_application_board: boolean | null;
   xp: number | null;
   streak_count: number | null;
   last_applied_on: string | null;
@@ -45,6 +46,21 @@ type DbFriend = {
   addressee_id: string;
   status: Friend["status"];
 };
+
+function mapDbApplication(application: DbApplication): Application {
+  return {
+    id: application.id,
+    company: application.company,
+    role: application.role,
+    location: application.location ?? "Remote",
+    source: application.source_url ?? "Saved manually",
+    status: application.status,
+    fitScore: application.fit_score ?? 75,
+    xp: application.xp_awarded ?? 0,
+    deadline: application.deadline ?? "No deadline",
+    updatedAt: new Date(application.updated_at).toLocaleDateString()
+  };
+}
 
 type DbUserReward = {
   reward_id: string;
@@ -99,6 +115,7 @@ export async function getCurrentProfile(): Promise<Profile> {
     resumeKeywords: data.resume_keywords ?? [],
     resumeFileName: data.resume_file_name ?? "",
     resumeUpdatedAt: data.resume_updated_at ? new Date(data.resume_updated_at).toLocaleDateString() : "",
+    shareApplicationBoard: data.share_application_board ?? false,
     xp: data.xp ?? 0,
     streak: getVisibleStreak(data.last_applied_on ?? null, data.streak_count ?? 0),
     streakBroken: isBrokenStreak(data.last_applied_on ?? null, data.streak_count ?? 0),
@@ -153,18 +170,7 @@ export async function getApplications(): Promise<Application[]> {
     return [];
   }
 
-  return data.map((application) => ({
-    id: application.id,
-    company: application.company,
-    role: application.role,
-    location: application.location ?? "Remote",
-    source: application.source_url ?? "Saved manually",
-    status: application.status,
-    fitScore: application.fit_score ?? 75,
-    xp: application.xp_awarded ?? 0,
-    deadline: application.deadline ?? "No deadline",
-    updatedAt: new Date(application.updated_at).toLocaleDateString()
-  }));
+  return data.map(mapDbApplication);
 }
 
 export async function getLeaderboard(): Promise<LeaderboardUser[]> {
@@ -335,6 +341,104 @@ export async function getFriendshipWith(profileId: string): Promise<Pick<Friend,
     status: data.status,
     direction: data.requester_id === user.id ? "outgoing" : "incoming"
   };
+}
+
+export async function getSharedApplicationBoard(profileId: string): Promise<{ applications: Application[]; canView: boolean; shareEnabled: boolean }> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return { applications: [], canView: false, shareEnabled: false };
+  }
+
+  const isOwnProfile = user.id === profileId;
+  const friendship = isOwnProfile ? null : await getFriendshipWith(profileId);
+
+  if (!isOwnProfile && friendship?.status !== "accepted") {
+    return { applications: [], canView: false, shareEnabled: false };
+  }
+
+  let shareEnabled = isOwnProfile;
+
+  if (!isOwnProfile) {
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("share_application_board")
+      .eq("id", profileId)
+      .maybeSingle<Pick<DbProfile, "share_application_board">>();
+
+    if (profileError || !profile?.share_application_board) {
+      return { applications: [], canView: false, shareEnabled: false };
+    }
+
+    shareEnabled = true;
+  }
+
+  const { data, error } = await supabase
+    .from("applications")
+    .select("*")
+    .eq("user_id", profileId)
+    .order("updated_at", { ascending: false })
+    .returns<DbApplication[]>();
+
+  if (error || !data) {
+    return { applications: [], canView: false, shareEnabled };
+  }
+
+  return { applications: data.map(mapDbApplication), canView: true, shareEnabled };
+}
+
+export async function getMutualFriends(profileId: string): Promise<MutualFriend[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user || user.id === profileId) {
+    return [];
+  }
+
+  const [currentFriendships, profileFriendships] = await Promise.all([
+    supabase
+      .from("friends")
+      .select("requester_id, addressee_id, status")
+      .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`)
+      .eq("status", "accepted")
+      .returns<Array<Pick<DbFriend, "requester_id" | "addressee_id" | "status">>>(),
+    supabase
+      .from("friends")
+      .select("requester_id, addressee_id, status")
+      .or(`requester_id.eq.${profileId},addressee_id.eq.${profileId}`)
+      .eq("status", "accepted")
+      .returns<Array<Pick<DbFriend, "requester_id" | "addressee_id" | "status">>>()
+  ]);
+
+  if (currentFriendships.error || profileFriendships.error || !currentFriendships.data || !profileFriendships.data) {
+    return [];
+  }
+
+  const currentFriendIds = new Set(currentFriendships.data.map((friendship) => (friendship.requester_id === user.id ? friendship.addressee_id : friendship.requester_id)));
+  const profileFriendIds = new Set(profileFriendships.data.map((friendship) => (friendship.requester_id === profileId ? friendship.addressee_id : friendship.requester_id)));
+  const mutualIds = Array.from(currentFriendIds).filter((id) => id !== user.id && id !== profileId && profileFriendIds.has(id));
+
+  if (mutualIds.length === 0) {
+    return [];
+  }
+
+  const { data: profiles, error } = await supabase
+    .from("profiles")
+    .select("id, full_name, school, xp")
+    .in("id", mutualIds)
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "xp">>>();
+
+  if (error || !profiles) {
+    return [];
+  }
+
+  return profiles.map((profile) => ({
+    id: profile.id,
+    name: profile.full_name ?? "CareerUp Student",
+    school: profile.school ?? "Student",
+    xp: profile.xp ?? 0
+  }));
 }
 
 export async function getRewards(): Promise<Reward[]> {

@@ -52,6 +52,7 @@ export async function updateProfile(formData: FormData) {
   const graduationYear = String(formData.get("graduationYear") ?? "").trim();
   const targetRoles = parseList(formData.get("targetRoles"));
   const targetLocations = parseList(formData.get("targetLocations"));
+  const shareApplicationBoard = formData.get("shareApplicationBoard") === "on";
 
   if (!fullName) {
     redirectWithMessage("/profile", "Your name is required.");
@@ -75,6 +76,7 @@ export async function updateProfile(formData: FormData) {
       graduation_year: graduationYear || null,
       target_roles: targetRoles,
       target_locations: targetLocations,
+      share_application_board: shareApplicationBoard,
       profile_completed_awarded: shouldAwardProfileXp ? true : currentProfile?.profile_completed_awarded ?? false,
       xp: shouldAwardProfileXp ? (currentProfile?.xp ?? 0) + 30 : currentProfile?.xp ?? 0
     })

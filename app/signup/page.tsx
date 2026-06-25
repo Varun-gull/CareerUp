@@ -29,6 +29,13 @@ export default async function SignupPage({ searchParams }: { searchParams?: { me
             <input name="fullName" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Name" required />
             <input name="email" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Email" type="email" required />
             <input name="password" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Password" type="password" minLength={6} required />
+            <label className="flex gap-3 rounded-lg border border-purple-100 bg-purple-50/70 p-3 text-sm font-bold text-slate-700">
+              <input name="shareApplicationBoard" type="checkbox" className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-700 focus:ring-purple-600" />
+              <span>
+                Let accepted friends view my application board.
+                <span className="mt-1 block text-xs font-semibold text-slate-500">You can change this later from your profile.</span>
+              </span>
+            </label>
             <button type="submit" className="primary-button w-full">Create account</button>
           </form>
           <p className="mt-5 text-sm text-slate-600">

@@ -1,10 +1,11 @@
-import { ArrowLeft, Flame, MapPin, Sparkles, Target, Trophy, UserPlus } from "lucide-react";
+import { ArrowLeft, Flame, Lock, MapPin, Sparkles, Target, Trophy, UserPlus, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
+import { PublicApplicationBoard } from "@/components/PublicApplicationBoard";
 import { RankBadge } from "@/components/RankBadge";
 import { XpProgressBar } from "@/components/XpProgressBar";
 import { sendFriendRequestById } from "@/lib/friends/actions";
-import { getCurrentUser, getFriendshipWith, getPublicProfile } from "@/lib/data";
+import { getCurrentUser, getFriendshipWith, getMutualFriends, getPublicProfile, getSharedApplicationBoard } from "@/lib/data";
 
 export default async function PublicProfilePage({
   params,
@@ -13,8 +14,15 @@ export default async function PublicProfilePage({
   params: { profileId: string };
   searchParams?: { message?: string };
 }) {
-  const [profile, user, friendship] = await Promise.all([getPublicProfile(params.profileId), getCurrentUser(), getFriendshipWith(params.profileId)]);
+  const [profile, user, friendship, sharedBoard, mutualFriends] = await Promise.all([
+    getPublicProfile(params.profileId),
+    getCurrentUser(),
+    getFriendshipWith(params.profileId),
+    getSharedApplicationBoard(params.profileId),
+    getMutualFriends(params.profileId)
+  ]);
   const isOwnProfile = user?.id === params.profileId;
+  const isAcceptedFriend = friendship?.status === "accepted";
 
   return (
     <>
@@ -82,11 +90,79 @@ export default async function PublicProfilePage({
                   <RankBadge xp={profile.xp} />
                 </div>
                 <XpProgressBar xp={profile.xp} />
+                {!isOwnProfile && (
+                  <div className="rounded-lg border border-slate-200 bg-white p-4">
+                    <div className="flex items-center gap-2">
+                      <UsersRound size={18} className="text-purple-700" />
+                      <h2 className="font-black text-ink">Mutual friends</h2>
+                    </div>
+                    {isAcceptedFriend ? (
+                      mutualFriends.length > 0 ? (
+                        <div className="mt-4 grid gap-3">
+                          {mutualFriends.map((friend) => (
+                            <Link key={friend.id} href={`/u/${friend.id}`} className="rounded-lg border border-slate-100 p-3 transition hover:border-purple-200 hover:bg-purple-50/60">
+                              <p className="font-black text-ink">{friend.name}</p>
+                              <p className="mt-1 text-xs font-bold text-slate-500">{friend.school}</p>
+                            </Link>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="mt-4 text-sm font-bold text-slate-500">No mutual friends yet.</p>
+                      )
+                    ) : (
+                      <p className="mt-4 text-sm font-bold text-slate-500">Become friends to compare mutuals.</p>
+                    )}
+                  </div>
+                )}
               </aside>
 
               <div className="lg:col-span-2 grid gap-4 md:grid-cols-2">
                 <ProfileTags icon={Target} title="Target roles" values={profile.targetRoles} empty="No target roles yet." />
                 <ProfileTags icon={MapPin} title="Target locations" values={profile.targetLocations} empty="No target locations yet." />
+              </div>
+
+              <div className="lg:col-span-2">
+                <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <p className="eyebrow">Application board</p>
+                    <h2 className="mt-2 text-2xl font-black text-ink">Pipeline</h2>
+                  </div>
+                  {sharedBoard.canView && <p className="text-sm font-bold text-slate-500">{sharedBoard.applications.length} visible roles</p>}
+                </div>
+
+                {sharedBoard.canView ? (
+                  sharedBoard.applications.length > 0 ? (
+                    <PublicApplicationBoard applications={sharedBoard.applications} />
+                  ) : (
+                    <div className="rounded-lg border border-dashed border-slate-200 bg-white/80 p-6 text-sm font-bold text-slate-500">No applications are on this board yet.</div>
+                  )
+                ) : isOwnProfile ? (
+                  <div className="rounded-lg border border-dashed border-slate-200 bg-white/80 p-6 text-sm font-bold text-slate-500">Add roles to your board from the postings page.</div>
+                ) : isAcceptedFriend ? (
+                  <div className="rounded-lg border border-slate-200 bg-white/80 p-6">
+                    <div className="flex items-start gap-3">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+                        <Lock size={18} />
+                      </span>
+                      <div>
+                        <h3 className="font-black text-ink">Application board is private</h3>
+                        <p className="mt-1 text-sm font-bold text-slate-500">This friend has not enabled board sharing.</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-slate-200 bg-white/80 p-6">
+                    <div className="flex items-start gap-3">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+                        <Lock size={18} />
+                      </span>
+                      <div>
+                        <h3 className="font-black text-ink">Friends only</h3>
+                        <p className="mt-1 text-sm font-bold text-slate-500">Add this profile as a friend to see a shared application board when they allow it.</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </section>

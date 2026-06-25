@@ -10,6 +10,7 @@ export const profile: Profile = {
   resumeKeywords: ["React", "TypeScript", "Python", "Data Analysis"],
   resumeFileName: "sample-resume.txt",
   resumeUpdatedAt: "Sample",
+  shareApplicationBoard: false,
   xp: 430,
   streak: 6,
   streakBroken: false,

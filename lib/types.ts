@@ -92,6 +92,13 @@ export type PublicProfile = {
   applicationsApplied: number;
 };
 
+export type MutualFriend = {
+  id: string;
+  name: string;
+  school: string;
+  xp: number;
+};
+
 export type CalendarEvent = {
   id: string;
   applicationId: string;
@@ -114,6 +121,7 @@ export type Profile = {
   resumeKeywords: string[];
   resumeFileName: string;
   resumeUpdatedAt: string;
+  shareApplicationBoard: boolean;
   xp: number;
   streak: number;
   streakBroken: boolean;

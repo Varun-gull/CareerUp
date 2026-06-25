@@ -1,5 +1,6 @@
 import { Check, MailPlus, Share2, Trash2, UserPlus, UsersRound } from "lucide-react";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { CopyInviteLink } from "@/components/CopyInviteLink";
 import { Navbar } from "@/components/Navbar";
 import { RankBadge } from "@/components/RankBadge";
@@ -120,7 +121,13 @@ function FriendSection({
             <article key={friend.id} className="rounded-lg border border-slate-200 bg-white p-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-black text-ink">{friend.name}</p>
+                  {friend.status === "accepted" ? (
+                    <Link href={`/u/${friend.userId}`} className="font-black text-ink hover:text-purple-800">
+                      {friend.name}
+                    </Link>
+                  ) : (
+                    <p className="font-black text-ink">{friend.name}</p>
+                  )}
                   <p className="text-sm text-slate-500">{friend.school}</p>
                   <p className="mt-1 text-xs font-bold text-slate-400">{friend.email}</p>
                 </div>

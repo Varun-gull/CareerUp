@@ -19,6 +19,7 @@ create table public.profiles (
   resume_keywords text[] not null default '{}',
   resume_file_name text,
   resume_updated_at timestamptz,
+  share_application_board boolean not null default false,
   profile_completed_awarded boolean not null default false,
   xp integer not null default 25,
   streak_count integer not null default 0,
@@ -106,11 +107,12 @@ security definer
 set search_path = public
 as $$
 begin
-  insert into public.profiles (id, full_name, email)
+  insert into public.profiles (id, full_name, email, share_application_board)
   values (
     new.id,
     coalesce(new.raw_user_meta_data ->> 'full_name', split_part(new.email, '@', 1)),
-    new.email
+    new.email,
+    coalesce((new.raw_user_meta_data ->> 'share_application_board')::boolean, false)
   );
   return new;
 end;
@@ -161,7 +163,7 @@ alter table public.interview_answers enable row level security;
 alter table public.friends enable row level security;
 
 grant usage on schema public to anon, authenticated;
-grant select (id, full_name, school, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied) on public.profiles to anon;
+grant select (id, full_name, school, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied, share_application_board) on public.profiles to anon;
 grant select on public.profiles to authenticated;
 grant update on public.profiles to authenticated;
 grant select, insert, update, delete on public.applications to authenticated;
@@ -193,6 +195,27 @@ on public.applications for all
 to authenticated
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);
+
+create policy "Friends can read shared application boards"
+on public.applications for select
+to authenticated
+using (
+  exists (
+    select 1
+    from public.profiles
+    where profiles.id = applications.user_id
+      and profiles.share_application_board = true
+  )
+  and exists (
+    select 1
+    from public.friends
+    where friends.status = 'accepted'
+      and (
+        (friends.requester_id = auth.uid() and friends.addressee_id = applications.user_id)
+        or (friends.addressee_id = auth.uid() and friends.requester_id = applications.user_id)
+      )
+  )
+);
 
 create policy "Authenticated users can read active challenges"
 on public.challenges for select

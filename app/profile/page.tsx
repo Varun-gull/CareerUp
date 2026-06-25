@@ -64,6 +64,13 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                   Target locations
                   <input name="targetLocations" defaultValue={profile.targetLocations.join(", ")} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="New York, Remote, Washington DC" />
                 </label>
+                <label className="flex gap-3 rounded-lg border border-purple-100 bg-purple-50/70 p-4 text-sm font-bold text-slate-700">
+                  <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-700 focus:ring-purple-600" />
+                  <span>
+                    Let accepted friends view my application board.
+                    <span className="mt-1 block text-xs font-semibold text-slate-500">Only accepted friends can see it, and they cannot edit your applications.</span>
+                  </span>
+                </label>
                 <button type="submit" className="primary-button w-full sm:w-auto">
                   <Save className="mr-2" size={18} /> Save profile
                 </button>

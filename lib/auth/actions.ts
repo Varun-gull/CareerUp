@@ -12,6 +12,7 @@ export async function signUp(formData: FormData) {
   const fullName = String(formData.get("fullName") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
+  const shareApplicationBoard = formData.get("shareApplicationBoard") === "on";
 
   if (!supabase) {
     redirectWithMessage("/signup", "Connect Supabase env vars before creating real accounts.");
@@ -26,7 +27,8 @@ export async function signUp(formData: FormData) {
     password,
     options: {
       data: {
-        full_name: fullName
+        full_name: fullName,
+        share_application_board: shareApplicationBoard
       }
     }
   });

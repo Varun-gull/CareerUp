@@ -4,6 +4,9 @@
 alter table public.profiles
   add column if not exists school_logo_url text;
 
+alter table public.profiles
+  add column if not exists privacy_prompt_answered boolean not null default false;
+
 alter table public.completed_challenges
   add column if not exists completed_on date not null default current_date;
 

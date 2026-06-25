@@ -21,6 +21,7 @@ create table public.profiles (
   resume_file_name text,
   resume_updated_at timestamptz,
   share_application_board boolean not null default false,
+  privacy_prompt_answered boolean not null default false,
   profile_completed_awarded boolean not null default false,
   xp integer not null default 25,
   streak_count integer not null default 0,
@@ -109,12 +110,13 @@ security definer
 set search_path = public
 as $$
 begin
-  insert into public.profiles (id, full_name, email, share_application_board)
+  insert into public.profiles (id, full_name, email, share_application_board, privacy_prompt_answered)
   values (
     new.id,
     coalesce(new.raw_user_meta_data ->> 'full_name', split_part(new.email, '@', 1)),
     new.email,
-    coalesce((new.raw_user_meta_data ->> 'share_application_board')::boolean, false)
+    coalesce((new.raw_user_meta_data ->> 'share_application_board')::boolean, false),
+    coalesce((new.raw_user_meta_data ->> 'privacy_prompt_answered')::boolean, false)
   );
   return new;
 end;

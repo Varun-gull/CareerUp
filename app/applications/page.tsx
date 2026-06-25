@@ -42,7 +42,7 @@ export default async function ApplicationsPage({
   const statusFilter = pipelineColumns.some((column) => column.status === searchParams?.status) ? searchParams?.status : "all";
   const visibleApplications = applications.filter((application) => matchesSearch(application, query) && (statusFilter === "all" || application.status === statusFilter));
   const savedCount = applications.filter((application) => application.status === "saved").length;
-  const appliedCount = applications.filter((application) => application.status === "applied").length;
+  const appliedCount = applications.filter((application) => application.status !== "saved").length;
   const interviewingCount = applications.filter((application) => application.status === "interviewing").length;
   const offerCount = applications.filter((application) => application.status === "offer").length;
 
@@ -66,7 +66,7 @@ export default async function ApplicationsPage({
             <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
               <DashboardCard title="Tracked" value={applications.length.toString()} helper="Total roles in your pipeline." icon={BriefcaseBusiness} />
               <DashboardCard title="Saved" value={savedCount.toString()} helper="Review and apply when ready." icon={Clock3} />
-              <DashboardCard title="Applied" value={appliedCount.toString()} helper="Applications submitted." icon={CheckCircle2} />
+              <DashboardCard title="Applied" value={appliedCount.toString()} helper="Roles moved beyond saved." icon={CheckCircle2} />
               <DashboardCard title="Interviewing" value={interviewingCount.toString()} helper="Active interview loops." icon={MessageSquareText} />
               <DashboardCard title="Offers" value={offerCount.toString()} helper="Unlocked wins." icon={Trophy} />
             </section>

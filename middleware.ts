@@ -31,6 +31,8 @@ export async function middleware(request: NextRequest) {
     "/applications",
     "/postings",
     "/profile",
+    "/privacy",
+    "/settings",
     "/challenges",
     "/rewards",
     "/interview",

@@ -127,6 +127,7 @@ export type Profile = {
   resumeFileName: string;
   resumeUpdatedAt: string;
   shareApplicationBoard: boolean;
+  privacyPromptAnswered: boolean;
   xp: number;
   streak: number;
   streakBroken: boolean;

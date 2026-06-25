@@ -82,6 +82,7 @@ export async function updateProfile(formData: FormData) {
       target_roles: targetRoles,
       target_locations: targetLocations,
       share_application_board: shareApplicationBoard,
+      privacy_prompt_answered: true,
       profile_completed_awarded: shouldAwardProfileXp ? true : currentProfile?.profile_completed_awarded ?? false,
       xp: shouldAwardProfileXp ? (currentProfile?.xp ?? 0) + 30 : currentProfile?.xp ?? 0
     })
@@ -95,6 +96,43 @@ export async function updateProfile(formData: FormData) {
   revalidatePath("/dashboard");
   revalidatePath("/leaderboard");
   redirectWithMessage("/profile", shouldAwardProfileXp ? "Profile saved. You earned 30 XP for completing it." : "Profile saved.");
+}
+
+export async function updatePrivacySettings(formData: FormData) {
+  const supabase = getSupabaseServerClient();
+  const returnTo = String(formData.get("returnTo") ?? "/settings");
+
+  if (!supabase) {
+    redirectWithMessage(returnTo, "Connect Supabase before updating privacy settings.");
+  }
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirectWithMessage("/login", "Log in before updating privacy settings.");
+  }
+
+  const shareApplicationBoard = formData.get("shareApplicationBoard") === "on";
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      share_application_board: shareApplicationBoard,
+      privacy_prompt_answered: true
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    redirectWithMessage(returnTo, error.message);
+  }
+
+  revalidatePath("/settings");
+  revalidatePath("/privacy");
+  revalidatePath("/profile");
+  revalidatePath("/friends");
+  revalidatePath("/dashboard");
+  redirectWithMessage(returnTo, shareApplicationBoard ? "Friends can view your application board." : "Your application board is private.");
 }
 
 export async function saveResumeProfile(formData: FormData) {

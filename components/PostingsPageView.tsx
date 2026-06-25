@@ -53,13 +53,28 @@ function sortPostings(postings: InternshipPosting[], sort: PostingSort) {
     }
 
     if (sort === "newest") {
-      const bDate = Date.parse(b.postedAt) || 0;
-      const aDate = Date.parse(a.postedAt) || 0;
-      return bDate - aDate;
+      return getPostingAgeScore(a.postedAt) - getPostingAgeScore(b.postedAt);
     }
 
     return b.fitScore - a.fitScore;
   });
+}
+
+function getPostingAgeScore(value: string) {
+  const normalized = value.trim().toLowerCase();
+  const hoursMatch = normalized.match(/^(\d+)\s*h/);
+  if (hoursMatch) return Number(hoursMatch[1]) / 24;
+
+  const daysMatch = normalized.match(/^(\d+)\s*d/);
+  if (daysMatch) return Number(daysMatch[1]);
+
+  const minutesMatch = normalized.match(/^(\d+)\s*m/);
+  if (minutesMatch) return Number(minutesMatch[1]) / 1440;
+
+  if (/today|now|just|recent/.test(normalized)) return 0;
+
+  const parsedDate = Date.parse(value);
+  return Number.isNaN(parsedDate) ? 999 : Math.max(0, Math.round((Date.now() - parsedDate) / 86_400_000));
 }
 
 function activeTabClass(active: boolean) {
@@ -74,7 +89,20 @@ function buildReturnHref(kind: PostingKind, searchParams?: { q?: string; locatio
   if (searchParams?.location) params.set("location", searchParams.location);
   if (searchParams?.remote) params.set("remote", searchParams.remote);
   if (searchParams?.minFit) params.set("minFit", searchParams.minFit);
-  params.set("sort", "fit");
+  params.set("sort", searchParams?.sort ?? "fit");
+
+  return `${basePath}?${params.toString()}`;
+}
+
+function buildSortHref(kind: PostingKind, sort: PostingSort, searchParams?: { q?: string; location?: string; remote?: RemoteFilter; minFit?: string }) {
+  const basePath = kind === "new-grad" ? "/postings/new-grad" : "/postings/internships";
+  const params = new URLSearchParams();
+
+  if (searchParams?.q) params.set("q", searchParams.q);
+  if (searchParams?.location) params.set("location", searchParams.location);
+  if (searchParams?.remote) params.set("remote", searchParams.remote);
+  if (searchParams?.minFit) params.set("minFit", searchParams.minFit);
+  params.set("sort", sort);
 
   return `${basePath}?${params.toString()}`;
 }
@@ -118,6 +146,8 @@ export async function PostingsPageView({
       : "Search current internship-style roles from Jobright, Intern-list, GitHub, and live job APIs.";
   const resetHref = kind === "new-grad" ? "/postings/new-grad" : "/postings/internships";
   const returnHref = buildReturnHref(kind, searchParams);
+  const bestFitHref = buildSortHref(kind, "fit", searchParams);
+  const newestHref = buildSortHref(kind, "newest", searchParams);
 
   return (
     <>
@@ -159,7 +189,14 @@ export async function PostingsPageView({
             <span>
               Showing {postings.length} of {searchResult.postings.length} results
             </span>
-            <span className="rounded-full bg-purple-50 px-3 py-1 text-xs font-black text-purple-800 ring-1 ring-purple-100">Sorted by best fit</span>
+            <span className="inline-flex overflow-hidden rounded-full bg-white text-xs font-black ring-1 ring-slate-200">
+              <Link href={bestFitHref} className={sort === "fit" ? "bg-purple-800 px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-purple-800"}>
+                Best fit
+              </Link>
+              <Link href={newestHref} className={sort === "newest" ? "bg-purple-800 px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-purple-800"}>
+                Latest posted
+              </Link>
+            </span>
           </div>
         </div>
 

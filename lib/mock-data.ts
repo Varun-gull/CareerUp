@@ -12,6 +12,7 @@ export const profile: Profile = {
   resumeFileName: "sample-resume.txt",
   resumeUpdatedAt: "Sample",
   shareApplicationBoard: false,
+  privacyPromptAnswered: true,
   xp: 430,
   streak: 6,
   streakBroken: false,

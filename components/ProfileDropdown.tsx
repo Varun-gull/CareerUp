@@ -1,8 +1,9 @@
 "use client";
 
-import { UserRound, Users, User, LogOut } from "lucide-react";
+import { UserRound, Users, User, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { logOut } from "@/lib/auth/actions";
 
 export function ProfileDropdown({ initials, displayName, loggedIn }: { initials: string; displayName?: string; loggedIn: boolean }) {
   const [open, setOpen] = useState(false);
@@ -55,14 +56,23 @@ export function ProfileDropdown({ initials, displayName, loggedIn }: { initials:
           >
             <Users size={16} /> Friends
           </Link>
-          <div className="border-t border-slate-100" />
           <Link
-            href="/login"
+            href="/settings"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50"
+            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-800"
           >
-            <LogOut size={16} /> Log out
+            <Settings size={16} /> Settings
           </Link>
+          <div className="border-t border-slate-100" />
+          <form action={logOut}>
+            <button
+              type="submit"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-bold text-red-500 hover:bg-red-50"
+            >
+              <LogOut size={16} /> Log out
+            </button>
+          </form>
         </div>
       )}
     </div>

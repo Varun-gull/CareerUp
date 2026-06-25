@@ -28,7 +28,8 @@ export async function signUp(formData: FormData) {
     options: {
       data: {
         full_name: fullName,
-        share_application_board: shareApplicationBoard
+        share_application_board: shareApplicationBoard,
+        privacy_prompt_answered: true
       }
     }
   });
@@ -49,10 +50,24 @@ export async function logIn(formData: FormData) {
     redirectWithMessage("/login", "Connect Supabase env vars before logging in.");
   }
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
     redirectWithMessage("/login", error.message);
+  }
+
+  const userId = data.user?.id;
+
+  if (userId) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("privacy_prompt_answered")
+      .eq("id", userId)
+      .maybeSingle<{ privacy_prompt_answered: boolean | null }>();
+
+    if (!profile?.privacy_prompt_answered) {
+      redirect("/privacy");
+    }
   }
 
   redirect("/dashboard");
@@ -65,5 +80,5 @@ export async function logOut() {
     await supabase.auth.signOut();
   }
 
-  redirect("/");
+  redirect("/login?message=You have been logged out.");
 }

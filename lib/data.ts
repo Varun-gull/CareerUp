@@ -32,6 +32,7 @@ type DbProfile = {
   resume_file_name: string | null;
   resume_updated_at: string | null;
   share_application_board: boolean | null;
+  privacy_prompt_answered: boolean | null;
   xp: number | null;
   streak_count: number | null;
   last_applied_on: string | null;
@@ -131,6 +132,7 @@ export async function getCurrentProfile(): Promise<Profile> {
     resumeFileName: data.resume_file_name ?? "",
     resumeUpdatedAt: data.resume_updated_at ? new Date(data.resume_updated_at).toLocaleDateString() : "",
     shareApplicationBoard: data.share_application_board ?? false,
+    privacyPromptAnswered: data.privacy_prompt_answered ?? false,
     xp: data.xp ?? 0,
     streak: getVisibleStreak(data.last_applied_on ?? null, data.streak_count ?? 0),
     streakBroken: isBrokenStreak(data.last_applied_on ?? null, data.streak_count ?? 0),

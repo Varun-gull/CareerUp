@@ -44,8 +44,8 @@ export default async function PublicProfilePage({
             <div className="bg-ink px-6 py-10 text-white">
               <div className="flex flex-wrap items-center justify-between gap-5">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-purple-700 text-2xl font-black">
-                    {profile.name.charAt(0)}
+                  <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-purple-700 text-2xl font-black">
+                    {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                   </div>
                   <div>
                     <p className="text-xs font-black uppercase text-purple-200">CareerUp profile</p>

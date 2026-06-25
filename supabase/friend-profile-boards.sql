@@ -4,7 +4,7 @@
 alter table public.profiles
   add column if not exists share_application_board boolean not null default false;
 
-grant select (id, full_name, school, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied, share_application_board)
+grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied, share_application_board)
 on public.profiles to anon;
 
 create or replace function public.handle_new_user()

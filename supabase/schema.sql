@@ -11,6 +11,7 @@ create table public.profiles (
   full_name text,
   email text,
   school text,
+  school_logo_url text,
   major text,
   graduation_year text,
   target_roles text[] not null default '{}',
@@ -65,8 +66,9 @@ create table public.completed_challenges (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id) on delete cascade,
   challenge_id uuid not null references public.challenges(id) on delete cascade,
+  completed_on date not null default current_date,
   completed_at timestamptz not null default now(),
-  unique (user_id, challenge_id)
+  unique (user_id, challenge_id, completed_on)
 );
 
 create table public.user_rewards (
@@ -163,7 +165,7 @@ alter table public.interview_answers enable row level security;
 alter table public.friends enable row level security;
 
 grant usage on schema public to anon, authenticated;
-grant select (id, full_name, school, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied, share_application_board) on public.profiles to anon;
+grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied, share_application_board) on public.profiles to anon;
 grant select on public.profiles to authenticated;
 grant update on public.profiles to authenticated;
 grant select, insert, update, delete on public.applications to authenticated;

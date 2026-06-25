@@ -6,11 +6,10 @@ import { DashboardCard } from "@/components/DashboardCard";
 import { Navbar } from "@/components/Navbar";
 import { StreakCard } from "@/components/StreakCard";
 import { XpProgressBar } from "@/components/XpProgressBar";
-import { getApplications, getCurrentProfile } from "@/lib/data";
-import { challenges } from "@/lib/mock-data";
+import { getApplications, getChallenges, getCurrentProfile } from "@/lib/data";
 
 export default async function DashboardPage({ searchParams }: { searchParams?: { message?: string } }) {
-  const [applications, profile] = await Promise.all([getApplications(), getCurrentProfile()]);
+  const [applications, profile, challenges] = await Promise.all([getApplications(), getCurrentProfile(), getChallenges()]);
   const appliedCount = applications.filter((application) => application.status !== "saved").length;
 
   return (

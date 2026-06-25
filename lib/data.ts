@@ -1,8 +1,8 @@
-import { applications as mockApplications, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
+import { applications as mockApplications, challenges as mockChallenges, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
 import { rewardCatalog } from "./rewards/catalog";
-import type { Application, CalendarEvent, Friend, InterviewAnswer, LeaderboardUser, MutualFriend, Profile, PublicProfile, Reward } from "./types";
+import type { Application, CalendarEvent, Challenge, Friend, InterviewAnswer, LeaderboardUser, MutualFriend, Profile, PublicProfile, Reward } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
-import { getVisibleStreak, isBrokenStreak } from "./streak";
+import { getDateKeyStartUtcIso, getTodayKey, getVisibleStreak, isBrokenStreak } from "./streak";
 
 type DbApplication = {
   id: string;
@@ -22,6 +22,7 @@ type DbProfile = {
   full_name: string | null;
   email: string | null;
   school: string | null;
+  school_logo_url: string | null;
   major: string | null;
   graduation_year: string | null;
   target_roles: string[] | null;
@@ -66,6 +67,19 @@ type DbUserReward = {
   reward_id: string;
 };
 
+type DbChallenge = {
+  id: string;
+  title: string;
+  description: string;
+  xp_reward: number;
+  target: number;
+};
+
+type DbCompletedChallenge = {
+  challenge_id: string;
+  completed_on: string | null;
+};
+
 type DbInterviewAnswer = {
   id: string;
   prompt: string;
@@ -108,6 +122,7 @@ export async function getCurrentProfile(): Promise<Profile> {
   return {
     name: data.full_name ?? user.email ?? "Student",
     school: data.school ?? "CareerUp Student",
+    schoolLogoUrl: data.school_logo_url ?? "",
     major: data.major ?? "",
     graduationYear: data.graduation_year ?? "",
     targetRoles: data.target_roles ?? [],
@@ -182,10 +197,10 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, xp, streak_count, last_applied_on")
+    .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
     .order("xp", { ascending: false })
     .limit(25)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "xp" | "streak_count" | "last_applied_on">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>();
 
   if (error || !data) {
     return mockLeaderboard;
@@ -195,6 +210,7 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
     id: user.id,
     name: user.full_name ?? "CareerUp Student",
     school: user.school ?? "Student",
+    schoolLogoUrl: user.school_logo_url ?? "",
     xp: user.xp ?? 0,
     streak: getVisibleStreak(user.last_applied_on ?? null, user.streak_count ?? 0)
   }));
@@ -222,9 +238,9 @@ export async function getFriends(): Promise<Friend[]> {
 
   const { data: profiles, error: profilesError } = await supabase
     .from("profiles")
-    .select("id, full_name, email, school, xp, streak_count, last_applied_on")
+    .select("id, full_name, email, school, school_logo_url, xp, streak_count, last_applied_on")
     .in("id", profileIds)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "email" | "school" | "xp" | "streak_count" | "last_applied_on">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "email" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>();
 
   if (profilesError || !profiles) {
     return [];
@@ -247,6 +263,7 @@ export async function getFriends(): Promise<Friend[]> {
         name: profile.full_name ?? profile.email ?? "CareerUp Student",
         email: profile.email ?? "",
         school: profile.school ?? "Student",
+        schoolLogoUrl: profile.school_logo_url ?? "",
         xp: profile.xp ?? 0,
         streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0),
         status: friendship.status,
@@ -270,10 +287,10 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, xp, streak_count, last_applied_on")
+    .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
     .in("id", ids)
     .order("xp", { ascending: false })
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "xp" | "streak_count" | "last_applied_on">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>();
 
   if (error || !data) {
     return [];
@@ -283,6 +300,7 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
     id: profile.id,
     name: profile.full_name ?? "CareerUp Student",
     school: profile.school ?? "Student",
+    schoolLogoUrl: profile.school_logo_url ?? "",
     xp: profile.xp ?? 0,
     streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0)
   }));
@@ -297,9 +315,9 @@ export async function getPublicProfile(profileId: string): Promise<PublicProfile
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, major, graduation_year, target_roles, target_locations, xp, streak_count, last_applied_on, applications_applied")
+    .select("id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, streak_count, last_applied_on, applications_applied")
     .eq("id", profileId)
-    .maybeSingle<Pick<DbProfile, "id" | "full_name" | "school" | "major" | "graduation_year" | "target_roles" | "target_locations" | "xp" | "streak_count" | "last_applied_on" | "applications_applied">>();
+    .maybeSingle<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "major" | "graduation_year" | "target_roles" | "target_locations" | "xp" | "streak_count" | "last_applied_on" | "applications_applied">>();
 
   if (error || !data) {
     return null;
@@ -309,6 +327,7 @@ export async function getPublicProfile(profileId: string): Promise<PublicProfile
     id: data.id,
     name: data.full_name ?? "CareerUp Student",
     school: data.school ?? "Student",
+    schoolLogoUrl: data.school_logo_url ?? "",
     major: data.major ?? "",
     graduationYear: data.graduation_year ?? "",
     targetRoles: data.target_roles ?? [],
@@ -425,9 +444,9 @@ export async function getMutualFriends(profileId: string): Promise<MutualFriend[
 
   const { data: profiles, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, xp")
+    .select("id, full_name, school, school_logo_url, xp")
     .in("id", mutualIds)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "xp">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp">>>();
 
   if (error || !profiles) {
     return [];
@@ -437,8 +456,78 @@ export async function getMutualFriends(profileId: string): Promise<MutualFriend[
     id: profile.id,
     name: profile.full_name ?? "CareerUp Student",
     school: profile.school ?? "Student",
+    schoolLogoUrl: profile.school_logo_url ?? "",
     xp: profile.xp ?? 0
   }));
+}
+
+export async function getChallenges(): Promise<Challenge[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return mockChallenges;
+  }
+
+  const today = getTodayKey();
+  const [{ data: dbChallenges, error: challengesError }, { data: completedToday }, { count: appliedToday }, { count: trackedCount }, { data: profile }] = await Promise.all([
+    supabase.from("challenges").select("id, title, description, xp_reward, target").eq("active", true).returns<DbChallenge[]>(),
+    supabase
+      .from("completed_challenges")
+      .select("challenge_id, completed_on")
+      .eq("user_id", user.id)
+      .eq("completed_on", today)
+      .returns<DbCompletedChallenge[]>(),
+    supabase
+      .from("applications")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("status", "applied")
+      .gte("updated_at", getDateKeyStartUtcIso()),
+    supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+    supabase
+      .from("profiles")
+      .select("school, major, graduation_year, target_roles, target_locations, resume_keywords")
+      .eq("id", user.id)
+      .single<Pick<DbProfile, "school" | "major" | "graduation_year" | "target_roles" | "target_locations" | "resume_keywords">>()
+  ]);
+
+  if (challengesError || !dbChallenges) {
+    return mockChallenges;
+  }
+
+  const completedIds = new Set((completedToday ?? []).map((challenge) => challenge.challenge_id));
+  const profileProgress = [
+    profile?.school,
+    profile?.major,
+    profile?.graduation_year,
+    profile?.target_roles?.length,
+    profile?.target_locations?.length,
+    profile?.resume_keywords?.length
+  ].filter(Boolean).length;
+
+  return dbChallenges.map((challenge) => {
+    const lowerTitle = challenge.title.toLowerCase();
+    let progress = completedIds.has(challenge.id) ? challenge.target : 0;
+
+    if (lowerTitle.includes("daily apply")) {
+      progress = Math.min(challenge.target, appliedToday ?? 0);
+    } else if (lowerTitle.includes("profile")) {
+      progress = Math.min(challenge.target, profileProgress);
+    } else if (lowerTitle.includes("pipeline")) {
+      progress = Math.min(challenge.target, trackedCount ?? 0);
+    }
+
+    return {
+      id: challenge.id,
+      title: challenge.title,
+      description: challenge.description,
+      xp: challenge.xp_reward,
+      progress,
+      target: challenge.target,
+      completed: progress >= challenge.target || completedIds.has(challenge.id)
+    };
+  });
 }
 
 export async function getRewards(): Promise<Reward[]> {

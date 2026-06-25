@@ -3,12 +3,12 @@ import Link from "next/link";
 import { ChallengeCard } from "@/components/ChallengeCard";
 import { Navbar } from "@/components/Navbar";
 import { RankBadge } from "@/components/RankBadge";
+import { XpProgressBar } from "@/components/XpProgressBar";
 import { unlockReward } from "@/lib/rewards/actions";
-import { getCurrentProfile, getRewards } from "@/lib/data";
-import { challenges } from "@/lib/mock-data";
+import { getChallenges, getCurrentProfile, getRewards } from "@/lib/data";
 
 export default async function RewardsPage({ searchParams }: { searchParams?: { message?: string } }) {
-  const [profile, rewards] = await Promise.all([getCurrentProfile(), getRewards()]);
+  const [profile, rewards, challenges] = await Promise.all([getCurrentProfile(), getRewards(), getChallenges()]);
   const unlockedCount = rewards.filter((reward) => reward.unlocked).length;
 
   return (
@@ -45,6 +45,10 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
               <RankBadge xp={profile.xp} />
             </div>
           </div>
+        </section>
+
+        <section className="mt-6">
+          <XpProgressBar xp={profile.xp} />
         </section>
 
         <section className="mt-6">

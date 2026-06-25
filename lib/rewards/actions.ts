@@ -52,15 +52,31 @@ export async function unlockReward(formData: FormData) {
     redirectWithMessage("/rewards", "You already unlocked that reward.");
   }
 
+  const { error: spendError } = await supabase
+    .from("profiles")
+    .update({ xp: (profile.xp ?? 0) - reward.xpCost })
+    .eq("id", user.id);
+
+  if (spendError) {
+    redirectWithMessage("/rewards", spendError.message);
+  }
+
   const { error } = await supabase.from("user_rewards").insert({
     user_id: user.id,
     reward_id: reward.id
   });
 
   if (error) {
+    await supabase
+      .from("profiles")
+      .update({ xp: profile.xp ?? 0 })
+      .eq("id", user.id);
     redirectWithMessage("/rewards", error.message);
   }
 
   revalidatePath("/rewards");
-  redirectWithMessage("/rewards", `${reward.title} unlocked.`);
+  revalidatePath("/dashboard");
+  revalidatePath("/leaderboard");
+  revalidatePath("/profile");
+  redirectWithMessage("/rewards", `${reward.title} unlocked for ${reward.xpCost.toLocaleString()} XP.`);
 }

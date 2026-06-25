@@ -42,12 +42,21 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
             {index < 3 && <Medal size={16} className={index === 0 ? "text-amber-500" : index === 1 ? "text-slate-400" : "text-orange-500"} />}
             {index + 1}
           </span>
-          <div>
-            <p className="font-black text-ink">
-              {user.name}
-              {currentUserId === user.id && <span className="ml-2 rounded-full bg-purple-50 px-2 py-0.5 text-xs font-black text-purple-800">You</span>}
-            </p>
-            <p className="text-sm text-slate-500">{user.school}</p>
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-white">
+              {user.schoolLogoUrl ? (
+                <img src={user.schoolLogoUrl} alt="" className="h-full w-full object-contain p-1" />
+              ) : (
+                <span className="text-sm font-black text-purple-800">{user.school.charAt(0)}</span>
+              )}
+            </div>
+            <div className="min-w-0">
+              <p className="truncate font-black text-ink">
+                {user.name}
+                {currentUserId === user.id && <span className="ml-2 rounded-full bg-purple-50 px-2 py-0.5 text-xs font-black text-purple-800">You</span>}
+              </p>
+              <p className="truncate text-sm text-slate-500">{user.school}</p>
+            </div>
           </div>
           <div className="space-y-2">
             <p className="font-black text-purple-800">{user.xp.toLocaleString()} XP</p>

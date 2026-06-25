@@ -1,4 +1,4 @@
-import { getRankProgress } from "@/lib/rank";
+import { getRankProgress, ranks } from "@/lib/rank";
 
 export function XpProgressBar({ xp }: { xp: number }) {
   const progress = getRankProgress(xp);
@@ -17,7 +17,24 @@ export function XpProgressBar({ xp }: { xp: number }) {
       <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100">
         <div className="h-full rounded-full bg-purple-700" style={{ width: `${progress.percent}%` }} />
       </div>
-      <p className="mt-3 text-sm text-slate-500">{progress.current.name}</p>
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-slate-500">{progress.current.name}</p>
+        <details className="relative">
+          <summary className="cursor-pointer list-none rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-black text-purple-900 transition hover:border-purple-300">
+            Show all ranks
+          </summary>
+          <div className="absolute right-0 z-20 mt-2 w-64 rounded-lg border border-slate-200 bg-white p-3 shadow-xl">
+            <div className="grid gap-2">
+              {ranks.map((rank) => (
+                <div key={rank.name} className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2">
+                  <span className="text-sm font-black text-ink">{rank.name}</span>
+                  <span className="text-xs font-bold text-slate-500">{rank.minXp.toLocaleString()} XP</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </details>
+      </div>
     </section>
   );
 }

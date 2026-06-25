@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { extractResumeKeywords, extractResumeTextFromFile, normalizeResumeText } from "@/lib/resume";
+import { getSchoolLogoUrl } from "@/lib/schools";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function redirectWithMessage(path: string, message: string): never {
@@ -47,7 +48,10 @@ export async function updateProfile(formData: FormData) {
   }
 
   const fullName = String(formData.get("fullName") ?? "").trim();
-  const school = String(formData.get("school") ?? "").trim();
+  const selectedSchool = String(formData.get("school") ?? "").trim();
+  const customSchool = String(formData.get("customSchool") ?? "").trim();
+  const school = customSchool || selectedSchool;
+  const schoolLogoUrl = customSchool ? "" : getSchoolLogoUrl(selectedSchool);
   const major = String(formData.get("major") ?? "").trim();
   const graduationYear = String(formData.get("graduationYear") ?? "").trim();
   const targetRoles = parseList(formData.get("targetRoles"));
@@ -72,6 +76,7 @@ export async function updateProfile(formData: FormData) {
     .update({
       full_name: fullName,
       school: school || null,
+      school_logo_url: schoolLogoUrl || null,
       major: major || null,
       graduation_year: graduationYear || null,
       target_roles: targetRoles,

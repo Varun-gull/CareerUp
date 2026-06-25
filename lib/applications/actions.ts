@@ -23,6 +23,7 @@ function getSafePostingsReturnTo(value: FormDataEntryValue | null) {
 
 const validStatuses: ApplicationStatus[] = ["saved", "applied", "interviewing", "offer", "rejected"];
 const PAID_STREAK_REVIVE_COST = 250;
+const DAILY_APPLY_CHALLENGE_TITLE = "Daily Apply Sprint";
 
 async function countApplicationsAppliedToday(supabase: NonNullable<ReturnType<typeof getSupabaseServerClient>>, userId: string) {
   const { count } = await supabase
@@ -116,6 +117,42 @@ async function updateAppliedStreakAndStats({
 
   const { error } = await supabase.from("profiles").update(updates).eq("id", userId);
   return error;
+}
+
+async function awardDailyApplyChallenge(supabase: NonNullable<ReturnType<typeof getSupabaseServerClient>>, userId: string) {
+  const today = getTodayKey();
+  const { data: challenge } = await supabase
+    .from("challenges")
+    .select("id, xp_reward")
+    .eq("title", DAILY_APPLY_CHALLENGE_TITLE)
+    .eq("active", true)
+    .maybeSingle<{ id: string; xp_reward: number }>();
+
+  if (!challenge) {
+    return;
+  }
+
+  const { data: existing } = await supabase
+    .from("completed_challenges")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("challenge_id", challenge.id)
+    .eq("completed_on", today)
+    .maybeSingle<{ id: string }>();
+
+  if (existing) {
+    return;
+  }
+
+  const { error: insertError } = await supabase.from("completed_challenges").insert({
+    user_id: userId,
+    challenge_id: challenge.id,
+    completed_on: today
+  });
+
+  if (!insertError) {
+    await supabase.rpc("award_xp", { amount: challenge.xp_reward });
+  }
 }
 
 export async function createApplication(formData: FormData) {
@@ -327,6 +364,8 @@ export async function updateApplicationStatus(formData: FormData) {
     if (profileError) {
       redirectWithMessage("/applications", profileError.message);
     }
+
+    await awardDailyApplyChallenge(supabase, user.id);
   }
 
   if (nextStatus === "applied" && application.status !== "applied") {
@@ -360,6 +399,7 @@ export async function updateApplicationStatus(formData: FormData) {
   revalidatePath("/leaderboard");
   revalidatePath("/profile");
   revalidatePath("/calendar");
+  revalidatePath("/rewards");
 }
 
 export async function deleteApplication(formData: FormData) {

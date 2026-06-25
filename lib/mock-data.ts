@@ -3,6 +3,7 @@ import type { Application, Challenge, LeaderboardUser, Profile } from "./types";
 export const profile: Profile = {
   name: "Varun",
   school: "Student Builder",
+  schoolLogoUrl: "",
   major: "Computer Science",
   graduationYear: "2027",
   targetRoles: ["Software Engineering", "Product", "Data"],
@@ -90,8 +91,8 @@ export const challenges: Challenge[] = [
 ];
 
 export const leaderboard: LeaderboardUser[] = [
-  { id: "u1", name: "Maya", school: "Rutgers", xp: 910, streak: 11 },
-  { id: "u2", name: "Jordan", school: "NYU", xp: 710, streak: 8 },
-  { id: "u3", name: "Varun", school: "Student Builder", xp: profile.xp, streak: profile.streak },
-  { id: "u4", name: "Ari", school: "Stevens", xp: 360, streak: 4 }
+  { id: "u1", name: "Maya", school: "Rutgers University", schoolLogoUrl: "https://logo.clearbit.com/rutgers.edu", xp: 910, streak: 11 },
+  { id: "u2", name: "Jordan", school: "New York University", schoolLogoUrl: "https://logo.clearbit.com/nyu.edu", xp: 710, streak: 8 },
+  { id: "u3", name: "Varun", school: "Student Builder", schoolLogoUrl: "", xp: profile.xp, streak: profile.streak },
+  { id: "u4", name: "Ari", school: "Stevens Institute of Technology", schoolLogoUrl: "https://logo.clearbit.com/stevens.edu", xp: 360, streak: 4 }
 ];

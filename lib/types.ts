@@ -63,6 +63,7 @@ export type LeaderboardUser = {
   id: string;
   name: string;
   school: string;
+  schoolLogoUrl: string;
   xp: number;
   streak: number;
 };
@@ -73,6 +74,7 @@ export type Friend = {
   name: string;
   email: string;
   school: string;
+  schoolLogoUrl: string;
   xp: number;
   streak: number;
   status: "pending" | "accepted" | "blocked";
@@ -83,6 +85,7 @@ export type PublicProfile = {
   id: string;
   name: string;
   school: string;
+  schoolLogoUrl: string;
   major: string;
   graduationYear: string;
   targetRoles: string[];
@@ -96,6 +99,7 @@ export type MutualFriend = {
   id: string;
   name: string;
   school: string;
+  schoolLogoUrl: string;
   xp: number;
 };
 
@@ -114,6 +118,7 @@ export type CalendarEvent = {
 export type Profile = {
   name: string;
   school: string;
+  schoolLogoUrl: string;
   major: string;
   graduationYear: string;
   targetRoles: string[];

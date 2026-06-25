@@ -5,6 +5,7 @@ import { RankBadge } from "@/components/RankBadge";
 import { XpProgressBar } from "@/components/XpProgressBar";
 import { getCurrentProfile } from "@/lib/data";
 import { saveResumeProfile, updateProfile } from "@/lib/profile/actions";
+import { schoolOptions } from "@/lib/schools";
 
 export const runtime = "nodejs";
 
@@ -19,8 +20,8 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
           <div className="bg-ink px-6 py-10 text-white">
             <div className="flex flex-wrap items-center justify-between gap-5">
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-purple-700 text-2xl font-black">
-                  {profile.name.charAt(0)}
+                <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-purple-700 text-2xl font-black">
+                  {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                 </div>
                 <div>
                   <h1 className="text-3xl font-black">{profile.name}</h1>
@@ -45,7 +46,15 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                 <div className="grid gap-5 sm:grid-cols-2">
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     School
-                    <input name="school" defaultValue={profile.school} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Rutgers University" />
+                    <select name="school" defaultValue={schoolOptions.some((school) => school.name === profile.school) ? profile.school : ""} className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-purple-600">
+                      <option value="">Choose a college or university</option>
+                      {schoolOptions.map((school) => (
+                        <option key={school.name} value={school.name}>
+                          {school.name}
+                        </option>
+                      ))}
+                    </select>
+                    <input name="customSchool" defaultValue={schoolOptions.some((school) => school.name === profile.school) ? "" : profile.school} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Not listed? Type your school here" />
                   </label>
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Major

@@ -1,4 +1,4 @@
-grant select (id, full_name, school, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied)
+grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied)
 on public.profiles
 to anon;
 

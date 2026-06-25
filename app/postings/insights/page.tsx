@@ -202,9 +202,13 @@ export default async function PostingInsightsPage({
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div className="flex min-w-0 items-center gap-3">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-purple-100 text-lg font-black text-purple-800">
+                        <Link
+                          href={`/u/${applicant.profileId}`}
+                          className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-purple-100 text-lg font-black text-purple-800 transition hover:ring-2 hover:ring-purple-300"
+                          aria-label={`Open ${applicant.name}'s profile`}
+                        >
                           <ApplicantAvatar applicant={applicant} />
-                        </div>
+                        </Link>
                         <div className="min-w-0">
                           <ProfileLink profileId={applicant.profileId} name={applicant.name} />
                           <p className="truncate text-sm font-bold text-slate-500">{applicant.school}</p>

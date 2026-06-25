@@ -50,6 +50,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                       name="school"
                       defaultValue={profile.school}
                       list="school-options"
+                      autoComplete="organization"
                       className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-purple-600"
                       placeholder="Choose or type your school"
                     />
@@ -61,7 +62,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                       ))}
                       <option value="Other / type your school">Other / type your school</option>
                     </datalist>
-                    <span className="text-xs font-bold text-slate-500">Pick a listed school for an automatic logo, or type another school name.</span>
+                    <span className="text-xs font-bold text-slate-500">Pick a listed school for an automatic logo, or type your school name in this same box.</span>
                   </label>
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Major

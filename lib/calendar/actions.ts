@@ -62,6 +62,37 @@ export async function addCalendarEvent(formData: FormData) {
   revalidatePath("/calendar");
 }
 
+export async function promoteAndMoveCalendarEvent({
+  applicationId, company, role, status, eventType, date,
+}: {
+  applicationId: string; company: string; role: string;
+  status: string; eventType: string; date: string;
+}) {
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  // Delete any existing DB record for this app+eventType, then insert at new date
+  await supabase.from("calendar_events")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("application_id", applicationId)
+    .eq("event_type", eventType);
+
+  await supabase.from("calendar_events").insert({
+    user_id: user.id,
+    application_id: applicationId,
+    company,
+    role,
+    status,
+    event_type: eventType,
+    date,
+  });
+
+  revalidatePath("/calendar");
+}
+
 export async function moveCalendarEvent(id: string, newDate: string) {
   const supabase = getSupabaseServerClient();
   if (!supabase) return;

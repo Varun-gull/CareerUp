@@ -3,7 +3,7 @@
 import { ChevronLeft, ChevronRight, CalendarDays, List, X, CalendarPlus } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import clsx from "clsx";
-import { addCalendarEvent, deleteCalendarEvent, moveCalendarEvent } from "@/lib/calendar/actions";
+import { addCalendarEvent, deleteCalendarEvent, moveCalendarEvent, promoteAndMoveCalendarEvent } from "@/lib/calendar/actions";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
 import { InterviewModal } from "@/components/InterviewModal";
 import { addInterviewEvent } from "@/lib/calendar/actions";
@@ -211,8 +211,21 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
       // Move immediately in local state
       setEvents((prev) => prev.map((e) => e.id === dragEvent.id ? { ...e, date: dateStr } : e));
 
+      const ev = dragEvent;
       startTransition(async () => {
-        await moveCalendarEvent(dragEvent.id, dateStr);
+        if (ev.id.startsWith("derived-") || ev.id.startsWith("temp-")) {
+          // Promote derived/temp event to a real DB record at the new date
+          await promoteAndMoveCalendarEvent({
+            applicationId: ev.applicationId,
+            company: ev.company,
+            role: ev.role,
+            status: ev.status,
+            eventType: ev.eventType,
+            date: dateStr,
+          });
+        } else {
+          await moveCalendarEvent(ev.id, dateStr);
+        }
       });
       setDragEvent(null);
     }

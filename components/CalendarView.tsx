@@ -310,7 +310,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               <ChevronRight size={18} />
             </button>
             <button
-              onClick={() => setAnchor(new Date(today.getFullYear(), today.getMonth(), 1))}
+              onClick={() => setAnchor(view === "week" ? startOfWeek(today) : new Date(today.getFullYear(), today.getMonth(), 1))}
               className="ml-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600 hover:border-purple-300 hover:text-purple-800 transition-colors"
             >
               Today
@@ -319,7 +319,11 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
 
           <div className="flex rounded-lg border border-slate-200 bg-white p-1">
             <button
-              onClick={() => setView("month")}
+              onClick={() => {
+                setView("month");
+                // Snap anchor to the 1st of the month currently visible in week view
+                setAnchor((prev) => new Date(prev.getFullYear(), prev.getMonth(), 1));
+              }}
               className={clsx(
                 "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors",
                 view === "month" ? "bg-purple-700 text-white" : "text-slate-600 hover:text-purple-800"
@@ -328,7 +332,11 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               <CalendarDays size={14} /> Month
             </button>
             <button
-              onClick={() => setView("week")}
+              onClick={() => {
+                setView("week");
+                // Snap anchor to the current week so events placed this month are visible
+                setAnchor(startOfWeek(anchor));
+              }}
               className={clsx(
                 "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors",
                 view === "week" ? "bg-purple-700 text-white" : "text-slate-600 hover:text-purple-800"

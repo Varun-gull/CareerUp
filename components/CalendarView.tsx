@@ -256,14 +256,20 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
 
   return (
     <div className="flex h-[calc(100vh-80px)] gap-5 overflow-hidden">
-      {scheduleApp && (
-        <InterviewModal
-          company={scheduleApp.company}
-          role={scheduleApp.role}
-          onConfirm={handleScheduleInterview}
-          onCancel={() => setScheduleApp(null)}
-        />
-      )}
+      {scheduleApp && (() => {
+        const existing = events.find((e) => e.applicationId === scheduleApp.id && e.eventType === "interview");
+        return (
+          <InterviewModal
+            company={scheduleApp.company}
+            role={scheduleApp.role}
+            initialDate={existing?.date}
+            initialTime={existing?.time}
+            initialNotes={existing?.notes}
+            onConfirm={handleScheduleInterview}
+            onCancel={() => setScheduleApp(null)}
+          />
+        );
+      })()}
       {/* Left sidebar */}
       <aside className="flex w-72 flex-none flex-col rounded-xl border border-slate-200 bg-white/80 backdrop-blur">
         <div className="border-b border-slate-100 px-4 py-4">

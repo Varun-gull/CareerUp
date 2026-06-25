@@ -6,6 +6,9 @@ import { useRef } from "react";
 type Props = {
   company: string;
   role: string;
+  initialDate?: string;
+  initialTime?: string;
+  initialNotes?: string;
   onConfirm: (date: string, time: string, notes: string) => void;
   onCancel: () => void;
 };
@@ -15,7 +18,7 @@ function todayLocal() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-export function InterviewModal({ company, role, onConfirm, onCancel }: Props) {
+export function InterviewModal({ company, role, initialDate, initialTime, initialNotes, onConfirm, onCancel }: Props) {
   const dateRef = useRef<HTMLInputElement>(null);
   const timeRef = useRef<HTMLInputElement>(null);
   const notesRef = useRef<HTMLTextAreaElement>(null);
@@ -46,7 +49,7 @@ export function InterviewModal({ company, role, onConfirm, onCancel }: Props) {
             <input
               ref={dateRef}
               type="date"
-              defaultValue={todayLocal()}
+              defaultValue={initialDate ?? todayLocal()}
               className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600"
             />
           </label>
@@ -55,6 +58,7 @@ export function InterviewModal({ company, role, onConfirm, onCancel }: Props) {
             <input
               ref={timeRef}
               type="time"
+              defaultValue={initialTime ?? ""}
               className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600"
             />
           </label>
@@ -63,6 +67,7 @@ export function InterviewModal({ company, role, onConfirm, onCancel }: Props) {
             <textarea
               ref={notesRef}
               rows={3}
+              defaultValue={initialNotes ?? ""}
               placeholder="Interviewer name, format, things to prepare..."
               className="resize-none rounded-lg border border-slate-200 px-4 py-3 text-sm outline-none focus:border-purple-600"
             />

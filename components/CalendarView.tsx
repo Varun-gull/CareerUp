@@ -208,13 +208,20 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
     }
 
     if (dragEvent && dragEvent.date !== dateStr) {
-      // Move immediately in local state
-      setEvents((prev) => prev.map((e) => e.id === dragEvent.id ? { ...e, date: dateStr } : e));
-
       const ev = dragEvent;
+      const movedEvent = { ...ev, date: dateStr };
+
+      // Move immediately in local state
+      setEvents((prev) => prev.map((e) => e.id === ev.id ? movedEvent : e));
+
+      // If it's an interview event, update localStorage + notify listeners so
+      // the rest of the app reflects the new date immediately
+      if (ev.eventType === "interview") {
+        dispatchInterviewScheduled(movedEvent);
+      }
+
       startTransition(async () => {
         if (ev.id.startsWith("derived-") || ev.id.startsWith("temp-") || ev.id.startsWith("pending-")) {
-          // Promote derived/temp event to a real DB record at the new date
           await promoteAndMoveCalendarEvent({
             applicationId: ev.applicationId,
             company: ev.company,

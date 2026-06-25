@@ -7,6 +7,8 @@ export type Application = {
   location: string;
   source: string;
   status: ApplicationStatus;
+  roleKey: string;
+  applicationYear: number;
   fitScore: number;
   xp: number;
   deadline: string;
@@ -101,6 +103,56 @@ export type MutualFriend = {
   school: string;
   schoolLogoUrl: string;
   xp: number;
+};
+
+export type RolePeerInsight = {
+  roleKey: string;
+  trackedCount: number;
+  appliedCount: number;
+  interviewedCount: number;
+  offerCount: number;
+};
+
+export type RolePeerFeatureStatus = {
+  ready: boolean;
+  missing: string[];
+};
+
+export type RolePeerApplicant = {
+  applicationId: string;
+  profileId: string;
+  name: string;
+  school: string;
+  schoolLogoUrl: string;
+  company: string;
+  role: string;
+  location: string;
+  status: ApplicationStatus;
+  applicationYear: number;
+  updatedAt: string;
+  canMessage: boolean;
+};
+
+export type PeerMessage = {
+  id: string;
+  roleKey: string;
+  applicationId: string;
+  senderId: string;
+  recipientId: string;
+  otherProfileId: string;
+  otherName: string;
+  otherSchool: string;
+  otherSchoolLogoUrl: string;
+  subject: string;
+  body: string;
+  readAt: string;
+  unread: boolean;
+  createdAt: string;
+  direction: "sent" | "received";
+  applicationCompany: string;
+  applicationRole: string;
+  applicationStatus: ApplicationStatus;
+  applicationYear: number;
 };
 
 export type CalendarEvent = {

@@ -1,11 +1,21 @@
 "use client";
 
-import { UserRound, Users, User, LogOut, Settings } from "lucide-react";
+import { UserRound, Users, User, LogOut, Mail, Settings } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { logOut } from "@/lib/auth/actions";
 
-export function ProfileDropdown({ initials, displayName, loggedIn }: { initials: string; displayName?: string; loggedIn: boolean }) {
+export function ProfileDropdown({
+  initials,
+  displayName,
+  loggedIn,
+  unreadMessages = 0
+}: {
+  initials: string;
+  displayName?: string;
+  loggedIn: boolean;
+  unreadMessages?: number;
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -55,6 +65,16 @@ export function ProfileDropdown({ initials, displayName, loggedIn }: { initials:
             className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-800"
           >
             <Users size={16} /> Friends
+          </Link>
+          <Link
+            href="/messages"
+            onClick={() => setOpen(false)}
+            className="flex items-center justify-between gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-800"
+          >
+            <span className="inline-flex items-center gap-3">
+              <Mail size={16} /> Messages
+            </span>
+            {unreadMessages > 0 && <span className="rounded-full bg-purple-700 px-2 py-0.5 text-xs font-black text-white">{unreadMessages}</span>}
           </Link>
           <Link
             href="/settings"

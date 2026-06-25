@@ -12,7 +12,7 @@ export default async function PublicProfilePage({
   searchParams
 }: {
   params: { profileId: string };
-  searchParams?: { message?: string };
+  searchParams?: { message?: string; year?: string };
 }) {
   const [profile, user, friendship, sharedBoard, mutualFriends] = await Promise.all([
     getPublicProfile(params.profileId),
@@ -23,6 +23,12 @@ export default async function PublicProfilePage({
   ]);
   const isOwnProfile = user?.id === params.profileId;
   const isAcceptedFriend = friendship?.status === "accepted";
+  const boardYears = Array.from(new Set(sharedBoard.applications.map((application) => application.applicationYear))).sort((a, b) => b - a);
+  const requestedBoardYear = searchParams?.year === "all" ? "all" : Number(searchParams?.year);
+  const selectedBoardYear: number | "all" =
+    requestedBoardYear === "all" ? "all" : boardYears.includes(requestedBoardYear) ? requestedBoardYear : boardYears[0] ?? new Date().getFullYear();
+  const visibleBoardApplications =
+    selectedBoardYear === "all" ? sharedBoard.applications : sharedBoard.applications.filter((application) => application.applicationYear === selectedBoardYear);
 
   return (
     <>
@@ -127,12 +133,37 @@ export default async function PublicProfilePage({
                     <p className="eyebrow">Application board</p>
                     <h2 className="mt-2 text-2xl font-black text-ink">Pipeline</h2>
                   </div>
-                  {sharedBoard.canView && <p className="text-sm font-bold text-slate-500">{sharedBoard.applications.length} visible roles</p>}
+                  {sharedBoard.canView && <p className="text-sm font-bold text-slate-500">{visibleBoardApplications.length} visible roles</p>}
                 </div>
 
                 {sharedBoard.canView ? (
                   sharedBoard.applications.length > 0 ? (
-                    <PublicApplicationBoard applications={sharedBoard.applications} />
+                    <>
+                      <div className="mb-4 flex flex-wrap gap-2">
+                        {boardYears.map((year) => (
+                          <Link
+                            key={year}
+                            href={`/u/${params.profileId}?year=${year}`}
+                            className={`rounded-lg px-4 py-2 text-sm font-black transition ${
+                              selectedBoardYear === year ? "bg-purple-700 text-white shadow-lg shadow-purple-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-purple-300 hover:text-purple-800"
+                            }`}
+                            aria-current={selectedBoardYear === year ? "page" : undefined}
+                          >
+                            {year}
+                          </Link>
+                        ))}
+                        <Link
+                          href={`/u/${params.profileId}?year=all`}
+                          className={`rounded-lg px-4 py-2 text-sm font-black transition ${
+                            selectedBoardYear === "all" ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-purple-300 hover:text-purple-800"
+                          }`}
+                          aria-current={selectedBoardYear === "all" ? "page" : undefined}
+                        >
+                          All years
+                        </Link>
+                      </div>
+                      <PublicApplicationBoard applications={visibleBoardApplications} />
+                    </>
                   ) : (
                     <div className="rounded-lg border border-dashed border-slate-200 bg-white/80 p-6 text-sm font-bold text-slate-500">No applications are on this board yet.</div>
                   )

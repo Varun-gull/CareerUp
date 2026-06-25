@@ -1,6 +1,8 @@
-import { BookmarkPlus, CheckCircle2, ExternalLink } from "lucide-react";
+import { BookmarkPlus, CheckCircle2, ExternalLink, UsersRound } from "lucide-react";
+import Link from "next/link";
 import { savePostingApplication } from "@/lib/applications/actions";
-import type { InternshipPosting } from "@/lib/types";
+import { buildRoleKey } from "@/lib/role-key";
+import type { InternshipPosting, RolePeerInsight } from "@/lib/types";
 
 function workModeTone(workMode: InternshipPosting["workMode"]) {
   if (workMode === "remote") {
@@ -34,10 +36,12 @@ export function PostingsTable({
   postings,
   returnTo,
   savedSourceUrls,
+  peerInsights,
 }: {
   postings: InternshipPosting[];
   returnTo: string;
   savedSourceUrls: Set<string>;
+  peerInsights: Map<string, RolePeerInsight>;
 }) {
   return (
     <div className="mt-6 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
@@ -52,6 +56,7 @@ export function PostingsTable({
               <th className="hidden w-28 border-b border-slate-200 px-2 py-3 md:table-cell">Work Model</th>
               <th className="w-[20%] border-b border-slate-200 px-3 py-3">Location</th>
               <th className="hidden w-[16%] border-b border-slate-200 px-3 py-3 lg:table-cell">Company</th>
+              <th className="hidden w-28 border-b border-slate-200 px-2 py-3 xl:table-cell">Peers</th>
               <th className="w-16 border-b border-slate-200 px-2 py-3">Fit</th>
               <th className="w-24 border-b border-slate-200 px-2 py-3">Save</th>
             </tr>
@@ -59,6 +64,14 @@ export function PostingsTable({
           <tbody className="divide-y divide-slate-100">
             {postings.map((posting, index) => {
               const saved = savedSourceUrls.has(posting.url);
+              const roleKey = buildRoleKey(posting.company, posting.title);
+              const peerInsight = peerInsights.get(roleKey);
+              const insightHref = `/postings/insights?${new URLSearchParams({
+                roleKey,
+                company: posting.company,
+                role: posting.title,
+                returnTo
+              }).toString()}`;
 
               return (
               <tr key={posting.id} className="align-middle transition hover:bg-purple-50/40">
@@ -94,6 +107,17 @@ export function PostingsTable({
                   <p className="truncate font-black text-purple-800" title={posting.company}>
                     {posting.company}
                   </p>
+                </td>
+                <td className="hidden px-2 py-3 xl:table-cell">
+                  <Link
+                    href={insightHref}
+                    className="inline-flex min-h-8 w-full items-center justify-center rounded-md bg-purple-50 px-2 text-xs font-black text-purple-800 ring-1 ring-purple-200 transition hover:bg-purple-100"
+                    title="See who else tracked this role"
+                  >
+                    <UsersRound className="mr-1" size={14} />
+                    {peerInsight?.trackedCount ?? 0}
+                    <span className="ml-1 text-[10px] text-purple-600">/{peerInsight?.interviewedCount ?? 0} int</span>
+                  </Link>
                 </td>
                 <td className="whitespace-nowrap px-2 py-3">
                   <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-black ${fitTone(posting.fitScore)}`}>{posting.fitScore}%</span>

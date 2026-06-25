@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { buildRoleKey } from "@/lib/role-key";
 import { getDateKeyStartUtcIso, getNextStreak, getTodayKey, isBrokenStreak } from "@/lib/streak";
 import type { ApplicationStatus } from "@/lib/types";
 
@@ -180,16 +181,26 @@ export async function createApplication(formData: FormData) {
     redirectWithMessage("/applications/new", "Company and role are required.");
   }
 
-  const { error } = await supabase.from("applications").insert({
+  const insertPayload = {
     user_id: user.id,
     company,
     role,
+    role_key: buildRoleKey(company, role),
+    application_year: new Date().getFullYear(),
     location: location || null,
     source_url: sourceUrl || null,
     deadline,
     status: "saved",
     xp_awarded: 5
-  });
+  };
+
+  let { error } = await supabase.from("applications").insert(insertPayload);
+
+  if (error && /role_key|application_year/i.test(error.message)) {
+    const { role_key, application_year, ...legacyPayload } = insertPayload;
+    const retry = await supabase.from("applications").insert(legacyPayload);
+    error = retry.error;
+  }
 
   if (error) {
     redirectWithMessage("/applications/new", error.message);
@@ -312,16 +323,26 @@ export async function savePostingApplication(formData: FormData) {
     redirectWithMessage(returnTo, "That posting is already in your tracker.");
   }
 
-  const { error } = await supabase.from("applications").insert({
+  const insertPayload = {
     user_id: user.id,
     company,
     role,
+    role_key: buildRoleKey(company, role),
+    application_year: new Date().getFullYear(),
     location: location || null,
     source_url: sourceUrl,
     fit_score: Number.isFinite(fitScore) ? Math.min(100, Math.max(0, fitScore)) : 75,
     status: "saved",
     xp_awarded: 5
-  });
+  };
+
+  let { error } = await supabase.from("applications").insert(insertPayload);
+
+  if (error && /role_key|application_year/i.test(error.message)) {
+    const { role_key, application_year, ...legacyPayload } = insertPayload;
+    const retry = await supabase.from("applications").insert(legacyPayload);
+    error = retry.error;
+  }
 
   if (error) {
     redirectWithMessage(returnTo, error.message);

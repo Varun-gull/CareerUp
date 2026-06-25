@@ -1,3 +1,4 @@
+import { buildRoleKey } from "./role-key";
 import type { Application, Challenge, LeaderboardUser, Profile } from "./types";
 
 export const profile: Profile = {
@@ -30,6 +31,8 @@ export const applications: Application[] = [
     location: "New York, NY",
     source: "Handshake",
     status: "applied",
+    roleKey: buildRoleKey("Northstar Labs", "Software Engineering Intern"),
+    applicationYear: 2026,
     fitScore: 92,
     xp: 20,
     deadline: "2026-07-01",
@@ -42,6 +45,8 @@ export const applications: Application[] = [
     location: "Remote",
     source: "Company site",
     status: "interviewing",
+    roleKey: buildRoleKey("BlueGrid AI", "Product Intern"),
+    applicationYear: 2026,
     fitScore: 86,
     xp: 35,
     deadline: "2026-06-25",
@@ -54,6 +59,8 @@ export const applications: Application[] = [
     location: "Chicago, IL",
     source: "LinkedIn",
     status: "saved",
+    roleKey: buildRoleKey("Summit Capital", "Data Analyst Intern"),
+    applicationYear: 2026,
     fitScore: 79,
     xp: 5,
     deadline: "2026-07-10",

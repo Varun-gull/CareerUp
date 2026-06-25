@@ -2,7 +2,7 @@ import { BriefcaseBusiness, CalendarDays } from "lucide-react";
 import Link from "next/link";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { NavLinks } from "@/components/NavLinks";
-import { getCurrentProfile, getCurrentUser } from "@/lib/data";
+import { getCurrentProfile, getCurrentUser, getUnreadPeerMessageCount } from "@/lib/data";
 
 const MONTH_ABBR = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 
@@ -41,7 +41,7 @@ function getFirstName(name: string) {
 
 export async function Navbar() {
   const user = await getCurrentUser();
-  const profile = user ? await getCurrentProfile() : null;
+  const [profile, unreadMessages] = user ? await Promise.all([getCurrentProfile(), getUnreadPeerMessageCount()]) : [null, 0];
   const profileName = profile?.name ?? user?.email ?? "CareerUp";
   const initials = user ? getInitials(profileName) : "";
   const firstName = user ? getFirstName(profile?.name ?? "") : "";
@@ -58,7 +58,7 @@ export async function Navbar() {
         <NavLinks />
         <div className="flex shrink-0 items-center gap-2">
           <CalendarWidget />
-          <ProfileDropdown initials={initials} displayName={firstName} loggedIn={!!user} />
+          <ProfileDropdown initials={initials} displayName={firstName} loggedIn={!!user} unreadMessages={unreadMessages} />
         </div>
       </nav>
     </header>

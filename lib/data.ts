@@ -1,6 +1,7 @@
 import { applications as mockApplications, challenges as mockChallenges, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
 import { rewardCatalog } from "./rewards/catalog";
-import type { Application, CalendarEvent, Challenge, Friend, InterviewAnswer, LeaderboardUser, MutualFriend, Profile, PublicProfile, Reward } from "./types";
+import { buildRoleKey } from "./role-key";
+import type { Application, CalendarEvent, Challenge, Friend, InterviewAnswer, LeaderboardUser, MutualFriend, PeerMessage, Profile, PublicProfile, Reward, RolePeerApplicant, RolePeerFeatureStatus, RolePeerInsight } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
 import { getDateKeyStartUtcIso, getTodayKey, getVisibleStreak, isBrokenStreak } from "./streak";
 
@@ -11,6 +12,8 @@ type DbApplication = {
   location: string | null;
   source_url: string | null;
   status: Application["status"];
+  role_key?: string | null;
+  application_year?: number | null;
   fit_score: number | null;
   xp_awarded: number | null;
   deadline: string | null;
@@ -57,12 +60,60 @@ function mapDbApplication(application: DbApplication): Application {
     location: application.location ?? "Remote",
     source: application.source_url ?? "Saved manually",
     status: application.status,
+    roleKey: application.role_key ?? buildRoleKey(application.company, application.role),
+    applicationYear: application.application_year ?? new Date(application.updated_at).getFullYear(),
     fitScore: application.fit_score ?? 75,
     xp: application.xp_awarded ?? 0,
     deadline: application.deadline ?? "No deadline",
     updatedAt: new Date(application.updated_at).toLocaleDateString()
   };
 }
+
+type DbRolePeerInsight = {
+  role_key: string;
+  tracked_count: number | null;
+  applied_count: number | null;
+  interviewed_count: number | null;
+  offer_count: number | null;
+};
+
+type DbRolePeerApplicant = {
+  application_id: string;
+  profile_id: string;
+  full_name: string | null;
+  school: string | null;
+  school_logo_url: string | null;
+  company: string;
+  role: string;
+  location: string | null;
+  status: Application["status"];
+  application_year: number | null;
+  updated_at: string;
+  can_message: boolean | null;
+};
+
+type DbPeerMessage = {
+  id: string;
+  role_key: string;
+  application_id: string;
+  sender_id: string;
+  recipient_id: string;
+  subject: string;
+  body: string;
+  read_at: string | null;
+  created_at: string;
+};
+
+type DbPeerMessageWithContext = DbPeerMessage & {
+  other_profile_id: string | null;
+  other_full_name: string | null;
+  other_school: string | null;
+  other_school_logo_url: string | null;
+  application_company: string | null;
+  application_role: string | null;
+  application_status: Application["status"] | null;
+  application_year: number | null;
+};
 
 type DbUserReward = {
   reward_id: string;
@@ -188,6 +239,232 @@ export async function getApplications(): Promise<Application[]> {
   }
 
   return data.map(mapDbApplication);
+}
+
+export async function getRolePeerFeatureStatus(): Promise<RolePeerFeatureStatus> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return { ready: true, missing: [] };
+  }
+
+  const checks = await Promise.all([
+    supabase.from("applications").select("role_key, application_year").limit(1),
+    supabase.from("peer_messages").select("id", { count: "exact", head: true }),
+    supabase.rpc("get_role_peer_summaries", { role_keys: ["careerup_setup_check"] }),
+    supabase.rpc("get_role_peer_applicants", { target_role_key: "careerup_setup_check" }),
+    supabase.rpc("get_peer_messages")
+  ]);
+
+  const missing = [
+    checks[0].error ? "application year tracking columns" : "",
+    checks[1].error ? "peer message table" : "",
+    checks[2].error ? "peer summary function" : "",
+    checks[3].error ? "peer applicant function" : "",
+    checks[4].error ? "message inbox function" : ""
+  ].filter(Boolean);
+
+  return {
+    ready: missing.length === 0,
+    missing
+  };
+}
+
+export async function getRolePeerInsights(roleKeys: string[]): Promise<Map<string, RolePeerInsight>> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+  const uniqueRoleKeys = Array.from(new Set(roleKeys.filter(Boolean)));
+
+  if (!supabase || !user || uniqueRoleKeys.length === 0) {
+    return new Map();
+  }
+
+  const { data, error } = await supabase.rpc("get_role_peer_summaries", { role_keys: uniqueRoleKeys });
+
+  if (error || !data) {
+    return new Map();
+  }
+
+  const insights = data as DbRolePeerInsight[];
+
+  return new Map(
+    insights.map((insight) => [
+      insight.role_key,
+      {
+        roleKey: insight.role_key,
+        trackedCount: insight.tracked_count ?? 0,
+        appliedCount: insight.applied_count ?? 0,
+        interviewedCount: insight.interviewed_count ?? 0,
+        offerCount: insight.offer_count ?? 0
+      }
+    ])
+  );
+}
+
+export async function getRolePeerApplicants(roleKey: string): Promise<RolePeerApplicant[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user || !roleKey) {
+    return [];
+  }
+
+  const { data, error } = await supabase.rpc("get_role_peer_applicants", { target_role_key: roleKey });
+
+  if (error || !data) {
+    return [];
+  }
+
+  const applicants = data as DbRolePeerApplicant[];
+
+  return applicants.map((applicant) => ({
+    applicationId: applicant.application_id,
+    profileId: applicant.profile_id,
+    name: applicant.full_name ?? "CareerUp Student",
+    school: applicant.school ?? "Student",
+    schoolLogoUrl: applicant.school_logo_url ?? "",
+    company: applicant.company,
+    role: applicant.role,
+    location: applicant.location ?? "Remote",
+    status: applicant.status,
+    applicationYear: applicant.application_year ?? new Date(applicant.updated_at).getFullYear(),
+    updatedAt: new Date(applicant.updated_at).toLocaleDateString(),
+    canMessage: applicant.can_message ?? false
+  }));
+}
+
+export async function getPeerMessages(): Promise<PeerMessage[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return [];
+  }
+
+  const { data: rpcMessages, error: rpcError } = await supabase.rpc("get_peer_messages");
+
+  if (!rpcError && rpcMessages) {
+    return (rpcMessages as DbPeerMessageWithContext[]).map((message) => {
+      const direction = message.sender_id === user.id ? "sent" : "received";
+
+      return {
+        id: message.id,
+        roleKey: message.role_key,
+        applicationId: message.application_id,
+        senderId: message.sender_id,
+        recipientId: message.recipient_id,
+        otherProfileId: message.other_profile_id ?? (direction === "sent" ? message.recipient_id : message.sender_id),
+        otherName: message.other_full_name ?? "CareerUp Student",
+        otherSchool: message.other_school ?? "Student",
+        otherSchoolLogoUrl: message.other_school_logo_url ?? "",
+        subject: message.subject,
+        body: message.body,
+        readAt: message.read_at ? new Date(message.read_at).toLocaleDateString() : "",
+        unread: direction === "received" && !message.read_at,
+        createdAt: new Date(message.created_at).toLocaleString([], {
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit"
+        }),
+        direction,
+        applicationCompany: message.application_company ?? "Role",
+        applicationRole: message.application_role ?? "CareerUp role",
+        applicationStatus: message.application_status ?? "saved",
+        applicationYear: message.application_year ?? new Date(message.created_at).getFullYear()
+      };
+    });
+  }
+
+  const { data: messages, error } = await supabase
+    .from("peer_messages")
+    .select("id, role_key, application_id, sender_id, recipient_id, subject, body, read_at, created_at")
+    .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`)
+    .order("created_at", { ascending: false })
+    .returns<DbPeerMessage[]>();
+
+  if (error || !messages?.length) {
+    return [];
+  }
+
+  const profileIds = Array.from(new Set(messages.flatMap((message) => [message.sender_id, message.recipient_id]).filter((id) => id !== user.id)));
+  const applicationIds = Array.from(new Set(messages.map((message) => message.application_id).filter(Boolean)));
+
+  const [{ data: profiles }, { data: applications }] = await Promise.all([
+    profileIds.length > 0
+      ? supabase
+          .from("profiles")
+          .select("id, full_name, school, school_logo_url")
+          .in("id", profileIds)
+          .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url">>>()
+      : Promise.resolve({ data: [] }),
+    applicationIds.length > 0
+      ? supabase
+          .from("applications")
+          .select("*")
+          .in("id", applicationIds)
+          .returns<DbApplication[]>()
+      : Promise.resolve({ data: [] })
+  ]);
+
+  const profilesById = new Map((profiles ?? []).map((profile) => [profile.id, profile]));
+  const applicationsById = new Map((applications ?? []).map((application) => [application.id, mapDbApplication(application)]));
+
+  return messages.map((message) => {
+    const direction = message.sender_id === user.id ? "sent" : "received";
+    const otherProfileId = direction === "sent" ? message.recipient_id : message.sender_id;
+    const otherProfile = profilesById.get(otherProfileId);
+    const application = applicationsById.get(message.application_id);
+
+    return {
+      id: message.id,
+      roleKey: message.role_key,
+      applicationId: message.application_id,
+      senderId: message.sender_id,
+      recipientId: message.recipient_id,
+      otherProfileId,
+      otherName: otherProfile?.full_name ?? "CareerUp Student",
+      otherSchool: otherProfile?.school ?? "Student",
+      otherSchoolLogoUrl: otherProfile?.school_logo_url ?? "",
+      subject: message.subject,
+      body: message.body,
+      readAt: message.read_at ? new Date(message.read_at).toLocaleDateString() : "",
+      unread: direction === "received" && !message.read_at,
+      createdAt: new Date(message.created_at).toLocaleString([], {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+      }),
+      direction,
+      applicationCompany: application?.company ?? "Role",
+      applicationRole: application?.role ?? "CareerUp role",
+      applicationStatus: application?.status ?? "saved",
+      applicationYear: application?.applicationYear ?? new Date(message.created_at).getFullYear()
+    };
+  });
+}
+
+export async function getUnreadPeerMessageCount(): Promise<number> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return 0;
+  }
+
+  const { count, error } = await supabase
+    .from("peer_messages")
+    .select("id", { count: "exact", head: true })
+    .eq("recipient_id", user.id)
+    .is("read_at", null);
+
+  if (error) {
+    return 0;
+  }
+
+  return count ?? 0;
 }
 
 export async function getLeaderboard(): Promise<LeaderboardUser[]> {

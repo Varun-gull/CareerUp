@@ -4,8 +4,10 @@ import { EmptyState } from "@/components/EmptyState";
 import { Navbar } from "@/components/Navbar";
 import { PostingsSearchForm } from "@/components/PostingsSearchForm";
 import { PostingsTable } from "@/components/PostingsTable";
-import { getApplications, getCurrentProfile } from "@/lib/data";
+import { RolePeerSetupNotice } from "@/components/RolePeerSetupNotice";
+import { getApplications, getCurrentProfile, getRolePeerFeatureStatus, getRolePeerInsights } from "@/lib/data";
 import { searchInternshipPostings, type PostingKind } from "@/lib/postings";
+import { buildRoleKey } from "@/lib/role-key";
 import type { InternshipPosting } from "@/lib/types";
 
 type RemoteFilter = "all" | "remote" | "hybrid" | "onsite";
@@ -139,6 +141,10 @@ export async function PostingsPageView({
   const applications = await getApplications();
   const savedSourceUrls = new Set(applications.map((application) => application.source).filter((source) => source.startsWith("http")));
   const postings = sortPostings(filterPostings(searchResult.postings, remoteFilter, minFit), sort);
+  const [peerInsights, peerFeatureStatus] = await Promise.all([
+    getRolePeerInsights(postings.map((posting) => buildRoleKey(posting.company, posting.title))),
+    getRolePeerFeatureStatus()
+  ]);
   const pageTitle = kind === "new-grad" ? "New grad postings" : "Internship postings";
   const pageCopy =
     kind === "new-grad"
@@ -170,6 +176,7 @@ export async function PostingsPageView({
         </div>
 
         {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+        <RolePeerSetupNotice status={peerFeatureStatus} />
 
         <PostingsSearchForm
           roleSuggestions={roleSuggestions}
@@ -201,7 +208,7 @@ export async function PostingsPageView({
         </div>
 
         {postings.length > 0 ? (
-          <PostingsTable postings={postings} returnTo={returnHref} savedSourceUrls={savedSourceUrls} />
+          <PostingsTable postings={postings} returnTo={returnHref} savedSourceUrls={savedSourceUrls} peerInsights={peerInsights} />
         ) : (
           <div className="mt-8">
             <EmptyState icon={Search} title="No postings found" description="Try a broader keyword, clear the location, or lower the minimum fit." actionHref={resetHref} actionLabel="Reset search" />

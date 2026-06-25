@@ -28,23 +28,49 @@ function matchesSearch(application: Application, query: string) {
   return haystack.includes(query.toLowerCase());
 }
 
+function getYearHref(year: number | "all", query: string, status: ApplicationStatus | "all") {
+  const params = new URLSearchParams();
+
+  if (year !== "all") {
+    params.set("year", String(year));
+  } else {
+    params.set("year", "all");
+  }
+
+  if (query) {
+    params.set("q", query);
+  }
+
+  if (status !== "all") {
+    params.set("status", status);
+  }
+
+  return `/applications?${params.toString()}`;
+}
+
 export default async function ApplicationsPage({
   searchParams
 }: {
   searchParams?: {
     q?: string;
     status?: ApplicationStatus | "all";
+    year?: string;
     message?: string;
   };
 }) {
   const applications = await getApplications();
   const query = searchParams?.q?.trim() ?? "";
-  const statusFilter = pipelineColumns.some((column) => column.status === searchParams?.status) ? searchParams?.status : "all";
-  const visibleApplications = applications.filter((application) => matchesSearch(application, query) && (statusFilter === "all" || application.status === statusFilter));
-  const savedCount = applications.filter((application) => application.status === "saved").length;
-  const appliedCount = applications.filter((application) => application.status !== "saved").length;
-  const interviewingCount = applications.filter((application) => application.status === "interviewing").length;
-  const offerCount = applications.filter((application) => application.status === "offer").length;
+  const statusFilter: ApplicationStatus | "all" = pipelineColumns.some((column) => column.status === searchParams?.status) ? (searchParams?.status as ApplicationStatus) : "all";
+  const years = Array.from(new Set(applications.map((application) => application.applicationYear))).sort((a, b) => b - a);
+  const requestedYear = searchParams?.year === "all" ? "all" : Number(searchParams?.year);
+  const selectedYear: number | "all" =
+    requestedYear === "all" ? "all" : years.includes(requestedYear) ? requestedYear : years[0] ?? new Date().getFullYear();
+  const yearApplications = selectedYear === "all" ? applications : applications.filter((application) => application.applicationYear === selectedYear);
+  const visibleApplications = yearApplications.filter((application) => matchesSearch(application, query) && (statusFilter === "all" || application.status === statusFilter));
+  const savedCount = yearApplications.filter((application) => application.status === "saved").length;
+  const appliedCount = yearApplications.filter((application) => application.status !== "saved").length;
+  const interviewingCount = yearApplications.filter((application) => application.status === "interviewing").length;
+  const offerCount = yearApplications.filter((application) => application.status === "offer").length;
 
   return (
     <>
@@ -63,8 +89,38 @@ export default async function ApplicationsPage({
         {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
         {applications.length > 0 ? (
           <>
+            <section className="mt-6 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-black text-ink">Application history</h2>
+                <p className="text-sm font-bold text-slate-500">Switch between recruiting cycles without losing your older boards.</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {years.map((year) => (
+                  <Link
+                    key={year}
+                    href={getYearHref(year, query, statusFilter)}
+                    className={`rounded-lg px-4 py-2 text-sm font-black transition ${
+                      selectedYear === year ? "bg-purple-700 text-white shadow-lg shadow-purple-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-purple-300 hover:text-purple-800"
+                    }`}
+                    aria-current={selectedYear === year ? "page" : undefined}
+                  >
+                    {year}
+                  </Link>
+                ))}
+                <Link
+                  href={getYearHref("all", query, statusFilter)}
+                  className={`rounded-lg px-4 py-2 text-sm font-black transition ${
+                    selectedYear === "all" ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-purple-300 hover:text-purple-800"
+                  }`}
+                  aria-current={selectedYear === "all" ? "page" : undefined}
+                >
+                  All years
+                </Link>
+              </div>
+            </section>
+
             <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-              <DashboardCard title="Tracked" value={applications.length.toString()} helper="Total roles in your pipeline." icon={BriefcaseBusiness} />
+              <DashboardCard title="Tracked" value={yearApplications.length.toString()} helper="Total roles in this cycle." icon={BriefcaseBusiness} />
               <DashboardCard title="Saved" value={savedCount.toString()} helper="Review and apply when ready." icon={Clock3} />
               <DashboardCard title="Applied" value={appliedCount.toString()} helper="Roles moved beyond saved." icon={CheckCircle2} />
               <DashboardCard title="Interviewing" value={interviewingCount.toString()} helper="Active interview loops." icon={MessageSquareText} />
@@ -72,6 +128,7 @@ export default async function ApplicationsPage({
             </section>
 
             <form className="card mt-6 grid gap-4 p-5 md:grid-cols-[1fr_220px_auto]">
+              <input type="hidden" name="year" value={selectedYear} />
               <label className="grid gap-2 text-sm font-bold text-slate-700">
                 Search
                 <input name="q" defaultValue={query} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Company, role, or location" />

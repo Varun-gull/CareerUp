@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, CalendarDays } from "lucide-react";
+import { Bell, BriefcaseBusiness } from "lucide-react";
 import Link from "next/link";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { NavLinks } from "@/components/NavLinks";
@@ -20,6 +20,23 @@ function CalendarWidget() {
         <span className="text-[8px] font-black tracking-widest text-white uppercase leading-none">{month}</span>
       </span>
       <span className="relative mt-3 text-[15px] font-black text-ink leading-none">{day}</span>
+    </Link>
+  );
+}
+
+function NotificationButton({ unreadMessages }: { unreadMessages: number }) {
+  return (
+    <Link
+      href="/messages"
+      className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-white text-slate-800 shadow-sm transition hover:border-purple-300 hover:text-purple-800"
+      aria-label={unreadMessages > 0 ? `Messages, ${unreadMessages} unread` : "Messages"}
+    >
+      <Bell size={19} />
+      {unreadMessages > 0 && (
+        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-700 px-1 text-[10px] font-black text-white ring-2 ring-slate-950">
+          {unreadMessages > 9 ? "9+" : unreadMessages}
+        </span>
+      )}
     </Link>
   );
 }
@@ -57,6 +74,7 @@ export async function Navbar() {
         </Link>
         <NavLinks />
         <div className="flex shrink-0 items-center gap-2">
+          {user && <NotificationButton unreadMessages={unreadMessages} />}
           <CalendarWidget />
           <ProfileDropdown initials={initials} displayName={firstName} loggedIn={!!user} unreadMessages={unreadMessages} />
         </div>

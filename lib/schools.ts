@@ -52,6 +52,7 @@ export const schoolOptions: SchoolOption[] = [
 ];
 
 export function getSchoolLogoUrl(schoolName: string) {
-  const school = schoolOptions.find((option) => option.name === schoolName);
+  const normalizedName = schoolName.trim().toLowerCase();
+  const school = schoolOptions.find((option) => option.name.toLowerCase() === normalizedName);
   return school ? `https://logo.clearbit.com/${school.domain}` : "";
 }

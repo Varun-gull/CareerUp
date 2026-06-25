@@ -2,6 +2,7 @@ import { ArrowLeft, BriefcaseBusiness, Mail, MapPin, MessageSquareText, Sparkles
 import Link from "next/link";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
 import { Navbar } from "@/components/Navbar";
+import { ProfileLink } from "@/components/ProfileLink";
 import { RolePeerSetupNotice } from "@/components/RolePeerSetupNotice";
 import { getRolePeerApplicants, getRolePeerFeatureStatus, getRolePeerInsights } from "@/lib/data";
 import { sendPeerMessage } from "@/lib/messages/actions";
@@ -205,9 +206,7 @@ export default async function PostingInsightsPage({
                           <ApplicantAvatar applicant={applicant} />
                         </div>
                         <div className="min-w-0">
-                          <Link href={`/u/${applicant.profileId}`} className="font-black text-ink hover:text-purple-800">
-                            {applicant.name}
-                          </Link>
+                          <ProfileLink profileId={applicant.profileId} name={applicant.name} />
                           <p className="truncate text-sm font-bold text-slate-500">{applicant.school}</p>
                         </div>
                       </div>

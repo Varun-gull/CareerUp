@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { CopyInviteLink } from "@/components/CopyInviteLink";
 import { Navbar } from "@/components/Navbar";
+import { ProfileLink } from "@/components/ProfileLink";
 import { RankBadge } from "@/components/RankBadge";
 import { acceptFriendRequest, removeFriend, sendFriendRequest, sendFriendRequestById } from "@/lib/friends/actions";
 import { getCurrentUser, getFriends } from "@/lib/data";
@@ -121,13 +122,7 @@ function FriendSection({
             <article key={friend.id} className="rounded-lg border border-slate-200 bg-white p-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  {friend.status === "accepted" ? (
-                    <Link href={`/u/${friend.userId}`} className="font-black text-ink hover:text-purple-800">
-                      {friend.name}
-                    </Link>
-                  ) : (
-                    <p className="font-black text-ink">{friend.name}</p>
-                  )}
+                  <ProfileLink profileId={friend.userId} name={friend.name} />
                   <p className="text-sm text-slate-500">{friend.school}</p>
                   <p className="mt-1 text-xs font-bold text-slate-400">{friend.email}</p>
                 </div>

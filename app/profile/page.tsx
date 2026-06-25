@@ -46,15 +46,22 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                 <div className="grid gap-5 sm:grid-cols-2">
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     School
-                    <select name="school" defaultValue={schoolOptions.some((school) => school.name === profile.school) ? profile.school : ""} className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-purple-600">
-                      <option value="">Choose a college or university</option>
+                    <input
+                      name="school"
+                      defaultValue={profile.school}
+                      list="school-options"
+                      className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-purple-600"
+                      placeholder="Choose or type your school"
+                    />
+                    <datalist id="school-options">
                       {schoolOptions.map((school) => (
                         <option key={school.name} value={school.name}>
                           {school.name}
                         </option>
                       ))}
-                    </select>
-                    <input name="customSchool" defaultValue={schoolOptions.some((school) => school.name === profile.school) ? "" : profile.school} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Not listed? Type your school here" />
+                      <option value="Other / type your school">Other / type your school</option>
+                    </datalist>
+                    <span className="text-xs font-bold text-slate-500">Pick a listed school for an automatic logo, or type another school name.</span>
                   </label>
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Major

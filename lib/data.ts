@@ -95,7 +95,7 @@ type DbRolePeerApplicant = {
 type DbPeerMessage = {
   id: string;
   role_key: string;
-  application_id: string;
+  application_id: string | null;
   sender_id: string;
   recipient_id: string;
   subject: string;
@@ -351,7 +351,7 @@ export async function getPeerMessages(): Promise<PeerMessage[]> {
       return {
         id: message.id,
         roleKey: message.role_key,
-        applicationId: message.application_id,
+        applicationId: message.application_id ?? "",
         senderId: message.sender_id,
         recipientId: message.recipient_id,
         otherProfileId: message.other_profile_id ?? (direction === "sent" ? message.recipient_id : message.sender_id),
@@ -415,12 +415,12 @@ export async function getPeerMessages(): Promise<PeerMessage[]> {
     const direction = message.sender_id === user.id ? "sent" : "received";
     const otherProfileId = direction === "sent" ? message.recipient_id : message.sender_id;
     const otherProfile = profilesById.get(otherProfileId);
-    const application = applicationsById.get(message.application_id);
+    const application = message.application_id ? applicationsById.get(message.application_id) : undefined;
 
     return {
       id: message.id,
       roleKey: message.role_key,
-      applicationId: message.application_id,
+      applicationId: message.application_id ?? "",
       senderId: message.sender_id,
       recipientId: message.recipient_id,
       otherProfileId,

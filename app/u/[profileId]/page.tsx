@@ -1,11 +1,13 @@
-import { ArrowLeft, Flame, Lock, MapPin, Sparkles, Target, Trophy, UserPlus, UsersRound } from "lucide-react";
+import { ArrowLeft, Flame, Lock, Mail, MapPin, Sparkles, Target, Trophy, UserPlus, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
+import { ProfileLink } from "@/components/ProfileLink";
 import { PublicApplicationBoard } from "@/components/PublicApplicationBoard";
 import { RankBadge } from "@/components/RankBadge";
 import { XpProgressBar } from "@/components/XpProgressBar";
 import { sendFriendRequestById } from "@/lib/friends/actions";
 import { getCurrentUser, getFriendshipWith, getMutualFriends, getPublicProfile, getSharedApplicationBoard } from "@/lib/data";
+import { sendPeerMessage } from "@/lib/messages/actions";
 
 export default async function PublicProfilePage({
   params,
@@ -96,6 +98,43 @@ export default async function PublicProfilePage({
                   <RankBadge xp={profile.xp} />
                 </div>
                 <XpProgressBar xp={profile.xp} />
+                {!isOwnProfile && user && (
+                  <form action={sendPeerMessage} className="rounded-lg border border-purple-200 bg-purple-50/70 p-4">
+                    <div className="flex items-center gap-2">
+                      <Mail size={18} className="text-purple-700" />
+                      <h2 className="font-black text-ink">Message {profile.name.split(" ")[0]}</h2>
+                    </div>
+                    <input type="hidden" name="recipientId" value={profile.id} />
+                    <input type="hidden" name="applicationId" value="" />
+                    <input type="hidden" name="roleKey" value={`profile::${profile.id}`} />
+                    <input type="hidden" name="returnTo" value={`/u/${profile.id}`} />
+                    <label className="mt-4 grid gap-1 text-xs font-black uppercase text-slate-500">
+                      Subject
+                      <input
+                        name="subject"
+                        defaultValue="CareerUp question"
+                        className="rounded-md border border-purple-100 bg-white px-3 py-2 text-sm normal-case text-ink outline-none focus:border-purple-600"
+                      />
+                    </label>
+                    <label className="mt-3 grid gap-1 text-xs font-black uppercase text-slate-500">
+                      Message
+                      <textarea
+                        name="body"
+                        rows={4}
+                        className="resize-none rounded-md border border-purple-100 bg-white px-3 py-2 text-sm normal-case text-ink outline-none focus:border-purple-600"
+                        placeholder="Ask about applications, interviews, classes, or recruiting advice."
+                      />
+                    </label>
+                    <button type="submit" className="primary-button mt-3 w-full justify-center">
+                      <Mail className="mr-2" size={16} /> Send message
+                    </button>
+                  </form>
+                )}
+                {!isOwnProfile && !user && (
+                  <Link href={`/login?message=${encodeURIComponent("Log in to message this profile.")}`} className="secondary-button w-full justify-center">
+                    Log in to message
+                  </Link>
+                )}
                 {!isOwnProfile && (
                   <div className="rounded-lg border border-slate-200 bg-white p-4">
                     <div className="flex items-center gap-2">
@@ -106,10 +145,10 @@ export default async function PublicProfilePage({
                       mutualFriends.length > 0 ? (
                         <div className="mt-4 grid gap-3">
                           {mutualFriends.map((friend) => (
-                            <Link key={friend.id} href={`/u/${friend.id}`} className="rounded-lg border border-slate-100 p-3 transition hover:border-purple-200 hover:bg-purple-50/60">
-                              <p className="font-black text-ink">{friend.name}</p>
+                            <div key={friend.id} className="rounded-lg border border-slate-100 p-3 transition hover:border-purple-200 hover:bg-purple-50/60">
+                              <ProfileLink profileId={friend.id} name={friend.name} />
                               <p className="mt-1 text-xs font-bold text-slate-500">{friend.school}</p>
-                            </Link>
+                            </div>
                           ))}
                         </div>
                       ) : (

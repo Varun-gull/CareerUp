@@ -2,6 +2,7 @@ import { CheckCheck, Inbox, Mail, Send, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
 import { Navbar } from "@/components/Navbar";
+import { ProfileLink } from "@/components/ProfileLink";
 import { RolePeerSetupNotice } from "@/components/RolePeerSetupNotice";
 import { getPeerMessages, getRolePeerFeatureStatus } from "@/lib/data";
 import { markPeerMessageRead, sendPeerMessage } from "@/lib/messages/actions";
@@ -40,9 +41,7 @@ function MessageList({ messages, empty }: { messages: PeerMessage[]; empty: stri
               </Link>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Link href={`/u/${message.otherProfileId}`} className="font-black text-ink hover:text-purple-800">
-                    {message.otherName}
-                  </Link>
+                  <ProfileLink profileId={message.otherProfileId} name={message.otherName} />
                   <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-black text-slate-500">
                     {message.direction === "received" ? "From peer" : "Sent"}
                   </span>
@@ -63,10 +62,16 @@ function MessageList({ messages, empty }: { messages: PeerMessage[]; empty: stri
           <p className="mt-4 rounded-lg bg-slate-50 p-4 text-sm font-bold leading-6 text-slate-600">{message.body}</p>
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4 text-sm font-black text-slate-500">
-            <span>
-              {message.applicationRole} at {message.applicationCompany}
-            </span>
-            <span>{message.applicationYear} cycle</span>
+            {message.roleKey.startsWith("profile::") ? (
+              <span>Direct profile message</span>
+            ) : (
+              <>
+                <span>
+                  {message.applicationRole} at {message.applicationCompany}
+                </span>
+                <span>{message.applicationYear} cycle</span>
+              </>
+            )}
           </div>
 
           {message.unread && (

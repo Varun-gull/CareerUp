@@ -25,7 +25,7 @@ function redirectWithMessage(path: string, message: string): never {
 
 function getSafeReturnTo(value: FormDataEntryValue | null) {
   const returnTo = String(value ?? "");
-  if (returnTo.startsWith("/postings/insights") || returnTo.startsWith("/messages")) {
+  if (returnTo.startsWith("/postings/insights") || returnTo.startsWith("/messages") || returnTo.startsWith("/u/")) {
     return returnTo;
   }
 
@@ -66,7 +66,12 @@ async function canSendPeerMessage({
   }
 
   if (!applicationId) {
-    return false;
+    if (roleKey !== `profile::${recipientId}`) {
+      return false;
+    }
+
+    const { data: recipient, error } = await supabase.from("profiles").select("id").eq("id", recipientId).maybeSingle<{ id: string }>();
+    return !error && Boolean(recipient);
   }
 
   const { data, error } = await supabase.rpc("get_role_peer_applicants", { target_role_key: roleKey });

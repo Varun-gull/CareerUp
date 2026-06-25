@@ -1,5 +1,6 @@
 import { Flame, Medal, UserPlus } from "lucide-react";
 import Link from "next/link";
+import { ProfileLink } from "./ProfileLink";
 import { RankBadge } from "./RankBadge";
 import type { LeaderboardUser } from "@/lib/types";
 
@@ -51,8 +52,10 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
               )}
             </div>
             <div className="min-w-0">
-              <p className="truncate font-black text-ink">
-                {user.name}
+              <p className="truncate">
+                <ProfileLink profileId={user.id} name={user.name} className="truncate">
+                  {user.name}
+                </ProfileLink>
                 {currentUserId === user.id && <span className="ml-2 rounded-full bg-purple-50 px-2 py-0.5 text-xs font-black text-purple-800">You</span>}
               </p>
               <p className="truncate text-sm text-slate-500">{user.school}</p>

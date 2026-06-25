@@ -99,19 +99,51 @@ type UploadedResumeFile = {
   text: () => Promise<string>;
 };
 
+async function extractPdfTextWithPdfParse(buffer: Buffer) {
+  const { PDFParse } = await import("pdf-parse");
+  const parser = new PDFParse({ data: buffer });
+
+  try {
+    const result = await parser.getText();
+    return normalizeResumeText(result.text ?? "");
+  } finally {
+    await parser.destroy();
+  }
+}
+
+async function extractPdfTextWithPdfJs(buffer: Buffer) {
+  const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  const loadingTask = pdfjs.getDocument({
+    data: new Uint8Array(buffer),
+    useSystemFonts: true,
+  });
+  const pdf = await loadingTask.promise;
+
+  try {
+    let text = "";
+
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+      const page = await pdf.getPage(pageNumber);
+      const content = await page.getTextContent();
+      text += content.items.map((item) => ("str" in item ? item.str : "")).join(" ");
+      text += "\n";
+    }
+
+    return normalizeResumeText(text);
+  } finally {
+    await pdf.destroy();
+  }
+}
+
 export async function extractResumeTextFromFile(file: UploadedResumeFile) {
   const fileName = file.name.toLowerCase();
   const buffer = Buffer.from(await file.arrayBuffer());
 
   if (fileName.endsWith(".pdf")) {
-    const { PDFParse } = await import("pdf-parse");
-    const parser = new PDFParse({ data: buffer });
-
     try {
-      const result = await parser.getText();
-      return normalizeResumeText(result.text ?? "");
-    } finally {
-      await parser.destroy();
+      return await extractPdfTextWithPdfParse(buffer);
+    } catch {
+      return extractPdfTextWithPdfJs(buffer);
     }
   }
 

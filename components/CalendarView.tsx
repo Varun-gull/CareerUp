@@ -213,7 +213,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
 
       const ev = dragEvent;
       startTransition(async () => {
-        if (ev.id.startsWith("derived-") || ev.id.startsWith("temp-")) {
+        if (ev.id.startsWith("derived-") || ev.id.startsWith("temp-") || ev.id.startsWith("pending-")) {
           // Promote derived/temp event to a real DB record at the new date
           await promoteAndMoveCalendarEvent({
             applicationId: ev.applicationId,

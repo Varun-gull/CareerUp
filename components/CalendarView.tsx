@@ -335,7 +335,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               onClick={() => {
                 setView("week");
                 // Snap anchor to the current week so events placed this month are visible
-                setAnchor(startOfWeek(anchor));
+                setAnchor(startOfWeek(today));
               }}
               className={clsx(
                 "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors",

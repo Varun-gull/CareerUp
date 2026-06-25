@@ -62,6 +62,34 @@ export async function addCalendarEvent(formData: FormData) {
   revalidatePath("/calendar");
 }
 
+export async function createCustomCalendarEvent({
+  title, date, time, notes,
+}: {
+  title: string; date: string; time: string | null; notes: string | null;
+}) {
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const base = {
+    user_id: user.id,
+    application_id: "custom",
+    company: title,
+    role: "",
+    status: "custom",
+    event_type: "custom",
+    date,
+  };
+
+  const { error } = await supabase.from("calendar_events").insert({ ...base, time, notes });
+  if (error) {
+    await supabase.from("calendar_events").insert(base);
+  }
+
+  revalidatePath("/calendar");
+}
+
 export async function promoteAndMoveCalendarEvent({
   applicationId, company, role, status, eventType, date,
 }: {

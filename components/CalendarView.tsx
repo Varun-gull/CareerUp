@@ -1,11 +1,13 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, CalendarDays, List, X, CalendarPlus } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarDays, List, X, CalendarPlus, Plus } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { addCalendarEvent, deleteCalendarEvent, moveCalendarEvent, promoteAndMoveCalendarEvent } from "@/lib/calendar/actions";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
 import { InterviewModal } from "@/components/InterviewModal";
+import { CalendarCreateModal } from "@/components/CalendarCreateModal";
 import { addInterviewEvent } from "@/lib/calendar/actions";
 import { INTERVIEW_SCHEDULED_EVENT, dispatchInterviewScheduled, getStoredInterviewDate, clearStoredInterview } from "@/lib/interviewEvents";
 import type { Application, CalendarEvent } from "@/lib/types";
@@ -131,10 +133,12 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
     window.addEventListener(INTERVIEW_SCHEDULED_EVENT, handleInterviewScheduled);
     return () => window.removeEventListener(INTERVIEW_SCHEDULED_EVENT, handleInterviewScheduled);
   }, []);
+  const router = useRouter();
   const [dragApp, setDragApp] = useState<Application | null>(null);
   const [dragEvent, setDragEvent] = useState<CalendarEvent | null>(null);
   const [activeDate, setActiveDate] = useState<string | null>(null);
   const [scheduleApp, setScheduleApp] = useState<Application | null>(null);
+  const [createDate, setCreateDate] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
   const scheduledAppIds = new Set(events.filter((e) => e.eventType === "interview").map((e) => e.applicationId));
@@ -256,6 +260,13 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
 
   return (
     <div className="flex h-[calc(100vh-80px)] gap-5 overflow-hidden">
+      {createDate && (
+        <CalendarCreateModal
+          defaultDate={createDate}
+          onClose={() => setCreateDate(null)}
+          onCreated={() => router.refresh()}
+        />
+      )}
       {scheduleApp && (() => {
         const existing = events.find((e) => e.applicationId === scheduleApp.id && e.eventType === "interview");
         return (
@@ -343,7 +354,15 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
             </button>
           </div>
 
-          <div className="flex rounded-lg border border-slate-200 bg-white p-1">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCreateDate(todayStr)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-purple-300 hover:text-purple-800 transition-colors"
+              aria-label="Add event"
+            >
+              <Plus size={18} />
+            </button>
+            <div className="flex rounded-lg border border-slate-200 bg-white p-1">
             <button
               onClick={() => {
                 setView("month");
@@ -370,6 +389,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
             >
               <List size={14} /> Week
             </button>
+            </div>
           </div>
         </div>
 
@@ -401,13 +421,16 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                   }
                 }}
                 onDrop={(e) => { e.preventDefault(); handleDrop(dateStr); }}
+                onClick={() => setCreateDate(dateStr)}
                 className={clsx(
-                  "min-h-[90px] rounded-lg border p-1.5 transition-colors",
+                  "min-h-[90px] cursor-pointer rounded-lg border p-1.5 transition-colors hover:border-purple-300",
                   isActive ? "border-purple-500 bg-purple-50" : "border-slate-100 bg-white/70",
                   !isCurrentMonth && "opacity-40"
                 )}
               >
-                <span className={clsx(
+                <span
+                  onClick={(e) => e.stopPropagation()}
+                  className={clsx(
                   "inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold",
                   isToday ? "bg-purple-700 text-white" : "text-slate-500"
                 )}>
@@ -419,6 +442,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                     <div
                       key={ev.id}
                       draggable
+                      onClick={(e) => e.stopPropagation()}
                       onDragStart={(e) => {
                         e.dataTransfer.effectAllowed = "move";
                         setDragEvent(ev);

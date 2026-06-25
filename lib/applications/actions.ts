@@ -224,6 +224,57 @@ export async function createApplication(formData: FormData) {
   redirect("/applications");
 }
 
+export async function createApplicationFromCalendar({
+  company, role, status, deadline,
+}: {
+  company: string; role: string; status: ApplicationStatus; deadline: string | null;
+}): Promise<{ error?: string }> {
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return { error: "Connect Supabase to save applications." };
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Log in to save applications." };
+
+  const { error } = await supabase.from("applications").insert({
+    user_id: user.id,
+    company,
+    role,
+    deadline: deadline || null,
+    status,
+    xp_awarded: 5,
+  });
+
+  if (error) return { error: error.message };
+
+  await supabase.rpc("award_xp", { amount: 5 });
+
+  const { data: newApp } = await supabase
+    .from("applications")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("company", company)
+    .eq("role", role)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle<{ id: string }>();
+
+  if (newApp) {
+    const today = new Date().toISOString().slice(0, 10);
+    const calEvents: object[] = [
+      { user_id: user.id, application_id: newApp.id, company, role, status, event_type: "submitted", date: today },
+    ];
+    if (deadline && /^\d{4}-\d{2}-\d{2}$/.test(deadline)) {
+      calEvents.push({ user_id: user.id, application_id: newApp.id, company, role, status, event_type: "deadline", date: deadline });
+    }
+    await supabase.from("calendar_events").insert(calEvents);
+  }
+
+  revalidatePath("/applications");
+  revalidatePath("/dashboard");
+  revalidatePath("/calendar");
+  return {};
+}
+
 export async function savePostingApplication(formData: FormData) {
   const supabase = getSupabaseServerClient();
 

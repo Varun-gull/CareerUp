@@ -14,7 +14,7 @@ export function CopyInviteLink({ url }: { url: string }) {
 
   return (
     <div className="mt-4 grid gap-2">
-      <div className="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-bold text-slate-700">
+      <div className="rounded-2xl border border-slate-700 bg-slate-950/60 px-3 py-3 text-sm font-bold text-slate-300">
         {url}
       </div>
       <button type="button" onClick={copyLink} className="secondary-button w-full">

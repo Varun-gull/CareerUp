@@ -18,11 +18,11 @@ export function DashboardCard({
           <p className="section-label">{title}</p>
           <p className="mt-2 text-3xl font-black text-ink">{value}</p>
         </div>
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-sm transition group-hover:bg-brand group-hover:shadow-glow">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-950 text-sky shadow-sm transition group-hover:bg-sky group-hover:text-slate-950 group-hover:shadow-glow">
           <Icon size={23} />
         </div>
       </div>
-      <p className="mt-4 text-sm leading-6 text-slate-600">{helper}</p>
+      <p className="mt-4 text-sm leading-6 text-slate-400">{helper}</p>
     </section>
   );
 }

@@ -29,7 +29,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                   <p className="text-slate-300">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "Complete your profile"}</p>
                 </div>
               </div>
-              <Link href="/friends" className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold transition hover:-translate-y-0.5 hover:border-violet-300 hover:bg-white/10">
+              <Link href="/friends" className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold transition hover:-translate-y-0.5 hover:border-sky/40 hover:bg-white/10">
                 <Share2 className="mr-2" size={18} /> Share profile
               </Link>
             </div>
@@ -37,33 +37,33 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
           <div className="grid gap-6 p-6 lg:grid-cols-[1fr_360px]">
             <div>
               <h2 className="text-xl font-black text-ink">Profile setup</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-600">These preferences will power personalized internship recommendations later.</p>
-              {searchParams?.message && <p className="mt-4 rounded-2xl bg-violet-50 p-3 text-sm font-bold text-violet-950">{searchParams.message}</p>}
+              <p className="mt-2 text-sm leading-6 text-slate-400">These preferences will power personalized internship recommendations later.</p>
+              {searchParams?.message && <p className="mt-4 rounded-2xl bg-sky/10 p-3 text-sm font-bold text-sky">{searchParams.message}</p>}
               <form action={updateProfile} className="mt-5 grid gap-5">
-                <label className="grid gap-2 text-sm font-bold text-slate-700">
+                <label className="grid gap-2 text-sm font-bold text-slate-300">
                   Name
                   <input name="fullName" defaultValue={profile.name} className="field" required />
                 </label>
                 <div className="grid gap-5 sm:grid-cols-2">
                   <SchoolField schools={schoolOptions} initialSchool={profile.school} />
-                  <label className="grid gap-2 text-sm font-bold text-slate-700">
+                  <label className="grid gap-2 text-sm font-bold text-slate-300">
                     Major
                     <input name="major" defaultValue={profile.major} className="field" placeholder="Computer Science" />
                   </label>
                 </div>
-                <label className="grid gap-2 text-sm font-bold text-slate-700">
+                <label className="grid gap-2 text-sm font-bold text-slate-300">
                   Graduation year
                   <input name="graduationYear" defaultValue={profile.graduationYear} className="field" placeholder="2027" inputMode="numeric" />
                 </label>
-                <label className="grid gap-2 text-sm font-bold text-slate-700">
+                <label className="grid gap-2 text-sm font-bold text-slate-300">
                   Target roles
                   <input name="targetRoles" defaultValue={profile.targetRoles.join(", ")} className="field" placeholder="Software Engineering, Data Science, Product" />
                 </label>
-                <label className="grid gap-2 text-sm font-bold text-slate-700">
+                <label className="grid gap-2 text-sm font-bold text-slate-300">
                   Target locations
                   <input name="targetLocations" defaultValue={profile.targetLocations.join(", ")} className="field" placeholder="New York, Remote, Washington DC" />
                 </label>
-                <label className="flex gap-3 rounded-2xl border border-violet-100 bg-violet-50/70 p-4 text-sm font-bold text-slate-700">
+                <label className="flex gap-3 rounded-2xl border border-sky/20 bg-sky/10 p-4 text-sm font-bold text-slate-300">
                   <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand" />
                   <span>
                     Let accepted friends view my application board.
@@ -76,14 +76,14 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
               </form>
             </div>
             <aside className="space-y-4">
-              <div className="rounded-3xl border border-slate-200 bg-white/70 p-4">
+              <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-4">
                 <p className="mb-2 text-sm font-bold text-slate-500">Current rank</p>
                 <RankBadge xp={profile.xp} />
               </div>
               <XpProgressBar xp={profile.xp} />
-              <div className="rounded-3xl border border-slate-200 bg-white/70 p-4">
+              <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-4">
                 <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-brand">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
                     <FileText size={20} />
                   </div>
                   <div>
@@ -93,11 +93,11 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                 </div>
                 {profile.resumeUpdatedAt && <p className="mt-1 text-sm font-bold text-slate-500">Updated {profile.resumeUpdatedAt}</p>}
                 <form action={saveResumeProfile} className="mt-5 grid gap-4">
-                  <label className="grid gap-2 text-sm font-bold text-slate-700">
+                  <label className="grid gap-2 text-sm font-bold text-slate-300">
                     Upload resume
                     <input name="resumeFile" type="file" accept=".txt,.md,.csv,.pdf,.docx" className="field text-sm" />
                   </label>
-                  <label className="grid gap-2 text-sm font-bold text-slate-700">
+                  <label className="grid gap-2 text-sm font-bold text-slate-300">
                     Paste text fallback
                     <textarea name="resumeText" rows={6} className="field resize-none text-sm" placeholder="Paste resume text if the upload cannot be read." />
                   </label>

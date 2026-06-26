@@ -163,7 +163,7 @@ export async function PostingsPageView({
           <div>
             <p className="eyebrow">Live search</p>
             <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">{pageTitle}</h1>
-            <p className="mt-2 max-w-3xl text-slate-600">{pageCopy}</p>
+            <p className="mt-2 max-w-3xl text-slate-400">{pageCopy}</p>
           </div>
           <div className="flex gap-2">
             <Link href="/postings/internships" className={`rounded-xl px-4 py-2 text-sm font-black transition ${activeTabClass(kind === "internship")}`}>
@@ -188,7 +188,7 @@ export async function PostingsPageView({
           minFit={minFit}
         />
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-400">
           <Link href={resetHref} className="inline-flex items-center rounded-full bg-slate-900 px-3 py-1 text-xs text-slate-300 shadow-sm ring-1 ring-slate-700 hover:text-sky">
             <RotateCcw className="mr-1" size={14} /> Reset
           </Link>

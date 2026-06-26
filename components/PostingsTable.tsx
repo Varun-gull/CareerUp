@@ -64,10 +64,10 @@ export function PostingsTable({
                 <div className="min-w-0 flex-1">
                   <p className="font-black leading-tight text-ink">{posting.title}</p>
                   <p className="mt-1 text-xs font-bold text-sky">{posting.company}</p>
-                  <div className="mt-3 flex flex-wrap gap-2 text-xs font-bold text-slate-600">
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs font-bold text-slate-400">
                     <span className={`rounded-full px-2.5 py-1 font-black ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
                     <span className={`rounded-full px-2.5 py-1 font-black ${fitTone(posting.fitScore)}`}>{posting.fitScore}% fit</span>
-                    <span className="rounded-full bg-slate-100 px-2.5 py-1">{posting.postedAt}</span>
+                    <span className="rounded-full bg-slate-800 px-2.5 py-1">{posting.postedAt}</span>
                   </div>
                   <p className="mt-3 line-clamp-2 text-sm font-semibold text-slate-400">{posting.location}</p>
                 </div>

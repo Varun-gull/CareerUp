@@ -32,19 +32,19 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+      <div className="w-full max-w-md rounded-2xl bg-slate-950 p-6 shadow-2xl">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-xl font-black text-ink">Schedule Interview</h2>
             <p className="mt-1 text-sm text-slate-500">{company} — {role}</p>
           </div>
-          <button onClick={onCancel} className="text-slate-400 hover:text-slate-700 transition-colors">
+          <button onClick={onCancel} className="text-slate-400 hover:text-slate-300 transition-colors">
             <X size={20} />
           </button>
         </div>
 
         <div className="mt-5 space-y-4">
-          <label className="grid gap-1.5 text-sm font-bold text-slate-700">
+          <label className="grid gap-1.5 text-sm font-bold text-slate-300">
             Interview date
             <input
               ref={dateRef}
@@ -53,7 +53,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               className="field"
             />
           </label>
-          <label className="grid gap-1.5 text-sm font-bold text-slate-700">
+          <label className="grid gap-1.5 text-sm font-bold text-slate-300">
             Time <span className="font-normal text-slate-400">(optional)</span>
             <input
               ref={timeRef}
@@ -62,7 +62,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               className="field"
             />
           </label>
-          <label className="grid gap-1.5 text-sm font-bold text-slate-700">
+          <label className="grid gap-1.5 text-sm font-bold text-slate-300">
             Notes <span className="font-normal text-slate-400">(optional)</span>
             <textarea
               ref={notesRef}

@@ -9,7 +9,7 @@ export default function ChallengesPage() {
       <main className="page-shell">
         <p className="eyebrow">XP quests</p>
         <h1 className="mt-2 text-4xl font-black text-ink">Challenges</h1>
-        <p className="mt-2 max-w-2xl text-slate-600">Small missions turn the internship search into daily progress instead of a giant vague task.</p>
+        <p className="mt-2 max-w-2xl text-slate-400">Small missions turn the internship search into daily progress instead of a giant vague task.</p>
         <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {challenges.map((challenge) => (
             <ChallengeCard key={challenge.id} challenge={challenge} />

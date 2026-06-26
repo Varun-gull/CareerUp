@@ -80,19 +80,19 @@ export default async function ApplicationsPage({
           <div>
             <p className="eyebrow">Pipeline</p>
             <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Applications</h1>
-            <p className="mt-2 text-slate-600">Track every role from saved to offer without losing momentum.</p>
+            <p className="mt-2 text-slate-400">Track every role from saved to offer without losing momentum.</p>
           </div>
           <Link href="/applications/new" className="primary-button">
             <Plus className="mr-2" size={18} /> Add role
           </Link>
         </div>
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/85 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky">{searchParams.message}</p>}
         {applications.length > 0 ? (
           <>
             <section className="mt-6 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-black text-ink">Application history</h2>
-                <p className="text-sm font-bold text-slate-500">Switch between recruiting cycles without losing your older boards.</p>
+                <p className="text-sm font-bold text-slate-400">Switch between recruiting cycles without losing your older boards.</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 {years.map((year) => (
@@ -100,7 +100,7 @@ export default async function ApplicationsPage({
                     key={year}
                     href={getYearHref(year, query, statusFilter)}
                     className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
-                      selectedYear === year ? "bg-brand text-white shadow-glow" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-brand/30 hover:text-brand"
+                      selectedYear === year ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-700 bg-slate-900 text-slate-300 hover:border-sky/40 hover:text-sky"
                     }`}
                     aria-current={selectedYear === year ? "page" : undefined}
                   >
@@ -110,7 +110,7 @@ export default async function ApplicationsPage({
                 <Link
                   href={getYearHref("all", query, statusFilter)}
                   className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
-                    selectedYear === "all" ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-brand/30 hover:text-brand"
+                    selectedYear === "all" ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-700 bg-slate-900 text-slate-300 hover:border-sky/40 hover:text-sky"
                   }`}
                   aria-current={selectedYear === "all" ? "page" : undefined}
                 >
@@ -129,11 +129,11 @@ export default async function ApplicationsPage({
 
             <form className="card mt-6 grid gap-4 p-5 md:grid-cols-[1fr_220px_auto]">
               <input type="hidden" name="year" value={selectedYear} />
-              <label className="grid gap-2 text-sm font-bold text-slate-700">
+              <label className="grid gap-2 text-sm font-bold text-slate-300">
                 Search
                 <input name="q" defaultValue={query} className="field" placeholder="Company, role, or location" />
               </label>
-              <label className="grid gap-2 text-sm font-bold text-slate-700">
+              <label className="grid gap-2 text-sm font-bold text-slate-300">
                 Status
                 <select name="status" defaultValue={statusFilter} className="field">
                   <option value="all">All statuses</option>

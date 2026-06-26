@@ -32,7 +32,7 @@ export function PostingsSearchForm({
   return (
     <form onSubmit={handleSubmit} className="card mt-8 grid gap-4 p-5 lg:grid-cols-[1.15fr_1fr_0.75fr_0.75fr_auto]">
       <input type="hidden" name="sort" value="fit" />
-      <label className="grid gap-2 text-sm font-black text-slate-700">
+      <label className="grid gap-2 text-sm font-black text-slate-300">
         Role or keyword
         <input name="q" list="role-keyword-examples" defaultValue={defaultQuery} className="field" placeholder="Data science intern" />
         <datalist id="role-keyword-examples">
@@ -41,7 +41,7 @@ export function PostingsSearchForm({
           ))}
         </datalist>
       </label>
-      <label className="grid gap-2 text-sm font-black text-slate-700">
+      <label className="grid gap-2 text-sm font-black text-slate-300">
         Location
         <input name="location" list="location-examples" defaultValue={defaultLocation} className="field" placeholder={locationPlaceholder} />
         <datalist id="location-examples">
@@ -50,7 +50,7 @@ export function PostingsSearchForm({
           ))}
         </datalist>
       </label>
-      <label className="grid gap-2 text-sm font-black text-slate-700">
+      <label className="grid gap-2 text-sm font-black text-slate-300">
         Work mode
         <select name="remote" defaultValue={remoteFilter} className="field">
           <option value="all">All roles</option>
@@ -59,7 +59,7 @@ export function PostingsSearchForm({
           <option value="onsite">On-site only</option>
         </select>
       </label>
-      <label className="grid gap-2 text-sm font-black text-slate-700">
+      <label className="grid gap-2 text-sm font-black text-slate-300">
         Minimum fit
         <select name="minFit" defaultValue={minFit.toString()} className="field">
           <option value="0">Any fit</option>

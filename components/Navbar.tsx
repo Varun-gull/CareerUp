@@ -13,13 +13,13 @@ function CalendarWidget() {
   return (
     <Link
       href="/calendar"
-      className="relative hidden h-11 w-11 select-none items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/95 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:flex flex-col gap-0"
+      className="relative hidden h-11 w-11 select-none items-center justify-center overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:shadow-md sm:flex flex-col gap-0"
       aria-label="Calendar"
     >
-      <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-brand">
-        <span className="text-[8px] font-black uppercase leading-none text-white">{month}</span>
+      <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-sky">
+        <span className="text-[8px] font-black uppercase leading-none text-slate-950">{month}</span>
       </span>
-      <span className="relative mt-3 text-[15px] font-black text-ink leading-none">{day}</span>
+      <span className="relative mt-3 text-[15px] font-black text-slate-100 leading-none">{day}</span>
     </Link>
   );
 }
@@ -28,12 +28,12 @@ function NotificationButton({ unreadMessages }: { unreadMessages: number }) {
   return (
     <Link
       href="/messages"
-      className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/95 text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:text-brand hover:shadow-md"
+      className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 text-slate-200 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky hover:shadow-md"
       aria-label={unreadMessages > 0 ? `Messages, ${unreadMessages} unread` : "Messages"}
     >
       <Bell size={19} />
       {unreadMessages > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-black text-white ring-2 ring-slate-950">
+        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-black text-slate-950 ring-2 ring-slate-950">
           {unreadMessages > 9 ? "9+" : unreadMessages}
         </span>
       )}
@@ -64,10 +64,10 @@ export async function Navbar() {
   const firstName = user ? getFirstName(profile?.name ?? "") : "";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-navy/95 shadow-lg shadow-slate-950/15 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 border-b border-slate-800 bg-navy/95 shadow-lg shadow-black/25 backdrop-blur-xl">
       <nav className="grid w-full grid-cols-[auto_auto] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:grid-cols-[auto_1fr_auto] lg:px-8">
         <Link href="/dashboard" className="group flex shrink-0 items-center gap-3 font-black text-white">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand via-violet-700 to-electric text-white shadow-glow transition group-hover:-translate-y-0.5">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-sky text-white shadow-glow transition group-hover:-translate-y-0.5">
             <BriefcaseBusiness size={22} />
           </span>
           <span className="text-lg">CareerUp</span>

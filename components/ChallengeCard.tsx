@@ -8,21 +8,21 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
   return (
     <article className="card p-5 transition hover:-translate-y-1 hover:shadow-strong">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-electric text-white shadow-glow">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-sky to-electric text-slate-950 shadow-glow">
           {challenge.completed ? <CheckCircle2 size={22} /> : <Trophy size={22} />}
         </div>
-        <span className="rounded-full bg-slate-950 px-3 py-1 text-xs font-black text-white">+{challenge.xp} XP</span>
+        <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-black text-sky ring-1 ring-sky/20">+{challenge.xp} XP</span>
       </div>
       <h3 className="mt-4 text-lg font-black text-ink">{challenge.title}</h3>
-      <p className="mt-2 text-sm leading-6 text-slate-600">{challenge.description}</p>
+      <p className="mt-2 text-sm leading-6 text-slate-400">{challenge.description}</p>
       <div className="mt-5">
-        <div className="mb-2 flex justify-between text-xs font-bold text-slate-500">
+        <div className="mb-2 flex justify-between text-xs font-bold text-slate-400">
           <span>Progress</span>
           <span>
             {challenge.progress}/{challenge.target}
           </span>
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
+        <div className="h-2 overflow-hidden rounded-full bg-slate-800 ring-1 ring-slate-700">
           <div
             className={clsx("h-full rounded-full", challenge.completed ? "bg-emerald-500" : "bg-gradient-to-r from-brand via-electric to-sky")}
             style={{ width: `${percent}%` }}

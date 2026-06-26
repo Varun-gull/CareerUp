@@ -26,46 +26,46 @@ export function StreakCard({
       : "Your free revive has been used. Unlock another for 250 XP when you want a backup.";
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-950 via-[#24104f] to-slate-900 p-5 text-white shadow-soft">
-      <div className="pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-r from-brand/15 to-transparent" />
+    <section className="relative overflow-hidden rounded-3xl border border-slate-700 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-5 text-white shadow-soft">
+      <div className="pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-r from-sky/10 to-transparent" />
 
       <div className="relative flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-brand shadow-lg shadow-violet-950/30">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky text-slate-950 shadow-lg shadow-sky/10">
           <Zap size={32} fill="currentColor" />
         </div>
         <div>
-          <p className="text-sm font-black uppercase text-violet-200">Current streak</p>
+          <p className="text-sm font-black uppercase text-sky">Current streak</p>
           <p className="text-4xl font-black leading-none">{streak} days</p>
         </div>
       </div>
 
-      <div className="relative mt-5 rounded-xl border border-white/10 bg-white/10 p-3">
-        <p className="text-sm font-bold leading-6 text-violet-50">
+      <div className="relative mt-5 rounded-2xl border border-slate-700 bg-slate-950/45 p-3">
+        <p className="text-sm font-bold leading-6 text-slate-300">
           {streak > 0 ? "You are charged up. Apply to one role today to keep the streak alive." : "Start the streak by applying to one role today."}
         </p>
       </div>
 
       {showReviveInfo && (
-        <div className="relative mt-4 rounded-xl border border-white/10 bg-white/5 p-3">
-          <div className="flex items-center gap-2 text-sm font-black text-violet-100">
+        <div className="relative mt-4 rounded-2xl border border-slate-700 bg-slate-950/45 p-3">
+          <div className="flex items-center gap-2 text-sm font-black text-sky">
             <ShieldCheck size={16} /> Streak revive
           </div>
           <p className="mt-2 text-sm leading-6 text-slate-300">{reviveHelper}</p>
           {reviveRequiredApplications > 0 && (
-            <p className="mt-2 rounded-xl bg-brand/20 px-3 py-2 text-xs font-black text-violet-100">
+            <p className="mt-2 rounded-xl bg-sky/10 px-3 py-2 text-xs font-black text-sky">
               Revive in progress: apply to {reviveRequiredApplications} roles today.
             </p>
           )}
-          <div className="mt-3 flex flex-wrap gap-2 text-xs font-black text-violet-100">
-            <span className="rounded-full bg-white/10 px-3 py-1">Free: {hasFreeRevive ? "available" : "used"}</span>
-            <span className="rounded-full bg-white/10 px-3 py-1">Paid: {paidRevives}</span>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs font-black text-slate-300">
+            <span className="rounded-full bg-slate-800 px-3 py-1">Free: {hasFreeRevive ? "available" : "used"}</span>
+            <span className="rounded-full bg-slate-800 px-3 py-1">Paid: {paidRevives}</span>
           </div>
           {freeReviveUsed && (
             <form action={unlockStreakRevive} className="mt-3">
               <button
                 type="submit"
                 disabled={!canUnlockPaidRevive}
-                className="w-full rounded-xl bg-white px-3 py-2 text-sm font-black text-ink transition hover:bg-violet-50 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-slate-400"
+                className="w-full rounded-xl bg-sky px-3 py-2 text-sm font-black text-slate-950 transition hover:bg-brand disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500"
               >
                 Unlock revive - 250 XP
               </button>

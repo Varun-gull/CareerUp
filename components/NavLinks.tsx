@@ -5,11 +5,13 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
 const navItems = [
-  { href: "/postings/internships", label: "Postings" },
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/applications", label: "Applications" },
+  { href: "/postings/internships", label: "Postings" },
   { href: "/interview", label: "Interview Prep" },
   { href: "/rewards", label: "Rewards" },
   { href: "/leaderboard", label: "Leaderboard" },
+  { href: "/friends", label: "Friends" },
 ];
 
 export function NavLinks() {
@@ -25,8 +27,8 @@ export function NavLinks() {
             className={clsx(
               "shrink-0 rounded-2xl px-4 py-2.5 text-sm font-black transition sm:text-[15px]",
               active
-                ? "bg-white text-ink shadow-sm"
-                : "text-slate-300 hover:bg-white/10 hover:text-white"
+                ? "bg-sky text-slate-950 shadow-glow"
+                : "text-slate-300 hover:bg-white/10 hover:text-sky"
             )}
             aria-current={active ? "page" : undefined}
           >

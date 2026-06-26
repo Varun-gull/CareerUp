@@ -80,7 +80,7 @@ function getPostingAgeScore(value: string) {
 }
 
 function activeTabClass(active: boolean) {
-  return active ? "bg-brand text-white shadow-glow" : "bg-white/85 text-slate-700 ring-1 ring-slate-200 hover:text-brand";
+  return active ? "bg-sky text-slate-950 shadow-glow" : "bg-slate-900 text-slate-300 ring-1 ring-slate-700 hover:text-sky";
 }
 
 function buildReturnHref(kind: PostingKind, searchParams?: { q?: string; location?: string; remote?: RemoteFilter; minFit?: string; sort?: PostingSort }) {
@@ -175,7 +175,7 @@ export async function PostingsPageView({
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/80 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
         <PostingsSearchForm
@@ -189,18 +189,18 @@ export async function PostingsPageView({
         />
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
-          <Link href={resetHref} className="inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs text-slate-700 shadow-sm ring-1 ring-slate-200 hover:text-brand">
+          <Link href={resetHref} className="inline-flex items-center rounded-full bg-slate-900 px-3 py-1 text-xs text-slate-300 shadow-sm ring-1 ring-slate-700 hover:text-sky">
             <RotateCcw className="mr-1" size={14} /> Reset
           </Link>
           <div className="flex flex-wrap items-center gap-3">
             <span>
               Showing {postings.length} of {searchResult.postings.length} results
             </span>
-            <span className="inline-flex overflow-hidden rounded-full bg-white/90 text-xs font-black shadow-sm ring-1 ring-slate-200">
-              <Link href={bestFitHref} className={sort === "fit" ? "bg-brand px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-brand"}>
+            <span className="inline-flex overflow-hidden rounded-full bg-slate-900 text-xs font-black shadow-sm ring-1 ring-slate-700">
+              <Link href={bestFitHref} className={sort === "fit" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-400 hover:text-sky"}>
                 Best fit
               </Link>
-              <Link href={newestHref} className={sort === "newest" ? "bg-brand px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-brand"}>
+              <Link href={newestHref} className={sort === "newest" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-400 hover:text-sky"}>
                 Latest posted
               </Link>
             </span>

@@ -8,122 +8,87 @@ import { getPeerMessages, getRolePeerFeatureStatus } from "@/lib/data";
 import { markPeerMessageRead, sendPeerMessage } from "@/lib/messages/actions";
 import type { PeerMessage } from "@/lib/types";
 
-function Avatar({ message }: { message: PeerMessage }) {
-  if (message.otherSchoolLogoUrl) {
-    return <img src={message.otherSchoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" />;
+type Conversation = {
+  id: string;
+  otherProfileId: string;
+  otherName: string;
+  otherSchool: string;
+  otherSchoolLogoUrl: string;
+  roleKey: string;
+  applicationCompany: string;
+  applicationRole: string;
+  applicationStatus: PeerMessage["applicationStatus"];
+  applicationYear: number;
+  messages: PeerMessage[];
+  lastMessage: PeerMessage;
+  unreadCount: number;
+};
+
+function Avatar({ conversation }: { conversation: Conversation }) {
+  if (conversation.otherSchoolLogoUrl) {
+    return <img src={conversation.otherSchoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" />;
   }
 
-  return <span>{message.otherName.charAt(0).toUpperCase()}</span>;
+  return <span>{conversation.otherName.charAt(0).toUpperCase()}</span>;
 }
 
-function MessageList({ messages, empty }: { messages: PeerMessage[]; empty: string }) {
-  if (messages.length === 0) {
-    return (
-      <div className="rounded-3xl border border-dashed border-slate-200 bg-white/70 p-6 text-center">
-        <Mail className="mx-auto text-brand" size={28} />
-        <p className="mt-3 text-sm font-black text-slate-500">{empty}</p>
-      </div>
-    );
+function conversationKey(message: PeerMessage) {
+  return `${message.otherProfileId}::${message.roleKey}`;
+}
+
+function buildConversations(messages: PeerMessage[]) {
+  const groups = new Map<string, PeerMessage[]>();
+
+  for (const message of messages) {
+    const key = conversationKey(message);
+    groups.set(key, [...(groups.get(key) ?? []), message]);
   }
 
+  return Array.from(groups.entries())
+    .map(([id, group]) => {
+      const sorted = [...group].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+      const lastMessage = sorted[sorted.length - 1];
+      return {
+        id,
+        otherProfileId: lastMessage.otherProfileId,
+        otherName: lastMessage.otherName,
+        otherSchool: lastMessage.otherSchool,
+        otherSchoolLogoUrl: lastMessage.otherSchoolLogoUrl,
+        roleKey: lastMessage.roleKey,
+        applicationCompany: lastMessage.applicationCompany,
+        applicationRole: lastMessage.applicationRole,
+        applicationStatus: lastMessage.applicationStatus,
+        applicationYear: lastMessage.applicationYear,
+        messages: sorted,
+        lastMessage,
+        unreadCount: sorted.filter((message) => message.direction === "received" && message.unread).length,
+      } satisfies Conversation;
+    })
+    .sort((a, b) => b.lastMessage.createdAt.localeCompare(a.lastMessage.createdAt));
+}
+
+function EmptyMessages() {
   return (
-    <div className="grid gap-4">
-      {messages.map((message) => (
-        <article key={message.id} className={`card p-5 ${message.unread ? "ring-2 ring-violet-200" : ""}`}>
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="flex min-w-0 items-start gap-3">
-              <Link
-                href={`/u/${message.otherProfileId}`}
-                className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-violet-100 text-lg font-black text-brand"
-                aria-label={`Open ${message.otherName}'s profile`}
-              >
-                <Avatar message={message} />
-              </Link>
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <ProfileLink profileId={message.otherProfileId} name={message.otherName} />
-                  <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-black text-slate-500">
-                    {message.direction === "received" ? "From peer" : "Sent"}
-                  </span>
-                  {message.unread && <span className="rounded-full bg-brand px-2 py-1 text-xs font-black text-white">Unread</span>}
-                </div>
-                <p className="text-sm font-bold text-slate-500">{message.otherSchool}</p>
-                <p className="mt-3 text-lg font-black text-ink">{message.subject}</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-xs font-black uppercase text-slate-400">{message.createdAt}</p>
-              <div className="mt-2">
-                <ApplicationStatusBadge status={message.applicationStatus} />
-              </div>
-            </div>
-          </div>
-
-          <p className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm font-bold leading-6 text-slate-600">{message.body}</p>
-
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4 text-sm font-black text-slate-500">
-            {message.roleKey.startsWith("profile::") ? (
-              <span>Direct profile message</span>
-            ) : (
-              <>
-                <span>
-                  {message.applicationRole} at {message.applicationCompany}
-                </span>
-                <span>{message.applicationYear} cycle</span>
-              </>
-            )}
-          </div>
-
-          {message.unread && (
-            <form action={markPeerMessageRead} className="mt-4">
-              <input type="hidden" name="messageId" value={message.id} />
-              <input type="hidden" name="returnTo" value="/messages" />
-              <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-2xl border border-violet-200 bg-white px-4 text-sm font-black text-brand transition hover:bg-violet-50">
-                <CheckCheck className="mr-2" size={16} /> Mark read
-              </button>
-            </form>
-          )}
-
-          {message.direction === "received" && (
-            <form action={sendPeerMessage} className="mt-4 grid gap-3 rounded-3xl border border-violet-100 bg-violet-50/60 p-4">
-              <input type="hidden" name="recipientId" value={message.otherProfileId} />
-              <input type="hidden" name="applicationId" value={message.applicationId} />
-              <input type="hidden" name="roleKey" value={message.roleKey} />
-              <input type="hidden" name="sourceMessageId" value={message.id} />
-              <input type="hidden" name="returnTo" value="/messages" />
-              <label className="grid gap-1 text-xs font-black uppercase text-slate-500">
-                Reply subject
-                <input
-                  name="subject"
-                  defaultValue={message.subject.startsWith("Re:") ? message.subject : `Re: ${message.subject}`}
-                  className="field text-sm normal-case"
-                />
-              </label>
-              <label className="grid gap-1 text-xs font-black uppercase text-slate-500">
-                Reply
-                <textarea
-                  name="body"
-                  rows={3}
-                  className="field text-sm normal-case"
-                  placeholder="Share advice, interview prep notes, or a time to chat."
-                />
-              </label>
-              <button type="submit" className="primary-button w-fit">
-                Send reply
-              </button>
-            </form>
-          )}
-        </article>
-      ))}
+    <div className="card flex min-h-[34rem] items-center justify-center p-8 text-center">
+      <div>
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-sky/10 text-sky">
+          <Mail size={26} />
+        </div>
+        <h2 className="mt-4 text-2xl font-black text-ink">No conversations yet</h2>
+        <p className="mt-2 max-w-sm text-sm font-semibold leading-6 text-slate-400">
+          Messages from role insights and public profiles will show up here as focused conversations.
+        </p>
+      </div>
     </div>
   );
 }
 
-export default async function MessagesPage({ searchParams }: { searchParams?: { message?: string } }) {
+export default async function MessagesPage({ searchParams }: { searchParams?: { message?: string; thread?: string } }) {
   const [messages, peerFeatureStatus] = await Promise.all([getPeerMessages(), getRolePeerFeatureStatus()]);
-  const receivedMessages = messages.filter((message) => message.direction === "received");
-  const sentMessages = messages.filter((message) => message.direction === "sent");
-  const unreadMessages = receivedMessages.filter((message) => message.unread);
+  const conversations = buildConversations(messages);
+  const selectedConversation = conversations.find((conversation) => conversation.id === searchParams?.thread) ?? conversations[0];
+  const unreadCount = conversations.reduce((sum, conversation) => sum + conversation.unreadCount, 0);
+  const sentCount = messages.filter((message) => message.direction === "sent").length;
 
   return (
     <>
@@ -131,64 +96,188 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
       <main className="page-shell">
         <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow">Peer advice</p>
+            <p className="eyebrow">Peer network</p>
             <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Messages</h1>
-            <p className="mt-2 max-w-2xl text-slate-600">
-              Keep track of advice requests connected to specific roles, interviews, and application years.
+            <p className="mt-2 max-w-2xl text-slate-400">
+              Keep role questions, profile messages, and peer advice in clean conversation threads.
             </p>
+          </div>
+          <div className="grid grid-cols-3 gap-2 rounded-3xl border border-slate-700 bg-slate-950/55 p-2 text-center">
+            <div className="min-w-20 rounded-2xl bg-slate-900 px-3 py-2">
+              <p className="text-lg font-black text-ink">{conversations.length}</p>
+              <p className="text-[11px] font-black uppercase text-slate-500">Threads</p>
+            </div>
+            <div className="min-w-20 rounded-2xl bg-slate-900 px-3 py-2">
+              <p className="text-lg font-black text-sky">{unreadCount}</p>
+              <p className="text-[11px] font-black uppercase text-slate-500">Unread</p>
+            </div>
+            <div className="min-w-20 rounded-2xl bg-slate-900 px-3 py-2">
+              <p className="text-lg font-black text-ink">{sentCount}</p>
+              <p className="text-[11px] font-black uppercase text-slate-500">Sent</p>
+            </div>
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/85 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
-        <section className="mt-8 grid gap-4 md:grid-cols-3">
-          <div className="card p-5">
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-white">
-                <Inbox size={20} />
-              </span>
-              <div>
-                <p className="text-sm font-black text-slate-500">Received</p>
-                <p className="text-3xl font-black text-ink">{receivedMessages.length}</p>
-                <p className="text-xs font-black text-brand">{unreadMessages.length} unread</p>
+        {selectedConversation ? (
+          <section className="mt-8 grid min-h-[42rem] overflow-hidden rounded-3xl border border-slate-700 bg-slate-950/65 shadow-strong lg:grid-cols-[340px_1fr_320px]">
+            <aside className="border-b border-slate-800 bg-slate-950/80 lg:border-b-0 lg:border-r">
+              <div className="border-b border-slate-800 p-4">
+                <div className="flex items-center gap-2 text-sm font-black text-slate-300">
+                  <Inbox size={18} className="text-sky" /> Conversations
+                </div>
+                <p className="mt-1 text-xs font-bold text-slate-500">Role-specific advice in one place.</p>
               </div>
-            </div>
-          </div>
-          <div className="card p-5">
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 text-white">
-                <Send size={20} />
-              </span>
-              <div>
-                <p className="text-sm font-black text-slate-500">Sent</p>
-                <p className="text-3xl font-black text-ink">{sentMessages.length}</p>
+              <div className="max-h-[34rem] overflow-y-auto p-2">
+                {conversations.map((conversation) => {
+                  const active = conversation.id === selectedConversation.id;
+                  return (
+                    <Link
+                      key={conversation.id}
+                      href={`/messages?thread=${encodeURIComponent(conversation.id)}`}
+                      className={`block rounded-2xl p-3 transition ${
+                        active ? "bg-sky/10 ring-1 ring-sky/25" : "hover:bg-slate-900"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-800 text-base font-black text-sky">
+                          <Avatar conversation={conversation} />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="truncate text-sm font-black text-ink">{conversation.otherName}</p>
+                            {conversation.unreadCount > 0 && (
+                              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-black text-slate-950">
+                                {conversation.unreadCount}
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-1 truncate text-xs font-bold text-slate-500">{conversation.applicationCompany}</p>
+                          <p className="mt-2 line-clamp-2 text-xs font-semibold leading-5 text-slate-400">{conversation.lastMessage.body}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
-            </div>
-          </div>
-          <div className="card p-5">
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-50 text-brand">
-                <UsersRound size={20} />
-              </span>
-              <div>
-                <p className="text-sm font-black text-slate-500">Role threads</p>
-                <p className="text-3xl font-black text-ink">{new Set(messages.map((message) => message.roleKey)).size}</p>
-              </div>
-            </div>
-          </div>
-        </section>
+            </aside>
 
-        <section className="mt-8 grid gap-6 lg:grid-cols-2">
-          <div>
-            <h2 className="mb-4 text-2xl font-black text-ink">Inbox</h2>
-            <MessageList messages={receivedMessages} empty="No one has messaged you about a role yet." />
+            <section className="flex min-h-[42rem] flex-col bg-slate-900/40">
+              <div className="border-b border-slate-800 p-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <ProfileLink profileId={selectedConversation.otherProfileId} name={selectedConversation.otherName} />
+                      <ApplicationStatusBadge status={selectedConversation.applicationStatus} />
+                    </div>
+                    <p className="mt-1 truncate text-sm font-bold text-slate-400">
+                      {selectedConversation.applicationRole} at {selectedConversation.applicationCompany}
+                    </p>
+                  </div>
+                  {selectedConversation.unreadCount > 0 && (
+                    <form action={markPeerMessageRead}>
+                      <input type="hidden" name="messageId" value={selectedConversation.messages.find((message) => message.unread)?.id ?? ""} />
+                      <input type="hidden" name="returnTo" value={`/messages?thread=${encodeURIComponent(selectedConversation.id)}`} />
+                      <button type="submit" className="secondary-button min-h-10 px-4 text-sm">
+                        <CheckCheck className="mr-2" size={16} /> Mark read
+                      </button>
+                    </form>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex-1 space-y-4 overflow-y-auto p-5">
+                {selectedConversation.messages.map((message) => {
+                  const outbound = message.direction === "sent";
+                  return (
+                    <article key={message.id} className={`flex ${outbound ? "justify-end" : "justify-start"}`}>
+                      <div className={`max-w-[80%] rounded-3xl border p-4 ${
+                        outbound
+                          ? "border-sky/25 bg-sky/12 text-slate-100"
+                          : "border-slate-700 bg-slate-950/70 text-slate-200"
+                      }`}>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-sm font-black">{outbound ? "You" : message.otherName}</p>
+                          <span className="text-xs font-bold text-slate-500">{message.createdAt}</span>
+                          {message.unread && <span className="rounded-full bg-sky px-2 py-0.5 text-[10px] font-black text-slate-950">Unread</span>}
+                        </div>
+                        <p className="mt-2 text-sm font-black text-ink">{message.subject}</p>
+                        <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6 text-slate-300">{message.body}</p>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+
+              <form action={sendPeerMessage} className="border-t border-slate-800 bg-slate-950/75 p-4">
+                <input type="hidden" name="recipientId" value={selectedConversation.otherProfileId} />
+                <input type="hidden" name="applicationId" value={selectedConversation.lastMessage.applicationId} />
+                <input type="hidden" name="roleKey" value={selectedConversation.roleKey} />
+                <input type="hidden" name="sourceMessageId" value={selectedConversation.lastMessage.id} />
+                <input type="hidden" name="returnTo" value={`/messages?thread=${encodeURIComponent(selectedConversation.id)}`} />
+                <div className="grid gap-3">
+                  <input
+                    name="subject"
+                    defaultValue={selectedConversation.lastMessage.subject.startsWith("Re:") ? selectedConversation.lastMessage.subject : `Re: ${selectedConversation.lastMessage.subject}`}
+                    className="field min-h-10 py-2 text-sm"
+                    aria-label="Reply subject"
+                  />
+                  <div className="flex flex-col gap-3 sm:flex-row">
+                    <textarea
+                      name="body"
+                      rows={2}
+                      className="field min-h-20 flex-1 text-sm"
+                      placeholder="Write a reply..."
+                    />
+                    <button type="submit" className="primary-button self-end">
+                      <Send className="mr-2" size={16} /> Send
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </section>
+
+            <aside className="border-t border-slate-800 bg-slate-950/80 p-5 lg:border-l lg:border-t-0">
+              <div className="flex items-center gap-3">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-800 text-lg font-black text-sky">
+                  <Avatar conversation={selectedConversation} />
+                </span>
+                <div className="min-w-0">
+                  <ProfileLink profileId={selectedConversation.otherProfileId} name={selectedConversation.otherName} />
+                  <p className="truncate text-sm font-bold text-slate-500">{selectedConversation.otherSchool || "Student"}</p>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-3">
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                  <div className="flex items-center gap-2 text-sm font-black text-slate-300">
+                    <UsersRound size={17} className="text-sky" /> Role context
+                  </div>
+                  <p className="mt-3 text-lg font-black text-ink">{selectedConversation.applicationRole}</p>
+                  <p className="mt-1 text-sm font-bold text-slate-400">{selectedConversation.applicationCompany}</p>
+                  <div className="mt-3">
+                    <ApplicationStatusBadge status={selectedConversation.applicationStatus} />
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                  <p className="text-sm font-black text-slate-300">Thread details</p>
+                  <div className="mt-3 grid gap-2 text-sm font-bold text-slate-400">
+                    <p>{selectedConversation.messages.length} messages</p>
+                    <p>{selectedConversation.applicationYear} application cycle</p>
+                    <p>{selectedConversation.unreadCount} unread</p>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </section>
+        ) : (
+          <div className="mt-8">
+            <EmptyMessages />
           </div>
-          <div>
-            <h2 className="mb-4 text-2xl font-black text-ink">Sent</h2>
-            <MessageList messages={sentMessages} empty="Messages you send from role insights will show here." />
-          </div>
-        </section>
+        )}
       </main>
     </>
   );

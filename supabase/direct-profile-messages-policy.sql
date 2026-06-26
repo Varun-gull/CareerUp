@@ -10,6 +10,21 @@ on public.profiles for select
 to authenticated
 using (true);
 
+create or replace function public.profile_exists_for_message(profile_id uuid)
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.profiles
+    where profiles.id = profile_id
+  );
+$$;
+
+grant execute on function public.profile_exists_for_message(uuid) to authenticated;
+
 drop policy if exists "Users can send peer messages" on public.peer_messages;
 
 create policy "Users can send peer messages"
@@ -32,13 +47,33 @@ with check (
     or (
       application_id is null
       and role_key = concat('profile::', recipient_id::text)
-      and exists (
-        select 1
-        from public.profiles
-        where profiles.id = peer_messages.recipient_id
-      )
+      and public.profile_exists_for_message(recipient_id)
     )
   )
 );
 
 notify pgrst, 'reload schema';
+
+select
+  'direct profile messages ready' as check_name,
+  exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'peer_messages'
+      and policyname = 'Users can send peer messages'
+  ) as has_send_policy,
+  exists (
+    select 1
+    from pg_proc
+    join pg_namespace on pg_namespace.oid = pg_proc.pronamespace
+    where pg_namespace.nspname = 'public'
+      and pg_proc.proname = 'profile_exists_for_message'
+  ) as has_profile_helper,
+  (
+    select is_nullable = 'YES'
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'peer_messages'
+      and column_name = 'application_id'
+  ) as application_id_allows_profile_messages;

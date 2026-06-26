@@ -42,6 +42,10 @@ function getSafeReturnTo(value: FormDataEntryValue | null) {
   return "/postings/internships";
 }
 
+function isDirectProfileMessage(applicationId: string, roleKey: string, recipientId: string) {
+  return !applicationId && roleKey === `profile::${recipientId}`;
+}
+
 async function canSendPeerMessage({
   supabase,
   userId,
@@ -139,14 +143,20 @@ export async function sendPeerMessage(formData: FormData) {
     redirectWithMessage(returnTo, "This message thread is not available. Make sure the role is still visible and the database migration has been run.");
   }
 
-  const { error } = await supabase.from("peer_messages").insert({
-    sender_id: user.id,
-    recipient_id: recipientId,
-    application_id: applicationId || null,
-    role_key: roleKey,
-    subject,
-    body
-  });
+  const { error } = isDirectProfileMessage(applicationId, roleKey, recipientId)
+    ? await supabase.rpc("send_direct_profile_message", {
+        target_recipient_id: recipientId,
+        message_subject: subject,
+        message_body: body
+      })
+    : await supabase.from("peer_messages").insert({
+        sender_id: user.id,
+        recipient_id: recipientId,
+        application_id: applicationId || null,
+        role_key: roleKey,
+        subject,
+        body
+      });
 
   if (error) {
     redirectWithMessage(returnTo, getPeerMessageErrorMessage(error.message));

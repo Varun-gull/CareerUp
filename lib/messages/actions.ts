@@ -23,6 +23,16 @@ function redirectWithMessage(path: string, message: string): never {
   redirect(`${path}${separator}message=${encodeURIComponent(message)}`);
 }
 
+function getPeerMessageErrorMessage(errorMessage: string) {
+  const normalizedMessage = errorMessage.toLowerCase();
+
+  if (normalizedMessage.includes("row-level security") || normalizedMessage.includes("peer_messages")) {
+    return "Messages are almost ready. Run supabase/direct-profile-messages-policy.sql in Supabase, then try sending this again.";
+  }
+
+  return errorMessage;
+}
+
 function getSafeReturnTo(value: FormDataEntryValue | null) {
   const returnTo = String(value ?? "");
   if (returnTo.startsWith("/postings/insights") || returnTo.startsWith("/messages") || returnTo.startsWith("/u/")) {
@@ -139,7 +149,7 @@ export async function sendPeerMessage(formData: FormData) {
   });
 
   if (error) {
-    redirectWithMessage(returnTo, error.message);
+    redirectWithMessage(returnTo, getPeerMessageErrorMessage(error.message));
   }
 
   revalidatePath(returnTo);

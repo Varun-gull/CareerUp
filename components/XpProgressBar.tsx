@@ -10,20 +10,20 @@ export function XpProgressBar({ xp }: { xp: number }) {
           <p className="text-sm font-bold text-slate-500">Rank progress</p>
           <h2 className="mt-1 text-2xl font-black text-ink">{xp.toLocaleString()} XP</h2>
         </div>
-        <p className="rounded-full bg-purple-50 px-3 py-1 text-sm font-black text-purple-800 ring-1 ring-purple-100">
+        <p className="rounded-full bg-violet-50 px-3 py-1 text-sm font-black text-brand ring-1 ring-violet-100">
           {progress.next ? `${progress.remaining} XP to ${progress.next.name}` : "Max rank unlocked"}
         </p>
       </div>
       <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
-        <div className="h-full rounded-full bg-gradient-to-r from-purple-800 via-purple-600 to-violet-400" style={{ width: `${progress.percent}%` }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-brand via-electric to-sky" style={{ width: `${progress.percent}%` }} />
       </div>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-slate-500">{progress.current.name}</p>
         <details className="relative">
-          <summary className="cursor-pointer list-none rounded-xl border border-purple-200 bg-white px-3 py-2 text-sm font-black text-purple-900 transition hover:border-purple-300 hover:bg-purple-50">
+          <summary className="cursor-pointer list-none rounded-2xl border border-violet-200 bg-white px-3 py-2 text-sm font-black text-brand transition hover:border-brand/40 hover:bg-violet-50">
             Show all ranks
           </summary>
-          <div className="absolute right-0 z-20 mt-2 w-64 rounded-2xl border border-white/70 bg-white/95 p-3 shadow-soft backdrop-blur-xl">
+          <div className="absolute right-0 z-20 mt-2 w-64 rounded-3xl border border-white/70 bg-white/95 p-3 shadow-strong backdrop-blur-xl">
             <div className="grid gap-2">
               {ranks.map((rank) => (
                 <div key={rank.name} className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2">

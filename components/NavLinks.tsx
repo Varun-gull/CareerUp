@@ -15,7 +15,7 @@ const navItems = [
 export function NavLinks() {
   const pathname = usePathname();
   return (
-    <div className="hidden min-w-0 flex-1 items-center justify-center gap-2 md:flex">
+    <div className="nav-scroll col-span-2 row-start-2 -mx-1 flex min-w-0 items-center gap-2 overflow-x-auto pb-1 lg:col-span-1 lg:row-start-auto lg:mx-0 lg:justify-center lg:overflow-visible lg:pb-0">
       {navItems.map((item) => {
         const active = item.label === "Postings" ? pathname.startsWith("/postings") : pathname.startsWith(item.href);
         return (
@@ -23,7 +23,7 @@ export function NavLinks() {
             key={item.href}
             href={item.href}
             className={clsx(
-              "rounded-xl px-4 py-2.5 text-[15px] font-black transition",
+              "shrink-0 rounded-2xl px-4 py-2.5 text-sm font-black transition sm:text-[15px]",
               active
                 ? "bg-white text-ink shadow-sm"
                 : "text-slate-300 hover:bg-white/10 hover:text-white"

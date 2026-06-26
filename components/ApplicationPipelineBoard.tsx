@@ -132,8 +132,8 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
                 }
               }}
               className={clsx(
-                "min-w-0 rounded-2xl border border-white/70 bg-white/55 p-3 shadow-sm backdrop-blur transition",
-                isActive && "border-purple-300 bg-purple-50/80 shadow-glow",
+                "min-w-0 rounded-3xl border border-white/70 bg-white/60 p-3 shadow-sm backdrop-blur-xl transition",
+                isActive && "border-brand/40 bg-violet-50/85 shadow-glow",
                 isPending && "opacity-90"
               )}
             >
@@ -167,7 +167,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
                   ))}
                 </div>
               ) : (
-                <div className="rounded-xl border border-dashed border-slate-200 bg-white/60 p-4 text-sm font-bold text-slate-500">Drop roles here.</div>
+                <div className="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-4 text-sm font-bold text-slate-500">Drop roles here.</div>
               )}
             </div>
           );

@@ -19,8 +19,8 @@ function Avatar({ message }: { message: PeerMessage }) {
 function MessageList({ messages, empty }: { messages: PeerMessage[]; empty: string }) {
   if (messages.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-slate-200 bg-white/70 p-6 text-center">
-        <Mail className="mx-auto text-purple-700" size={28} />
+      <div className="rounded-3xl border border-dashed border-slate-200 bg-white/70 p-6 text-center">
+        <Mail className="mx-auto text-brand" size={28} />
         <p className="mt-3 text-sm font-black text-slate-500">{empty}</p>
       </div>
     );
@@ -29,12 +29,12 @@ function MessageList({ messages, empty }: { messages: PeerMessage[]; empty: stri
   return (
     <div className="grid gap-4">
       {messages.map((message) => (
-        <article key={message.id} className={`card p-5 ${message.unread ? "ring-2 ring-purple-200" : ""}`}>
+        <article key={message.id} className={`card p-5 ${message.unread ? "ring-2 ring-violet-200" : ""}`}>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex min-w-0 items-start gap-3">
               <Link
                 href={`/u/${message.otherProfileId}`}
-                className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-purple-100 text-lg font-black text-purple-800"
+                className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-violet-100 text-lg font-black text-brand"
                 aria-label={`Open ${message.otherName}'s profile`}
               >
                 <Avatar message={message} />
@@ -45,7 +45,7 @@ function MessageList({ messages, empty }: { messages: PeerMessage[]; empty: stri
                   <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-black text-slate-500">
                     {message.direction === "received" ? "From peer" : "Sent"}
                   </span>
-                  {message.unread && <span className="rounded-full bg-purple-700 px-2 py-1 text-xs font-black text-white">Unread</span>}
+                  {message.unread && <span className="rounded-full bg-brand px-2 py-1 text-xs font-black text-white">Unread</span>}
                 </div>
                 <p className="text-sm font-bold text-slate-500">{message.otherSchool}</p>
                 <p className="mt-3 text-lg font-black text-ink">{message.subject}</p>
@@ -59,7 +59,7 @@ function MessageList({ messages, empty }: { messages: PeerMessage[]; empty: stri
             </div>
           </div>
 
-          <p className="mt-4 rounded-lg bg-slate-50 p-4 text-sm font-bold leading-6 text-slate-600">{message.body}</p>
+          <p className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm font-bold leading-6 text-slate-600">{message.body}</p>
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4 text-sm font-black text-slate-500">
             {message.roleKey.startsWith("profile::") ? (
@@ -78,14 +78,14 @@ function MessageList({ messages, empty }: { messages: PeerMessage[]; empty: stri
             <form action={markPeerMessageRead} className="mt-4">
               <input type="hidden" name="messageId" value={message.id} />
               <input type="hidden" name="returnTo" value="/messages" />
-              <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-purple-200 bg-white px-4 text-sm font-black text-purple-800 transition hover:bg-purple-50">
+              <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-2xl border border-violet-200 bg-white px-4 text-sm font-black text-brand transition hover:bg-violet-50">
                 <CheckCheck className="mr-2" size={16} /> Mark read
               </button>
             </form>
           )}
 
           {message.direction === "received" && (
-            <form action={sendPeerMessage} className="mt-4 grid gap-3 rounded-lg border border-purple-100 bg-purple-50/60 p-4">
+            <form action={sendPeerMessage} className="mt-4 grid gap-3 rounded-3xl border border-violet-100 bg-violet-50/60 p-4">
               <input type="hidden" name="recipientId" value={message.otherProfileId} />
               <input type="hidden" name="applicationId" value={message.applicationId} />
               <input type="hidden" name="roleKey" value={message.roleKey} />
@@ -129,35 +129,35 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
     <>
       <Navbar />
       <main className="page-shell">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Peer advice</p>
-            <h1 className="mt-2 text-4xl font-black text-ink">Messages</h1>
+            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Messages</h1>
             <p className="mt-2 max-w-2xl text-slate-600">
               Keep track of advice requests connected to specific roles, interviews, and application years.
             </p>
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/85 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
         <section className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="card p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-purple-700 text-white">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-white">
                 <Inbox size={20} />
               </span>
               <div>
                 <p className="text-sm font-black text-slate-500">Received</p>
                 <p className="text-3xl font-black text-ink">{receivedMessages.length}</p>
-                <p className="text-xs font-black text-purple-700">{unreadMessages.length} unread</p>
+                <p className="text-xs font-black text-brand">{unreadMessages.length} unread</p>
               </div>
             </div>
           </div>
           <div className="card p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-slate-950 text-white">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 text-white">
                 <Send size={20} />
               </span>
               <div>
@@ -168,7 +168,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
           </div>
           <div className="card p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-50 text-brand">
                 <UsersRound size={20} />
               </span>
               <div>

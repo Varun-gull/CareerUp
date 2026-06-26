@@ -10,17 +10,17 @@ export default async function SettingsPage({ searchParams }: { searchParams?: { 
     <>
       <Navbar />
       <main className="page-shell">
-        <div>
+        <div className="page-hero">
           <p className="eyebrow">Account controls</p>
-          <h1 className="mt-2 text-4xl font-black text-ink">Settings</h1>
+          <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Settings</h1>
           <p className="mt-2 max-w-2xl text-slate-600">Control what friends can see and how your CareerUp profile behaves.</p>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/85 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
 
         <section className="card mt-8 max-w-2xl p-6">
           <div className="flex items-start gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-brand">
               {profile.shareApplicationBoard ? <UsersRound size={20} /> : <Lock size={20} />}
             </span>
             <div>
@@ -33,8 +33,8 @@ export default async function SettingsPage({ searchParams }: { searchParams?: { 
 
           <form action={updatePrivacySettings} className="mt-5 grid gap-4">
             <input type="hidden" name="returnTo" value="/settings" />
-            <label className="flex gap-3 rounded-lg border border-purple-100 bg-purple-50/70 p-4 text-sm font-bold text-slate-700">
-              <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-700 focus:ring-purple-600" />
+            <label className="flex gap-3 rounded-2xl border border-violet-100 bg-violet-50/70 p-4 text-sm font-bold text-slate-700">
+              <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand" />
               <span>
                 Let accepted friends view my application board.
                 <span className="mt-1 block text-xs font-semibold text-slate-500">Friends can see statuses, roles, companies, fit scores, and posting links, but cannot edit anything.</span>

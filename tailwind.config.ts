@@ -9,18 +9,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0b1020",
-        navy: "#070b17",
+        ink: "#090d18",
+        navy: "#060914",
         panel: "#ffffff",
-        muted: "#667085",
-        brand: "#6d28d9",
-        sky: "#8b5cf6",
+        muted: "#64748b",
+        brand: "#7c3aed",
+        electric: "#2563eb",
+        sky: "#06b6d4",
         success: "#10b981",
         warning: "#f59e0b"
       },
       boxShadow: {
-        soft: "0 18px 50px rgba(15, 23, 42, 0.08)",
-        glow: "0 18px 45px rgba(109, 40, 217, 0.18)"
+        soft: "0 22px 70px rgba(15, 23, 42, 0.10)",
+        glow: "0 18px 45px rgba(124, 58, 237, 0.22)",
+        strong: "0 24px 80px rgba(15, 23, 42, 0.18)"
       }
     }
   },

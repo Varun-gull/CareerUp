@@ -16,17 +16,17 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
     <>
       <Navbar />
       <main className="page-shell">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Command center</p>
-            <h1 className="mt-2 text-4xl font-black text-ink">Welcome back, {profile.name}</h1>
+            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Welcome back, {profile.name}</h1>
             <p className="mt-2 text-slate-600">Today’s goal: move one internship forward and protect your streak.</p>
           </div>
           <Link href="/applications/new" className="primary-button">
             Add role
           </Link>
         </div>
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-white p-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white p-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">{searchParams.message}</p>}
 
         <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <DashboardCard title="Total XP" value={profile.xp.toString()} helper="Earned from applications and challenges." icon={Trophy} />
@@ -41,7 +41,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
             <div>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-2xl font-black text-ink">Recent applications</h2>
-                <Link href="/applications" className="text-sm font-bold text-purple-800">
+                <Link href="/applications" className="text-sm font-bold text-brand">
                   View all
                 </Link>
               </div>

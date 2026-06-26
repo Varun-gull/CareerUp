@@ -82,7 +82,7 @@ export function StatusUpdateForm({ application, compact }: { application: Applic
             <option key={s.value} value={s.value}>{s.label}</option>
           ))}
         </select>
-        <button type="submit" className="min-h-10 rounded-xl bg-slate-950 px-4 text-sm font-bold text-white shadow-sm transition hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-200">
+        <button type="submit" className="min-h-10 rounded-xl bg-slate-950 px-4 text-sm font-bold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-200">
           Update
         </button>
       </form>

@@ -95,11 +95,11 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
           </button>
         </div>
 
-        <div className="mt-4 flex rounded-lg border border-slate-200 bg-slate-50 p-1">
+        <div className="mt-4 flex rounded-2xl border border-slate-200 bg-slate-50 p-1">
           <button
             onClick={() => setTab("application")}
             className={clsx(
-              "flex-1 rounded-md py-1.5 text-sm font-bold transition-colors",
+              "flex-1 rounded-xl py-1.5 text-sm font-bold transition-colors",
               tab === "application" ? "bg-white shadow-sm text-ink" : "text-slate-500 hover:text-slate-700"
             )}
           >
@@ -108,7 +108,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
           <button
             onClick={() => setTab("custom")}
             className={clsx(
-              "flex-1 rounded-md py-1.5 text-sm font-bold transition-colors",
+              "flex-1 rounded-xl py-1.5 text-sm font-bold transition-colors",
               tab === "custom" ? "bg-white shadow-sm text-ink" : "text-slate-500 hover:text-slate-700"
             )}
           >

@@ -13,10 +13,10 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
     <>
       <Navbar />
       <main className="page-shell">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Prep tool</p>
-            <h1 className="mt-2 text-4xl font-black text-ink">Interview Prep</h1>
+            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Interview Prep</h1>
             <p className="mt-2 max-w-2xl text-slate-600">Draft STAR answers for behavioral interviews and keep your best stories ready.</p>
           </div>
           <Link href="/rewards" className="secondary-button">
@@ -24,12 +24,12 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
           </Link>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/85 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
 
         {!isUnlocked ? (
           <section className="card mt-8 p-6">
             <div className="flex max-w-3xl flex-col gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
                 <LockKeyhole size={24} />
               </div>
               <div>
@@ -46,7 +46,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
             <section className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
               <form action={saveInterviewAnswer} className="card min-w-0 p-5">
                 <div className="mb-5 flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-brand">
                     <MessageSquareText size={22} />
                   </div>
                   <div>
@@ -84,7 +84,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
               </form>
 
               <aside className="card p-5">
-                <p className="text-sm font-black text-purple-700">Answer formula</p>
+                <p className="text-sm font-black text-brand">Answer formula</p>
                 <h2 className="mt-1 text-xl font-black text-ink">What a strong answer needs</h2>
                 <div className="mt-4 grid gap-3">
                   {[
@@ -93,7 +93,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                     ["Action", "The concrete choices you made. This should be the longest section."],
                     ["Result", "Outcome, metric, lesson, or what you would repeat next time."]
                   ].map(([title, body]) => (
-                    <div key={title} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                    <div key={title} className="rounded-2xl border border-slate-100 bg-slate-50 p-3">
                       <p className="font-black text-ink">{title}</p>
                       <p className="mt-1 text-sm leading-6 text-slate-600">{body}</p>
                     </div>
@@ -117,12 +117,12 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                     <article key={answer.id} className="card p-5">
                       <div className="flex flex-wrap items-start justify-between gap-4">
                         <div>
-                          <p className="text-sm font-black text-purple-700">{answer.createdAt}</p>
+                          <p className="text-sm font-black text-brand">{answer.createdAt}</p>
                           <h3 className="mt-1 text-xl font-black text-ink">{answer.prompt}</h3>
                         </div>
                         <form action={deleteInterviewAnswer}>
                           <input type="hidden" name="answerId" value={answer.id} />
-                          <button className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-red-200 hover:text-red-600" aria-label="Delete interview answer">
+                          <button className="rounded-2xl border border-slate-200 p-2 text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600" aria-label="Delete interview answer">
                             <Trash2 size={18} />
                           </button>
                         </form>
@@ -133,13 +133,13 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                         <AnswerSection title="Action" body={answer.action} />
                         <AnswerSection title="Result" body={answer.result} />
                       </div>
-                      {answer.notes && <p className="mt-4 rounded-lg bg-purple-50 p-3 text-sm leading-6 text-slate-700">{answer.notes}</p>}
+                      {answer.notes && <p className="mt-4 rounded-2xl bg-violet-50 p-3 text-sm leading-6 text-slate-700">{answer.notes}</p>}
                     </article>
                   ))}
                 </div>
               ) : (
                 <div className="card mt-4 flex flex-col items-center px-6 py-10 text-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-slate-100 text-purple-800">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-brand">
                     <MessageSquareText size={28} />
                   </div>
                   <h3 className="mt-5 text-2xl font-black text-ink">No answers saved yet</h3>
@@ -165,7 +165,7 @@ function StarTextarea({ name, label, placeholder }: { name: string; label: strin
 
 function AnswerSection({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+    <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3">
       <p className="text-sm font-black text-slate-500">{title}</p>
       <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-700">{body}</p>
     </div>

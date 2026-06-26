@@ -17,14 +17,14 @@ export default async function LoginPage({ searchParams }: { searchParams?: { mes
   return (
     <>
       <Navbar />
-      <main className="page-shell grid min-h-[calc(100vh-72px)] place-items-center">
-        <section className="card w-full max-w-md p-7">
+      <main className="page-shell grid min-h-[calc(100vh-92px)] place-items-center">
+        <section className="card w-full max-w-md p-8">
           <p className="eyebrow">Log in</p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-ink">Continue your streak</h1>
+          <h1 className="mt-2 text-3xl font-black text-ink">Continue your streak</h1>
           {!supabaseReady && (
-            <p className="mt-4 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">Supabase env vars are not connected yet. This form is ready for the next setup step.</p>
+            <p className="mt-4 rounded-2xl bg-violet-50 p-3 text-sm font-bold text-violet-950">Supabase env vars are not connected yet. This form is ready for the next setup step.</p>
           )}
-          {searchParams?.message && <p className="mt-4 rounded-lg bg-slate-100 p-3 text-sm font-bold text-slate-700">{searchParams.message}</p>}
+          {searchParams?.message && <p className="mt-4 rounded-2xl bg-slate-100 p-3 text-sm font-bold text-slate-700">{searchParams.message}</p>}
           <form action={logIn} className="mt-6 grid gap-4">
             <input name="email" className="field" placeholder="Email" type="email" required />
             <input name="password" className="field" placeholder="Password" type="password" required />
@@ -32,7 +32,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: { mes
           </form>
           <p className="mt-5 text-sm text-slate-600">
             New here?{" "}
-            <Link href="/signup" className="font-bold text-purple-800">
+            <Link href="/signup" className="font-bold text-brand">
               Create an account
             </Link>
           </p>

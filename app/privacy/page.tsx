@@ -26,11 +26,11 @@ export default async function PrivacyPage({ searchParams }: { searchParams?: { m
           <p className="mt-3 leading-7 text-slate-600">
             CareerUp can let accepted friends view your application pipeline on your profile. They can only see it if you allow it, and they cannot edit your roles.
           </p>
-          {searchParams?.message && <p className="mt-4 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+          {searchParams?.message && <p className="mt-4 rounded-2xl bg-violet-50 p-3 text-sm font-bold text-violet-950">{searchParams.message}</p>}
           <form action={updatePrivacySettings} className="mt-6 grid gap-4">
             <input type="hidden" name="returnTo" value="/privacy" />
-            <label className="flex gap-3 rounded-lg border border-purple-100 bg-purple-50/70 p-4 text-sm font-bold text-slate-700">
-              <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-700 focus:ring-purple-600" />
+            <label className="flex gap-3 rounded-2xl border border-violet-100 bg-violet-50/70 p-4 text-sm font-bold text-slate-700">
+              <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand" />
               <span>
                 Let accepted friends view my application board.
                 <span className="mt-1 block text-xs font-semibold text-slate-500">You can change this later from Settings.</span>

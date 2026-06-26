@@ -76,17 +76,17 @@ export default async function ApplicationsPage({
     <>
       <Navbar />
       <main className="page-shell">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Pipeline</p>
-            <h1 className="mt-2 text-4xl font-black text-ink">Applications</h1>
+            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Applications</h1>
             <p className="mt-2 text-slate-600">Track every role from saved to offer without losing momentum.</p>
           </div>
           <Link href="/applications/new" className="primary-button">
             <Plus className="mr-2" size={18} /> Add role
           </Link>
         </div>
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/85 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
         {applications.length > 0 ? (
           <>
             <section className="mt-6 flex flex-wrap items-center justify-between gap-3">
@@ -99,8 +99,8 @@ export default async function ApplicationsPage({
                   <Link
                     key={year}
                     href={getYearHref(year, query, statusFilter)}
-                    className={`rounded-lg px-4 py-2 text-sm font-black transition ${
-                      selectedYear === year ? "bg-purple-700 text-white shadow-lg shadow-purple-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-purple-300 hover:text-purple-800"
+                    className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
+                      selectedYear === year ? "bg-brand text-white shadow-glow" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-brand/30 hover:text-brand"
                     }`}
                     aria-current={selectedYear === year ? "page" : undefined}
                   >
@@ -109,8 +109,8 @@ export default async function ApplicationsPage({
                 ))}
                 <Link
                   href={getYearHref("all", query, statusFilter)}
-                  className={`rounded-lg px-4 py-2 text-sm font-black transition ${
-                    selectedYear === "all" ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-purple-300 hover:text-purple-800"
+                  className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
+                    selectedYear === "all" ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-brand/30 hover:text-brand"
                   }`}
                   aria-current={selectedYear === "all" ? "page" : undefined}
                 >

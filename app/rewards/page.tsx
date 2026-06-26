@@ -15,31 +15,31 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
     <>
       <Navbar />
       <main className="page-shell">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Unlocks</p>
-            <h1 className="mt-2 text-4xl font-black text-ink">Rewards</h1>
+            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Rewards</h1>
             <p className="mt-2 max-w-2xl text-slate-600">Turn XP into interview prep tools you can use when recruiting gets serious.</p>
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/85 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
 
         <section className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="card p-5">
-            <Sparkles size={22} className="text-purple-700" />
+            <Sparkles size={22} className="text-brand" />
             <p className="mt-4 text-sm font-bold text-slate-500">Available XP</p>
             <p className="mt-1 text-3xl font-black text-ink">{profile.xp.toLocaleString()}</p>
           </div>
           <div className="card p-5">
-            <Gift size={22} className="text-purple-700" />
+            <Gift size={22} className="text-brand" />
             <p className="mt-4 text-sm font-bold text-slate-500">Unlocked</p>
             <p className="mt-1 text-3xl font-black text-ink">
               {unlockedCount}/{rewards.length}
             </p>
           </div>
           <div className="card p-5">
-            <Trophy size={22} className="text-purple-700" />
+            <Trophy size={22} className="text-brand" />
             <p className="mt-4 text-sm font-bold text-slate-500">Current rank</p>
             <div className="mt-2">
               <RankBadge xp={profile.xp} />
@@ -74,7 +74,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
               <article key={reward.id} className="card p-5">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-black text-purple-700">{reward.category}</p>
+                    <p className="text-sm font-black text-brand">{reward.category}</p>
                     <h2 className="mt-1 text-xl font-black text-ink">{reward.title}</h2>
                     <p className="mt-2 text-sm leading-6 text-slate-600">{reward.description}</p>
                   </div>
@@ -84,13 +84,13 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                 </div>
 
                 {reward.unlocked ? (
-                  <div className="mt-5 rounded-lg border border-emerald-100 bg-emerald-50/60 p-4">
+                  <div className="mt-5 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4">
                     <div className="mb-3 flex items-center gap-2 font-black text-emerald-800">
                       <UnlockKeyhole size={18} /> Prep tool
                     </div>
                     <ul className="grid gap-2 text-sm leading-6 text-slate-700">
                       {reward.contents.map((item) => (
-                        <li key={item} className="rounded-lg bg-white/80 px-3 py-2">
+                        <li key={item} className="rounded-2xl bg-white/80 px-3 py-2">
                           {item}
                         </li>
                       ))}

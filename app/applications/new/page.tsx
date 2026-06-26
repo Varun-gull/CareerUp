@@ -6,10 +6,13 @@ export default function NewApplicationPage({ searchParams }: { searchParams?: { 
   return (
     <>
       <Navbar />
-      <main className="page-shell max-w-3xl">
-        <p className="eyebrow">Add internship</p>
-        <h1 className="mt-2 text-4xl font-black text-ink">Track a new role</h1>
-        {searchParams?.message && <p className="mt-4 rounded-lg bg-slate-100 p-3 text-sm font-bold text-slate-700">{searchParams.message}</p>}
+      <main className="page-shell max-w-4xl">
+        <div className="page-hero">
+          <p className="eyebrow">Add role</p>
+          <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Track a new role</h1>
+          <p className="mt-2 text-slate-600">Save the role now, then move it through your pipeline when you apply.</p>
+        </div>
+        {searchParams?.message && <p className="mt-4 rounded-2xl bg-slate-100 p-3 text-sm font-bold text-slate-700">{searchParams.message}</p>}
         <form action={createApplication} className="card mt-8 grid gap-5 p-6">
           <label className="grid gap-2 text-sm font-bold text-slate-700">
             Company

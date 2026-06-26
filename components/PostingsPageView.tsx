@@ -80,7 +80,7 @@ function getPostingAgeScore(value: string) {
 }
 
 function activeTabClass(active: boolean) {
-  return active ? "bg-purple-700 text-white shadow-glow" : "bg-white/85 text-slate-700 ring-1 ring-slate-200 hover:text-purple-800";
+  return active ? "bg-brand text-white shadow-glow" : "bg-white/85 text-slate-700 ring-1 ring-slate-200 hover:text-brand";
 }
 
 function buildReturnHref(kind: PostingKind, searchParams?: { q?: string; location?: string; remote?: RemoteFilter; minFit?: string; sort?: PostingSort }) {
@@ -159,10 +159,10 @@ export async function PostingsPageView({
     <>
       <Navbar />
       <main className="page-shell">
-        <div className="flex flex-wrap items-start justify-between gap-5 border-b border-slate-200 pb-6">
+        <div className="page-hero flex flex-wrap items-start justify-between gap-5">
           <div>
             <p className="eyebrow">Live search</p>
-            <h1 className="mt-2 text-4xl font-black text-ink">{pageTitle}</h1>
+            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">{pageTitle}</h1>
             <p className="mt-2 max-w-3xl text-slate-600">{pageCopy}</p>
           </div>
           <div className="flex gap-2">
@@ -175,7 +175,7 @@ export async function PostingsPageView({
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-xl bg-white/80 p-3 text-sm font-bold text-purple-900 shadow-sm ring-1 ring-purple-100">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/80 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
         <PostingsSearchForm
@@ -189,7 +189,7 @@ export async function PostingsPageView({
         />
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
-          <Link href={resetHref} className="inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs text-slate-700 shadow-sm ring-1 ring-slate-200 hover:text-purple-800">
+          <Link href={resetHref} className="inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs text-slate-700 shadow-sm ring-1 ring-slate-200 hover:text-brand">
             <RotateCcw className="mr-1" size={14} /> Reset
           </Link>
           <div className="flex flex-wrap items-center gap-3">
@@ -197,10 +197,10 @@ export async function PostingsPageView({
               Showing {postings.length} of {searchResult.postings.length} results
             </span>
             <span className="inline-flex overflow-hidden rounded-full bg-white/90 text-xs font-black shadow-sm ring-1 ring-slate-200">
-              <Link href={bestFitHref} className={sort === "fit" ? "bg-purple-700 px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-purple-800"}>
+              <Link href={bestFitHref} className={sort === "fit" ? "bg-brand px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-brand"}>
                 Best fit
               </Link>
-              <Link href={newestHref} className={sort === "newest" ? "bg-purple-700 px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-purple-800"}>
+              <Link href={newestHref} className={sort === "newest" ? "bg-brand px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-brand"}>
                 Latest posted
               </Link>
             </span>

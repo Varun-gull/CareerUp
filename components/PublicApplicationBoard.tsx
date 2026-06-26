@@ -19,7 +19,7 @@ export function PublicApplicationBoard({ applications }: { applications: Applica
     <section className="overflow-x-auto pb-3">
       <div className="grid min-w-[1040px] gap-4 xl:grid-cols-5">
         {groupedApplications.map((column) => (
-          <div key={column.status} className="min-w-0 rounded-lg border border-slate-200 bg-white/80 p-3">
+          <div key={column.status} className="min-w-0 rounded-3xl border border-white/70 bg-white/70 p-3 shadow-sm backdrop-blur">
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
                 <h3 className="text-sm font-black text-ink">{column.title}</h3>
@@ -34,8 +34,8 @@ export function PublicApplicationBoard({ applications }: { applications: Applica
                   const sourceIsUrl = application.source.startsWith("http://") || application.source.startsWith("https://");
 
                   return (
-                    <article key={application.id} className="min-w-0 rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
-                      <p className="truncate text-xs font-black text-purple-700">{application.company}</p>
+                    <article key={application.id} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                      <p className="truncate text-xs font-black text-brand">{application.company}</p>
                       <h4 className="mt-1 line-clamp-2 text-sm font-black text-ink">{application.role}</h4>
                       <p className="mt-2 flex items-center gap-2 truncate text-xs font-bold text-slate-500">
                         <MapPin size={14} /> {application.location}
@@ -44,11 +44,11 @@ export function PublicApplicationBoard({ applications }: { applications: Applica
                         <span className="inline-flex items-center gap-2">
                           <CalendarDays size={14} /> Due {application.deadline}
                         </span>
-                        <span className="inline-flex items-center gap-2 text-purple-800">
+                        <span className="inline-flex items-center gap-2 text-brand">
                           <Sparkles size={14} /> {application.fitScore}% fit
                         </span>
                         {sourceIsUrl && (
-                          <a href={application.source} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-purple-800 hover:text-purple-950">
+                          <a href={application.source} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-brand hover:text-violet-950">
                             <ExternalLink size={14} /> Posting
                           </a>
                         )}
@@ -58,7 +58,7 @@ export function PublicApplicationBoard({ applications }: { applications: Applica
                 })}
               </div>
             ) : (
-              <div className="rounded-lg border border-dashed border-slate-200 bg-white/70 p-4 text-sm font-bold text-slate-500">No roles here.</div>
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-white/70 p-4 text-sm font-bold text-slate-500">No roles here.</div>
             )}
           </div>
         ))}

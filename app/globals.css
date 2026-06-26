@@ -9,9 +9,10 @@
 html {
   min-height: 100%;
   background:
-    radial-gradient(circle at 14% 0%, rgba(124, 58, 237, 0.16), transparent 28%),
-    radial-gradient(circle at 86% 12%, rgba(59, 130, 246, 0.10), transparent 26%),
-    linear-gradient(180deg, #f5f3ff 0%, #eef2ff 42%, #f8fafc 100%);
+    linear-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(135deg, #f8fafc 0%, #f3f0ff 36%, #eaf2ff 70%, #f8fafc 100%);
+  background-size: 44px 44px, 44px 44px, auto;
   background-attachment: fixed;
   background-repeat: no-repeat;
 }
@@ -24,9 +25,10 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 14% 0%, rgba(124, 58, 237, 0.16), transparent 28%),
-    radial-gradient(circle at 86% 12%, rgba(59, 130, 246, 0.10), transparent 26%),
-    linear-gradient(180deg, #f5f3ff 0%, #eef2ff 42%, #f8fafc 100%);
+    linear-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(135deg, #f8fafc 0%, #f3f0ff 36%, #eaf2ff 70%, #f8fafc 100%);
+  background-size: 44px 44px, 44px 44px, auto;
   background-attachment: fixed;
   background-repeat: no-repeat;
   color: #0b1020;
@@ -47,27 +49,27 @@ textarea {
 
 @layer components {
   .page-shell {
-    @apply mx-auto w-full max-w-[96rem] px-4 py-7 sm:px-6 lg:px-10;
+    @apply mx-auto w-full max-w-[104rem] px-4 py-8 sm:px-6 lg:px-8 xl:px-10;
   }
 
   .card {
-    @apply rounded-xl border border-white/70 bg-white/90 shadow-soft backdrop-blur-xl;
+    @apply rounded-3xl border border-white/70 bg-white/95 shadow-soft backdrop-blur-xl;
   }
 
   .eyebrow {
-    @apply text-xs font-black uppercase tracking-[0.14em] text-purple-700;
+    @apply text-xs font-black uppercase text-brand;
   }
 
   .primary-button {
-    @apply inline-flex min-h-11 items-center justify-center rounded-xl bg-purple-700 px-5 font-black text-white shadow-glow transition hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-200 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none;
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl bg-gradient-to-r from-brand to-electric px-5 font-black text-white shadow-glow transition hover:-translate-y-0.5 hover:shadow-strong focus:outline-none focus:ring-4 focus:ring-brand/20 disabled:cursor-not-allowed disabled:translate-y-0 disabled:bg-slate-300 disabled:bg-none disabled:shadow-none;
   }
 
   .secondary-button {
-    @apply inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white/85 px-5 font-black text-slate-900 shadow-sm transition hover:border-purple-300 hover:bg-purple-50 hover:text-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-100;
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white/85 px-5 font-black text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-brand/30 hover:bg-white hover:text-brand focus:outline-none focus:ring-4 focus:ring-brand/10;
   }
 
   .field {
-    @apply rounded-xl border border-slate-200 bg-white/90 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-purple-500 focus:ring-4 focus:ring-purple-100;
+    @apply rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-4 focus:ring-brand/10;
   }
 
   .panel-title {
@@ -76,5 +78,30 @@ textarea {
 
   .muted-copy {
     @apply text-sm leading-6 text-slate-600;
+  }
+
+  .page-hero {
+    @apply rounded-[2rem] border border-white/70 bg-white/75 p-5 shadow-soft backdrop-blur-xl sm:p-7;
+  }
+
+  .section-label {
+    @apply text-xs font-black uppercase text-slate-500;
+  }
+
+  .soft-panel {
+    @apply rounded-3xl border border-white/70 bg-white/78 shadow-soft backdrop-blur-xl;
+  }
+
+  .dark-panel {
+    @apply rounded-3xl border border-white/10 bg-slate-950 text-white shadow-strong;
+  }
+
+  .nav-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .nav-scroll::-webkit-scrollbar {
+    display: none;
   }
 }

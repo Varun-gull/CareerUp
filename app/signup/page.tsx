@@ -17,20 +17,20 @@ export default async function SignupPage({ searchParams }: { searchParams?: { me
   return (
     <>
       <Navbar />
-      <main className="page-shell grid min-h-[calc(100vh-72px)] place-items-center">
-        <section className="card w-full max-w-md p-7">
+      <main className="page-shell grid min-h-[calc(100vh-92px)] place-items-center">
+        <section className="card w-full max-w-md p-8">
           <p className="eyebrow">Create account</p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-ink">Start with 25 XP</h1>
+          <h1 className="mt-2 text-3xl font-black text-ink">Start with 25 XP</h1>
           {!supabaseReady && (
-            <p className="mt-4 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">Supabase env vars are not connected yet. Account creation will be wired in the database step.</p>
+            <p className="mt-4 rounded-2xl bg-violet-50 p-3 text-sm font-bold text-violet-950">Supabase env vars are not connected yet. Account creation will be wired in the database step.</p>
           )}
-          {searchParams?.message && <p className="mt-4 rounded-lg bg-slate-100 p-3 text-sm font-bold text-slate-700">{searchParams.message}</p>}
+          {searchParams?.message && <p className="mt-4 rounded-2xl bg-slate-100 p-3 text-sm font-bold text-slate-700">{searchParams.message}</p>}
           <form action={signUp} className="mt-6 grid gap-4">
             <input name="fullName" className="field" placeholder="Name" required />
             <input name="email" className="field" placeholder="Email" type="email" required />
             <input name="password" className="field" placeholder="Password" type="password" minLength={6} required />
-            <label className="flex gap-3 rounded-xl border border-purple-100 bg-purple-50/70 p-3 text-sm font-bold text-slate-700">
-              <input name="shareApplicationBoard" type="checkbox" className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-700 focus:ring-purple-600" />
+            <label className="flex gap-3 rounded-2xl border border-violet-100 bg-violet-50/70 p-3 text-sm font-bold text-slate-700">
+              <input name="shareApplicationBoard" type="checkbox" className="mt-1 h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand" />
               <span>
                 Let accepted friends view my application board.
                 <span className="mt-1 block text-xs font-semibold text-slate-500">You can change this later from your profile.</span>
@@ -40,7 +40,7 @@ export default async function SignupPage({ searchParams }: { searchParams?: { me
           </form>
           <p className="mt-5 text-sm text-slate-600">
             Already have an account?{" "}
-            <Link href="/login" className="font-bold text-purple-800">
+            <Link href="/login" className="font-bold text-brand">
               Log in
             </Link>
           </p>

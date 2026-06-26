@@ -14,7 +14,7 @@ export function ProfileLink({
   children?: ReactNode;
 }) {
   return (
-    <Link href={`/u/${profileId}`} className={clsx("inline-block max-w-full font-black text-ink transition hover:text-purple-800", className)} aria-label={`Open ${name}'s profile`}>
+    <Link href={`/u/${profileId}`} className={clsx("inline-block max-w-full font-black text-ink transition hover:text-brand", className)} aria-label={`Open ${name}'s profile`}>
       {children ?? name}
     </Link>
   );

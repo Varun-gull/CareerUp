@@ -1,4 +1,5 @@
 import { ArrowLeft, Flame, Lock, Mail, MapPin, Sparkles, Target, Trophy, UserPlus, UsersRound } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { ProfileLink } from "@/components/ProfileLink";
@@ -36,11 +37,11 @@ export default async function PublicProfilePage({
     <>
       <Navbar />
       <main className="page-shell">
-        <Link href="/friends" className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-purple-800">
+        <Link href="/friends" className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-brand">
           <ArrowLeft className="mr-2" size={16} /> Friends
         </Link>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/85 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
 
         {!profile ? (
           <section className="card mt-6 p-8 text-center">
@@ -49,36 +50,36 @@ export default async function PublicProfilePage({
           </section>
         ) : (
           <section className="card mt-6 overflow-hidden">
-            <div className="bg-ink px-6 py-10 text-white">
+            <div className="bg-navy px-6 py-10 text-white">
               <div className="flex flex-wrap items-center justify-between gap-5">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-purple-700 text-2xl font-black">
+                  <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-electric text-2xl font-black shadow-glow">
                     {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="text-xs font-black uppercase text-purple-200">CareerUp profile</p>
+                    <p className="text-xs font-black uppercase text-violet-200">CareerUp profile</p>
                     <h1 className="mt-1 text-3xl font-black">{profile.name}</h1>
                     <p className="text-slate-300">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "CareerUp Student"}</p>
                   </div>
                 </div>
 
                 {isOwnProfile ? (
-                  <Link href="/profile" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold hover:border-purple-300">
+                  <Link href="/profile" className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold transition hover:-translate-y-0.5 hover:border-violet-300 hover:bg-white/10">
                     Edit profile
                   </Link>
                 ) : friendship ? (
-                  <span className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold text-purple-100">
+                  <span className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold text-violet-100">
                     {friendship.status === "accepted" ? "Friends" : friendship.direction === "incoming" ? "Request received" : "Request sent"}
                   </span>
                 ) : user ? (
                   <form action={sendFriendRequestById}>
                     <input type="hidden" name="profileId" value={profile.id} />
-                    <button className="inline-flex min-h-11 items-center justify-center rounded-lg bg-purple-700 px-5 font-bold text-white shadow-lg shadow-purple-800/20 hover:bg-purple-800">
+                    <button className="primary-button">
                       <UserPlus className="mr-2" size={18} /> Add friend
                     </button>
                   </form>
                 ) : (
-                  <Link href={`/login?message=${encodeURIComponent("Log in to add this profile as a friend.")}`} className="inline-flex min-h-11 items-center justify-center rounded-lg bg-purple-700 px-5 font-bold text-white shadow-lg shadow-purple-800/20 hover:bg-purple-800">
+                  <Link href={`/login?message=${encodeURIComponent("Log in to add this profile as a friend.")}`} className="primary-button">
                     Log in to add
                   </Link>
                 )}
@@ -93,15 +94,15 @@ export default async function PublicProfilePage({
               </div>
 
               <aside className="space-y-4">
-                <div className="rounded-lg border border-slate-200 p-4">
+                <div className="rounded-3xl border border-slate-200 bg-white/70 p-4">
                   <p className="mb-2 text-sm font-bold text-slate-500">Current rank</p>
                   <RankBadge xp={profile.xp} />
                 </div>
                 <XpProgressBar xp={profile.xp} />
                 {!isOwnProfile && user && (
-                  <form action={sendPeerMessage} className="rounded-lg border border-purple-200 bg-purple-50/70 p-4">
+                  <form action={sendPeerMessage} className="rounded-3xl border border-violet-100 bg-violet-50/70 p-4">
                     <div className="flex items-center gap-2">
-                      <Mail size={18} className="text-purple-700" />
+                      <Mail size={18} className="text-brand" />
                       <h2 className="font-black text-ink">Message {profile.name.split(" ")[0]}</h2>
                     </div>
                     <input type="hidden" name="recipientId" value={profile.id} />
@@ -136,16 +137,16 @@ export default async function PublicProfilePage({
                   </Link>
                 )}
                 {!isOwnProfile && (
-                  <div className="rounded-lg border border-slate-200 bg-white p-4">
+                  <div className="rounded-3xl border border-slate-200 bg-white/80 p-4">
                     <div className="flex items-center gap-2">
-                      <UsersRound size={18} className="text-purple-700" />
+                      <UsersRound size={18} className="text-brand" />
                       <h2 className="font-black text-ink">Mutual friends</h2>
                     </div>
                     {isAcceptedFriend ? (
                       mutualFriends.length > 0 ? (
                         <div className="mt-4 grid gap-3">
                           {mutualFriends.map((friend) => (
-                            <div key={friend.id} className="rounded-lg border border-slate-100 p-3 transition hover:border-purple-200 hover:bg-purple-50/60">
+                            <div key={friend.id} className="rounded-2xl border border-slate-100 p-3 transition hover:border-violet-200 hover:bg-violet-50/60">
                               <ProfileLink profileId={friend.id} name={friend.name} />
                               <p className="mt-1 text-xs font-bold text-slate-500">{friend.school}</p>
                             </div>
@@ -183,8 +184,8 @@ export default async function PublicProfilePage({
                           <Link
                             key={year}
                             href={`/u/${params.profileId}?year=${year}`}
-                            className={`rounded-lg px-4 py-2 text-sm font-black transition ${
-                              selectedBoardYear === year ? "bg-purple-700 text-white shadow-lg shadow-purple-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-purple-300 hover:text-purple-800"
+                            className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
+                              selectedBoardYear === year ? "bg-brand text-white shadow-glow" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-brand/30 hover:text-brand"
                             }`}
                             aria-current={selectedBoardYear === year ? "page" : undefined}
                           >
@@ -193,8 +194,8 @@ export default async function PublicProfilePage({
                         ))}
                         <Link
                           href={`/u/${params.profileId}?year=all`}
-                          className={`rounded-lg px-4 py-2 text-sm font-black transition ${
-                            selectedBoardYear === "all" ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-purple-300 hover:text-purple-800"
+                          className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
+                            selectedBoardYear === "all" ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:border-brand/30 hover:text-brand"
                           }`}
                           aria-current={selectedBoardYear === "all" ? "page" : undefined}
                         >
@@ -204,14 +205,14 @@ export default async function PublicProfilePage({
                       <PublicApplicationBoard applications={visibleBoardApplications} />
                     </>
                   ) : (
-                    <div className="rounded-lg border border-dashed border-slate-200 bg-white/80 p-6 text-sm font-bold text-slate-500">No applications are on this board yet.</div>
+                    <div className="rounded-3xl border border-dashed border-slate-200 bg-white/80 p-6 text-sm font-bold text-slate-500">No applications are on this board yet.</div>
                   )
                 ) : isOwnProfile ? (
-                  <div className="rounded-lg border border-dashed border-slate-200 bg-white/80 p-6 text-sm font-bold text-slate-500">Add roles to your board from the postings page.</div>
+                  <div className="rounded-3xl border border-dashed border-slate-200 bg-white/80 p-6 text-sm font-bold text-slate-500">Add roles to your board from the postings page.</div>
                 ) : isAcceptedFriend ? (
-                  <div className="rounded-lg border border-slate-200 bg-white/80 p-6">
+                  <div className="rounded-3xl border border-slate-200 bg-white/80 p-6">
                     <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-brand">
                         <Lock size={18} />
                       </span>
                       <div>
@@ -221,9 +222,9 @@ export default async function PublicProfilePage({
                     </div>
                   </div>
                 ) : (
-                  <div className="rounded-lg border border-slate-200 bg-white/80 p-6">
+                  <div className="rounded-3xl border border-slate-200 bg-white/80 p-6">
                     <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-brand">
                         <Lock size={18} />
                       </span>
                       <div>
@@ -242,21 +243,21 @@ export default async function PublicProfilePage({
   );
 }
 
-function StatCard({ icon: Icon, label, value }: { icon: typeof Sparkles; label: string; value: string }) {
+function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4">
-      <Icon size={20} className="text-purple-700" />
+    <div className="rounded-3xl border border-slate-200 bg-white/80 p-4">
+      <Icon size={20} className="text-brand" />
       <p className="mt-4 text-sm font-bold text-slate-500">{label}</p>
       <p className="mt-1 text-2xl font-black text-ink">{value}</p>
     </div>
   );
 }
 
-function ProfileTags({ icon: Icon, title, values, empty }: { icon: typeof Target; title: string; values: string[]; empty: string }) {
+function ProfileTags({ icon: Icon, title, values, empty }: { icon: LucideIcon; title: string; values: string[]; empty: string }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4">
+    <div className="rounded-3xl border border-slate-200 bg-white/80 p-4">
       <div className="flex items-center gap-2">
-        <Icon size={18} className="text-purple-700" />
+        <Icon size={18} className="text-brand" />
         <h2 className="font-black text-ink">{title}</h2>
       </div>
       {values.length > 0 ? (

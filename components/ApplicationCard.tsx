@@ -13,15 +13,15 @@ export function ApplicationCard({ application, compact = false }: { application:
 
   if (compact) {
     return (
-      <article className="min-w-0 overflow-hidden rounded-xl border border-white/70 bg-white/95 shadow-sm transition hover:border-purple-200 hover:shadow-soft">
+      <article className="min-w-0 overflow-hidden rounded-2xl border border-white/80 bg-white/95 shadow-sm transition hover:-translate-y-0.5 hover:border-brand/20 hover:shadow-soft">
         <button
           type="button"
           onClick={() => setExpanded((current) => !current)}
-          className="flex w-full min-w-0 items-center justify-between gap-2 px-3 py-3 text-left transition hover:bg-purple-50/50"
+          className="flex w-full min-w-0 items-center justify-between gap-2 px-3 py-3 text-left transition hover:bg-violet-50/50"
           aria-expanded={expanded}
         >
           <div className="min-w-0">
-            <p className="truncate text-xs font-black uppercase tracking-wide text-purple-700">{application.company}</p>
+            <p className="truncate text-xs font-black uppercase text-brand">{application.company}</p>
             <h3 className="mt-0.5 truncate text-sm font-black text-ink">{application.role}</h3>
             <p className="mt-1 truncate text-xs font-bold text-slate-500">{application.location}</p>
           </div>
@@ -40,7 +40,7 @@ export function ApplicationCard({ application, compact = false }: { application:
                 <CalendarDays size={16} /> Due {application.deadline}
               </span>
               {sourceIsUrl ? (
-                <a className="inline-flex items-center gap-2 font-bold text-purple-800 hover:text-purple-950" href={application.source} target="_blank" rel="noreferrer">
+                <a className="inline-flex items-center gap-2 font-bold text-brand hover:text-violet-950" href={application.source} target="_blank" rel="noreferrer">
                   <ExternalLink size={16} /> Posting
                 </a>
               ) : (
@@ -48,7 +48,7 @@ export function ApplicationCard({ application, compact = false }: { application:
                   <ExternalLink size={16} /> {application.source}
                 </span>
               )}
-              <span className="inline-flex items-center gap-2 font-bold text-purple-800">
+              <span className="inline-flex items-center gap-2 font-bold text-brand">
                 <Sparkles size={16} /> {application.fitScore}% fit
               </span>
             </div>
@@ -71,7 +71,7 @@ export function ApplicationCard({ application, compact = false }: { application:
     <article className="card p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-black uppercase tracking-wide text-purple-700">{application.company}</p>
+          <p className="text-sm font-black uppercase text-brand">{application.company}</p>
           <h3 className="mt-1 text-lg font-black text-ink">{application.role}</h3>
         </div>
         <ApplicationStatusBadge status={application.status} />
@@ -84,7 +84,7 @@ export function ApplicationCard({ application, compact = false }: { application:
           <CalendarDays size={16} /> Due {application.deadline}
         </span>
         {sourceIsUrl ? (
-          <a className="inline-flex items-center gap-2 font-bold text-purple-800 hover:text-purple-950" href={application.source} target="_blank" rel="noreferrer">
+          <a className="inline-flex items-center gap-2 font-bold text-brand hover:text-violet-950" href={application.source} target="_blank" rel="noreferrer">
             <ExternalLink size={16} /> Posting
           </a>
         ) : (
@@ -92,7 +92,7 @@ export function ApplicationCard({ application, compact = false }: { application:
             <ExternalLink size={16} /> {application.source}
           </span>
         )}
-        <span className="inline-flex items-center gap-2 font-bold text-purple-800">
+        <span className="inline-flex items-center gap-2 font-bold text-brand">
           <Sparkles size={16} /> {application.fitScore}% fit
         </span>
       </div>

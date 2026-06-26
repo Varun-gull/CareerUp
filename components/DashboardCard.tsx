@@ -12,13 +12,13 @@ export function DashboardCard({
   icon: LucideIcon;
 }) {
   return (
-    <section className="card p-5 transition hover:-translate-y-0.5 hover:shadow-glow">
+    <section className="group card p-5 transition hover:-translate-y-1 hover:shadow-strong">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-wide text-slate-500">{title}</p>
-          <p className="mt-2 text-3xl font-black tracking-tight text-ink">{value}</p>
+          <p className="section-label">{title}</p>
+          <p className="mt-2 text-3xl font-black text-ink">{value}</p>
         </div>
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-purple-800 ring-1 ring-purple-100">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-sm transition group-hover:bg-brand group-hover:shadow-glow">
           <Icon size={23} />
         </div>
       </div>

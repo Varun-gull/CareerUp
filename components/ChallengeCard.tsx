@@ -6,9 +6,9 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
   const percent = Math.min(100, Math.round((challenge.progress / challenge.target) * 100));
 
   return (
-    <article className="card p-5">
+    <article className="card p-5 transition hover:-translate-y-1 hover:shadow-strong">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-violet-800 text-white shadow-glow">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-electric text-white shadow-glow">
           {challenge.completed ? <CheckCircle2 size={22} /> : <Trophy size={22} />}
         </div>
         <span className="rounded-full bg-slate-950 px-3 py-1 text-xs font-black text-white">+{challenge.xp} XP</span>
@@ -24,7 +24,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
           <div
-            className={clsx("h-full rounded-full", challenge.completed ? "bg-emerald-500" : "bg-gradient-to-r from-purple-700 to-violet-500")}
+            className={clsx("h-full rounded-full", challenge.completed ? "bg-emerald-500" : "bg-gradient-to-r from-brand via-electric to-sky")}
             style={{ width: `${percent}%` }}
           />
         </div>

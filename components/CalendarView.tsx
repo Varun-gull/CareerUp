@@ -19,7 +19,7 @@ const EVENT_TYPE_COLORS: Record<string, string> = {
   interview: "bg-yellow-100 text-yellow-800 border-yellow-300",
   offer: "bg-green-100 text-green-800 border-green-300",
   deadline: "bg-slate-100 text-slate-600 border-slate-300",
-  custom: "bg-purple-50 text-purple-800 border-purple-200",
+  custom: "bg-violet-50 text-brand border-violet-200",
 };
 
 const EVENT_TYPE_LABEL: Record<string, string> = {
@@ -282,7 +282,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
         );
       })()}
       {/* Left sidebar */}
-      <aside className="flex w-72 flex-none flex-col rounded-xl border border-slate-200 bg-white/80 backdrop-blur">
+      <aside className="flex w-72 flex-none flex-col rounded-3xl border border-slate-200 bg-white/80 backdrop-blur">
         <div className="border-b border-slate-100 px-4 py-4">
           <p className="eyebrow">Your applications</p>
           <p className="mt-1 text-xs text-slate-500">Drag onto any date to add an event</p>
@@ -301,13 +301,13 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               }}
               onDragEnd={() => setDragApp(null)}
               className={clsx(
-                "cursor-grab select-none rounded-lg border border-slate-200 bg-white p-3 shadow-sm transition active:cursor-grabbing",
+                "cursor-grab select-none rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition active:cursor-grabbing",
                 dragApp?.id === app.id && "opacity-40"
               )}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-black text-purple-700">{app.company}</p>
+                  <p className="truncate text-sm font-black text-brand">{app.company}</p>
                   <p className="truncate text-sm font-bold text-slate-700">{app.role}</p>
                 </div>
                 <ApplicationStatusBadge status={app.status} />
@@ -335,20 +335,20 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate(-1)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-purple-300 hover:text-purple-800 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 hover:border-violet-300 hover:text-brand transition-colors"
             >
               <ChevronLeft size={18} />
             </button>
             <span className="min-w-56 text-center text-lg font-black text-ink">{headerLabel}</span>
             <button
               onClick={() => navigate(1)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-purple-300 hover:text-purple-800 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 hover:border-violet-300 hover:text-brand transition-colors"
             >
               <ChevronRight size={18} />
             </button>
             <button
               onClick={() => setAnchor(view === "week" ? startOfWeek(today) : new Date(today.getFullYear(), today.getMonth(), 1))}
-              className="ml-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600 hover:border-purple-300 hover:text-purple-800 transition-colors"
+              className="ml-2 rounded-2xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600 hover:border-violet-300 hover:text-brand transition-colors"
             >
               Today
             </button>
@@ -357,12 +357,12 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCreateDate(todayStr)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-purple-300 hover:text-purple-800 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 hover:border-violet-300 hover:text-brand transition-colors"
               aria-label="Add event"
             >
               <Plus size={18} />
             </button>
-            <div className="flex rounded-lg border border-slate-200 bg-white p-1">
+            <div className="flex rounded-2xl border border-slate-200 bg-white p-1">
             <button
               onClick={() => {
                 setView("month");
@@ -370,8 +370,8 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                 setAnchor((prev) => new Date(prev.getFullYear(), prev.getMonth(), 1));
               }}
               className={clsx(
-                "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors",
-                view === "month" ? "bg-purple-700 text-white" : "text-slate-600 hover:text-purple-800"
+                "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-colors",
+                view === "month" ? "bg-brand text-white" : "text-slate-600 hover:text-brand"
               )}
             >
               <CalendarDays size={14} /> Month
@@ -383,8 +383,8 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                 setAnchor(startOfWeek(today));
               }}
               className={clsx(
-                "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-colors",
-                view === "week" ? "bg-purple-700 text-white" : "text-slate-600 hover:text-purple-800"
+                "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-colors",
+                view === "week" ? "bg-brand text-white" : "text-slate-600 hover:text-brand"
               )}
             >
               <List size={14} /> Week
@@ -396,7 +396,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
         {/* Day header row */}
         <div className="mb-1 grid grid-cols-7 gap-1">
           {DAY_NAMES.map((d) => (
-            <div key={d} className="py-1 text-center text-xs font-black uppercase tracking-wide text-slate-400">
+            <div key={d} className="py-1 text-center text-xs font-black uppercase text-slate-400">
               {d}
             </div>
           ))}
@@ -423,8 +423,8 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                 onDrop={(e) => { e.preventDefault(); handleDrop(dateStr); }}
                 onClick={() => setCreateDate(dateStr)}
                 className={clsx(
-                  "min-h-[90px] cursor-pointer rounded-lg border p-1.5 transition-colors hover:border-purple-300",
-                  isActive ? "border-purple-500 bg-purple-50" : "border-slate-100 bg-white/70",
+                  "min-h-[90px] cursor-pointer rounded-2xl border p-1.5 transition-colors hover:border-violet-300",
+                  isActive ? "border-brand bg-violet-50" : "border-slate-100 bg-white/70",
                   !isCurrentMonth && "opacity-40"
                 )}
               >
@@ -432,7 +432,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                   onClick={(e) => e.stopPropagation()}
                   className={clsx(
                   "inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold",
-                  isToday ? "bg-purple-700 text-white" : "text-slate-500"
+                  isToday ? "bg-brand text-white" : "text-slate-500"
                 )}>
                   {day.getDate()}
                 </span>

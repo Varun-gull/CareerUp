@@ -24,21 +24,21 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
     <>
       <Navbar />
       <main className="page-shell">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Squad</p>
-            <h1 className="mt-2 text-4xl font-black text-ink">Friends</h1>
+            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Friends</h1>
             <p className="mt-2 max-w-2xl text-slate-600">Add classmates, compare progress, and build a leaderboard that feels personal.</p>
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-xl bg-white/80 p-3 text-sm font-bold text-purple-900 shadow-sm ring-1 ring-purple-100">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-xl bg-white/80 p-3 text-sm font-bold text-violet-950 shadow-sm ring-1 ring-violet-100">{searchParams.message}</p>}
 
         {inviteId && (
-          <form action={sendFriendRequestById} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-purple-100 bg-white/85 p-4 shadow-soft backdrop-blur">
+          <form action={sendFriendRequestById} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-violet-100 bg-white/85 p-4 shadow-soft backdrop-blur">
             <div>
-              <p className="font-black text-purple-950">Friend invite opened</p>
-              <p className="text-sm font-bold text-purple-800">Send a request to add this CareerUp profile.</p>
+              <p className="font-black text-violet-950">Friend invite opened</p>
+              <p className="text-sm font-bold text-brand">Send a request to add this CareerUp profile.</p>
             </div>
             <input type="hidden" name="profileId" value={inviteId} />
             <button className="primary-button">
@@ -50,7 +50,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
         <section className="mt-8 grid gap-4 lg:grid-cols-[1fr_360px]">
           <form action={sendFriendRequest} className="card grid gap-4 p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-800">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-50 text-brand">
                 <UserPlus size={20} />
               </span>
               <div>
@@ -119,25 +119,25 @@ function FriendSection({
       {friends.length > 0 ? (
         <div className="grid gap-3">
           {friends.map((friend) => (
-            <article key={friend.id} className="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-purple-200 hover:shadow-soft">
+            <article key={friend.id} className="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-soft">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <ProfileLink profileId={friend.userId} name={friend.name} />
                   <p className="text-sm text-slate-500">{friend.school}</p>
                   <p className="mt-1 text-xs font-bold text-slate-400">{friend.email}</p>
                 </div>
-                <UsersRound size={18} className="text-purple-700" />
+                <UsersRound size={18} className="text-brand" />
               </div>
               <div className="mt-4 flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-black text-purple-800">{friend.xp.toLocaleString()} XP</p>
+                  <p className="text-sm font-black text-brand">{friend.xp.toLocaleString()} XP</p>
                   <RankBadge xp={friend.xp} />
                 </div>
                 <div className="flex gap-2">
                   {action === "accept" && (
                     <form action={acceptFriendRequest}>
                       <input type="hidden" name="friendshipId" value={friend.id} />
-                      <button className="inline-flex min-h-10 items-center rounded-xl bg-purple-700 px-3 text-sm font-bold text-white shadow-sm transition hover:bg-purple-800" aria-label={`Accept ${friend.name}`}>
+                      <button className="inline-flex min-h-10 items-center rounded-xl bg-brand px-3 text-sm font-bold text-white shadow-sm transition hover:bg-violet-800" aria-label={`Accept ${friend.name}`}>
                         <Check size={16} />
                       </button>
                     </form>

@@ -18,10 +18,10 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
       <Navbar />
       <main className="page-shell">
         <section className="card overflow-hidden">
-          <div className="bg-ink px-6 py-10 text-white">
+          <div className="bg-navy px-6 py-10 text-white">
             <div className="flex flex-wrap items-center justify-between gap-5">
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-purple-700 text-2xl font-black">
+                <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-electric text-2xl font-black shadow-glow">
                   {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                 </div>
                 <div>
@@ -29,7 +29,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                   <p className="text-slate-300">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "Complete your profile"}</p>
                 </div>
               </div>
-              <Link href="/friends" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 font-bold hover:border-purple-300">
+              <Link href="/friends" className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold transition hover:-translate-y-0.5 hover:border-violet-300 hover:bg-white/10">
                 <Share2 className="mr-2" size={18} /> Share profile
               </Link>
             </div>
@@ -38,7 +38,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
             <div>
               <h2 className="text-xl font-black text-ink">Profile setup</h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">These preferences will power personalized internship recommendations later.</p>
-              {searchParams?.message && <p className="mt-4 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+              {searchParams?.message && <p className="mt-4 rounded-2xl bg-violet-50 p-3 text-sm font-bold text-violet-950">{searchParams.message}</p>}
               <form action={updateProfile} className="mt-5 grid gap-5">
                 <label className="grid gap-2 text-sm font-bold text-slate-700">
                   Name
@@ -63,8 +63,8 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                   Target locations
                   <input name="targetLocations" defaultValue={profile.targetLocations.join(", ")} className="field" placeholder="New York, Remote, Washington DC" />
                 </label>
-                <label className="flex gap-3 rounded-lg border border-purple-100 bg-purple-50/70 p-4 text-sm font-bold text-slate-700">
-                  <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-700 focus:ring-purple-600" />
+                <label className="flex gap-3 rounded-2xl border border-violet-100 bg-violet-50/70 p-4 text-sm font-bold text-slate-700">
+                  <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand" />
                   <span>
                     Let accepted friends view my application board.
                     <span className="mt-1 block text-xs font-semibold text-slate-500">Only accepted friends can see it, and they cannot edit your applications.</span>
@@ -76,14 +76,14 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
               </form>
             </div>
             <aside className="space-y-4">
-              <div className="rounded-lg border border-slate-200 p-4">
+              <div className="rounded-3xl border border-slate-200 bg-white/70 p-4">
                 <p className="mb-2 text-sm font-bold text-slate-500">Current rank</p>
                 <RankBadge xp={profile.xp} />
               </div>
               <XpProgressBar xp={profile.xp} />
-              <div className="rounded-lg border border-slate-200 p-4">
+              <div className="rounded-3xl border border-slate-200 bg-white/70 p-4">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-brand">
                     <FileText size={20} />
                   </div>
                   <div>

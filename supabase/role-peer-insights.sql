@@ -80,6 +80,78 @@ on public.peer_messages for select
 to authenticated
 using (auth.uid() = sender_id or auth.uid() = recipient_id);
 
+create or replace function public.profile_exists_for_message(profile_id uuid)
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.profiles
+    where profiles.id = profile_id
+  );
+$$;
+
+grant execute on function public.profile_exists_for_message(uuid) to authenticated;
+
+create or replace function public.send_direct_profile_message(
+  target_recipient_id uuid,
+  message_subject text,
+  message_body text
+)
+returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  inserted_message_id uuid;
+begin
+  if auth.uid() is null then
+    raise exception 'Log in before sending messages.';
+  end if;
+
+  if target_recipient_id is null or message_subject is null or message_body is null then
+    raise exception 'Add a subject and message before sending.';
+  end if;
+
+  if btrim(message_subject) = '' or btrim(message_body) = '' then
+    raise exception 'Add a subject and message before sending.';
+  end if;
+
+  if target_recipient_id = auth.uid() then
+    raise exception 'You cannot message yourself.';
+  end if;
+
+  if not public.profile_exists_for_message(target_recipient_id) then
+    raise exception 'Profile not found.';
+  end if;
+
+  insert into public.peer_messages (
+    sender_id,
+    recipient_id,
+    application_id,
+    role_key,
+    subject,
+    body
+  )
+  values (
+    auth.uid(),
+    target_recipient_id,
+    null,
+    concat('profile::', target_recipient_id::text),
+    btrim(message_subject),
+    btrim(message_body)
+  )
+  returning id into inserted_message_id;
+
+  return inserted_message_id;
+end;
+$$;
+
+grant execute on function public.send_direct_profile_message(uuid, text, text) to authenticated;
+
 drop policy if exists "Users can send peer messages" on public.peer_messages;
 create policy "Users can send peer messages"
 on public.peer_messages for insert
@@ -100,11 +172,7 @@ with check (
     or (
       application_id is null
       and role_key = concat('profile::', recipient_id::text)
-      and exists (
-        select 1
-        from public.profiles
-        where profiles.id = peer_messages.recipient_id
-      )
+      and public.profile_exists_for_message(recipient_id)
     )
   )
 );

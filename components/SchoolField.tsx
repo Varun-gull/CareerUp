@@ -12,7 +12,7 @@ export function SchoolField({ schools, initialSchool }: { schools: SchoolOption[
   const [customMode, setCustomMode] = useState(Boolean(initialSchool) && !isKnownSchool(schools, initialSchool));
 
   return (
-    <label className="grid gap-2 text-sm font-bold text-slate-300">
+    <label className="grid gap-2 text-sm font-bold text-slate-700">
       School
       {customMode ? (
         <input

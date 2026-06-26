@@ -20,7 +20,7 @@ export function EmptyState({
         <Icon size={28} />
       </div>
       <h2 className="mt-5 text-2xl font-black text-ink">{title}</h2>
-      <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">{description}</p>
+      <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">{description}</p>
       <Link href={actionHref} className="primary-button mt-6">
         {actionLabel}
       </Link>

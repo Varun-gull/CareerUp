@@ -15,7 +15,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
           <div>
             <p className="eyebrow">Friendly competition</p>
             <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Leaderboard</h1>
-            <p className="mt-2 max-w-2xl text-slate-400">Compare XP with friends and stay accountable during recruiting season.</p>
+            <p className="mt-2 max-w-2xl text-slate-600">Compare XP with friends and stay accountable during recruiting season.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Link href="/leaderboard" className={scope === "global" ? "primary-button" : "secondary-button"}>

@@ -26,7 +26,7 @@ export function StreakCard({
       : "Your free revive has been used. Unlock another for 250 XP when you want a backup.";
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-slate-700 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-5 text-white shadow-soft">
+    <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-5 text-white shadow-soft">
       <div className="pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-r from-sky/10 to-transparent" />
 
       <div className="relative flex items-center gap-4">
@@ -39,33 +39,33 @@ export function StreakCard({
         </div>
       </div>
 
-      <div className="relative mt-5 rounded-2xl border border-slate-700 bg-slate-950/45 p-3">
-        <p className="text-sm font-bold leading-6 text-slate-300">
+      <div className="relative mt-5 rounded-2xl border border-slate-200 bg-slate-50/90 p-3">
+        <p className="text-sm font-bold leading-6 text-slate-700">
           {streak > 0 ? "You are charged up. Apply to one role today to keep the streak alive." : "Start the streak by applying to one role today."}
         </p>
       </div>
 
       {showReviveInfo && (
-        <div className="relative mt-4 rounded-2xl border border-slate-700 bg-slate-950/45 p-3">
+        <div className="relative mt-4 rounded-2xl border border-slate-200 bg-slate-50/90 p-3">
           <div className="flex items-center gap-2 text-sm font-black text-sky">
             <ShieldCheck size={16} /> Streak revive
           </div>
-          <p className="mt-2 text-sm leading-6 text-slate-300">{reviveHelper}</p>
+          <p className="mt-2 text-sm leading-6 text-slate-700">{reviveHelper}</p>
           {reviveRequiredApplications > 0 && (
             <p className="mt-2 rounded-xl bg-sky/10 px-3 py-2 text-xs font-black text-sky">
               Revive in progress: apply to {reviveRequiredApplications} roles today.
             </p>
           )}
-          <div className="mt-3 flex flex-wrap gap-2 text-xs font-black text-slate-300">
-            <span className="rounded-full bg-slate-800 px-3 py-1">Free: {hasFreeRevive ? "available" : "used"}</span>
-            <span className="rounded-full bg-slate-800 px-3 py-1">Paid: {paidRevives}</span>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs font-black text-slate-700">
+            <span className="rounded-full bg-slate-100 px-3 py-1">Free: {hasFreeRevive ? "available" : "used"}</span>
+            <span className="rounded-full bg-slate-100 px-3 py-1">Paid: {paidRevives}</span>
           </div>
           {freeReviveUsed && (
             <form action={unlockStreakRevive} className="mt-3">
               <button
                 type="submit"
                 disabled={!canUnlockPaidRevive}
-                className="w-full rounded-xl bg-sky px-3 py-2 text-sm font-black text-slate-950 transition hover:bg-brand disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500"
+                className="w-full rounded-xl bg-sky px-3 py-2 text-sm font-black text-slate-950 transition hover:bg-brand disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500"
               >
                 Unlock revive - 250 XP
               </button>

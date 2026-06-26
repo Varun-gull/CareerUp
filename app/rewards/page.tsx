@@ -19,11 +19,11 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
           <div>
             <p className="eyebrow">Unlocks</p>
             <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Rewards</h1>
-            <p className="mt-2 max-w-2xl text-slate-400">Turn XP into interview prep tools you can use when recruiting gets serious.</p>
+            <p className="mt-2 max-w-2xl text-slate-600">Turn XP into interview prep tools you can use when recruiting gets serious.</p>
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-slate-900/80 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 
         <section className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="card p-5">
@@ -56,7 +56,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
             <div>
               <p className="eyebrow">Earn more XP</p>
               <h2 className="mt-2 text-2xl font-black text-ink">Challenges</h2>
-              <p className="mt-2 text-slate-400">Complete quests to build enough XP for the next unlock.</p>
+              <p className="mt-2 text-slate-600">Complete quests to build enough XP for the next unlock.</p>
             </div>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-3">
@@ -76,9 +76,9 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                   <div>
                     <p className="text-sm font-black text-brand">{reward.category}</p>
                     <h2 className="mt-1 text-xl font-black text-ink">{reward.title}</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-400">{reward.description}</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">{reward.description}</p>
                   </div>
-                  <span className={reward.unlocked ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700" : "rounded-full bg-slate-800 px-3 py-1 text-xs font-black text-slate-300"}>
+                  <span className={reward.unlocked ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700" : "rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700"}>
                     {reward.unlocked ? "Unlocked" : `${reward.xpCost} XP`}
                   </span>
                 </div>
@@ -88,9 +88,9 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                     <div className="mb-3 flex items-center gap-2 font-black text-emerald-800">
                       <UnlockKeyhole size={18} /> Prep tool
                     </div>
-                    <ul className="grid gap-2 text-sm leading-6 text-slate-300">
+                    <ul className="grid gap-2 text-sm leading-6 text-slate-700">
                       {reward.contents.map((item) => (
-                        <li key={item} className="rounded-2xl bg-slate-900/80 px-3 py-2">
+                        <li key={item} className="rounded-2xl bg-white/90 px-3 py-2">
                           {item}
                         </li>
                       ))}
@@ -102,8 +102,8 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                     )}
                   </div>
                 ) : (
-                  <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 pt-4">
-                    <p className="inline-flex items-center gap-2 text-sm font-bold text-slate-400">
+                  <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
+                    <p className="inline-flex items-center gap-2 text-sm font-bold text-slate-600">
                       <LockKeyhole size={16} /> {canUnlock ? "Ready to unlock" : `${Math.max(0, reward.xpCost - profile.xp).toLocaleString()} XP needed`}
                     </p>
                     <form action={unlockReward}>

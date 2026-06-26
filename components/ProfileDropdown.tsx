@@ -33,7 +33,7 @@ export function ProfileDropdown({
     return (
       <Link
         href="/login"
-        className="flex h-11 min-w-11 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 px-2 text-sm font-black text-slate-200 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky"
+        className="flex h-11 min-w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-2 text-sm font-black text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky"
       >
         <UserRound size={20} />
       </Link>
@@ -44,32 +44,32 @@ export function ProfileDropdown({
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex h-11 min-w-11 max-w-36 items-center justify-center truncate rounded-2xl border border-slate-700 bg-slate-900 px-4 text-sm font-black text-slate-100 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky"
+        className="flex h-11 min-w-11 max-w-36 items-center justify-center truncate rounded-2xl border border-slate-200 bg-white px-4 text-sm font-black text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky"
         aria-label="Open profile menu"
       >
         {displayName || initials}
       </button>
 
       {open && (
-        <div className="absolute right-0 top-14 z-50 w-56 overflow-hidden rounded-3xl border border-slate-700 bg-slate-950/95 p-1 shadow-strong backdrop-blur-xl">
+        <div className="absolute right-0 top-14 z-50 w-56 overflow-hidden rounded-3xl border border-slate-200 bg-white/95 p-1 shadow-strong backdrop-blur-xl">
           <Link
             href="/profile"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-300 hover:bg-sky/10 hover:text-sky"
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky"
           >
             <User size={16} /> Profile
           </Link>
           <Link
             href="/friends"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-300 hover:bg-sky/10 hover:text-sky"
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky"
           >
             <Users size={16} /> Friends
           </Link>
           <Link
             href="/messages"
             onClick={() => setOpen(false)}
-            className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-300 hover:bg-sky/10 hover:text-sky"
+            className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky"
           >
             <span className="inline-flex items-center gap-3">
               <Mail size={16} /> Messages
@@ -79,16 +79,16 @@ export function ProfileDropdown({
           <Link
             href="/settings"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-300 hover:bg-sky/10 hover:text-sky"
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky"
           >
             <Settings size={16} /> Settings
           </Link>
-          <div className="border-t border-slate-800" />
+          <div className="border-t border-slate-200" />
           <form action={logOut}>
             <button
               type="submit"
               onClick={() => setOpen(false)}
-            className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-bold text-red-300 hover:bg-red-500/10"
+            className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-bold text-red-600 hover:bg-red-50"
             >
               <LogOut size={16} /> Log out
             </button>

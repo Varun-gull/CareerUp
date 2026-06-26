@@ -132,7 +132,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
                 }
               }}
               className={clsx(
-                "min-w-0 rounded-3xl border border-slate-700 bg-slate-900/70 p-3 shadow-sm backdrop-blur-xl transition",
+                "min-w-0 rounded-3xl border border-slate-200 bg-white/80 p-3 shadow-sm backdrop-blur-xl transition",
                 isActive && "border-sky/40 bg-sky/10 shadow-glow",
                 isPending && "opacity-90"
               )}
@@ -142,7 +142,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
                   <h2 className="text-sm font-black text-ink">{column.title}</h2>
                   <p className="text-xs font-bold text-slate-500">{column.helper}</p>
                 </div>
-                <span className="rounded-full bg-slate-950 px-3 py-1 text-xs font-black text-slate-300 ring-1 ring-slate-700">{columnApplications.length}</span>
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700 ring-1 ring-slate-200">{columnApplications.length}</span>
               </div>
 
               {columnApplications.length > 0 ? (
@@ -167,7 +167,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
                   ))}
                 </div>
               ) : (
-                <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-950/55 p-4 text-sm font-bold text-slate-500">Drop roles here.</div>
+                <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 p-4 text-sm font-bold text-slate-500">Drop roles here.</div>
               )}
             </div>
           );

@@ -17,24 +17,24 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
           <div>
             <p className="eyebrow">Prep tool</p>
             <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Interview Prep</h1>
-            <p className="mt-2 max-w-2xl text-slate-400">Draft STAR answers for behavioral interviews and keep your best stories ready.</p>
+            <p className="mt-2 max-w-2xl text-slate-600">Draft STAR answers for behavioral interviews and keep your best stories ready.</p>
           </div>
           <Link href="/rewards" className="secondary-button">
             <Sparkles className="mr-2" size={18} /> Rewards
           </Link>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-slate-900/80 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 
         {!isUnlocked ? (
           <section className="card mt-8 p-6">
             <div className="flex max-w-3xl flex-col gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-800 text-slate-300">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
                 <LockKeyhole size={24} />
               </div>
               <div>
                 <h2 className="text-2xl font-black text-ink">Unlock the Behavioral Interview Pack first</h2>
-                <p className="mt-2 text-slate-400">Spend XP on the rewards page to open this builder and start saving interview stories.</p>
+                <p className="mt-2 text-slate-600">Spend XP on the rewards page to open this builder and start saving interview stories.</p>
               </div>
               <Link href="/rewards" className="primary-button w-fit">
                 Go unlock it <ArrowRight className="ml-2" size={18} />
@@ -51,11 +51,11 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                   </div>
                   <div>
                     <h2 className="text-xl font-black text-ink">Build a STAR answer</h2>
-                    <p className="mt-1 text-sm leading-6 text-slate-400">Keep each section tight enough to speak naturally in 60 to 90 seconds.</p>
+                    <p className="mt-1 text-sm leading-6 text-slate-600">Keep each section tight enough to speak naturally in 60 to 90 seconds.</p>
                   </div>
                 </div>
 
-                <label className="grid min-w-0 gap-2 text-sm font-bold text-slate-300">
+                <label className="grid min-w-0 gap-2 text-sm font-bold text-slate-700">
                   Prompt
                   <select name="prompt" className="field w-full min-w-0 max-w-full truncate">
                     {behavioralInterviewPrompts.map((prompt) => (
@@ -73,7 +73,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                   <StarTextarea name="resultOutcome" label="Result" placeholder="What changed? Add metrics if you can." />
                 </div>
 
-                <label className="mt-4 grid gap-2 text-sm font-bold text-slate-300">
+                <label className="mt-4 grid gap-2 text-sm font-bold text-slate-700">
                   Notes
                   <textarea name="notes" rows={3} className="field resize-none" placeholder="Keywords, company tie-in, or follow-up examples." />
                 </label>
@@ -93,9 +93,9 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                     ["Action", "The concrete choices you made. This should be the longest section."],
                     ["Result", "Outcome, metric, lesson, or what you would repeat next time."]
                   ].map(([title, body]) => (
-                    <div key={title} className="rounded-2xl border border-slate-800 bg-slate-900 p-3">
+                    <div key={title} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                       <p className="font-black text-ink">{title}</p>
-                      <p className="mt-1 text-sm leading-6 text-slate-400">{body}</p>
+                      <p className="mt-1 text-sm leading-6 text-slate-600">{body}</p>
                     </div>
                   ))}
                 </div>
@@ -108,7 +108,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                   <p className="eyebrow">Saved stories</p>
                   <h2 className="mt-2 text-2xl font-black text-ink">Saved answers</h2>
                 </div>
-                <span className="rounded-full bg-slate-800 px-3 py-1 text-sm font-black text-slate-300">{answers.length} saved</span>
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-black text-slate-700">{answers.length} saved</span>
               </div>
 
               {answers.length > 0 ? (
@@ -122,7 +122,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                         </div>
                         <form action={deleteInterviewAnswer}>
                           <input type="hidden" name="answerId" value={answer.id} />
-                          <button className="rounded-2xl border border-slate-700 p-2 text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600" aria-label="Delete interview answer">
+                          <button className="rounded-2xl border border-slate-200 p-2 text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600" aria-label="Delete interview answer">
                             <Trash2 size={18} />
                           </button>
                         </form>
@@ -133,17 +133,17 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                         <AnswerSection title="Action" body={answer.action} />
                         <AnswerSection title="Result" body={answer.result} />
                       </div>
-                      {answer.notes && <p className="mt-4 rounded-2xl bg-sky/10 p-3 text-sm leading-6 text-slate-300">{answer.notes}</p>}
+                      {answer.notes && <p className="mt-4 rounded-2xl bg-sky/10 p-3 text-sm leading-6 text-slate-700">{answer.notes}</p>}
                     </article>
                   ))}
                 </div>
               ) : (
                 <div className="card mt-4 flex flex-col items-center px-6 py-10 text-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-800 text-brand">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-brand">
                     <MessageSquareText size={28} />
                   </div>
                   <h3 className="mt-5 text-2xl font-black text-ink">No answers saved yet</h3>
-                  <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">Use the builder to create your first interview story.</p>
+                  <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">Use the builder to create your first interview story.</p>
                 </div>
               )}
             </section>
@@ -156,7 +156,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
 
 function StarTextarea({ name, label, placeholder }: { name: string; label: string; placeholder: string }) {
   return (
-    <label className="grid gap-2 text-sm font-bold text-slate-300">
+    <label className="grid gap-2 text-sm font-bold text-slate-700">
       {label}
       <textarea name={name} rows={5} className="field resize-none" placeholder={placeholder} />
     </label>
@@ -165,9 +165,9 @@ function StarTextarea({ name, label, placeholder }: { name: string; label: strin
 
 function AnswerSection({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-3">
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
       <p className="text-sm font-black text-slate-500">{title}</p>
-      <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-300">{body}</p>
+      <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-700">{body}</p>
     </div>
   );
 }

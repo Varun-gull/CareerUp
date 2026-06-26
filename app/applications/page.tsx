@@ -80,7 +80,7 @@ export default async function ApplicationsPage({
           <div>
             <p className="eyebrow">Pipeline</p>
             <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Applications</h1>
-            <p className="mt-2 text-slate-400">Track every role from saved to offer without losing momentum.</p>
+            <p className="mt-2 text-slate-600">Track every role from saved to offer without losing momentum.</p>
           </div>
           <Link href="/applications/new" className="primary-button">
             <Plus className="mr-2" size={18} /> Add role
@@ -100,7 +100,7 @@ export default async function ApplicationsPage({
                     key={year}
                     href={getYearHref(year, query, statusFilter)}
                     className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
-                      selectedYear === year ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-700 bg-slate-900 text-slate-300 hover:border-sky/40 hover:text-sky"
+                      selectedYear === year ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky"
                     }`}
                     aria-current={selectedYear === year ? "page" : undefined}
                   >
@@ -110,7 +110,7 @@ export default async function ApplicationsPage({
                 <Link
                   href={getYearHref("all", query, statusFilter)}
                   className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
-                    selectedYear === "all" ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-700 bg-slate-900 text-slate-300 hover:border-sky/40 hover:text-sky"
+                    selectedYear === "all" ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky"
                   }`}
                   aria-current={selectedYear === "all" ? "page" : undefined}
                 >
@@ -129,11 +129,11 @@ export default async function ApplicationsPage({
 
             <form className="card mt-6 grid gap-4 p-5 md:grid-cols-[1fr_220px_auto]">
               <input type="hidden" name="year" value={selectedYear} />
-              <label className="grid gap-2 text-sm font-bold text-slate-300">
+              <label className="grid gap-2 text-sm font-bold text-slate-700">
                 Search
                 <input name="q" defaultValue={query} className="field" placeholder="Company, role, or location" />
               </label>
-              <label className="grid gap-2 text-sm font-bold text-slate-300">
+              <label className="grid gap-2 text-sm font-bold text-slate-700">
                 Status
                 <select name="status" defaultValue={statusFilter} className="field">
                   <option value="all">All statuses</option>

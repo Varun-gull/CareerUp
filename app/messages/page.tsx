@@ -75,7 +75,7 @@ function EmptyMessages() {
           <Mail size={26} />
         </div>
         <h2 className="mt-4 text-2xl font-black text-ink">No conversations yet</h2>
-        <p className="mt-2 max-w-sm text-sm font-semibold leading-6 text-slate-400">
+        <p className="mt-2 max-w-sm text-sm font-semibold leading-6 text-slate-600">
           Messages from role insights and public profiles will show up here as focused conversations.
         </p>
       </div>
@@ -98,20 +98,20 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
           <div>
             <p className="eyebrow">Peer network</p>
             <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Messages</h1>
-            <p className="mt-2 max-w-2xl text-slate-400">
+            <p className="mt-2 max-w-2xl text-slate-600">
               Keep role questions, profile messages, and peer advice in clean conversation threads.
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-2 rounded-3xl border border-slate-700 bg-slate-950/55 p-2 text-center">
-            <div className="min-w-20 rounded-2xl bg-slate-900 px-3 py-2">
+          <div className="grid grid-cols-3 gap-2 rounded-3xl border border-slate-200 bg-white/90 p-2 text-center">
+            <div className="min-w-20 rounded-2xl bg-slate-50 px-3 py-2">
               <p className="text-lg font-black text-ink">{conversations.length}</p>
               <p className="text-[11px] font-black uppercase text-slate-500">Threads</p>
             </div>
-            <div className="min-w-20 rounded-2xl bg-slate-900 px-3 py-2">
+            <div className="min-w-20 rounded-2xl bg-slate-50 px-3 py-2">
               <p className="text-lg font-black text-sky">{unreadCount}</p>
               <p className="text-[11px] font-black uppercase text-slate-500">Unread</p>
             </div>
-            <div className="min-w-20 rounded-2xl bg-slate-900 px-3 py-2">
+            <div className="min-w-20 rounded-2xl bg-slate-50 px-3 py-2">
               <p className="text-lg font-black text-ink">{sentCount}</p>
               <p className="text-[11px] font-black uppercase text-slate-500">Sent</p>
             </div>
@@ -122,10 +122,10 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
         {selectedConversation ? (
-          <section className="mt-8 grid min-h-[42rem] overflow-hidden rounded-3xl border border-slate-700 bg-slate-950/65 shadow-strong lg:grid-cols-[340px_1fr_320px]">
-            <aside className="border-b border-slate-800 bg-slate-950/80 lg:border-b-0 lg:border-r">
-              <div className="border-b border-slate-800 p-4">
-                <div className="flex items-center gap-2 text-sm font-black text-slate-300">
+          <section className="mt-8 grid min-h-[42rem] overflow-hidden rounded-3xl border border-slate-200 bg-white/90 shadow-strong lg:grid-cols-[340px_1fr_320px]">
+            <aside className="border-b border-slate-200 bg-white/90 lg:border-b-0 lg:border-r">
+              <div className="border-b border-slate-200 p-4">
+                <div className="flex items-center gap-2 text-sm font-black text-slate-700">
                   <Inbox size={18} className="text-sky" /> Conversations
                 </div>
                 <p className="mt-1 text-xs font-bold text-slate-500">Role-specific advice in one place.</p>
@@ -138,11 +138,11 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                       key={conversation.id}
                       href={`/messages?thread=${encodeURIComponent(conversation.id)}`}
                       className={`block rounded-2xl p-3 transition ${
-                        active ? "bg-sky/10 ring-1 ring-sky/25" : "hover:bg-slate-900"
+                        active ? "bg-sky/10 ring-1 ring-sky/25" : "hover:bg-slate-50"
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-800 text-base font-black text-sky">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-100 text-base font-black text-sky">
                           <Avatar conversation={conversation} />
                         </span>
                         <div className="min-w-0 flex-1">
@@ -155,7 +155,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                             )}
                           </div>
                           <p className="mt-1 truncate text-xs font-bold text-slate-500">{conversation.applicationCompany}</p>
-                          <p className="mt-2 line-clamp-2 text-xs font-semibold leading-5 text-slate-400">{conversation.lastMessage.body}</p>
+                          <p className="mt-2 line-clamp-2 text-xs font-semibold leading-5 text-slate-600">{conversation.lastMessage.body}</p>
                         </div>
                       </div>
                     </Link>
@@ -164,15 +164,15 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
               </div>
             </aside>
 
-            <section className="flex min-h-[42rem] flex-col bg-slate-900/40">
-              <div className="border-b border-slate-800 p-5">
+            <section className="flex min-h-[42rem] flex-col bg-white/80">
+              <div className="border-b border-slate-200 p-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <ProfileLink profileId={selectedConversation.otherProfileId} name={selectedConversation.otherName} />
                       <ApplicationStatusBadge status={selectedConversation.applicationStatus} />
                     </div>
-                    <p className="mt-1 truncate text-sm font-bold text-slate-400">
+                    <p className="mt-1 truncate text-sm font-bold text-slate-600">
                       {selectedConversation.applicationRole} at {selectedConversation.applicationCompany}
                     </p>
                   </div>
@@ -196,7 +196,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                       <div className={`max-w-[80%] rounded-3xl border p-4 ${
                         outbound
                           ? "border-sky/25 bg-sky/12 text-slate-100"
-                          : "border-slate-700 bg-slate-950/70 text-slate-200"
+                          : "border-slate-200 bg-white/90 text-slate-200"
                       }`}>
                         <div className="flex flex-wrap items-center gap-2">
                           <p className="text-sm font-black">{outbound ? "You" : message.otherName}</p>
@@ -204,14 +204,14 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                           {message.unread && <span className="rounded-full bg-sky px-2 py-0.5 text-[10px] font-black text-slate-950">Unread</span>}
                         </div>
                         <p className="mt-2 text-sm font-black text-ink">{message.subject}</p>
-                        <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6 text-slate-300">{message.body}</p>
+                        <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6 text-slate-700">{message.body}</p>
                       </div>
                     </article>
                   );
                 })}
               </div>
 
-              <form action={sendPeerMessage} className="border-t border-slate-800 bg-slate-950/75 p-4">
+              <form action={sendPeerMessage} className="border-t border-slate-200 bg-white/90 p-4">
                 <input type="hidden" name="recipientId" value={selectedConversation.otherProfileId} />
                 <input type="hidden" name="applicationId" value={selectedConversation.lastMessage.applicationId} />
                 <input type="hidden" name="roleKey" value={selectedConversation.roleKey} />
@@ -239,9 +239,9 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
               </form>
             </section>
 
-            <aside className="border-t border-slate-800 bg-slate-950/80 p-5 lg:border-l lg:border-t-0">
+            <aside className="border-t border-slate-200 bg-white/90 p-5 lg:border-l lg:border-t-0">
               <div className="flex items-center gap-3">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-800 text-lg font-black text-sky">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-100 text-lg font-black text-sky">
                   <Avatar conversation={selectedConversation} />
                 </span>
                 <div className="min-w-0">
@@ -251,20 +251,20 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
               </div>
 
               <div className="mt-6 space-y-3">
-                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
-                  <div className="flex items-center gap-2 text-sm font-black text-slate-300">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="flex items-center gap-2 text-sm font-black text-slate-700">
                     <UsersRound size={17} className="text-sky" /> Role context
                   </div>
                   <p className="mt-3 text-lg font-black text-ink">{selectedConversation.applicationRole}</p>
-                  <p className="mt-1 text-sm font-bold text-slate-400">{selectedConversation.applicationCompany}</p>
+                  <p className="mt-1 text-sm font-bold text-slate-600">{selectedConversation.applicationCompany}</p>
                   <div className="mt-3">
                     <ApplicationStatusBadge status={selectedConversation.applicationStatus} />
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
-                  <p className="text-sm font-black text-slate-300">Thread details</p>
-                  <div className="mt-3 grid gap-2 text-sm font-bold text-slate-400">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-sm font-black text-slate-700">Thread details</p>
+                  <div className="mt-3 grid gap-2 text-sm font-bold text-slate-600">
                     <p>{selectedConversation.messages.length} messages</p>
                     <p>{selectedConversation.applicationYear} application cycle</p>
                     <p>{selectedConversation.unreadCount} unread</p>

@@ -24,13 +24,13 @@ export default async function LoginPage({ searchParams }: { searchParams?: { mes
           {!supabaseReady && (
             <p className="mt-4 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky">Supabase env vars are not connected yet. This form is ready for the next setup step.</p>
           )}
-          {searchParams?.message && <p className="mt-4 rounded-2xl border border-slate-700 bg-slate-950/60 p-3 text-sm font-bold text-slate-300">{searchParams.message}</p>}
+          {searchParams?.message && <p className="mt-4 rounded-2xl border border-slate-200 bg-white/90 p-3 text-sm font-bold text-slate-700">{searchParams.message}</p>}
           <form action={logIn} className="mt-6 grid gap-4">
             <input name="email" className="field" placeholder="Email" type="email" required />
             <input name="password" className="field" placeholder="Password" type="password" required />
             <button type="submit" className="primary-button w-full">Log in</button>
           </form>
-          <p className="mt-5 text-sm text-slate-400">
+          <p className="mt-5 text-sm text-slate-600">
             New here?{" "}
             <Link href="/signup" className="font-bold text-sky">
               Create an account

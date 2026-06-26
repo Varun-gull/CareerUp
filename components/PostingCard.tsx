@@ -3,7 +3,7 @@ import { savePostingApplication } from "@/lib/applications/actions";
 import type { InternshipPosting } from "@/lib/types";
 
 export function PostingCard({ posting }: { posting: InternshipPosting }) {
-  const fitTone = posting.fitScore >= 80 ? "bg-emerald-50 text-emerald-700" : posting.fitScore >= 70 ? "bg-sky/10 text-brand" : "bg-slate-800 text-slate-300";
+  const fitTone = posting.fitScore >= 80 ? "bg-emerald-50 text-emerald-700" : posting.fitScore >= 70 ? "bg-sky/10 text-brand" : "bg-slate-100 text-slate-700";
   const workModeLabel = posting.workMode === "remote" ? "Remote" : posting.workMode === "hybrid" ? "Hybrid" : "On-site";
 
   return (
@@ -18,7 +18,7 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
         </span>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-slate-400">
+      <div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-slate-600">
         <span className="inline-flex items-center gap-2">
           <MapPin size={16} /> {posting.location}
         </span>
@@ -30,19 +30,19 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
         </span>
       </div>
 
-      <p className="mt-4 text-sm leading-6 text-slate-400">{posting.description || "Open the posting to review role details and application requirements."}</p>
+      <p className="mt-4 text-sm leading-6 text-slate-600">{posting.description || "Open the posting to review role details and application requirements."}</p>
 
       {posting.tags.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {posting.tags.map((tag) => (
-            <span key={tag} className="rounded-full bg-slate-800 px-3 py-1 text-xs font-bold text-slate-400">
+            <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
               {tag}
             </span>
           ))}
         </div>
       )}
 
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 pt-4">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
         <a href={posting.url} target="_blank" rel="noreferrer" className="secondary-button">
           <ExternalLink className="mr-2" size={18} /> Open posting
         </a>

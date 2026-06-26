@@ -84,23 +84,23 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl bg-slate-950 p-6 shadow-2xl">
+      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-xl font-black text-ink">Add to Calendar</h2>
             <p className="mt-1 text-sm text-slate-500">{defaultDate}</p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-300 transition-colors">
+          <button onClick={onClose} className="text-slate-600 hover:text-slate-700 transition-colors">
             <X size={20} />
           </button>
         </div>
 
-        <div className="mt-4 flex rounded-2xl border border-slate-700 bg-slate-900 p-1">
+        <div className="mt-4 flex rounded-2xl border border-slate-200 bg-slate-50 p-1">
           <button
             onClick={() => setTab("application")}
             className={clsx(
               "flex-1 rounded-xl py-1.5 text-sm font-bold transition-colors",
-              tab === "application" ? "bg-sky text-slate-950" : "text-slate-500 hover:text-slate-300"
+              tab === "application" ? "bg-sky text-slate-950" : "text-slate-500 hover:text-slate-700"
             )}
           >
             New Application
@@ -109,7 +109,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
             onClick={() => setTab("custom")}
             className={clsx(
               "flex-1 rounded-xl py-1.5 text-sm font-bold transition-colors",
-              tab === "custom" ? "bg-sky text-slate-950" : "text-slate-500 hover:text-slate-300"
+              tab === "custom" ? "bg-sky text-slate-950" : "text-slate-500 hover:text-slate-700"
             )}
           >
             Custom Event
@@ -119,7 +119,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
         <div className="mt-5 space-y-4">
           {tab === "application" ? (
             <>
-              <label className="grid gap-1.5 text-sm font-bold text-slate-300">
+              <label className="grid gap-1.5 text-sm font-bold text-slate-700">
                 Company
                 <input
                   ref={companyRef}
@@ -128,7 +128,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   className="field"
                 />
               </label>
-              <label className="grid gap-1.5 text-sm font-bold text-slate-300">
+              <label className="grid gap-1.5 text-sm font-bold text-slate-700">
                 Role
                 <input
                   ref={roleRef}
@@ -137,7 +137,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   className="field"
                 />
               </label>
-              <label className="grid gap-1.5 text-sm font-bold text-slate-300">
+              <label className="grid gap-1.5 text-sm font-bold text-slate-700">
                 Status
                 <select
                   value={status}
@@ -149,8 +149,8 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   ))}
                 </select>
               </label>
-              <label className="grid gap-1.5 text-sm font-bold text-slate-300">
-                Deadline <span className="font-normal text-slate-400">(optional)</span>
+              <label className="grid gap-1.5 text-sm font-bold text-slate-700">
+                Deadline <span className="font-normal text-slate-600">(optional)</span>
                 <input
                   ref={deadlineRef}
                   type="date"
@@ -161,7 +161,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
             </>
           ) : (
             <>
-              <label className="grid gap-1.5 text-sm font-bold text-slate-300">
+              <label className="grid gap-1.5 text-sm font-bold text-slate-700">
                 Title
                 <input
                   ref={titleRef}
@@ -170,7 +170,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   className="field"
                 />
               </label>
-              <label className="grid gap-1.5 text-sm font-bold text-slate-300">
+              <label className="grid gap-1.5 text-sm font-bold text-slate-700">
                 Date
                 <input
                   ref={dateRef}
@@ -179,16 +179,16 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   className="field"
                 />
               </label>
-              <label className="grid gap-1.5 text-sm font-bold text-slate-300">
-                Time <span className="font-normal text-slate-400">(optional)</span>
+              <label className="grid gap-1.5 text-sm font-bold text-slate-700">
+                Time <span className="font-normal text-slate-600">(optional)</span>
                 <input
                   ref={timeRef}
                   type="time"
                   className="field"
                 />
               </label>
-              <label className="grid gap-1.5 text-sm font-bold text-slate-300">
-                Notes <span className="font-normal text-slate-400">(optional)</span>
+              <label className="grid gap-1.5 text-sm font-bold text-slate-700">
+                Notes <span className="font-normal text-slate-600">(optional)</span>
                 <textarea
                   ref={notesRef}
                   rows={3}

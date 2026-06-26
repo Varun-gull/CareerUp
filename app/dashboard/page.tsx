@@ -14,12 +14,12 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
     <>
       <Navbar />
       <main className="page-shell">
-        <section className="overflow-hidden rounded-[2rem] border border-slate-700/80 bg-slate-950/70 shadow-strong backdrop-blur-xl">
+        <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white/90 shadow-soft backdrop-blur-xl">
           <div className="grid gap-6 p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
               <p className="eyebrow">Command center</p>
               <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight text-ink sm:text-6xl">Welcome back, {profile.name}</h1>
-              <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-slate-300">
+              <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-slate-600">
                 Keep today simple: check your streak, scan the week, finish a challenge, and move one application forward.
               </p>
             </div>
@@ -32,8 +32,8 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
               </Link>
             </div>
           </div>
-          <div className="border-t border-slate-800 bg-slate-900/60 px-6 py-4 sm:px-8">
-            <div className="flex flex-wrap items-center gap-3 text-sm font-bold text-slate-300">
+          <div className="border-t border-slate-200 bg-slate-50/80 px-6 py-4 sm:px-8">
+            <div className="flex flex-wrap items-center gap-3 text-sm font-bold text-slate-600">
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-sky/10 text-sky">
                 <Sparkles size={18} />
               </span>

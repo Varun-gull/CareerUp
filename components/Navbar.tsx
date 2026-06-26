@@ -1,8 +1,45 @@
-import { BriefcaseBusiness } from "lucide-react";
+import { BriefcaseBusiness, Mail } from "lucide-react";
 import Link from "next/link";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { NavLinks } from "@/components/NavLinks";
 import { getCurrentProfile, getCurrentUser, getUnreadPeerMessageCount } from "@/lib/data";
+
+const MONTH_ABBR = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+
+function CalendarWidget() {
+  const now = new Date();
+  const month = MONTH_ABBR[now.getMonth()];
+  const day = now.getDate();
+  return (
+    <Link
+      href="/calendar"
+      className="relative hidden h-11 w-11 select-none flex-col items-center justify-center gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/50 hover:shadow-md sm:flex"
+      aria-label="Calendar"
+    >
+      <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-sky">
+        <span className="text-[8px] font-black uppercase leading-none text-slate-950">{month}</span>
+      </span>
+      <span className="relative mt-3 text-[15px] font-black leading-none">{day}</span>
+    </Link>
+  );
+}
+
+function MessageButton({ unreadMessages }: { unreadMessages: number }) {
+  return (
+    <Link
+      href="/messages"
+      className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/50 hover:text-sky hover:shadow-md"
+      aria-label={unreadMessages > 0 ? `Messages, ${unreadMessages} unread` : "Messages"}
+    >
+      <Mail size={19} />
+      {unreadMessages > 0 && (
+        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-black text-slate-950 ring-2 ring-navy">
+          {unreadMessages > 9 ? "9+" : unreadMessages}
+        </span>
+      )}
+    </Link>
+  );
+}
 
 function getInitials(name: string) {
   const initials = name
@@ -27,7 +64,7 @@ export async function Navbar() {
   const firstName = user ? getFirstName(profile?.name ?? "") : "";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-800 bg-navy/95 shadow-lg shadow-black/25 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 border-b border-slate-200 bg-navy/95 shadow-lg shadow-black/25 backdrop-blur-xl">
       <nav className="grid w-full grid-cols-[auto_auto] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:grid-cols-[auto_1fr_auto] lg:px-8">
         <Link href="/dashboard" className="group flex shrink-0 items-center gap-3 font-black text-white">
           <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-sky text-white shadow-glow transition group-hover:-translate-y-0.5">
@@ -35,8 +72,10 @@ export async function Navbar() {
           </span>
           <span className="text-lg">CareerUp</span>
         </Link>
-        <NavLinks unreadMessages={unreadMessages} />
+        <NavLinks />
         <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-end gap-2">
+          {user && <MessageButton unreadMessages={unreadMessages} />}
+          <CalendarWidget />
           <ProfileDropdown initials={initials} displayName={firstName} loggedIn={!!user} unreadMessages={unreadMessages} />
         </div>
       </nav>

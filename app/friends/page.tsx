@@ -28,14 +28,14 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
           <div>
             <p className="eyebrow">Squad</p>
             <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Friends</h1>
-            <p className="mt-2 max-w-2xl text-slate-400">Add classmates, compare progress, and build a leaderboard that feels personal.</p>
+            <p className="mt-2 max-w-2xl text-slate-600">Add classmates, compare progress, and build a leaderboard that feels personal.</p>
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-xl bg-slate-900/80 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-xl bg-white/90 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 
         {inviteId && (
-          <form action={sendFriendRequestById} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-slate-900/80 p-4 shadow-soft backdrop-blur">
+          <form action={sendFriendRequestById} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-white/90 p-4 shadow-soft backdrop-blur">
             <div>
               <p className="font-black text-sky">Friend invite opened</p>
               <p className="text-sm font-bold text-brand">Send a request to add this CareerUp profile.</p>
@@ -55,10 +55,10 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
               </span>
               <div>
                 <h2 className="font-black text-ink">Add a friend</h2>
-                <p className="text-sm text-slate-400">Use the email they signed up with.</p>
+                <p className="text-sm text-slate-600">Use the email they signed up with.</p>
               </div>
             </div>
-            <label className="grid gap-2 text-sm font-bold text-slate-300">
+            <label className="grid gap-2 text-sm font-bold text-slate-700">
               Email
               <input name="email" type="email" className="field" placeholder="friend@example.com" required />
             </label>
@@ -69,12 +69,12 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
 
           <div className="card p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 text-slate-300">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
                 <Share2 size={20} />
               </span>
               <div>
                 <h2 className="font-black text-ink">Profile invite</h2>
-                <p className="text-sm text-slate-400">Share your CareerUp friend link.</p>
+                <p className="text-sm text-slate-600">Share your CareerUp friend link.</p>
               </div>
             </div>
             <CopyInviteLink url={shareLink} />
@@ -105,13 +105,13 @@ function FriendSection({
   action: "accept" | "remove";
 }) {
   return (
-    <div className="rounded-2xl border border-white/70 bg-slate-900/80 p-4 shadow-soft backdrop-blur">
+    <div className="rounded-2xl border border-white/70 bg-white/90 p-4 shadow-soft backdrop-blur">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <h2 className="font-black text-ink">{title}</h2>
-          <p className="text-sm text-slate-400">{helper}</p>
+          <p className="text-sm text-slate-600">{helper}</p>
         </div>
-        <span className="flex h-9 min-w-9 items-center justify-center rounded-xl bg-slate-800 px-3 text-sm font-black text-slate-300">
+        <span className="flex h-9 min-w-9 items-center justify-center rounded-xl bg-slate-100 px-3 text-sm font-black text-slate-700">
           {friends.length}
         </span>
       </div>
@@ -119,12 +119,12 @@ function FriendSection({
       {friends.length > 0 ? (
         <div className="grid gap-3">
           {friends.map((friend) => (
-            <article key={friend.id} className="rounded-xl border border-slate-700/80 bg-slate-950 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/25 hover:shadow-soft">
+            <article key={friend.id} className="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/25 hover:shadow-soft">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <ProfileLink profileId={friend.userId} name={friend.name} />
                   <p className="text-sm text-slate-500">{friend.school}</p>
-                  <p className="mt-1 text-xs font-bold text-slate-400">{friend.email}</p>
+                  <p className="mt-1 text-xs font-bold text-slate-600">{friend.email}</p>
                 </div>
                 <UsersRound size={18} className="text-brand" />
               </div>
@@ -144,7 +144,7 @@ function FriendSection({
                   )}
                   <form action={removeFriend}>
                     <input type="hidden" name="friendshipId" value={friend.id} />
-                    <button className="inline-flex min-h-10 items-center rounded-xl border border-slate-700 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600" aria-label={`Remove ${friend.name}`}>
+                    <button className="inline-flex min-h-10 items-center rounded-xl border border-slate-200 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600" aria-label={`Remove ${friend.name}`}>
                       <Trash2 size={16} />
                     </button>
                   </form>
@@ -154,7 +154,7 @@ function FriendSection({
           ))}
         </div>
       ) : (
-        <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900/70 p-4 text-sm font-bold text-slate-500">{empty}</div>
+        <div className="rounded-xl border border-dashed border-slate-200 bg-white/85 p-4 text-sm font-bold text-slate-500">{empty}</div>
       )}
     </div>
   );

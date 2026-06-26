@@ -29,7 +29,7 @@ function eventTone(type: CalendarEvent["eventType"]) {
   if (type === "interview") return "border-sky/40 bg-sky/12 text-sky";
   if (type === "offer") return "border-emerald-400/40 bg-emerald-400/10 text-emerald-200";
   if (type === "deadline") return "border-amber-300/40 bg-amber-300/10 text-amber-200";
-  return "border-slate-600 bg-slate-800 text-slate-300";
+  return "border-slate-600 bg-slate-100 text-slate-700";
 }
 
 export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) {
@@ -70,11 +70,11 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
             <div
               key={day.ymd}
               className={`min-h-32 rounded-2xl border p-3 ${
-                isToday ? "border-sky/50 bg-sky/10" : "border-slate-700 bg-slate-950/45"
+                isToday ? "border-sky/50 bg-sky/10" : "border-slate-200 bg-slate-50/90"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <p className="text-xs font-black uppercase text-slate-400">{DAY_LABELS[day.date.getDay()]}</p>
+                <p className="text-xs font-black uppercase text-slate-600">{DAY_LABELS[day.date.getDay()]}</p>
                 <p className={isToday ? "text-sm font-black text-sky" : "text-sm font-black text-slate-200"}>{day.date.getDate()}</p>
               </div>
               <div className="mt-3 space-y-2">
@@ -86,7 +86,7 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
                     </div>
                   ))
                 ) : (
-                  <p className="rounded-xl border border-dashed border-slate-700 px-2 py-2 text-xs font-bold text-slate-500">Open</p>
+                  <p className="rounded-xl border border-dashed border-slate-200 px-2 py-2 text-xs font-bold text-slate-500">Open</p>
                 )}
               </div>
             </div>
@@ -94,18 +94,18 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
         })}
       </div>
 
-      <div className="mt-5 rounded-2xl border border-slate-700 bg-slate-950/45 p-4">
-        <div className="flex items-center gap-2 text-sm font-black text-slate-300">
+      <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50/90 p-4">
+        <div className="flex items-center gap-2 text-sm font-black text-slate-700">
           <CalendarDays size={17} className="text-sky" />
           Upcoming
         </div>
         <div className="mt-3 grid gap-2">
           {upcoming.length > 0 ? (
             upcoming.map((event) => (
-              <div key={event.id} className="flex items-center justify-between gap-3 rounded-xl bg-slate-900 px-3 py-2">
+              <div key={event.id} className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-black text-ink">{event.role}</p>
-                  <p className="truncate text-xs font-bold text-slate-400">{event.company}</p>
+                  <p className="truncate text-xs font-bold text-slate-600">{event.company}</p>
                 </div>
                 <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-sky/10 px-2.5 py-1 text-xs font-black text-sky">
                   <Clock3 size={13} /> {event.date.slice(5)}

@@ -13,11 +13,11 @@ export function ApplicationCard({ application, compact = false }: { application:
 
   if (compact) {
     return (
-      <article className="min-w-0 overflow-hidden rounded-2xl border border-slate-700 bg-slate-950/70 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/30 hover:shadow-soft">
+      <article className="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:shadow-soft">
         <button
           type="button"
           onClick={() => setExpanded((current) => !current)}
-          className="flex w-full min-w-0 items-center justify-between gap-2 px-3 py-3 text-left transition hover:bg-slate-900"
+          className="flex w-full min-w-0 items-center justify-between gap-2 px-3 py-3 text-left transition hover:bg-slate-50"
           aria-expanded={expanded}
         >
           <div className="min-w-0">
@@ -26,13 +26,13 @@ export function ApplicationCard({ application, compact = false }: { application:
             <p className="mt-1 truncate text-xs font-bold text-slate-500">{application.location}</p>
           </div>
           <div className="flex shrink-0 items-center">
-            <ChevronDown className={`text-slate-400 transition ${expanded ? "rotate-180" : ""}`} size={18} />
+            <ChevronDown className={`text-slate-600 transition ${expanded ? "rotate-180" : ""}`} size={18} />
           </div>
         </button>
 
         {expanded && (
-          <div className="border-t border-slate-800 px-3 py-3">
-            <div className="grid gap-3 text-sm text-slate-400">
+          <div className="border-t border-slate-200 px-3 py-3">
+            <div className="grid gap-3 text-sm text-slate-600">
               <span className="inline-flex items-center gap-2">
                 <MapPin size={16} /> {application.location}
               </span>
@@ -52,11 +52,11 @@ export function ApplicationCard({ application, compact = false }: { application:
                 <Sparkles size={16} /> {application.fitScore}% fit
               </span>
             </div>
-            <div className="mt-4 grid gap-3 border-t border-slate-800 pt-4">
+            <div className="mt-4 grid gap-3 border-t border-slate-200 pt-4">
               <StatusUpdateForm application={application} compact />
               <form action={deleteApplication} className="justify-self-end">
                 <input type="hidden" name="applicationId" value={application.id} />
-                <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-700 px-3 text-sm font-bold text-slate-400 transition hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-300" aria-label={`Delete ${application.company} application`}>
+                <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-200 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600" aria-label={`Delete ${application.company} application`}>
                   <Trash2 size={16} />
                 </button>
               </form>
@@ -76,7 +76,7 @@ export function ApplicationCard({ application, compact = false }: { application:
         </div>
         <ApplicationStatusBadge status={application.status} />
       </div>
-      <div className="mt-4 grid gap-3 text-sm text-slate-400 sm:grid-cols-2">
+      <div className="mt-4 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
         <span className="inline-flex items-center gap-2">
           <MapPin size={16} /> {application.location}
         </span>
@@ -96,11 +96,11 @@ export function ApplicationCard({ application, compact = false }: { application:
           <Sparkles size={16} /> {application.fitScore}% fit
         </span>
       </div>
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 pt-4">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
         <StatusUpdateForm application={application} />
         <form action={deleteApplication}>
           <input type="hidden" name="applicationId" value={application.id} />
-          <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-700 px-3 text-sm font-bold text-slate-400 transition hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-300" aria-label={`Delete ${application.company} application`}>
+          <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-200 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600" aria-label={`Delete ${application.company} application`}>
             <Trash2 size={16} />
           </button>
         </form>

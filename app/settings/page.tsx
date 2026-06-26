@@ -13,10 +13,10 @@ export default async function SettingsPage({ searchParams }: { searchParams?: { 
         <div className="page-hero">
           <p className="eyebrow">Account controls</p>
           <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Settings</h1>
-          <p className="mt-2 max-w-2xl text-slate-400">Control what friends can see and how your CareerUp profile behaves.</p>
+          <p className="mt-2 max-w-2xl text-slate-600">Control what friends can see and how your CareerUp profile behaves.</p>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-slate-900/80 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 
         <section className="card mt-8 max-w-2xl p-6">
           <div className="flex items-start gap-3">
@@ -25,7 +25,7 @@ export default async function SettingsPage({ searchParams }: { searchParams?: { 
             </span>
             <div>
               <h2 className="text-xl font-black text-ink">Application board visibility</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-400">
+              <p className="mt-2 text-sm leading-6 text-slate-600">
                 When this is enabled, accepted friends can open your profile and view a read-only version of your application board.
               </p>
             </div>
@@ -33,7 +33,7 @@ export default async function SettingsPage({ searchParams }: { searchParams?: { 
 
           <form action={updatePrivacySettings} className="mt-5 grid gap-4">
             <input type="hidden" name="returnTo" value="/settings" />
-            <label className="flex gap-3 rounded-2xl border border-sky/20 bg-sky/10 p-4 text-sm font-bold text-slate-300">
+            <label className="flex gap-3 rounded-2xl border border-sky/20 bg-sky/10 p-4 text-sm font-bold text-slate-700">
               <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand" />
               <span>
                 Let accepted friends view my application board.

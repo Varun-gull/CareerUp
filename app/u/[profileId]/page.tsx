@@ -37,16 +37,16 @@ export default async function PublicProfilePage({
     <>
       <Navbar />
       <main className="page-shell">
-        <Link href="/friends" className="inline-flex items-center text-sm font-bold text-slate-400 hover:text-brand">
+        <Link href="/friends" className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-brand">
           <ArrowLeft className="mr-2" size={16} /> Friends
         </Link>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-slate-900/80 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 
         {!profile ? (
           <section className="card mt-6 p-8 text-center">
             <h1 className="text-3xl font-black text-ink">Profile not available</h1>
-            <p className="mt-2 text-slate-400">This profile may be private until the public profile database policy is enabled.</p>
+            <p className="mt-2 text-slate-600">This profile may be private until the public profile database policy is enabled.</p>
           </section>
         ) : (
           <section className="card mt-6 overflow-hidden">
@@ -59,7 +59,7 @@ export default async function PublicProfilePage({
                   <div>
                     <p className="text-xs font-black uppercase text-sky">CareerUp profile</p>
                     <h1 className="mt-1 text-3xl font-black">{profile.name}</h1>
-                    <p className="text-slate-300">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "CareerUp Student"}</p>
+                    <p className="text-slate-700">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "CareerUp Student"}</p>
                   </div>
                 </div>
 
@@ -94,7 +94,7 @@ export default async function PublicProfilePage({
               </div>
 
               <aside className="space-y-4">
-                <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-4">
+                <div className="rounded-3xl border border-slate-200 bg-white/85 p-4">
                   <p className="mb-2 text-sm font-bold text-slate-500">Current rank</p>
                   <RankBadge xp={profile.xp} />
                 </div>
@@ -137,7 +137,7 @@ export default async function PublicProfilePage({
                   </Link>
                 )}
                 {!isOwnProfile && (
-                  <div className="rounded-3xl border border-slate-700 bg-slate-900/80 p-4">
+                  <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">
                     <div className="flex items-center gap-2">
                       <UsersRound size={18} className="text-brand" />
                       <h2 className="font-black text-ink">Mutual friends</h2>
@@ -146,7 +146,7 @@ export default async function PublicProfilePage({
                       mutualFriends.length > 0 ? (
                         <div className="mt-4 grid gap-3">
                           {mutualFriends.map((friend) => (
-                            <div key={friend.id} className="rounded-2xl border border-slate-800 p-3 transition hover:border-sky/25 hover:bg-sky/10">
+                            <div key={friend.id} className="rounded-2xl border border-slate-200 p-3 transition hover:border-sky/25 hover:bg-sky/10">
                               <ProfileLink profileId={friend.id} name={friend.name} />
                               <p className="mt-1 text-xs font-bold text-slate-500">{friend.school}</p>
                             </div>
@@ -185,7 +185,7 @@ export default async function PublicProfilePage({
                             key={year}
                             href={`/u/${params.profileId}?year=${year}`}
                             className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
-                              selectedBoardYear === year ? "bg-brand text-white shadow-glow" : "border border-slate-700 bg-slate-900/80 text-slate-400 hover:border-brand/30 hover:text-brand"
+                              selectedBoardYear === year ? "bg-brand text-white shadow-glow" : "border border-slate-200 bg-white/90 text-slate-600 hover:border-brand/30 hover:text-brand"
                             }`}
                             aria-current={selectedBoardYear === year ? "page" : undefined}
                           >
@@ -195,7 +195,7 @@ export default async function PublicProfilePage({
                         <Link
                           href={`/u/${params.profileId}?year=all`}
                           className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
-                            selectedBoardYear === "all" ? "bg-slate-950 text-white shadow-lg shadow-slate-950/20" : "border border-slate-700 bg-slate-900/80 text-slate-400 hover:border-brand/30 hover:text-brand"
+                            selectedBoardYear === "all" ? "bg-white text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/90 text-slate-600 hover:border-brand/30 hover:text-brand"
                           }`}
                           aria-current={selectedBoardYear === "all" ? "page" : undefined}
                         >
@@ -205,12 +205,12 @@ export default async function PublicProfilePage({
                       <PublicApplicationBoard applications={visibleBoardApplications} />
                     </>
                   ) : (
-                    <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/80 p-6 text-sm font-bold text-slate-500">No applications are on this board yet.</div>
+                    <div className="rounded-3xl border border-dashed border-slate-200 bg-white/90 p-6 text-sm font-bold text-slate-500">No applications are on this board yet.</div>
                   )
                 ) : isOwnProfile ? (
-                  <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/80 p-6 text-sm font-bold text-slate-500">Add roles to your board from the postings page.</div>
+                  <div className="rounded-3xl border border-dashed border-slate-200 bg-white/90 p-6 text-sm font-bold text-slate-500">Add roles to your board from the postings page.</div>
                 ) : isAcceptedFriend ? (
-                  <div className="rounded-3xl border border-slate-700 bg-slate-900/80 p-6">
+                  <div className="rounded-3xl border border-slate-200 bg-white/90 p-6">
                     <div className="flex items-start gap-3">
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
                         <Lock size={18} />
@@ -222,7 +222,7 @@ export default async function PublicProfilePage({
                     </div>
                   </div>
                 ) : (
-                  <div className="rounded-3xl border border-slate-700 bg-slate-900/80 p-6">
+                  <div className="rounded-3xl border border-slate-200 bg-white/90 p-6">
                     <div className="flex items-start gap-3">
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
                         <Lock size={18} />
@@ -245,7 +245,7 @@ export default async function PublicProfilePage({
 
 function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
-    <div className="rounded-3xl border border-slate-700 bg-slate-900/80 p-4">
+    <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">
       <Icon size={20} className="text-brand" />
       <p className="mt-4 text-sm font-bold text-slate-500">{label}</p>
       <p className="mt-1 text-2xl font-black text-ink">{value}</p>
@@ -255,7 +255,7 @@ function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: strin
 
 function ProfileTags({ icon: Icon, title, values, empty }: { icon: LucideIcon; title: string; values: string[]; empty: string }) {
   return (
-    <div className="rounded-3xl border border-slate-700 bg-slate-900/80 p-4">
+    <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">
       <div className="flex items-center gap-2">
         <Icon size={18} className="text-brand" />
         <h2 className="font-black text-ink">{title}</h2>
@@ -263,7 +263,7 @@ function ProfileTags({ icon: Icon, title, values, empty }: { icon: LucideIcon; t
       {values.length > 0 ? (
         <div className="mt-4 flex flex-wrap gap-2">
           {values.map((value) => (
-            <span key={value} className="rounded-full bg-slate-800 px-3 py-1 text-xs font-bold text-slate-400">
+            <span key={value} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
               {value}
             </span>
           ))}

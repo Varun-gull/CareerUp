@@ -55,7 +55,7 @@ textarea {
   }
 
   .card {
-    @apply rounded-3xl border border-slate-700/70 bg-slate-900/90 shadow-soft backdrop-blur-xl;
+    @apply rounded-3xl border border-slate-200 bg-white/90 shadow-soft backdrop-blur-xl;
   }
 
   .eyebrow {
@@ -67,11 +67,11 @@ textarea {
   }
 
   .secondary-button {
-    @apply inline-flex min-h-11 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900/75 px-5 font-black text-slate-100 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:bg-slate-800 hover:text-sky focus:outline-none focus:ring-4 focus:ring-sky/10;
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white/85 px-5 font-black text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/50 hover:bg-sky/10 hover:text-slate-950 focus:outline-none focus:ring-4 focus:ring-sky/10;
   }
 
   .field {
-    @apply rounded-2xl border border-slate-700 bg-slate-950/60 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-sky focus:ring-4 focus:ring-sky/10;
+    @apply rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-sky focus:ring-4 focus:ring-sky/20;
   }
 
   .panel-title {
@@ -83,15 +83,15 @@ textarea {
   }
 
   .page-hero {
-    @apply rounded-[2rem] border border-slate-700/80 bg-slate-900/80 p-5 shadow-soft backdrop-blur-xl sm:p-7;
+    @apply rounded-[2rem] border border-slate-200 bg-white/90 p-5 shadow-soft backdrop-blur-xl sm:p-7;
   }
 
   .section-label {
-    @apply text-xs font-black uppercase text-slate-400;
+    @apply text-xs font-black uppercase text-slate-500;
   }
 
   .soft-panel {
-    @apply rounded-3xl border border-slate-700/70 bg-slate-900/70 shadow-soft backdrop-blur-xl;
+    @apply rounded-3xl border border-slate-200 bg-white/80 shadow-soft backdrop-blur-xl;
   }
 
   .dark-panel {

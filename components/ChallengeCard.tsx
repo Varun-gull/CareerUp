@@ -14,15 +14,15 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
         <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-black text-sky ring-1 ring-sky/20">+{challenge.xp} XP</span>
       </div>
       <h3 className="mt-4 text-lg font-black text-ink">{challenge.title}</h3>
-      <p className="mt-2 text-sm leading-6 text-slate-400">{challenge.description}</p>
+      <p className="mt-2 text-sm leading-6 text-slate-600">{challenge.description}</p>
       <div className="mt-5">
-        <div className="mb-2 flex justify-between text-xs font-bold text-slate-400">
+        <div className="mb-2 flex justify-between text-xs font-bold text-slate-600">
           <span>Progress</span>
           <span>
             {challenge.progress}/{challenge.target}
           </span>
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-slate-800 ring-1 ring-slate-700">
+        <div className="h-2 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
           <div
             className={clsx("h-full rounded-full", challenge.completed ? "bg-emerald-500" : "bg-gradient-to-r from-brand via-electric to-sky")}
             style={{ width: `${percent}%` }}

@@ -33,7 +33,7 @@ export function ProfileDropdown({
     return (
       <Link
         href="/login"
-        className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-white/20 bg-white px-2 text-sm font-black text-slate-700 shadow-sm transition hover:border-purple-300 hover:text-purple-800"
+        className="flex h-11 min-w-11 items-center justify-center rounded-xl border border-white/10 bg-white/95 px-2 text-sm font-black text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:text-purple-800"
       >
         <UserRound size={20} />
       </Link>
@@ -44,14 +44,14 @@ export function ProfileDropdown({
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex h-10 min-w-10 max-w-32 items-center justify-center truncate rounded-lg border border-white/20 bg-white px-3 text-sm font-black text-slate-700 shadow-sm transition hover:border-purple-300 hover:text-purple-800"
+        className="flex h-11 min-w-11 max-w-36 items-center justify-center truncate rounded-xl border border-white/10 bg-white/95 px-4 text-sm font-black text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:text-purple-800"
         aria-label="Open profile menu"
       >
         {displayName || initials}
       </button>
 
       {open && (
-        <div className="absolute right-0 top-12 z-50 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
+        <div className="absolute right-0 top-14 z-50 w-52 overflow-hidden rounded-2xl border border-white/70 bg-white/95 shadow-soft backdrop-blur-xl">
           <Link
             href="/profile"
             onClick={() => setOpen(false)}
@@ -88,7 +88,7 @@ export function ProfileDropdown({
             <button
               type="submit"
               onClick={() => setOpen(false)}
-              className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-bold text-red-500 hover:bg-red-50"
+            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-bold text-red-500 hover:bg-red-50"
             >
               <LogOut size={16} /> Log out
             </button>

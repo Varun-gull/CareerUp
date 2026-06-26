@@ -13,10 +13,10 @@ function CalendarWidget() {
   return (
     <Link
       href="/calendar"
-      className="relative hidden h-10 w-10 select-none items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-md sm:flex flex-col gap-0"
+      className="relative hidden h-11 w-11 select-none items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/95 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:flex flex-col gap-0"
       aria-label="Calendar"
     >
-      <span className="absolute top-0 left-0 right-0 h-[16px] bg-purple-700 flex items-center justify-center">
+      <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-purple-700">
         <span className="text-[8px] font-black tracking-widest text-white uppercase leading-none">{month}</span>
       </span>
       <span className="relative mt-3 text-[15px] font-black text-ink leading-none">{day}</span>
@@ -28,7 +28,7 @@ function NotificationButton({ unreadMessages }: { unreadMessages: number }) {
   return (
     <Link
       href="/messages"
-      className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-white text-slate-800 shadow-sm transition hover:border-purple-300 hover:text-purple-800"
+      className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/95 text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:text-purple-800 hover:shadow-md"
       aria-label={unreadMessages > 0 ? `Messages, ${unreadMessages} unread` : "Messages"}
     >
       <Bell size={19} />
@@ -64,13 +64,13 @@ export async function Navbar() {
   const firstName = user ? getFirstName(profile?.name ?? "") : "";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-purple-500/20 bg-slate-950/95 shadow-lg shadow-slate-950/10 backdrop-blur">
-      <nav className="flex w-full items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/dashboard" className="flex shrink-0 items-center gap-3 font-black text-white">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-700 text-white shadow-lg shadow-purple-950/30">
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#070b17]/95 shadow-lg shadow-slate-950/10 backdrop-blur-xl">
+      <nav className="flex w-full items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <Link href="/dashboard" className="group flex shrink-0 items-center gap-3 font-black text-white">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-violet-800 text-white shadow-glow transition group-hover:-translate-y-0.5">
             <BriefcaseBusiness size={22} />
           </span>
-          <span>CareerUp</span>
+          <span className="text-lg tracking-tight">CareerUp</span>
         </Link>
         <NavLinks />
         <div className="flex shrink-0 items-center gap-2">

@@ -44,21 +44,21 @@ export function PostingsTable({
   peerInsights: Map<string, RolePeerInsight>;
 }) {
   return (
-    <div className="mt-6 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <div className="mt-6 overflow-hidden rounded-2xl border border-white/70 bg-white/90 shadow-soft backdrop-blur-xl">
       <div className="overflow-hidden">
         <table className="w-full table-fixed border-collapse text-left text-sm">
-          <thead className="bg-slate-50 text-xs font-black uppercase tracking-wide text-slate-500">
+          <thead className="bg-slate-950 text-xs font-black uppercase tracking-wide text-slate-300">
             <tr>
-              <th className="hidden w-10 border-b border-slate-200 px-2 py-3 lg:table-cell">#</th>
-              <th className="w-[32%] border-b border-slate-200 px-3 py-3">Position Title</th>
-              <th className="hidden w-20 border-b border-slate-200 px-2 py-3 xl:table-cell">Date</th>
-              <th className="w-24 border-b border-slate-200 px-2 py-3">Apply</th>
-              <th className="hidden w-28 border-b border-slate-200 px-2 py-3 md:table-cell">Work Model</th>
-              <th className="w-[20%] border-b border-slate-200 px-3 py-3">Location</th>
-              <th className="hidden w-[16%] border-b border-slate-200 px-3 py-3 lg:table-cell">Company</th>
-              <th className="hidden w-28 border-b border-slate-200 px-2 py-3 xl:table-cell">Peers</th>
-              <th className="w-16 border-b border-slate-200 px-2 py-3">Fit</th>
-              <th className="w-24 border-b border-slate-200 px-2 py-3">Save</th>
+              <th className="hidden w-10 px-2 py-4 lg:table-cell">#</th>
+              <th className="w-[32%] px-3 py-4">Position</th>
+              <th className="hidden w-20 px-2 py-4 xl:table-cell">Date</th>
+              <th className="w-24 px-2 py-4">Apply</th>
+              <th className="hidden w-28 px-2 py-4 md:table-cell">Mode</th>
+              <th className="w-[20%] px-3 py-4">Location</th>
+              <th className="hidden w-[16%] px-3 py-4 lg:table-cell">Company</th>
+              <th className="hidden w-28 px-2 py-4 xl:table-cell">Peers</th>
+              <th className="w-16 px-2 py-4">Fit</th>
+              <th className="w-24 px-2 py-4">Save</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -74,7 +74,7 @@ export function PostingsTable({
               }).toString()}`;
 
               return (
-              <tr key={posting.id} className="align-middle transition hover:bg-purple-50/40">
+              <tr key={posting.id} className="align-middle transition hover:bg-purple-50/45">
                 <td className="hidden px-2 py-3 text-center font-bold text-slate-400 lg:table-cell">{index + 1}</td>
                 <td className="px-3 py-3">
                   <p className="truncate font-black text-ink" title={posting.title}>
@@ -90,13 +90,13 @@ export function PostingsTable({
                     href={posting.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex min-h-8 items-center justify-center rounded-md bg-emerald-600 px-3 text-xs font-black text-white shadow-sm transition hover:bg-emerald-700"
+                    className="inline-flex min-h-9 items-center justify-center rounded-xl bg-emerald-600 px-3 text-xs font-black text-white shadow-sm transition hover:bg-emerald-700"
                   >
                     <ExternalLink className="mr-1" size={14} /> Apply
                   </a>
                 </td>
                 <td className="hidden whitespace-nowrap px-2 py-3 md:table-cell">
-                  <span className={`inline-flex rounded-md px-2.5 py-1 text-xs font-black ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
+                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-black ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
                 </td>
                 <td className="px-3 py-3">
                   <p className="truncate font-bold text-slate-700" title={posting.location}>
@@ -111,7 +111,7 @@ export function PostingsTable({
                 <td className="hidden px-2 py-3 xl:table-cell">
                   <Link
                     href={insightHref}
-                    className="inline-flex min-h-8 w-full items-center justify-center rounded-md bg-purple-50 px-2 text-xs font-black text-purple-800 ring-1 ring-purple-200 transition hover:bg-purple-100"
+                    className="inline-flex min-h-9 w-full items-center justify-center rounded-xl bg-purple-50 px-2 text-xs font-black text-purple-800 ring-1 ring-purple-200 transition hover:bg-purple-100"
                     title="See who else tracked this role"
                   >
                     <UsersRound className="mr-1" size={14} />
@@ -135,8 +135,8 @@ export function PostingsTable({
                       disabled={saved}
                       className={
                         saved
-                          ? "inline-flex min-h-8 w-full cursor-default items-center justify-center rounded-md bg-emerald-50 px-2 text-xs font-black text-emerald-700 ring-1 ring-emerald-200"
-                          : "inline-flex min-h-8 w-full items-center justify-center rounded-md bg-purple-800 px-2 text-xs font-black text-white shadow-sm transition hover:bg-purple-900"
+                          ? "inline-flex min-h-9 w-full cursor-default items-center justify-center rounded-xl bg-emerald-50 px-2 text-xs font-black text-emerald-700 ring-1 ring-emerald-200"
+                          : "inline-flex min-h-9 w-full items-center justify-center rounded-xl bg-purple-700 px-2 text-xs font-black text-white shadow-sm transition hover:bg-purple-800"
                       }
                     >
                       {saved ? <CheckCircle2 className="mr-1" size={14} /> : <BookmarkPlus className="mr-1" size={14} />}

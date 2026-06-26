@@ -96,7 +96,7 @@ function MessageList({ messages, empty }: { messages: PeerMessage[]; empty: stri
                 <input
                   name="subject"
                   defaultValue={message.subject.startsWith("Re:") ? message.subject : `Re: ${message.subject}`}
-                  className="rounded-md border border-purple-100 bg-white px-3 py-2 text-sm normal-case text-ink outline-none focus:border-purple-600"
+                  className="field text-sm normal-case"
                 />
               </label>
               <label className="grid gap-1 text-xs font-black uppercase text-slate-500">
@@ -104,7 +104,7 @@ function MessageList({ messages, empty }: { messages: PeerMessage[]; empty: stri
                 <textarea
                   name="body"
                   rows={3}
-                  className="rounded-md border border-purple-100 bg-white px-3 py-2 text-sm normal-case text-ink outline-none focus:border-purple-600"
+                  className="field text-sm normal-case"
                   placeholder="Share advice, interview prep notes, or a time to chat."
                 />
               </label>

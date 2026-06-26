@@ -80,7 +80,7 @@ function getPostingAgeScore(value: string) {
 }
 
 function activeTabClass(active: boolean) {
-  return active ? "bg-purple-800 text-white shadow-lg shadow-purple-800/20" : "bg-white text-slate-700 ring-1 ring-slate-200 hover:text-purple-800";
+  return active ? "bg-purple-700 text-white shadow-glow" : "bg-white/85 text-slate-700 ring-1 ring-slate-200 hover:text-purple-800";
 }
 
 function buildReturnHref(kind: PostingKind, searchParams?: { q?: string; location?: string; remote?: RemoteFilter; minFit?: string; sort?: PostingSort }) {
@@ -166,16 +166,16 @@ export async function PostingsPageView({
             <p className="mt-2 max-w-3xl text-slate-600">{pageCopy}</p>
           </div>
           <div className="flex gap-2">
-            <Link href="/postings/internships" className={`rounded-lg px-4 py-2 text-sm font-black transition ${activeTabClass(kind === "internship")}`}>
+            <Link href="/postings/internships" className={`rounded-xl px-4 py-2 text-sm font-black transition ${activeTabClass(kind === "internship")}`}>
               Internships
             </Link>
-            <Link href="/postings/new-grad" className={`rounded-lg px-4 py-2 text-sm font-black transition ${activeTabClass(kind === "new-grad")}`}>
+            <Link href="/postings/new-grad" className={`rounded-xl px-4 py-2 text-sm font-black transition ${activeTabClass(kind === "new-grad")}`}>
               New Grad
             </Link>
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-xl bg-white/80 p-3 text-sm font-bold text-purple-900 shadow-sm ring-1 ring-purple-100">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
         <PostingsSearchForm
@@ -189,18 +189,18 @@ export async function PostingsPageView({
         />
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
-          <Link href={resetHref} className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs text-slate-700 ring-1 ring-slate-200 hover:text-purple-800">
+          <Link href={resetHref} className="inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs text-slate-700 shadow-sm ring-1 ring-slate-200 hover:text-purple-800">
             <RotateCcw className="mr-1" size={14} /> Reset
           </Link>
           <div className="flex flex-wrap items-center gap-3">
             <span>
               Showing {postings.length} of {searchResult.postings.length} results
             </span>
-            <span className="inline-flex overflow-hidden rounded-full bg-white text-xs font-black ring-1 ring-slate-200">
-              <Link href={bestFitHref} className={sort === "fit" ? "bg-purple-800 px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-purple-800"}>
+            <span className="inline-flex overflow-hidden rounded-full bg-white/90 text-xs font-black shadow-sm ring-1 ring-slate-200">
+              <Link href={bestFitHref} className={sort === "fit" ? "bg-purple-700 px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-purple-800"}>
                 Best fit
               </Link>
-              <Link href={newestHref} className={sort === "newest" ? "bg-purple-800 px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-purple-800"}>
+              <Link href={newestHref} className={sort === "newest" ? "bg-purple-700 px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-purple-800"}>
                 Latest posted
               </Link>
             </span>

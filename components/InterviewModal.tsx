@@ -50,7 +50,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               ref={dateRef}
               type="date"
               defaultValue={initialDate ?? todayLocal()}
-              className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600"
+              className="field"
             />
           </label>
           <label className="grid gap-1.5 text-sm font-bold text-slate-700">
@@ -59,7 +59,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               ref={timeRef}
               type="time"
               defaultValue={initialTime ?? ""}
-              className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600"
+              className="field"
             />
           </label>
           <label className="grid gap-1.5 text-sm font-bold text-slate-700">
@@ -69,7 +69,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               rows={3}
               defaultValue={initialNotes ?? ""}
               placeholder="Interviewer name, format, things to prepare..."
-              className="resize-none rounded-lg border border-slate-200 px-4 py-3 text-sm outline-none focus:border-purple-600"
+              className="field resize-none text-sm"
             />
           </label>
         </div>

@@ -113,7 +113,7 @@ export default async function PublicProfilePage({
                       <input
                         name="subject"
                         defaultValue="CareerUp question"
-                        className="rounded-md border border-purple-100 bg-white px-3 py-2 text-sm normal-case text-ink outline-none focus:border-purple-600"
+                        className="field text-sm normal-case"
                       />
                     </label>
                     <label className="mt-3 grid gap-1 text-xs font-black uppercase text-slate-500">
@@ -121,7 +121,7 @@ export default async function PublicProfilePage({
                       <textarea
                         name="body"
                         rows={4}
-                        className="resize-none rounded-md border border-purple-100 bg-white px-3 py-2 text-sm normal-case text-ink outline-none focus:border-purple-600"
+                        className="field resize-none text-sm normal-case"
                         placeholder="Ask about applications, interviews, classes, or recruiting advice."
                       />
                     </label>

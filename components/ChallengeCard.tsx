@@ -8,10 +8,10 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
   return (
     <article className="card p-5">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-purple-700 text-white">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-violet-800 text-white shadow-glow">
           {challenge.completed ? <CheckCircle2 size={22} /> : <Trophy size={22} />}
         </div>
-        <span className="rounded-full bg-ink px-3 py-1 text-xs font-black text-white">+{challenge.xp} XP</span>
+        <span className="rounded-full bg-slate-950 px-3 py-1 text-xs font-black text-white">+{challenge.xp} XP</span>
       </div>
       <h3 className="mt-4 text-lg font-black text-ink">{challenge.title}</h3>
       <p className="mt-2 text-sm leading-6 text-slate-600">{challenge.description}</p>
@@ -22,9 +22,9 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
             {challenge.progress}/{challenge.target}
           </span>
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+        <div className="h-2 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
           <div
-            className={clsx("h-full rounded-full", challenge.completed ? "bg-emerald-500" : "bg-purple-700")}
+            className={clsx("h-full rounded-full", challenge.completed ? "bg-emerald-500" : "bg-gradient-to-r from-purple-700 to-violet-500")}
             style={{ width: `${percent}%` }}
           />
         </div>

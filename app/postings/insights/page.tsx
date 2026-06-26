@@ -238,7 +238,7 @@ export default async function PostingInsightsPage({
                         <input
                           name="subject"
                           defaultValue={`Question about ${company}`}
-                          className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm normal-case text-ink outline-none focus:border-purple-600"
+                          className="field text-sm normal-case"
                         />
                       </label>
                       <label className="grid gap-1 text-xs font-black uppercase text-slate-500">
@@ -246,7 +246,7 @@ export default async function PostingInsightsPage({
                         <textarea
                           name="body"
                           rows={3}
-                          className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm normal-case text-ink outline-none focus:border-purple-600"
+                          className="field text-sm normal-case"
                           defaultValue={`Hey ${applicant.name.split(" ")[0]}, I saw you tracked ${role} at ${company}. Would you be open to sharing any application or interview advice?`}
                         />
                       </label>

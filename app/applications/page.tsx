@@ -131,11 +131,11 @@ export default async function ApplicationsPage({
               <input type="hidden" name="year" value={selectedYear} />
               <label className="grid gap-2 text-sm font-bold text-slate-700">
                 Search
-                <input name="q" defaultValue={query} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Company, role, or location" />
+                <input name="q" defaultValue={query} className="field" placeholder="Company, role, or location" />
               </label>
               <label className="grid gap-2 text-sm font-bold text-slate-700">
                 Status
-                <select name="status" defaultValue={statusFilter} className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-purple-600">
+                <select name="status" defaultValue={statusFilter} className="field">
                   <option value="all">All statuses</option>
                   {pipelineColumns.map((column) => (
                     <option key={column.status} value={column.status}>

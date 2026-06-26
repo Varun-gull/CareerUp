@@ -32,10 +32,10 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-lg bg-purple-50 p-3 text-sm font-bold text-purple-900">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-xl bg-white/80 p-3 text-sm font-bold text-purple-900 shadow-sm ring-1 ring-purple-100">{searchParams.message}</p>}
 
         {inviteId && (
-          <form action={sendFriendRequestById} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-purple-200 bg-purple-50 p-4">
+          <form action={sendFriendRequestById} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-purple-100 bg-white/85 p-4 shadow-soft backdrop-blur">
             <div>
               <p className="font-black text-purple-950">Friend invite opened</p>
               <p className="text-sm font-bold text-purple-800">Send a request to add this CareerUp profile.</p>
@@ -50,7 +50,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
         <section className="mt-8 grid gap-4 lg:grid-cols-[1fr_360px]">
           <form action={sendFriendRequest} className="card grid gap-4 p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-800">
                 <UserPlus size={20} />
               </span>
               <div>
@@ -60,7 +60,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
             </div>
             <label className="grid gap-2 text-sm font-bold text-slate-700">
               Email
-              <input name="email" type="email" className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="friend@example.com" required />
+              <input name="email" type="email" className="field" placeholder="friend@example.com" required />
             </label>
             <button type="submit" className="primary-button w-full sm:w-auto">
               <MailPlus className="mr-2" size={18} /> Send request
@@ -69,7 +69,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
 
           <div className="card p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
                 <Share2 size={20} />
               </span>
               <div>
@@ -105,13 +105,13 @@ function FriendSection({
   action: "accept" | "remove";
 }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white/80 p-4">
+    <div className="rounded-2xl border border-white/70 bg-white/85 p-4 shadow-soft backdrop-blur">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <h2 className="font-black text-ink">{title}</h2>
           <p className="text-sm text-slate-600">{helper}</p>
         </div>
-        <span className="flex h-9 min-w-9 items-center justify-center rounded-lg bg-slate-100 px-3 text-sm font-black text-slate-700">
+        <span className="flex h-9 min-w-9 items-center justify-center rounded-xl bg-slate-100 px-3 text-sm font-black text-slate-700">
           {friends.length}
         </span>
       </div>
@@ -119,7 +119,7 @@ function FriendSection({
       {friends.length > 0 ? (
         <div className="grid gap-3">
           {friends.map((friend) => (
-            <article key={friend.id} className="rounded-lg border border-slate-200 bg-white p-4">
+            <article key={friend.id} className="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-purple-200 hover:shadow-soft">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <ProfileLink profileId={friend.userId} name={friend.name} />
@@ -137,14 +137,14 @@ function FriendSection({
                   {action === "accept" && (
                     <form action={acceptFriendRequest}>
                       <input type="hidden" name="friendshipId" value={friend.id} />
-                      <button className="inline-flex min-h-10 items-center rounded-lg bg-purple-700 px-3 text-sm font-bold text-white" aria-label={`Accept ${friend.name}`}>
+                      <button className="inline-flex min-h-10 items-center rounded-xl bg-purple-700 px-3 text-sm font-bold text-white shadow-sm transition hover:bg-purple-800" aria-label={`Accept ${friend.name}`}>
                         <Check size={16} />
                       </button>
                     </form>
                   )}
                   <form action={removeFriend}>
                     <input type="hidden" name="friendshipId" value={friend.id} />
-                    <button className="inline-flex min-h-10 items-center rounded-lg border border-slate-200 px-3 text-sm font-bold text-slate-500 hover:border-red-200 hover:text-red-600" aria-label={`Remove ${friend.name}`}>
+                    <button className="inline-flex min-h-10 items-center rounded-xl border border-slate-200 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600" aria-label={`Remove ${friend.name}`}>
                       <Trash2 size={16} />
                     </button>
                   </form>
@@ -154,7 +154,7 @@ function FriendSection({
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed border-slate-200 bg-white/70 p-4 text-sm font-bold text-slate-500">{empty}</div>
+        <div className="rounded-xl border border-dashed border-slate-200 bg-white/70 p-4 text-sm font-bold text-slate-500">{empty}</div>
       )}
     </div>
   );

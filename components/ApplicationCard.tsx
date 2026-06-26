@@ -13,7 +13,7 @@ export function ApplicationCard({ application, compact = false }: { application:
 
   if (compact) {
     return (
-      <article className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <article className="min-w-0 overflow-hidden rounded-xl border border-white/70 bg-white/95 shadow-sm transition hover:border-purple-200 hover:shadow-soft">
         <button
           type="button"
           onClick={() => setExpanded((current) => !current)}
@@ -21,7 +21,7 @@ export function ApplicationCard({ application, compact = false }: { application:
           aria-expanded={expanded}
         >
           <div className="min-w-0">
-            <p className="truncate text-xs font-black text-purple-700">{application.company}</p>
+            <p className="truncate text-xs font-black uppercase tracking-wide text-purple-700">{application.company}</p>
             <h3 className="mt-0.5 truncate text-sm font-black text-ink">{application.role}</h3>
             <p className="mt-1 truncate text-xs font-bold text-slate-500">{application.location}</p>
           </div>
@@ -56,7 +56,7 @@ export function ApplicationCard({ application, compact = false }: { application:
               <StatusUpdateForm application={application} compact />
               <form action={deleteApplication} className="justify-self-end">
                 <input type="hidden" name="applicationId" value={application.id} />
-                <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:text-red-600" aria-label={`Delete ${application.company} application`}>
+                <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-200 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600" aria-label={`Delete ${application.company} application`}>
                   <Trash2 size={16} />
                 </button>
               </form>
@@ -71,7 +71,7 @@ export function ApplicationCard({ application, compact = false }: { application:
     <article className="card p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-bold text-purple-700">{application.company}</p>
+          <p className="text-sm font-black uppercase tracking-wide text-purple-700">{application.company}</p>
           <h3 className="mt-1 text-lg font-black text-ink">{application.role}</h3>
         </div>
         <ApplicationStatusBadge status={application.status} />
@@ -100,7 +100,7 @@ export function ApplicationCard({ application, compact = false }: { application:
         <StatusUpdateForm application={application} />
         <form action={deleteApplication}>
           <input type="hidden" name="applicationId" value={application.id} />
-          <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:text-red-600" aria-label={`Delete ${application.company} application`}>
+          <button type="submit" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-200 px-3 text-sm font-bold text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600" aria-label={`Delete ${application.company} application`}>
             <Trash2 size={16} />
           </button>
         </form>

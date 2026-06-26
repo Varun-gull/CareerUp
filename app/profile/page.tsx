@@ -42,26 +42,26 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
               <form action={updateProfile} className="mt-5 grid gap-5">
                 <label className="grid gap-2 text-sm font-bold text-slate-700">
                   Name
-                  <input name="fullName" defaultValue={profile.name} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" required />
+                  <input name="fullName" defaultValue={profile.name} className="field" required />
                 </label>
                 <div className="grid gap-5 sm:grid-cols-2">
                   <SchoolField schools={schoolOptions} initialSchool={profile.school} />
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Major
-                    <input name="major" defaultValue={profile.major} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Computer Science" />
+                    <input name="major" defaultValue={profile.major} className="field" placeholder="Computer Science" />
                   </label>
                 </div>
                 <label className="grid gap-2 text-sm font-bold text-slate-700">
                   Graduation year
-                  <input name="graduationYear" defaultValue={profile.graduationYear} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="2027" inputMode="numeric" />
+                  <input name="graduationYear" defaultValue={profile.graduationYear} className="field" placeholder="2027" inputMode="numeric" />
                 </label>
                 <label className="grid gap-2 text-sm font-bold text-slate-700">
                   Target roles
-                  <input name="targetRoles" defaultValue={profile.targetRoles.join(", ")} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Software Engineering, Data Science, Product" />
+                  <input name="targetRoles" defaultValue={profile.targetRoles.join(", ")} className="field" placeholder="Software Engineering, Data Science, Product" />
                 </label>
                 <label className="grid gap-2 text-sm font-bold text-slate-700">
                   Target locations
-                  <input name="targetLocations" defaultValue={profile.targetLocations.join(", ")} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="New York, Remote, Washington DC" />
+                  <input name="targetLocations" defaultValue={profile.targetLocations.join(", ")} className="field" placeholder="New York, Remote, Washington DC" />
                 </label>
                 <label className="flex gap-3 rounded-lg border border-purple-100 bg-purple-50/70 p-4 text-sm font-bold text-slate-700">
                   <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-700 focus:ring-purple-600" />
@@ -95,11 +95,11 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                 <form action={saveResumeProfile} className="mt-5 grid gap-4">
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Upload resume
-                    <input name="resumeFile" type="file" accept=".txt,.md,.csv,.pdf,.docx" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-purple-600" />
+                    <input name="resumeFile" type="file" accept=".txt,.md,.csv,.pdf,.docx" className="field text-sm" />
                   </label>
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Paste text fallback
-                    <textarea name="resumeText" rows={6} className="resize-none rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-purple-600" placeholder="Paste resume text if the upload cannot be read." />
+                    <textarea name="resumeText" rows={6} className="field resize-none text-sm" placeholder="Paste resume text if the upload cannot be read." />
                   </label>
                   <button type="submit" className="primary-button w-full">
                     <Upload className="mr-2" size={18} /> Save resume

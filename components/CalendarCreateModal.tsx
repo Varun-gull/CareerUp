@@ -125,7 +125,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   ref={companyRef}
                   type="text"
                   placeholder="Google, Meta, Stripe…"
-                  className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600"
+                  className="field"
                 />
               </label>
               <label className="grid gap-1.5 text-sm font-bold text-slate-700">
@@ -134,7 +134,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   ref={roleRef}
                   type="text"
                   placeholder="Software Engineer Intern"
-                  className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600"
+                  className="field"
                 />
               </label>
               <label className="grid gap-1.5 text-sm font-bold text-slate-700">
@@ -142,7 +142,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as ApplicationStatus)}
-                  className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600 bg-white"
+                  className="field"
                 >
                   {STATUS_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>{o.label}</option>
@@ -155,7 +155,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   ref={deadlineRef}
                   type="date"
                   defaultValue={defaultDate}
-                  className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600"
+                  className="field"
                 />
               </label>
             </>
@@ -167,7 +167,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   ref={titleRef}
                   type="text"
                   placeholder="Career fair, networking event…"
-                  className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600"
+                  className="field"
                 />
               </label>
               <label className="grid gap-1.5 text-sm font-bold text-slate-700">
@@ -176,7 +176,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   ref={dateRef}
                   type="date"
                   defaultValue={defaultDate}
-                  className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600"
+                  className="field"
                 />
               </label>
               <label className="grid gap-1.5 text-sm font-bold text-slate-700">
@@ -184,7 +184,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                 <input
                   ref={timeRef}
                   type="time"
-                  className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600"
+                  className="field"
                 />
               </label>
               <label className="grid gap-1.5 text-sm font-bold text-slate-700">
@@ -193,7 +193,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
                   ref={notesRef}
                   rows={3}
                   placeholder="Details, links, reminders…"
-                  className="resize-none rounded-lg border border-slate-200 px-4 py-3 text-sm outline-none focus:border-purple-600"
+                  className="field resize-none text-sm"
                 />
               </label>
             </>

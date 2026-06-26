@@ -20,14 +20,14 @@ export function SchoolField({ schools, initialSchool }: { schools: SchoolOption[
           defaultValue={isKnownSchool(schools, initialSchool) ? "" : initialSchool}
           autoComplete="organization"
           autoFocus
-          className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-purple-600"
+          className="field"
           placeholder="Type your school name"
         />
       ) : (
         <select
           name="school"
           defaultValue={isKnownSchool(schools, initialSchool) ? initialSchool : ""}
-          className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-purple-600"
+          className="field"
           onChange={(event) => {
             if (event.currentTarget.value === "__other__") {
               setCustomMode(true);

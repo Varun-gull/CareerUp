@@ -34,7 +34,7 @@ export function PostingsSearchForm({
       <input type="hidden" name="sort" value="fit" />
       <label className="grid gap-2 text-sm font-bold text-slate-700">
         Role or keyword
-        <input name="q" list="role-keyword-examples" defaultValue={defaultQuery} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Data science intern" />
+        <input name="q" list="role-keyword-examples" defaultValue={defaultQuery} className="field" placeholder="Data science intern" />
         <datalist id="role-keyword-examples">
           {roleSuggestions.map((example) => (
             <option key={example} value={example} />
@@ -43,7 +43,7 @@ export function PostingsSearchForm({
       </label>
       <label className="grid gap-2 text-sm font-bold text-slate-700">
         Location
-        <input name="location" list="location-examples" defaultValue={defaultLocation} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder={locationPlaceholder} />
+        <input name="location" list="location-examples" defaultValue={defaultLocation} className="field" placeholder={locationPlaceholder} />
         <datalist id="location-examples">
           {locationSuggestions.map((example) => (
             <option key={example} value={example} />
@@ -52,7 +52,7 @@ export function PostingsSearchForm({
       </label>
       <label className="grid gap-2 text-sm font-bold text-slate-700">
         Work mode
-        <select name="remote" defaultValue={remoteFilter} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600">
+        <select name="remote" defaultValue={remoteFilter} className="field">
           <option value="all">All roles</option>
           <option value="remote">Remote only</option>
           <option value="hybrid">Hybrid only</option>
@@ -61,7 +61,7 @@ export function PostingsSearchForm({
       </label>
       <label className="grid gap-2 text-sm font-bold text-slate-700">
         Minimum fit
-        <select name="minFit" defaultValue={minFit.toString()} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600">
+        <select name="minFit" defaultValue={minFit.toString()} className="field">
           <option value="0">Any fit</option>
           <option value="60">60%+</option>
           <option value="70">70%+</option>

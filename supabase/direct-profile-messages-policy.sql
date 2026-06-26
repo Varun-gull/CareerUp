@@ -4,6 +4,12 @@ alter table public.peer_messages
 grant select, insert, update on public.peer_messages to authenticated;
 grant select on public.profiles to authenticated;
 
+drop policy if exists "Users can read leaderboard profiles" on public.profiles;
+create policy "Users can read leaderboard profiles"
+on public.profiles for select
+to authenticated
+using (true);
+
 drop policy if exists "Users can send peer messages" on public.peer_messages;
 
 create policy "Users can send peer messages"

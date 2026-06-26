@@ -48,8 +48,7 @@ export async function updateProfile(formData: FormData) {
   }
 
   const fullName = String(formData.get("fullName") ?? "").trim();
-  const selectedSchool = String(formData.get("school") ?? "").trim();
-  const school = selectedSchool.toLowerCase().startsWith("other /") ? "" : selectedSchool;
+  const school = String(formData.get("school") ?? "").trim();
   const schoolLogoUrl = getSchoolLogoUrl(school);
   const major = String(formData.get("major") ?? "").trim();
   const graduationYear = String(formData.get("graduationYear") ?? "").trim();

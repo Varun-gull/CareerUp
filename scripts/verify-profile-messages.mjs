@@ -59,27 +59,20 @@ const recipient = await signIn("recipient", process.env.CAREERUP_TEST_RECIPIENT_
 const roleKey = `profile::${recipient.user.id}`;
 const subject = `CareerUp profile message verification ${new Date().toISOString()}`;
 
-const { data: message, error: insertError } = await sender.supabase
-  .from("peer_messages")
-  .insert({
-    sender_id: sender.user.id,
-    recipient_id: recipient.user.id,
-    application_id: null,
-    role_key: roleKey,
-    subject,
-    body: "Automated verification that direct profile messages can be sent and counted as unread."
-  })
-  .select("id, role_key, application_id, read_at")
-  .single();
+const { data: messageId, error: sendError } = await sender.supabase.rpc("send_direct_profile_message", {
+  target_recipient_id: recipient.user.id,
+  message_subject: subject,
+  message_body: "Automated verification that direct profile messages can be sent and counted as unread."
+});
 
-if (insertError || !message) {
-  throw new Error(`Profile message insert failed: ${insertError?.message ?? "No message returned"}`);
+if (sendError || !messageId) {
+  throw new Error(`Profile message RPC failed: ${sendError?.message ?? "No message id returned"}`);
 }
 
 const { data: receivedMessage, error: readError } = await recipient.supabase
   .from("peer_messages")
-  .select("id, subject, read_at")
-  .eq("id", message.id)
+  .select("id, subject, role_key, application_id, read_at")
+  .eq("id", messageId)
   .single();
 
 if (readError || !receivedMessage) {
@@ -100,9 +93,9 @@ console.log(
   JSON.stringify(
     {
       ok: true,
-      messageId: message.id,
-      roleKey: message.role_key,
-      applicationId: message.application_id,
+      messageId,
+      roleKey: receivedMessage.role_key,
+      applicationId: receivedMessage.application_id,
       recipientCanRead: true,
       unreadCountForRecipient: count
     },

@@ -60,9 +60,9 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                           {school.name}
                         </option>
                       ))}
-                      <option value="Other / type your school">Other / type your school</option>
+                      <option value="Other school">Other school</option>
                     </datalist>
-                    <span className="text-xs font-bold text-slate-500">Pick a listed school for an automatic logo, or type your school name in this same box.</span>
+                    <span className="text-xs font-bold text-slate-500">Choose a listed school for an automatic logo, or type a custom school name in this same box.</span>
                   </label>
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Major

@@ -148,8 +148,8 @@ export async function PostingsPageView({
   const pageTitle = kind === "new-grad" ? "New grad postings" : "Internship postings";
   const pageCopy =
     kind === "new-grad"
-      ? "Search current entry-level and new graduate roles from Jobright, Intern-list, GitHub, and live job APIs."
-      : "Search current internship-style roles from Jobright, Intern-list, GitHub, and live job APIs.";
+      ? "Search current entry-level and new graduate roles from Jobright, Intern-list, and curated GitHub sources."
+      : "Search current internship-style roles from Jobright, Intern-list, and curated GitHub sources.";
   const resetHref = kind === "new-grad" ? "/postings/new-grad" : "/postings/internships";
   const returnHref = buildReturnHref(kind, searchParams);
   const bestFitHref = buildSortHref(kind, "fit", searchParams);

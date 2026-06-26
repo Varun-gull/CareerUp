@@ -16,7 +16,7 @@ const navItems = [
 export function NavLinks() {
   const pathname = usePathname();
   return (
-    <div className="nav-scroll col-span-2 row-start-2 -mx-1 flex min-w-0 items-center gap-2.5 overflow-x-auto pb-1 lg:col-span-1 lg:row-start-auto lg:mx-0 lg:justify-center lg:overflow-visible lg:pb-0 xl:gap-3">
+    <div className="nav-scroll col-span-2 row-start-2 -mx-1 flex min-w-0 items-center gap-2.5 overflow-x-auto pb-1 lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:mx-0 lg:justify-center lg:overflow-visible lg:pb-0 xl:gap-3">
       {navItems.map((item) => {
         const active = item.label === "Postings" ? pathname.startsWith("/postings") : pathname.startsWith(item.href);
         return (

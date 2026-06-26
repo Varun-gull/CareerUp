@@ -1,7 +1,65 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { type FormEvent } from "react";
+import { type FormEvent, useMemo, useState } from "react";
+
+function SuggestionInput({
+  label,
+  name,
+  value,
+  onChange,
+  placeholder,
+  suggestions,
+}: {
+  label: string;
+  name: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  suggestions: string[];
+}) {
+  const [open, setOpen] = useState(false);
+  const visibleSuggestions = useMemo(() => {
+    const normalizedValue = value.trim().toLowerCase();
+    return suggestions
+      .filter((suggestion) => !normalizedValue || suggestion.toLowerCase().includes(normalizedValue))
+      .slice(0, 8);
+  }, [suggestions, value]);
+
+  return (
+    <label className="relative grid gap-2 text-sm font-black text-slate-700">
+      {label}
+      <input
+        name={name}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => window.setTimeout(() => setOpen(false), 120)}
+        className="field"
+        placeholder={placeholder}
+        autoComplete="off"
+      />
+      {open && visibleSuggestions.length > 0 && (
+        <div className="absolute left-0 right-0 top-full z-20 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-strong">
+          {visibleSuggestions.map((suggestion) => (
+            <button
+              key={suggestion}
+              type="button"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                onChange(suggestion);
+                setOpen(false);
+              }}
+              className="flex w-full items-center rounded-xl px-3 py-2 text-left text-sm font-bold text-slate-700 transition hover:bg-sky/10 hover:text-slate-950"
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
+      )}
+    </label>
+  );
+}
 
 export function PostingsSearchForm({
   roleSuggestions,
@@ -20,6 +78,9 @@ export function PostingsSearchForm({
   remoteFilter: string;
   minFit: number;
 }) {
+  const [query, setQuery] = useState(defaultQuery);
+  const [location, setLocation] = useState(defaultLocation);
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     const form = event.currentTarget;
     const sortInput = form.elements.namedItem("sort") as HTMLInputElement | null;
@@ -32,24 +93,8 @@ export function PostingsSearchForm({
   return (
     <form onSubmit={handleSubmit} className="card mt-8 grid gap-4 p-5 lg:grid-cols-[1.15fr_1fr_0.75fr_0.75fr_auto]">
       <input type="hidden" name="sort" value="fit" />
-      <label className="grid gap-2 text-sm font-black text-slate-700">
-        Role or keyword
-        <input name="q" list="role-keyword-examples" defaultValue={defaultQuery} className="field" placeholder="Data science intern" />
-        <datalist id="role-keyword-examples">
-          {roleSuggestions.map((example) => (
-            <option key={example} value={example} />
-          ))}
-        </datalist>
-      </label>
-      <label className="grid gap-2 text-sm font-black text-slate-700">
-        Location
-        <input name="location" list="location-examples" defaultValue={defaultLocation} className="field" placeholder={locationPlaceholder} />
-        <datalist id="location-examples">
-          {locationSuggestions.map((example) => (
-            <option key={example} value={example} />
-          ))}
-        </datalist>
-      </label>
+      <SuggestionInput label="Role or keyword" name="q" value={query} onChange={setQuery} placeholder="Data science intern" suggestions={roleSuggestions} />
+      <SuggestionInput label="Location" name="location" value={location} onChange={setLocation} placeholder={locationPlaceholder} suggestions={locationSuggestions} />
       <label className="grid gap-2 text-sm font-black text-slate-700">
         Work mode
         <select name="remote" defaultValue={remoteFilter} className="field">

@@ -1,24 +1,5 @@
 import type { InternshipPosting, Profile } from "./types";
 
-type AdzunaJob = {
-  id: string;
-  title: string;
-  company?: {
-    display_name?: string;
-  };
-  location?: {
-    display_name?: string;
-  };
-  redirect_url: string;
-  created?: string;
-  description?: string;
-  category?: {
-    label?: string;
-  };
-  contract_time?: string;
-  contract_type?: string;
-};
-
 type SearchPostingsOptions = {
   query?: string;
   location?: string;
@@ -27,7 +8,7 @@ type SearchPostingsOptions = {
 };
 
 export type PostingKind = "internship" | "new-grad";
-export type PostingProvider = "Jobright / Intern-list" | "Jobright / Intern-list + GitHub" | "Jobright / Intern-list + Adzuna" | "Jobright / Intern-list + GitHub + Adzuna" | "Curated GitHub" | "Curated GitHub + Adzuna" | "Adzuna" | "CareerUp sample";
+export type PostingProvider = "Jobright / Intern-list" | "Jobright / Intern-list + GitHub" | "Curated GitHub" | "CareerUp sample";
 
 export type PostingSearchResult = {
   postings: InternshipPosting[];
@@ -412,7 +393,7 @@ async function searchCuratedGithubPostings(searchQuery: string, targetLocation: 
     ? {
         provider: "Curated GitHub",
         usingFallback: false,
-        postings: deduped.slice(0, 50)
+        postings: deduped
       }
     : null;
 }
@@ -445,7 +426,7 @@ async function searchJobrightPostings(searchQuery: string, targetLocation: strin
     ? {
         provider: "Jobright / Intern-list",
         usingFallback: false,
-        postings: deduped.slice(0, 75)
+        postings: deduped
       }
     : null;
 }
@@ -544,99 +525,6 @@ function fallbackPostings(profile?: Profile): PostingSearchResult {
   };
 }
 
-async function searchAdzunaPostings(searchQuery: string, targetLocation: string, profile?: Profile, kind: PostingKind = "internship"): Promise<PostingSearchResult | null> {
-  const appId = process.env.ADZUNA_APP_ID;
-  const appKey = process.env.ADZUNA_APP_KEY;
-
-  if (!appId || !appKey) {
-    return null;
-  }
-
-  const locationAttempts = targetLocation ? [targetLocation, ""] : [""];
-  const collectedPostings = new Map<string, InternshipPosting>();
-
-  for (const locationAttempt of locationAttempts) {
-    for (const variant of buildPostingQueryVariants(searchQuery, kind)) {
-      const url = new URL("https://api.adzuna.com/v1/api/jobs/us/search/1");
-      url.searchParams.set("app_id", appId);
-      url.searchParams.set("app_key", appKey);
-      url.searchParams.set("results_per_page", "24");
-      url.searchParams.set("content-type", "application/json");
-      url.searchParams.set("sort_by", "date");
-      url.searchParams.set("what", variant);
-
-      if (locationAttempt) {
-        url.searchParams.set("where", locationAttempt);
-      }
-
-      const response = await fetch(url, {
-        cache: "no-store"
-      });
-
-      if (!response.ok) {
-        continue;
-      }
-
-      const payload = (await response.json()) as { results?: AdzunaJob[] };
-      const jobs = payload.results ?? [];
-      jobs
-        .map((job): InternshipPosting => {
-          const description = stripHtml(job.description ?? "");
-          const tags = [job.category?.label, job.contract_time, job.contract_type].filter(Boolean) as string[];
-          const workMode = getWorkMode(`${job.title} ${job.location?.display_name ?? ""} ${description}`);
-          const posting = {
-            id: `adzuna-${job.id}`,
-            company: job.company?.display_name ?? "Unknown company",
-            title: job.title,
-            location: job.location?.display_name ?? (locationAttempt || targetLocation || "United States"),
-            source: "Adzuna",
-            url: job.redirect_url,
-            remote: workMode === "remote",
-            workMode,
-            postedAt: job.created ? new Date(job.created).toLocaleDateString() : "Recently",
-            tags: tags.slice(0, 5),
-            description: description.slice(0, 220)
-          };
-
-          return {
-            ...posting,
-            fitScore: getFitScore(posting, profile)
-          };
-        })
-        .filter((posting) =>
-          kind === "new-grad"
-            ? /new grad|new graduate|university grad|college grad|entry level|early career|associate/i.test(`${posting.title} ${posting.description}`)
-            : /intern|internship|student|co-op|coop/i.test(`${posting.title} ${posting.description}`)
-        )
-        .forEach((posting) => {
-          collectedPostings.set(posting.url, posting);
-        });
-
-      if (collectedPostings.size >= 24) {
-        return {
-          provider: "Adzuna",
-          usingFallback: false,
-          postings: Array.from(collectedPostings.values()).slice(0, 24)
-        };
-      }
-    }
-
-    if (collectedPostings.size >= 6) {
-      break;
-    }
-  }
-
-  if (collectedPostings.size > 0) {
-    return {
-      provider: "Adzuna",
-      usingFallback: false,
-      postings: Array.from(collectedPostings.values()).slice(0, 24)
-    };
-  }
-
-  return null;
-}
-
 export async function searchInternshipPostings({ query, location, profile, kind = "internship" }: SearchPostingsOptions = {}): Promise<PostingSearchResult> {
   const rawQuery = typeof query === "string" ? query.trim() : "";
   const rawLocation = typeof location === "string" ? location.trim() : "";
@@ -647,29 +535,12 @@ export async function searchInternshipPostings({ query, location, profile, kind 
   try {
     const jobrightResults = await searchJobrightPostings(searchQuery, targetLocation, profile, kind);
     const curatedResults = await searchCuratedGithubPostings(searchQuery, targetLocation, profile, kind);
-    const adzunaResults = await searchAdzunaPostings(searchQuery, targetLocation, profile, kind);
-
-    if (jobrightResults && curatedResults && adzunaResults) {
-      return {
-        provider: "Jobright / Intern-list + GitHub + Adzuna",
-        usingFallback: false,
-        postings: dedupePostings([...jobrightResults.postings, ...curatedResults.postings, ...adzunaResults.postings]).slice(0, 90)
-      };
-    }
 
     if (jobrightResults && curatedResults) {
       return {
         provider: "Jobright / Intern-list + GitHub",
         usingFallback: false,
-        postings: dedupePostings([...jobrightResults.postings, ...curatedResults.postings]).slice(0, 90)
-      };
-    }
-
-    if (jobrightResults && adzunaResults) {
-      return {
-        provider: "Jobright / Intern-list + Adzuna",
-        usingFallback: false,
-        postings: dedupePostings([...jobrightResults.postings, ...adzunaResults.postings]).slice(0, 90)
+        postings: dedupePostings([...jobrightResults.postings, ...curatedResults.postings])
       };
     }
 
@@ -677,20 +548,8 @@ export async function searchInternshipPostings({ query, location, profile, kind 
       return jobrightResults;
     }
 
-    if (curatedResults && adzunaResults) {
-      return {
-        provider: "Curated GitHub + Adzuna",
-        usingFallback: false,
-        postings: dedupePostings([...curatedResults.postings, ...adzunaResults.postings]).slice(0, 60)
-      };
-    }
-
     if (curatedResults) {
       return curatedResults;
-    }
-
-    if (adzunaResults) {
-      return adzunaResults;
     }
 
     return fallbackPostings(profile);

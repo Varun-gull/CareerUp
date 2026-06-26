@@ -1,6 +1,7 @@
 import { applications as mockApplications, challenges as mockChallenges, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
 import { rewardCatalog } from "./rewards/catalog";
 import { buildRoleKey } from "./role-key";
+import { getSchoolLogoUrl } from "./schools";
 import type { Application, CalendarEvent, Challenge, Friend, InterviewAnswer, LeaderboardUser, MutualFriend, PeerMessage, Profile, PublicProfile, Reward, RolePeerApplicant, RolePeerFeatureStatus, RolePeerInsight } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
 import { getDateKeyStartUtcIso, getTodayKey, getVisibleStreak, isBrokenStreak } from "./streak";
@@ -51,6 +52,11 @@ type DbFriend = {
   addressee_id: string;
   status: Friend["status"];
 };
+
+function resolveSchoolLogoUrl(school: string | null | undefined, storedLogoUrl: string | null | undefined) {
+  const derivedLogoUrl = school ? getSchoolLogoUrl(school) : "";
+  return derivedLogoUrl || storedLogoUrl || "";
+}
 
 function mapDbApplication(application: DbApplication): Application {
   return {
@@ -174,7 +180,7 @@ export async function getCurrentProfile(): Promise<Profile> {
   return {
     name: data.full_name ?? user.email ?? "Student",
     school: data.school ?? "CareerUp Student",
-    schoolLogoUrl: data.school_logo_url ?? "",
+    schoolLogoUrl: resolveSchoolLogoUrl(data.school, data.school_logo_url),
     major: data.major ?? "",
     graduationYear: data.graduation_year ?? "",
     targetRoles: data.target_roles ?? [],
@@ -323,7 +329,7 @@ export async function getRolePeerApplicants(roleKey: string): Promise<RolePeerAp
     profileId: applicant.profile_id,
     name: applicant.full_name ?? "CareerUp Student",
     school: applicant.school ?? "Student",
-    schoolLogoUrl: applicant.school_logo_url ?? "",
+    schoolLogoUrl: resolveSchoolLogoUrl(applicant.school, applicant.school_logo_url),
     company: applicant.company,
     role: applicant.role,
     location: applicant.location ?? "Remote",
@@ -357,7 +363,7 @@ export async function getPeerMessages(): Promise<PeerMessage[]> {
         otherProfileId: message.other_profile_id ?? (direction === "sent" ? message.recipient_id : message.sender_id),
         otherName: message.other_full_name ?? "CareerUp Student",
         otherSchool: message.other_school ?? "Student",
-        otherSchoolLogoUrl: message.other_school_logo_url ?? "",
+        otherSchoolLogoUrl: resolveSchoolLogoUrl(message.other_school, message.other_school_logo_url),
         subject: message.subject,
         body: message.body,
         readAt: message.read_at ? new Date(message.read_at).toLocaleDateString() : "",
@@ -426,7 +432,7 @@ export async function getPeerMessages(): Promise<PeerMessage[]> {
       otherProfileId,
       otherName: otherProfile?.full_name ?? "CareerUp Student",
       otherSchool: otherProfile?.school ?? "Student",
-      otherSchoolLogoUrl: otherProfile?.school_logo_url ?? "",
+      otherSchoolLogoUrl: resolveSchoolLogoUrl(otherProfile?.school, otherProfile?.school_logo_url),
       subject: message.subject,
       body: message.body,
       readAt: message.read_at ? new Date(message.read_at).toLocaleDateString() : "",
@@ -489,7 +495,7 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
     id: user.id,
     name: user.full_name ?? "CareerUp Student",
     school: user.school ?? "Student",
-    schoolLogoUrl: user.school_logo_url ?? "",
+    schoolLogoUrl: resolveSchoolLogoUrl(user.school, user.school_logo_url),
     xp: user.xp ?? 0,
     streak: getVisibleStreak(user.last_applied_on ?? null, user.streak_count ?? 0)
   }));
@@ -542,7 +548,7 @@ export async function getFriends(): Promise<Friend[]> {
         name: profile.full_name ?? profile.email ?? "CareerUp Student",
         email: profile.email ?? "",
         school: profile.school ?? "Student",
-        schoolLogoUrl: profile.school_logo_url ?? "",
+        schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
         xp: profile.xp ?? 0,
         streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0),
         status: friendship.status,
@@ -579,7 +585,7 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
     id: profile.id,
     name: profile.full_name ?? "CareerUp Student",
     school: profile.school ?? "Student",
-    schoolLogoUrl: profile.school_logo_url ?? "",
+    schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
     xp: profile.xp ?? 0,
     streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0)
   }));
@@ -606,7 +612,7 @@ export async function getPublicProfile(profileId: string): Promise<PublicProfile
     id: data.id,
     name: data.full_name ?? "CareerUp Student",
     school: data.school ?? "Student",
-    schoolLogoUrl: data.school_logo_url ?? "",
+    schoolLogoUrl: resolveSchoolLogoUrl(data.school, data.school_logo_url),
     major: data.major ?? "",
     graduationYear: data.graduation_year ?? "",
     targetRoles: data.target_roles ?? [],
@@ -735,7 +741,7 @@ export async function getMutualFriends(profileId: string): Promise<MutualFriend[
     id: profile.id,
     name: profile.full_name ?? "CareerUp Student",
     school: profile.school ?? "Student",
-    schoolLogoUrl: profile.school_logo_url ?? "",
+    schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
     xp: profile.xp ?? 0
   }));
 }

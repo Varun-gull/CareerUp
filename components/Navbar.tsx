@@ -1,25 +1,17 @@
-import { BriefcaseBusiness, Mail } from "lucide-react";
+import { BriefcaseBusiness, CalendarDays, Mail } from "lucide-react";
 import Link from "next/link";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { NavLinks } from "@/components/NavLinks";
 import { getCurrentProfile, getCurrentUser, getUnreadPeerMessageCount } from "@/lib/data";
 
-const MONTH_ABBR = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-
 function CalendarWidget() {
-  const now = new Date();
-  const month = MONTH_ABBR[now.getMonth()];
-  const day = now.getDate();
   return (
     <Link
       href="/calendar"
-      className="relative hidden h-11 w-11 select-none flex-col items-center justify-center gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/50 hover:shadow-md sm:flex"
+      className="relative hidden h-11 w-11 select-none items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/50 hover:text-sky hover:shadow-md sm:flex"
       aria-label="Calendar"
     >
-      <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-sky">
-        <span className="text-[8px] font-black uppercase leading-none text-slate-950">{month}</span>
-      </span>
-      <span className="relative mt-3 text-[15px] font-black leading-none">{day}</span>
+      <CalendarDays size={20} />
     </Link>
   );
 }
@@ -65,18 +57,24 @@ export async function Navbar() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-navy/95 shadow-lg shadow-black/25 backdrop-blur-xl">
-      <nav className="grid w-full grid-cols-[auto_auto] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:grid-cols-[auto_1fr_auto] lg:px-8">
-        <Link href="/dashboard" className="group flex shrink-0 items-center gap-3 font-black text-white">
+      <nav className="grid w-full grid-cols-[auto_auto] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
+        <Link href="/dashboard" className="group flex shrink-0 items-center gap-3 justify-self-start font-black text-white">
           <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-sky text-white shadow-glow transition group-hover:-translate-y-0.5">
             <BriefcaseBusiness size={22} />
           </span>
           <span className="text-lg">CareerUp</span>
         </Link>
         <NavLinks />
-        <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-end gap-2">
+        <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-end gap-2 justify-self-end lg:col-start-3">
+          <ProfileDropdown
+            initials={initials}
+            displayName={firstName}
+            loggedIn={!!user}
+            schoolLogoUrl={profile?.schoolLogoUrl ?? ""}
+            unreadMessages={unreadMessages}
+          />
           {user && <MessageButton unreadMessages={unreadMessages} />}
           <CalendarWidget />
-          <ProfileDropdown initials={initials} displayName={firstName} loggedIn={!!user} unreadMessages={unreadMessages} />
         </div>
       </nav>
     </header>

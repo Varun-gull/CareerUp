@@ -9,11 +9,13 @@ export function ProfileDropdown({
   initials,
   displayName,
   loggedIn,
+  schoolLogoUrl = "",
   unreadMessages = 0
 }: {
   initials: string;
   displayName?: string;
   loggedIn: boolean;
+  schoolLogoUrl?: string;
   unreadMessages?: number;
 }) {
   const [open, setOpen] = useState(false);
@@ -44,10 +46,15 @@ export function ProfileDropdown({
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex h-11 min-w-11 max-w-36 items-center justify-center truncate rounded-2xl border border-slate-200 bg-white px-4 text-sm font-black text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky"
+        className="flex h-11 min-w-11 max-w-44 items-center justify-center gap-2 truncate rounded-2xl border border-slate-200 bg-white px-3 text-sm font-black text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky"
         aria-label="Open profile menu"
       >
-        {displayName || initials}
+        {schoolLogoUrl ? (
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-white">
+            <img src={schoolLogoUrl} alt="" className="h-full w-full object-contain p-0.5" />
+          </span>
+        ) : null}
+        <span className="truncate">{displayName || initials}</span>
       </button>
 
       {open && (

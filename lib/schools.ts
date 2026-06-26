@@ -54,5 +54,5 @@ export const schoolOptions: SchoolOption[] = [
 export function getSchoolLogoUrl(schoolName: string) {
   const normalizedName = schoolName.trim().toLowerCase();
   const school = schoolOptions.find((option) => option.name.toLowerCase() === normalizedName);
-  return school ? `https://logo.clearbit.com/${school.domain}` : "";
+  return school ? `https://www.google.com/s2/favicons?domain=${school.domain}&sz=64` : "";
 }

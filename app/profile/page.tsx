@@ -2,6 +2,7 @@ import { FileText, Save, Share2, Upload } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { RankBadge } from "@/components/RankBadge";
+import { SchoolField } from "@/components/SchoolField";
 import { XpProgressBar } from "@/components/XpProgressBar";
 import { getCurrentProfile } from "@/lib/data";
 import { saveResumeProfile, updateProfile } from "@/lib/profile/actions";
@@ -44,26 +45,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                   <input name="fullName" defaultValue={profile.name} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" required />
                 </label>
                 <div className="grid gap-5 sm:grid-cols-2">
-                  <label className="grid gap-2 text-sm font-bold text-slate-700">
-                    School
-                    <input
-                      name="school"
-                      defaultValue={profile.school}
-                      list="school-options"
-                      autoComplete="organization"
-                      className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-purple-600"
-                      placeholder="Choose or type your school"
-                    />
-                    <datalist id="school-options">
-                      {schoolOptions.map((school) => (
-                        <option key={school.name} value={school.name}>
-                          {school.name}
-                        </option>
-                      ))}
-                      <option value="Other school">Other school</option>
-                    </datalist>
-                    <span className="text-xs font-bold text-slate-500">Choose a listed school for an automatic logo, or type a custom school name in this same box.</span>
-                  </label>
+                  <SchoolField schools={schoolOptions} initialSchool={profile.school} />
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Major
                     <input name="major" defaultValue={profile.major} className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-purple-600" placeholder="Computer Science" />

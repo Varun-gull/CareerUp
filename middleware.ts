@@ -36,6 +36,7 @@ export async function middleware(request: NextRequest) {
     "/challenges",
     "/rewards",
     "/interview",
+    "/messages",
     "/calendar",
     "/friends",
     "/leaderboard",

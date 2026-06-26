@@ -55,6 +55,20 @@ create table public.applications (
   updated_at timestamptz not null default now()
 );
 
+create table public.calendar_events (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  application_id text not null,
+  company text not null,
+  role text not null,
+  status text not null default 'saved',
+  event_type text not null default 'custom',
+  date date not null,
+  time text,
+  notes text,
+  created_at timestamptz not null default now()
+);
+
 create table public.challenges (
   id uuid primary key default gen_random_uuid(),
   title text not null,
@@ -196,6 +210,7 @@ create trigger interview_answers_set_updated_at before update on public.intervie
 
 create index applications_role_key_idx on public.applications(role_key);
 create index applications_application_year_idx on public.applications(user_id, application_year);
+create index calendar_events_user_date_idx on public.calendar_events(user_id, date);
 create index peer_messages_sender_idx on public.peer_messages(sender_id, created_at desc);
 create index peer_messages_recipient_idx on public.peer_messages(recipient_id, created_at desc);
 create index peer_messages_role_key_idx on public.peer_messages(role_key);
@@ -214,6 +229,7 @@ $$;
 
 alter table public.profiles enable row level security;
 alter table public.applications enable row level security;
+alter table public.calendar_events enable row level security;
 alter table public.challenges enable row level security;
 alter table public.completed_challenges enable row level security;
 alter table public.user_rewards enable row level security;
@@ -226,6 +242,7 @@ grant select (id, full_name, school, school_logo_url, major, graduation_year, ta
 grant select on public.profiles to authenticated;
 grant update on public.profiles to authenticated;
 grant select, insert, update, delete on public.applications to authenticated;
+grant select, insert, update, delete on public.calendar_events to authenticated;
 grant select on public.challenges to authenticated;
 grant select, insert, update, delete on public.completed_challenges to authenticated;
 grant select, insert, delete on public.user_rewards to authenticated;
@@ -252,6 +269,12 @@ with check (auth.uid() = id and role = (select role from public.profiles where i
 
 create policy "Users can manage own applications"
 on public.applications for all
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create policy "Users can manage own calendar events"
+on public.calendar_events for all
 to authenticated
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);

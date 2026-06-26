@@ -91,8 +91,8 @@ export default async function ApplicationsPage({
           <>
             <section className="mt-6 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-lg font-black text-ink">Application history</h2>
-                <p className="text-sm font-bold text-slate-400">Switch between recruiting cycles without losing your older boards.</p>
+                <h2 className="text-lg font-black text-slate-950">Application history</h2>
+                <p className="text-sm font-bold text-slate-600">Switch between recruiting cycles without losing your older boards.</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 {years.map((year) => (

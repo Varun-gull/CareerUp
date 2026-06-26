@@ -1,45 +1,8 @@
-import { Bell, BriefcaseBusiness } from "lucide-react";
+import { BriefcaseBusiness } from "lucide-react";
 import Link from "next/link";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { NavLinks } from "@/components/NavLinks";
 import { getCurrentProfile, getCurrentUser, getUnreadPeerMessageCount } from "@/lib/data";
-
-const MONTH_ABBR = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-
-function CalendarWidget() {
-  const now = new Date();
-  const month = MONTH_ABBR[now.getMonth()];
-  const day = now.getDate();
-  return (
-    <Link
-      href="/calendar"
-      className="relative hidden h-11 w-11 select-none items-center justify-center overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:shadow-md sm:flex flex-col gap-0"
-      aria-label="Calendar"
-    >
-      <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-sky">
-        <span className="text-[8px] font-black uppercase leading-none text-slate-950">{month}</span>
-      </span>
-      <span className="relative mt-3 text-[15px] font-black text-slate-100 leading-none">{day}</span>
-    </Link>
-  );
-}
-
-function NotificationButton({ unreadMessages }: { unreadMessages: number }) {
-  return (
-    <Link
-      href="/messages"
-      className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 text-slate-200 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky hover:shadow-md"
-      aria-label={unreadMessages > 0 ? `Messages, ${unreadMessages} unread` : "Messages"}
-    >
-      <Bell size={19} />
-      {unreadMessages > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-black text-slate-950 ring-2 ring-slate-950">
-          {unreadMessages > 9 ? "9+" : unreadMessages}
-        </span>
-      )}
-    </Link>
-  );
-}
 
 function getInitials(name: string) {
   const initials = name
@@ -72,10 +35,8 @@ export async function Navbar() {
           </span>
           <span className="text-lg">CareerUp</span>
         </Link>
-        <NavLinks />
+        <NavLinks unreadMessages={unreadMessages} />
         <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-end gap-2">
-          {user && <NotificationButton unreadMessages={unreadMessages} />}
-          <CalendarWidget />
           <ProfileDropdown initials={initials} displayName={firstName} loggedIn={!!user} unreadMessages={unreadMessages} />
         </div>
       </nav>

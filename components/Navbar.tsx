@@ -1,29 +1,9 @@
 import { BriefcaseBusiness, Mail } from "lucide-react";
 import Link from "next/link";
+import { CalendarTile } from "@/components/CalendarTile";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { NavLinks } from "@/components/NavLinks";
 import { getCurrentProfile, getCurrentUser, getUnreadPeerMessageCount } from "@/lib/data";
-
-const MONTH_ABBR = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-
-function CalendarWidget() {
-  const now = new Date();
-  const month = MONTH_ABBR[now.getMonth()];
-  const day = now.getDate();
-
-  return (
-    <Link
-      href="/calendar"
-      className="relative hidden h-11 w-11 select-none flex-col items-center justify-center gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/50 hover:shadow-md sm:flex"
-      aria-label="Calendar"
-    >
-      <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-sky">
-        <span className="text-[8px] font-black uppercase leading-none text-slate-950">{month}</span>
-      </span>
-      <span className="relative mt-3 text-[15px] font-black leading-none">{day}</span>
-    </Link>
-  );
-}
 
 function MessageButton({ unreadMessages }: { unreadMessages: number }) {
   return (
@@ -76,7 +56,7 @@ export async function Navbar() {
         <NavLinks />
         <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-end gap-2 justify-self-end lg:col-start-3">
           {user && <MessageButton unreadMessages={unreadMessages} />}
-          <CalendarWidget />
+          <CalendarTile />
           <ProfileDropdown
             initials={initials}
             displayName={firstName}

@@ -83,6 +83,27 @@ export type Friend = {
   direction: "incoming" | "outgoing";
 };
 
+export type CareerGroup = {
+  id: string;
+  name: string;
+  description: string;
+  ownerId: string;
+  memberCount: number;
+  totalXp: number;
+  averageXp: number;
+  members: LeaderboardUser[];
+};
+
+export type GroupLeaderboardRow = {
+  id: string;
+  name: string;
+  description: string;
+  memberCount: number;
+  totalXp: number;
+  averageXp: number;
+  currentUserMember: boolean;
+};
+
 export type PublicProfile = {
   id: string;
   name: string;

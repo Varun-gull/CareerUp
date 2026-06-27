@@ -23,6 +23,8 @@ create table public.profiles (
   share_application_board boolean not null default false,
   privacy_prompt_answered boolean not null default false,
   profile_completed_awarded boolean not null default false,
+  resume_uploaded_awarded boolean not null default false,
+  rank_bonus_awarded text[] not null default '{}',
   xp integer not null default 25,
   streak_count integer not null default 0,
   applications_applied integer not null default 0,
@@ -119,6 +121,24 @@ create table public.friends (
   check (requester_id <> addressee_id)
 );
 
+create table public.career_groups (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  description text,
+  owner_id uuid not null references public.profiles(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table public.career_group_members (
+  id uuid primary key default gen_random_uuid(),
+  group_id uuid not null references public.career_groups(id) on delete cascade,
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  added_by uuid references public.profiles(id) on delete set null,
+  created_at timestamptz not null default now(),
+  unique (group_id, user_id)
+);
+
 create table public.peer_messages (
   id uuid primary key default gen_random_uuid(),
   sender_id uuid not null references public.profiles(id) on delete cascade,
@@ -172,6 +192,9 @@ create trigger profiles_set_updated_at before update on public.profiles
 create trigger applications_set_updated_at before update on public.applications
   for each row execute procedure public.set_updated_at();
 
+create trigger career_groups_set_updated_at before update on public.career_groups
+  for each row execute procedure public.set_updated_at();
+
 create or replace function public.normalize_role_key_part(value text)
 returns text
 language sql
@@ -214,6 +237,8 @@ create index calendar_events_user_date_idx on public.calendar_events(user_id, da
 create index peer_messages_sender_idx on public.peer_messages(sender_id, created_at desc);
 create index peer_messages_recipient_idx on public.peer_messages(recipient_id, created_at desc);
 create index peer_messages_role_key_idx on public.peer_messages(role_key);
+create index career_group_members_user_idx on public.career_group_members(user_id);
+create index career_group_members_group_idx on public.career_group_members(group_id);
 
 create or replace function public.award_xp(amount integer)
 returns void
@@ -235,6 +260,8 @@ alter table public.completed_challenges enable row level security;
 alter table public.user_rewards enable row level security;
 alter table public.interview_answers enable row level security;
 alter table public.friends enable row level security;
+alter table public.career_groups enable row level security;
+alter table public.career_group_members enable row level security;
 alter table public.peer_messages enable row level security;
 
 grant usage on schema public to anon, authenticated;
@@ -248,6 +275,8 @@ grant select, insert, update, delete on public.completed_challenges to authentic
 grant select, insert, delete on public.user_rewards to authenticated;
 grant select, insert, update, delete on public.interview_answers to authenticated;
 grant select, insert, update, delete on public.friends to authenticated;
+grant select, insert, update, delete on public.career_groups to authenticated;
+grant select, insert, delete on public.career_group_members to authenticated;
 grant select, insert, update on public.peer_messages to authenticated;
 grant execute on function public.award_xp(integer) to authenticated;
 
@@ -328,6 +357,89 @@ on public.friends for all
 to authenticated
 using (auth.uid() = requester_id or auth.uid() = addressee_id)
 with check (auth.uid() = requester_id or auth.uid() = addressee_id);
+
+create policy "Group members can read groups"
+on public.career_groups for select
+to authenticated
+using (
+  owner_id = auth.uid()
+  or exists (
+    select 1
+    from public.career_group_members
+    where career_group_members.group_id = career_groups.id
+      and career_group_members.user_id = auth.uid()
+  )
+);
+
+create policy "Users can create groups"
+on public.career_groups for insert
+to authenticated
+with check (owner_id = auth.uid());
+
+create policy "Group owners can update groups"
+on public.career_groups for update
+to authenticated
+using (owner_id = auth.uid())
+with check (owner_id = auth.uid());
+
+create policy "Group owners can delete groups"
+on public.career_groups for delete
+to authenticated
+using (owner_id = auth.uid());
+
+create policy "Group members can read memberships"
+on public.career_group_members for select
+to authenticated
+using (
+  user_id = auth.uid()
+  or exists (
+    select 1
+    from public.career_group_members own_membership
+    where own_membership.group_id = career_group_members.group_id
+      and own_membership.user_id = auth.uid()
+  )
+);
+
+create policy "Members can add themselves or accepted friends"
+on public.career_group_members for insert
+to authenticated
+with check (
+  added_by = auth.uid()
+  and (
+    user_id = auth.uid()
+    or exists (
+      select 1
+      from public.career_group_members own_membership
+      where own_membership.group_id = career_group_members.group_id
+        and own_membership.user_id = auth.uid()
+    )
+  )
+  and (
+    user_id = auth.uid()
+    or exists (
+      select 1
+      from public.friends
+      where friends.status = 'accepted'
+        and (
+          (friends.requester_id = auth.uid() and friends.addressee_id = career_group_members.user_id)
+          or (friends.addressee_id = auth.uid() and friends.requester_id = career_group_members.user_id)
+        )
+    )
+  )
+);
+
+create policy "Members can leave groups"
+on public.career_group_members for delete
+to authenticated
+using (
+  user_id = auth.uid()
+  or exists (
+    select 1
+    from public.career_groups
+    where career_groups.id = career_group_members.group_id
+      and career_groups.owner_id = auth.uid()
+  )
+);
 
 create policy "Users can read own peer messages"
 on public.peer_messages for select
@@ -580,8 +692,16 @@ grant execute on function public.get_peer_messages() to authenticated;
 insert into public.challenges (title, description, xp_reward, target)
 values
   ('Daily Apply Sprint', 'Submit one high-quality application today.', 40, 1),
-  ('Profile Polish', 'Add target roles, locations, and resume keywords.', 30, 3),
-  ('Pipeline Builder', 'Save five internships that match your goals.', 60, 5)
+  ('Apply Duo', 'Move two roles to applied today for a stronger recruiting day.', 70, 2),
+  ('Watchlist Builder', 'Save five roles worth reviewing later.', 35, 5),
+  ('Pipeline Builder', 'Track ten roles in your application board.', 80, 10),
+  ('Profile Power-Up', 'Complete school, major, graduation year, goals, and resume signals.', 45, 6),
+  ('Resume Ready', 'Upload or paste a readable resume so matching can improve.', 40, 1),
+  ('Interview Momentum', 'Move one role into interviewing.', 90, 1),
+  ('Offer Celebration', 'Move one role into offer.', 150, 1),
+  ('Friend Builder', 'Add one accepted friend to CareerUp.', 35, 1),
+  ('Group Launch', 'Create or join one recruiting group.', 55, 1),
+  ('Peer Message', 'Send one helpful message to another applicant.', 30, 1)
 on conflict do nothing;
 
 -- After your own account signs up, make yourself admin:

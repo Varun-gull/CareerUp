@@ -1,3 +1,4 @@
+import { rankBonuses } from "@/lib/gamification";
 import { getRankProgress, ranks } from "@/lib/rank";
 
 export function XpProgressBar({ xp }: { xp: number }) {
@@ -28,7 +29,12 @@ export function XpProgressBar({ xp }: { xp: number }) {
               {ranks.map((rank) => (
                 <div key={rank.name} className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2">
                   <span className="text-sm font-black text-ink">{rank.name}</span>
-                  <span className="text-xs font-bold text-slate-600">{rank.minXp.toLocaleString()} XP</span>
+                  <span className="text-right text-xs font-bold text-slate-600">
+                    {rank.minXp.toLocaleString()} XP
+                    {rankBonuses.some((bonus) => bonus.rankName === rank.name) && (
+                      <span className="block text-brand">+{rankBonuses.find((bonus) => bonus.rankName === rank.name)?.xp} bonus</span>
+                    )}
+                  </span>
                 </div>
               ))}
             </div>

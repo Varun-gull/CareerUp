@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { awardEligibleChallenges, awardXp, pointValues } from "@/lib/gamification";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function redirectWithMessage(path: string, message: string): never {
@@ -65,6 +66,9 @@ export async function sendFriendRequest(formData: FormData) {
     redirectWithMessage("/friends", error.message);
   }
 
+  await awardXp({ supabase, userId: user.id, amount: pointValues.sendFriendRequest });
+  await awardEligibleChallenges(supabase, user.id);
+
   revalidatePath("/friends");
   revalidatePath("/leaderboard");
   redirectWithMessage("/friends", "Friend request sent.");
@@ -121,6 +125,9 @@ export async function sendFriendRequestById(formData: FormData) {
     redirectWithMessage("/friends", error.message);
   }
 
+  await awardXp({ supabase, userId: user.id, amount: pointValues.sendFriendRequest });
+  await awardEligibleChallenges(supabase, user.id);
+
   revalidatePath("/friends");
   revalidatePath("/leaderboard");
   redirectWithMessage("/friends", "Friend request sent from invite link.");
@@ -156,6 +163,9 @@ export async function acceptFriendRequest(formData: FormData) {
   if (error) {
     redirectWithMessage("/friends", error.message);
   }
+
+  await awardXp({ supabase, userId: user.id, amount: pointValues.acceptFriendRequest });
+  await awardEligibleChallenges(supabase, user.id);
 
   revalidatePath("/friends");
   revalidatePath("/leaderboard");

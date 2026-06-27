@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { buildRoleKey } from "@/lib/role-key";
+import { awardEligibleChallenges, awardXp, pointValues } from "@/lib/gamification";
 import { getDateKeyStartUtcIso, getNextStreak, getTodayKey, isBrokenStreak } from "@/lib/streak";
 import type { ApplicationStatus } from "@/lib/types";
 
@@ -40,11 +41,9 @@ async function countApplicationsAppliedToday(supabase: NonNullable<ReturnType<ty
 async function updateAppliedStreakAndStats({
   supabase,
   userId,
-  xpBonus,
 }: {
   supabase: NonNullable<ReturnType<typeof getSupabaseServerClient>>;
   userId: string;
-  xpBonus: number;
 }) {
   const { data: profile, error: loadError } = await supabase
     .from("profiles")
@@ -77,7 +76,6 @@ async function updateAppliedStreakAndStats({
   const inProgressReviveStartedToday = profile?.streak_revive_started_on === todayKey;
   const missedStreak = isBrokenStreak(lastAppliedOn, currentStreak) || inProgressReviveStartedToday;
   const updates: Record<string, string | number | boolean | null> = {
-    xp: (profile?.xp ?? 0) + xpBonus,
     applications_applied: (profile?.applications_applied ?? 0) + 1,
     last_applied_on: todayKey,
   };
@@ -152,7 +150,7 @@ async function awardDailyApplyChallenge(supabase: NonNullable<ReturnType<typeof 
   });
 
   if (!insertError) {
-    await supabase.rpc("award_xp", { amount: challenge.xp_reward });
+    await awardXp({ supabase, userId, amount: challenge.xp_reward });
   }
 }
 
@@ -191,7 +189,7 @@ export async function createApplication(formData: FormData) {
     source_url: sourceUrl || null,
     deadline,
     status: "saved",
-    xp_awarded: 5
+    xp_awarded: pointValues.saveRole
   };
 
   let { error } = await supabase.from("applications").insert(insertPayload);
@@ -206,7 +204,8 @@ export async function createApplication(formData: FormData) {
     redirectWithMessage("/applications/new", error.message);
   }
 
-  await supabase.rpc("award_xp", { amount: 5 });
+  await awardXp({ supabase, userId: user.id, amount: pointValues.saveRole });
+  await awardEligibleChallenges(supabase, user.id);
 
   const { data: newApp } = await supabase
     .from("applications")
@@ -252,12 +251,13 @@ export async function createApplicationFromCalendar({
     role,
     deadline: deadline || null,
     status,
-    xp_awarded: 5,
+    xp_awarded: pointValues.saveRole,
   });
 
   if (error) return { error: error.message };
 
-  await supabase.rpc("award_xp", { amount: 5 });
+  await awardXp({ supabase, userId: user.id, amount: pointValues.saveRole });
+  await awardEligibleChallenges(supabase, user.id);
 
   const { data: newApp } = await supabase
     .from("applications")
@@ -333,7 +333,7 @@ export async function savePostingApplication(formData: FormData) {
     source_url: sourceUrl,
     fit_score: Number.isFinite(fitScore) ? Math.min(100, Math.max(0, fitScore)) : 75,
     status: "saved",
-    xp_awarded: 5
+    xp_awarded: pointValues.saveRole
   };
 
   let { error } = await supabase.from("applications").insert(insertPayload);
@@ -348,7 +348,8 @@ export async function savePostingApplication(formData: FormData) {
     redirectWithMessage(returnTo, error.message);
   }
 
-  await supabase.rpc("award_xp", { amount: 5 });
+  await awardXp({ supabase, userId: user.id, amount: pointValues.saveRole });
+  await awardEligibleChallenges(supabase, user.id);
 
   const { data: newApp } = await supabase
     .from("applications")
@@ -415,7 +416,15 @@ export async function updateApplicationStatus(formData: FormData) {
   }
 
   const applyingForFirstTime = application.status !== "applied" && nextStatus === "applied";
-  const xpBonus = applyingForFirstTime ? 20 : 0;
+  const enteringInterview = application.status !== "interviewing" && nextStatus === "interviewing";
+  const enteringOffer = application.status !== "offer" && nextStatus === "offer";
+  const xpBonus = applyingForFirstTime
+    ? pointValues.applyRole
+    : enteringInterview
+      ? pointValues.interviewStage
+      : enteringOffer
+        ? pointValues.offerStage
+        : 0;
 
   const { error: updateError } = await supabase
     .from("applications")
@@ -431,13 +440,18 @@ export async function updateApplicationStatus(formData: FormData) {
   }
 
   if (applyingForFirstTime) {
-    const profileError = await updateAppliedStreakAndStats({ supabase, userId: user.id, xpBonus });
+    const profileError = await updateAppliedStreakAndStats({ supabase, userId: user.id });
 
     if (profileError) {
       redirectWithMessage("/applications", profileError.message);
     }
 
     await awardDailyApplyChallenge(supabase, user.id);
+  }
+
+  if (xpBonus > 0) {
+    await awardXp({ supabase, userId: user.id, amount: xpBonus });
+    await awardEligibleChallenges(supabase, user.id);
   }
 
   if (nextStatus === "applied" && application.status !== "applied") {

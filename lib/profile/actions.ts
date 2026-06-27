@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { awardEligibleChallenges, awardXp, pointValues } from "@/lib/gamification";
 import { extractResumeKeywords, extractResumeTextFromFile, normalizeResumeText } from "@/lib/resume";
 import { getSchoolLogoUrl } from "@/lib/schools";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -82,13 +83,17 @@ export async function updateProfile(formData: FormData) {
       share_application_board: shareApplicationBoard,
       privacy_prompt_answered: true,
       profile_completed_awarded: shouldAwardProfileXp ? true : currentProfile?.profile_completed_awarded ?? false,
-      xp: shouldAwardProfileXp ? (currentProfile?.xp ?? 0) + 30 : currentProfile?.xp ?? 0
     })
     .eq("id", user.id);
 
   if (error) {
     redirectWithMessage("/profile", error.message);
   }
+
+  if (shouldAwardProfileXp) {
+    await awardXp({ supabase, userId: user.id, amount: pointValues.completeProfile });
+  }
+  await awardEligibleChallenges(supabase, user.id);
 
   revalidatePath("/profile");
   revalidatePath("/dashboard");
@@ -181,21 +186,55 @@ export async function saveResumeProfile(formData: FormData) {
     );
   }
 
-  const { error } = await supabase
+  let { data: currentProfile, error: resumeAwardColumnError } = await supabase
     .from("profiles")
-    .update({
-      resume_text: normalizedText,
-      resume_keywords: keywords,
-      resume_file_name: fileName || "Pasted resume",
-      resume_updated_at: new Date().toISOString()
-    })
+    .select("resume_file_name, resume_uploaded_awarded")
+    .eq("id", user.id)
+    .single<{ resume_file_name: string | null; resume_uploaded_awarded: boolean | null }>();
+
+  if (resumeAwardColumnError) {
+    const fallback = await supabase.from("profiles").select("resume_file_name").eq("id", user.id).single<{ resume_file_name: string | null }>();
+    currentProfile = fallback.data ? { ...fallback.data, resume_uploaded_awarded: Boolean(fallback.data.resume_file_name) } : null;
+  }
+
+  const shouldAwardResumeXp = !currentProfile?.resume_uploaded_awarded && Boolean(normalizedText);
+
+  const updatePayload = {
+    resume_text: normalizedText,
+    resume_keywords: keywords,
+    resume_file_name: fileName || "Pasted resume",
+    resume_updated_at: new Date().toISOString(),
+    resume_uploaded_awarded: shouldAwardResumeXp ? true : currentProfile?.resume_uploaded_awarded ?? false,
+  };
+
+  let { error } = await supabase
+    .from("profiles")
+    .update(updatePayload)
     .eq("id", user.id);
+
+  if (error && /resume_uploaded_awarded/i.test(error.message)) {
+    const { resume_uploaded_awarded, ...legacyPayload } = updatePayload;
+    const retry = await supabase.from("profiles").update(legacyPayload).eq("id", user.id);
+    error = retry.error;
+  }
 
   if (error) {
     redirectWithMessage("/profile", error.message);
   }
 
+  if (shouldAwardResumeXp) {
+    await awardXp({ supabase, userId: user.id, amount: pointValues.uploadResume });
+  }
+  await awardEligibleChallenges(supabase, user.id);
+
   revalidatePath("/profile");
   revalidatePath("/postings");
-  redirectWithMessage("/profile", fileReadFailed ? "Resume text saved from the pasted box because the file could not be read." : "Resume saved.");
+  redirectWithMessage(
+    "/profile",
+    fileReadFailed
+      ? "Resume text saved from the pasted box because the file could not be read."
+      : shouldAwardResumeXp
+        ? "Resume saved. You earned 40 XP."
+        : "Resume saved."
+  );
 }

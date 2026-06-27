@@ -1,11 +1,16 @@
 import Link from "next/link";
+import { GroupLeaderboardTable } from "@/components/GroupLeaderboardTable";
 import { LeaderboardTable } from "@/components/LeaderboardTable";
 import { Navbar } from "@/components/Navbar";
-import { getCurrentUser, getFriendLeaderboard, getLeaderboard } from "@/lib/data";
+import { getCurrentUser, getFriendLeaderboard, getGroupLeaderboard, getLeaderboard } from "@/lib/data";
 
 export default async function LeaderboardPage({ searchParams }: { searchParams?: { scope?: string } }) {
-  const scope = searchParams?.scope === "friends" ? "friends" : "global";
-  const [leaderboard, user] = await Promise.all([scope === "friends" ? getFriendLeaderboard() : getLeaderboard(), getCurrentUser()]);
+  const scope = searchParams?.scope === "friends" ? "friends" : searchParams?.scope === "groups" ? "groups" : "global";
+  const [leaderboard, groupLeaderboard, user] = await Promise.all([
+    scope === "friends" ? getFriendLeaderboard() : scope === "groups" ? Promise.resolve([]) : getLeaderboard(),
+    scope === "groups" ? getGroupLeaderboard() : Promise.resolve([]),
+    getCurrentUser()
+  ]);
 
   return (
     <>
@@ -24,10 +29,17 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
             <Link href="/leaderboard?scope=friends" className={scope === "friends" ? "primary-button" : "secondary-button"}>
               Friends
             </Link>
+            <Link href="/leaderboard?scope=groups" className={scope === "groups" ? "primary-button" : "secondary-button"}>
+              Groups
+            </Link>
           </div>
         </div>
         <section className="mt-6">
-          <LeaderboardTable users={leaderboard} currentUserId={user?.id} emptyMode={scope} />
+          {scope === "groups" ? (
+            <GroupLeaderboardTable groups={groupLeaderboard} />
+          ) : (
+            <LeaderboardTable users={leaderboard} currentUserId={user?.id} emptyMode={scope} />
+          )}
         </section>
       </main>
     </>

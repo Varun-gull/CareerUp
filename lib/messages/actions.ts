@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { awardEligibleChallenges, awardXp, pointValues } from "@/lib/gamification";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 type VisibleRoleApplicant = {
@@ -161,6 +162,9 @@ export async function sendPeerMessage(formData: FormData) {
   if (error) {
     redirectWithMessage(returnTo, getPeerMessageErrorMessage(error.message));
   }
+
+  await awardXp({ supabase, userId: user.id, amount: pointValues.sendMessage });
+  await awardEligibleChallenges(supabase, user.id);
 
   revalidatePath(returnTo);
   revalidatePath("/messages");

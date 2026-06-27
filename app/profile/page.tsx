@@ -96,6 +96,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Upload resume
                     <input name="resumeFile" type="file" accept=".txt,.md,.csv,.pdf,.docx" className="field text-sm" />
+                    <span className="text-xs font-semibold text-slate-500">PDF, DOCX, TXT, MD, and CSV resumes are supported. Text-based PDFs work best.</span>
                   </label>
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
                     Paste text fallback

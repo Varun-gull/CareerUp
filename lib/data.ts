@@ -2,7 +2,7 @@ import { applications as mockApplications, challenges as mockChallenges, leaderb
 import { rewardCatalog } from "./rewards/catalog";
 import { buildRoleKey } from "./role-key";
 import { getSchoolLogoUrl } from "./schools";
-import type { Application, CalendarEvent, Challenge, Friend, InterviewAnswer, LeaderboardUser, MutualFriend, PeerMessage, Profile, PublicProfile, Reward, RolePeerApplicant, RolePeerFeatureStatus, RolePeerInsight } from "./types";
+import type { Application, CalendarEvent, CareerGroup, Challenge, Friend, GroupLeaderboardRow, InterviewAnswer, LeaderboardUser, MutualFriend, PeerMessage, Profile, PublicProfile, Reward, RolePeerApplicant, RolePeerFeatureStatus, RolePeerInsight } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
 import { getDateKeyStartUtcIso, getTodayKey, getVisibleStreak, isBrokenStreak } from "./streak";
 
@@ -51,6 +51,19 @@ type DbFriend = {
   requester_id: string;
   addressee_id: string;
   status: Friend["status"];
+};
+
+type DbCareerGroup = {
+  id: string;
+  name: string;
+  description: string | null;
+  owner_id: string;
+};
+
+type DbCareerGroupMember = {
+  id: string;
+  group_id: string;
+  user_id: string;
 };
 
 function resolveSchoolLogoUrl(school: string | null | undefined, storedLogoUrl: string | null | undefined) {
@@ -591,6 +604,103 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
   }));
 }
 
+export async function getGroups(): Promise<CareerGroup[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return [];
+  }
+
+  const { data: memberships, error: membershipsError } = await supabase
+    .from("career_group_members")
+    .select("id, group_id, user_id")
+    .eq("user_id", user.id)
+    .returns<DbCareerGroupMember[]>();
+
+  if (membershipsError || !memberships?.length) {
+    return [];
+  }
+
+  const groupIds = memberships.map((membership) => membership.group_id);
+  const [{ data: groups, error: groupsError }, { data: allMembers, error: membersError }] = await Promise.all([
+    supabase.from("career_groups").select("id, name, description, owner_id").in("id", groupIds).returns<DbCareerGroup[]>(),
+    supabase.from("career_group_members").select("id, group_id, user_id").in("group_id", groupIds).returns<DbCareerGroupMember[]>()
+  ]);
+
+  if (groupsError || membersError || !groups || !allMembers) {
+    return [];
+  }
+
+  const memberIds = Array.from(new Set(allMembers.map((member) => member.user_id)));
+  const { data: profiles, error: profilesError } = await supabase
+    .from("profiles")
+    .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
+    .in("id", memberIds)
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>();
+
+  if (profilesError || !profiles) {
+    return [];
+  }
+
+  const profilesById = new Map(
+    profiles.map((profile) => [
+      profile.id,
+      {
+        id: profile.id,
+        name: profile.full_name ?? "CareerUp Student",
+        school: profile.school ?? "Student",
+        schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
+        xp: profile.xp ?? 0,
+        streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0)
+      } satisfies LeaderboardUser
+    ])
+  );
+
+  return groups.map((group) => {
+    const members = allMembers
+      .filter((member) => member.group_id === group.id)
+      .map((member) => profilesById.get(member.user_id))
+      .filter((member): member is LeaderboardUser => Boolean(member))
+      .sort((a, b) => b.xp - a.xp);
+    const totalXp = members.reduce((sum, member) => sum + member.xp, 0);
+
+    return {
+      id: group.id,
+      name: group.name,
+      description: group.description ?? "",
+      ownerId: group.owner_id,
+      memberCount: members.length,
+      totalXp,
+      averageXp: members.length ? Math.round(totalXp / members.length) : 0,
+      members
+    };
+  });
+}
+
+export async function getGroupLeaderboard(): Promise<GroupLeaderboardRow[]> {
+  const supabase = getSupabaseServerClient();
+  const user = await getCurrentUser();
+
+  if (!supabase || !user) {
+    return [];
+  }
+
+  const groups = await getGroups();
+
+  return groups
+    .map((group) => ({
+      id: group.id,
+      name: group.name,
+      description: group.description,
+      memberCount: group.memberCount,
+      totalXp: group.totalXp,
+      averageXp: group.averageXp,
+      currentUserMember: group.members.some((member) => member.id === user.id)
+    }))
+    .sort((a, b) => b.totalXp - a.totalXp);
+}
+
 export async function getPublicProfile(profileId: string): Promise<PublicProfile | null> {
   const supabase = getSupabaseServerClient();
 
@@ -755,7 +865,21 @@ export async function getChallenges(): Promise<Challenge[]> {
   }
 
   const today = getTodayKey();
-  const [{ data: dbChallenges, error: challengesError }, { data: completedToday }, { count: appliedToday }, { count: trackedCount }, { data: profile }] = await Promise.all([
+  const [
+    { data: dbChallenges, error: challengesError },
+    { data: completedToday },
+    { data: completedAny },
+    { count: appliedToday },
+    { count: appliedCount },
+    { count: savedCount },
+    { count: trackedCount },
+    { count: interviewCount },
+    { count: offerCount },
+    { count: friendCount },
+    { count: messageCount },
+    { count: groupCount },
+    { data: profile }
+  ] = await Promise.all([
     supabase.from("challenges").select("id, title, description, xp_reward, target").eq("active", true).returns<DbChallenge[]>(),
     supabase
       .from("completed_challenges")
@@ -763,13 +887,25 @@ export async function getChallenges(): Promise<Challenge[]> {
       .eq("user_id", user.id)
       .eq("completed_on", today)
       .returns<DbCompletedChallenge[]>(),
+    supabase.from("completed_challenges").select("challenge_id, completed_on").eq("user_id", user.id).returns<DbCompletedChallenge[]>(),
     supabase
       .from("applications")
       .select("id", { count: "exact", head: true })
       .eq("user_id", user.id)
       .eq("status", "applied")
       .gte("updated_at", getDateKeyStartUtcIso()),
+    supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "applied"),
+    supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "saved"),
     supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+    supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "interviewing"),
+    supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "offer"),
+    supabase
+      .from("friends")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "accepted")
+      .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`),
+    supabase.from("peer_messages").select("id", { count: "exact", head: true }).eq("sender_id", user.id),
+    supabase.from("career_group_members").select("id", { count: "exact", head: true }).eq("user_id", user.id),
     supabase
       .from("profiles")
       .select("school, major, graduation_year, target_roles, target_locations, resume_keywords")
@@ -782,6 +918,7 @@ export async function getChallenges(): Promise<Challenge[]> {
   }
 
   const completedIds = new Set((completedToday ?? []).map((challenge) => challenge.challenge_id));
+  const completedAnyIds = new Set((completedAny ?? []).map((challenge) => challenge.challenge_id));
   const profileProgress = [
     profile?.school,
     profile?.major,
@@ -797,11 +934,30 @@ export async function getChallenges(): Promise<Challenge[]> {
 
     if (lowerTitle.includes("daily apply")) {
       progress = Math.min(challenge.target, appliedToday ?? 0);
+    } else if (lowerTitle.includes("two-a-day") || lowerTitle.includes("apply duo")) {
+      progress = Math.min(challenge.target, appliedToday ?? 0);
     } else if (lowerTitle.includes("profile")) {
       progress = Math.min(challenge.target, profileProgress);
+    } else if (lowerTitle.includes("resume")) {
+      progress = Math.min(challenge.target, profile?.resume_keywords?.length ? 1 : 0);
+    } else if (lowerTitle.includes("save") || lowerTitle.includes("watchlist")) {
+      progress = Math.min(challenge.target, savedCount ?? 0);
     } else if (lowerTitle.includes("pipeline")) {
       progress = Math.min(challenge.target, trackedCount ?? 0);
+    } else if (lowerTitle.includes("interview")) {
+      progress = Math.min(challenge.target, interviewCount ?? 0);
+    } else if (lowerTitle.includes("offer")) {
+      progress = Math.min(challenge.target, offerCount ?? 0);
+    } else if (lowerTitle.includes("friend")) {
+      progress = Math.min(challenge.target, friendCount ?? 0);
+    } else if (lowerTitle.includes("group")) {
+      progress = Math.min(challenge.target, groupCount ?? 0);
+    } else if (lowerTitle.includes("message")) {
+      progress = Math.min(challenge.target, messageCount ?? 0);
+    } else if (lowerTitle.includes("apply")) {
+      progress = Math.min(challenge.target, appliedCount ?? 0);
     }
+    const completed = lowerTitle.includes("daily") ? completedIds.has(challenge.id) : completedAnyIds.has(challenge.id);
 
     return {
       id: challenge.id,
@@ -810,7 +966,7 @@ export async function getChallenges(): Promise<Challenge[]> {
       xp: challenge.xp_reward,
       progress,
       target: challenge.target,
-      completed: progress >= challenge.target || completedIds.has(challenge.id)
+      completed: progress >= challenge.target || completed
     };
   });
 }

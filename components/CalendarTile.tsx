@@ -14,7 +14,7 @@ function getCalendarParts() {
 }
 
 export function CalendarTile() {
-  const [parts, setParts] = useState(getCalendarParts);
+  const [parts, setParts] = useState<{ month: string; day: number } | null>(null);
 
   useEffect(() => {
     setParts(getCalendarParts());
@@ -28,9 +28,9 @@ export function CalendarTile() {
       suppressHydrationWarning
     >
       <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-sky">
-        <span className="text-[8px] font-black uppercase leading-none text-slate-950">{parts.month}</span>
+        <span className="text-[8px] font-black uppercase leading-none text-slate-950">{parts?.month ?? "CAL"}</span>
       </span>
-      <span className="relative mt-3 text-[15px] font-black leading-none">{parts.day}</span>
+      <span className="relative mt-3 text-[15px] font-black leading-none">{parts?.day ?? ""}</span>
     </Link>
   );
 }

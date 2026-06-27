@@ -91,7 +91,7 @@ function buildReturnHref(kind: PostingKind, searchParams?: { q?: string; locatio
   if (searchParams?.location) params.set("location", searchParams.location);
   if (searchParams?.remote) params.set("remote", searchParams.remote);
   if (searchParams?.minFit) params.set("minFit", searchParams.minFit);
-  params.set("sort", searchParams?.sort ?? "fit");
+  params.set("sort", searchParams?.sort ?? "newest");
 
   return `${basePath}?${params.toString()}`;
 }
@@ -125,7 +125,7 @@ export async function PostingsPageView({
 }) {
   const profile = await getCurrentProfile();
   const remoteFilter = searchParams?.remote === "remote" || searchParams?.remote === "hybrid" || searchParams?.remote === "onsite" ? searchParams.remote : "all";
-  const sort = searchParams?.sort === "newest" || searchParams?.sort === "company" ? searchParams.sort : "fit";
+  const sort = searchParams?.sort === "fit" || searchParams?.sort === "company" ? searchParams.sort : "newest";
   const minFit = Math.min(95, Math.max(0, Number(searchParams?.minFit ?? 0) || 0));
   const submittedQuery = typeof searchParams?.q === "string" ? searchParams.q.trim() : "";
   const submittedLocation = typeof searchParams?.location === "string" ? searchParams.location.trim() : "";

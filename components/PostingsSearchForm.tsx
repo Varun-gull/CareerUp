@@ -86,13 +86,13 @@ export function PostingsSearchForm({
     const sortInput = form.elements.namedItem("sort") as HTMLInputElement | null;
 
     if (sortInput) {
-      sortInput.value = "fit";
+      sortInput.value = "newest";
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="card mt-8 grid gap-4 p-5 lg:grid-cols-[1.15fr_1fr_0.75fr_0.75fr_auto]">
-      <input type="hidden" name="sort" value="fit" />
+      <input type="hidden" name="sort" value="newest" />
       <SuggestionInput label="Role or keyword" name="q" value={query} onChange={setQuery} placeholder="Data science intern" suggestions={roleSuggestions} />
       <SuggestionInput label="Location" name="location" value={location} onChange={setLocation} placeholder={locationPlaceholder} suggestions={locationSuggestions} />
       <label className="grid gap-2 text-sm font-black text-slate-700">

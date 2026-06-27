@@ -53,7 +53,7 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
             <input type="hidden" name="location" value={posting.location} />
             <input type="hidden" name="sourceUrl" value={posting.url} />
             <input type="hidden" name="fitScore" value={posting.fitScore} />
-            <input type="hidden" name="returnTo" value="/postings/internships?sort=fit" />
+            <input type="hidden" name="returnTo" value="/postings/internships?sort=newest" />
             <button type="submit" className="primary-button">
               <BookmarkPlus className="mr-2" size={18} /> Save +5 XP
             </button>

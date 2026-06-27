@@ -23,6 +23,7 @@ create table if not exists public.career_group_members (
   unique (group_id, user_id)
 );
 
+drop trigger if exists career_groups_set_updated_at on public.career_groups;
 create trigger career_groups_set_updated_at before update on public.career_groups
   for each row execute procedure public.set_updated_at();
 

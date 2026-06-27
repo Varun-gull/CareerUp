@@ -218,7 +218,7 @@ export async function createApplication(formData: FormData) {
     .maybeSingle<{ id: string }>();
 
   if (newApp) {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = getTodayKey();
     const calEvents = [{ user_id: user.id, application_id: newApp.id, company, role, status: "saved", event_type: "submitted", date: today }];
     if (deadline && /^\d{4}-\d{2}-\d{2}$/.test(deadline)) {
       calEvents.push({ user_id: user.id, application_id: newApp.id, company, role, status: "saved", event_type: "deadline", date: deadline });
@@ -245,18 +245,30 @@ export async function createApplicationFromCalendar({
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Log in to save applications." };
 
+  const submittedFromCalendar = status === "applied" || status === "interviewing" || status === "offer";
+  const calendarXpBonus =
+    pointValues.saveRole +
+    (submittedFromCalendar ? pointValues.applyRole : 0) +
+    (status === "interviewing" || status === "offer" ? pointValues.interviewStage : 0) +
+    (status === "offer" ? pointValues.offerStage : 0);
+
   const { error } = await supabase.from("applications").insert({
     user_id: user.id,
     company,
     role,
     deadline: deadline || null,
     status,
-    xp_awarded: pointValues.saveRole,
+    xp_awarded: calendarXpBonus,
   });
 
   if (error) return { error: error.message };
 
-  await awardXp({ supabase, userId: user.id, amount: pointValues.saveRole });
+  if (submittedFromCalendar) {
+    const profileError = await updateAppliedStreakAndStats({ supabase, userId: user.id });
+    if (profileError) return { error: profileError.message };
+  }
+
+  await awardXp({ supabase, userId: user.id, amount: calendarXpBonus });
   await awardEligibleChallenges(supabase, user.id);
 
   const { data: newApp } = await supabase
@@ -270,7 +282,7 @@ export async function createApplicationFromCalendar({
     .maybeSingle<{ id: string }>();
 
   if (newApp) {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = getTodayKey();
     const calEvents: object[] = [
       { user_id: user.id, application_id: newApp.id, company, role, status, event_type: "submitted", date: today },
     ];
@@ -359,7 +371,7 @@ export async function savePostingApplication(formData: FormData) {
     .maybeSingle<{ id: string }>();
 
   if (newApp) {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = getTodayKey();
     await supabase.from("calendar_events").insert({
       user_id: user.id,
       application_id: newApp.id,
@@ -415,16 +427,15 @@ export async function updateApplicationStatus(formData: FormData) {
     redirectWithMessage("/applications", "Application not found.");
   }
 
-  const applyingForFirstTime = application.status !== "applied" && nextStatus === "applied";
+  const nextIsSubmitted = nextStatus === "applied" || nextStatus === "interviewing" || nextStatus === "offer";
+  const wasSubmitted = application.status === "applied" || application.status === "interviewing" || application.status === "offer";
+  const applyingForFirstTime = !wasSubmitted && nextIsSubmitted;
   const enteringInterview = application.status !== "interviewing" && nextStatus === "interviewing";
   const enteringOffer = application.status !== "offer" && nextStatus === "offer";
-  const xpBonus = applyingForFirstTime
-    ? pointValues.applyRole
-    : enteringInterview
-      ? pointValues.interviewStage
-      : enteringOffer
-        ? pointValues.offerStage
-        : 0;
+  const xpBonus =
+    (applyingForFirstTime ? pointValues.applyRole : 0) +
+    (enteringInterview ? pointValues.interviewStage : 0) +
+    (enteringOffer ? pointValues.offerStage : 0);
 
   const { error: updateError } = await supabase
     .from("applications")
@@ -454,14 +465,14 @@ export async function updateApplicationStatus(formData: FormData) {
     await awardEligibleChallenges(supabase, user.id);
   }
 
-  if (nextStatus === "applied" && application.status !== "applied") {
+  if (applyingForFirstTime) {
     const today = getTodayKey();
     await supabase.from("calendar_events").insert({
       user_id: user.id,
       application_id: applicationId,
       company: application.company,
       role: application.role,
-      status: "applied",
+      status: nextStatus,
       event_type: "submitted",
       date: today,
     });

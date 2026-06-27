@@ -38,6 +38,7 @@ type DbProfile = {
   share_application_board: boolean | null;
   privacy_prompt_answered: boolean | null;
   xp: number | null;
+  total_xp: number | null;
   streak_count: number | null;
   last_applied_on: string | null;
   streak_free_revive_used: boolean | null;
@@ -86,6 +87,14 @@ function mapDbApplication(application: DbApplication): Application {
     deadline: application.deadline ?? "No deadline",
     updatedAt: new Date(application.updated_at).toLocaleDateString()
   };
+}
+
+function getLeaderboardXp(profile: Pick<DbProfile, "xp" | "total_xp">) {
+  return profile.total_xp ?? profile.xp ?? 0;
+}
+
+function getOptionalTotalXp(profile: object) {
+  return "total_xp" in profile && typeof profile.total_xp === "number" ? profile.total_xp : null;
 }
 
 type DbRolePeerInsight = {
@@ -495,21 +504,33 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
-    .order("xp", { ascending: false })
+    .select("id, full_name, school, school_logo_url, xp, total_xp, streak_count, last_applied_on")
+    .order("total_xp", { ascending: false })
     .limit(25)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "total_xp" | "streak_count" | "last_applied_on">>>();
 
-  if (error || !data) {
+  const rows =
+    error || !data
+      ? (
+          await supabase
+            .from("profiles")
+            .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
+            .order("xp", { ascending: false })
+            .limit(25)
+            .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>()
+        ).data
+      : data;
+
+  if (!rows) {
     return mockLeaderboard;
   }
 
-  return data.map((user) => ({
+  return rows.map((user) => ({
     id: user.id,
     name: user.full_name ?? "CareerUp Student",
     school: user.school ?? "Student",
     schoolLogoUrl: resolveSchoolLogoUrl(user.school, user.school_logo_url),
-    xp: user.xp ?? 0,
+    xp: getLeaderboardXp({ xp: user.xp, total_xp: getOptionalTotalXp(user) }),
     streak: getVisibleStreak(user.last_applied_on ?? null, user.streak_count ?? 0)
   }));
 }
@@ -585,21 +606,33 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
+    .select("id, full_name, school, school_logo_url, xp, total_xp, streak_count, last_applied_on")
     .in("id", ids)
-    .order("xp", { ascending: false })
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>();
+    .order("total_xp", { ascending: false })
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "total_xp" | "streak_count" | "last_applied_on">>>();
 
-  if (error || !data) {
+  const rows =
+    error || !data
+      ? (
+          await supabase
+            .from("profiles")
+            .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
+            .in("id", ids)
+            .order("xp", { ascending: false })
+            .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>()
+        ).data
+      : data;
+
+  if (!rows) {
     return [];
   }
 
-  return data.map((profile) => ({
+  return rows.map((profile) => ({
     id: profile.id,
     name: profile.full_name ?? "CareerUp Student",
     school: profile.school ?? "Student",
     schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
-    xp: profile.xp ?? 0,
+    xp: getLeaderboardXp({ xp: profile.xp, total_xp: getOptionalTotalXp(profile) }),
     streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0)
   }));
 }
@@ -635,23 +668,34 @@ export async function getGroups(): Promise<CareerGroup[]> {
   const memberIds = Array.from(new Set(allMembers.map((member) => member.user_id)));
   const { data: profiles, error: profilesError } = await supabase
     .from("profiles")
-    .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
+    .select("id, full_name, school, school_logo_url, xp, total_xp, streak_count, last_applied_on")
     .in("id", memberIds)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "total_xp" | "streak_count" | "last_applied_on">>>();
 
-  if (profilesError || !profiles) {
+  const profileRows =
+    profilesError || !profiles
+      ? (
+          await supabase
+            .from("profiles")
+            .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
+            .in("id", memberIds)
+            .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>()
+        ).data
+      : profiles;
+
+  if (!profileRows) {
     return [];
   }
 
   const profilesById = new Map(
-    profiles.map((profile) => [
+    profileRows.map((profile) => [
       profile.id,
       {
         id: profile.id,
         name: profile.full_name ?? "CareerUp Student",
         school: profile.school ?? "Student",
         schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
-        xp: profile.xp ?? 0,
+        xp: getLeaderboardXp({ xp: profile.xp, total_xp: getOptionalTotalXp(profile) }),
         streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0)
       } satisfies LeaderboardUser
     ])

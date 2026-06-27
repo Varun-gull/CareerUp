@@ -31,7 +31,7 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
       <div className="grid grid-cols-[56px_1fr_100px] gap-4 border-b border-slate-200 bg-white px-5 py-4 text-xs font-black uppercase text-slate-700 sm:grid-cols-[56px_1fr_150px_110px]">
         <span>#</span>
         <span>Player</span>
-        <span>XP</span>
+        <span>Total XP</span>
         <span className="hidden sm:block">Streak</span>
       </div>
       {sorted.map((user, index) => (

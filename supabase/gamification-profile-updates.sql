@@ -25,5 +25,5 @@ begin
   end if;
 end $$;
 
-grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied, share_application_board)
+grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, total_xp, streak_count, applications_applied, share_application_board)
 on public.profiles to anon;

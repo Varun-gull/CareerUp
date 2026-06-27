@@ -7,7 +7,7 @@ alter table public.profiles
 alter table public.profiles
   add column if not exists privacy_prompt_answered boolean not null default false;
 
-grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, streak_count, applications_applied, share_application_board)
+grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, total_xp, streak_count, applications_applied, share_application_board)
 on public.profiles to anon;
 
 create or replace function public.handle_new_user()

@@ -60,24 +60,26 @@ export async function awardXp({
 
   const { data: profile, error } = await supabase
     .from("profiles")
-    .select("xp, rank_bonus_awarded")
+    .select("xp, total_xp, rank_bonus_awarded")
     .eq("id", userId)
-    .single<{ xp: number | null; rank_bonus_awarded: string[] | null }>();
+    .single<{ xp: number | null; total_xp: number | null; rank_bonus_awarded: string[] | null }>();
 
   if (error || !profile) {
     await supabase.rpc("award_xp", { amount: safeAmount });
     return { awarded: safeAmount, rankBonus: 0, reachedRanks: [] as string[] };
   }
 
-  const previousXp = profile.xp ?? 0;
+  const previousSpendableXp = profile.xp ?? 0;
+  const previousTotalXp = profile.total_xp ?? previousSpendableXp;
   const rankBonusAwarded = profile.rank_bonus_awarded ?? [];
-  const reachedRanks = getNewlyReachedRankNames(previousXp, previousXp + safeAmount, rankBonusAwarded);
+  const reachedRanks = getNewlyReachedRankNames(previousTotalXp, previousTotalXp + safeAmount, rankBonusAwarded);
   const rankBonus = reachedRanks.reduce((sum, rankName) => sum + (rankBonuses.find((bonus) => bonus.rankName === rankName)?.xp ?? 0), 0);
 
   const { error: updateError } = await supabase
     .from("profiles")
     .update({
-      xp: previousXp + safeAmount + rankBonus,
+      xp: previousSpendableXp + safeAmount + rankBonus,
+      total_xp: previousTotalXp + safeAmount + rankBonus,
       rank_bonus_awarded: Array.from(new Set([...rankBonusAwarded, ...reachedRanks])),
     })
     .eq("id", userId);

@@ -79,7 +79,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-3xl rounded-[2rem] bg-white p-5 shadow-2xl sm:p-6">
+      <div className="w-full max-w-4xl rounded-[2rem] bg-white p-5 shadow-2xl sm:p-6">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-xl font-black text-ink">Schedule interview</h2>
@@ -118,7 +118,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               return (
                 <section key={dateKey}>
                   <h3 className="text-xs font-black uppercase tracking-wide text-slate-400">{formatDayLabel(day, dayIndex)}</h3>
-                  <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5">
+                  <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6 md:grid-cols-9">
                     {timeSlots.map((time) => {
                       const selected = selectedDate === dateKey && selectedTime === time;
                       return (
@@ -130,7 +130,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                             setSelectedTime(time);
                           }}
                           className={clsx(
-                            "rounded-2xl px-3 py-2.5 text-sm font-black transition",
+                            "rounded-xl px-2 py-2 text-xs font-black transition",
                             selected
                               ? "bg-sky text-slate-950 shadow-sm"
                               : "bg-slate-100 text-slate-700 hover:bg-sky/20 hover:text-slate-900"
@@ -147,7 +147,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                         setCustomTimeOpen(true);
                       }}
                       className={clsx(
-                        "rounded-2xl px-3 py-2.5 text-sm font-black transition",
+                        "rounded-xl px-2 py-2 text-xs font-black transition",
                         customTimeOpen && customDate === dateKey
                           ? "bg-brand/20 text-slate-900 ring-1 ring-brand/40"
                           : "bg-slate-50 text-slate-500 ring-1 ring-slate-200 hover:bg-slate-100 hover:text-slate-700"

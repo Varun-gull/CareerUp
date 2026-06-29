@@ -105,18 +105,20 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
     setEvents((prev) => {
       const rebuilt = buildEvents(applications, dbEvents, todayStr);
       const dbInterviewKeys = new Set(dbEvents.filter((e) => e.eventType === "interview").map((e) => e.applicationId));
+      // Once DB has the real event, clear localStorage so derived events stop overriding
       dbInterviewKeys.forEach((appId) => clearStoredInterview(appId));
+      // Keep pending interview events (from modal) that haven't reached DB yet
       const pendingInterviews = prev.filter(
         (e) => e.eventType === "interview" && e.id.startsWith("pending-") && !dbInterviewKeys.has(e.applicationId)
       );
       const pendingAppIds = new Set(pendingInterviews.map((e) => e.applicationId));
+      // Drop the derived-today fallback for apps that have a pending real date
       const base = rebuilt.filter(
         (e) => !(e.eventType === "interview" && e.id.startsWith("derived-") && pendingAppIds.has(e.applicationId))
-          && !dismissedKeys.has(`${e.applicationId}-${e.eventType}`)
       );
       return [...base, ...pendingInterviews];
     });
-  }, [dbEvents, dismissedKeys]);
+  }, [dbEvents]);
 
   // Immediately add interview event to calendar when modal is confirmed anywhere in the app
   // Always replaces derived/pending events so the user's chosen date takes effect immediately
@@ -132,7 +134,6 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
     return () => window.removeEventListener(INTERVIEW_SCHEDULED_EVENT, handleInterviewScheduled);
   }, []);
   const router = useRouter();
-  const [dismissedKeys, setDismissedKeys] = useState<Set<string>>(new Set());
   const [dragApp, setDragApp] = useState<Application | null>(null);
   const [dragEvent, setDragEvent] = useState<CalendarEvent | null>(null);
   const [activeDate, setActiveDate] = useState<string | null>(null);
@@ -242,15 +243,8 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
   }
 
   function handleDelete(id: string) {
-    setEvents((prev) => {
-      const ev = prev.find((e) => e.id === id);
-      if (ev?.id.startsWith("derived-")) {
-        // Track dismissed derived events so they don't reappear on rebuild
-        setDismissedKeys((keys) => new Set([...keys, `${ev.applicationId}-${ev.eventType}`]));
-        return prev.filter((e) => e.id !== id);
-      }
-      return prev.filter((e) => e.id !== id);
-    });
+    // Remove immediately from local state
+    setEvents((prev) => prev.filter((e) => e.id !== id));
     startTransition(async () => {
       await deleteCalendarEvent(id);
     });

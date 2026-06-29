@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import clsx from "clsx";
 
 type Props = {
@@ -59,9 +59,9 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
   const [weekOffset, setWeekOffset] = useState(0);
   const [selectedDate, setSelectedDate] = useState(initialDate ?? todayLocal());
   const [selectedTime, setSelectedTime] = useState(initialTime ?? "");
-  const dateRef = useRef<HTMLInputElement>(null);
-  const timeRef = useRef<HTMLInputElement>(null);
-  const notesRef = useRef<HTMLTextAreaElement>(null);
+  const [customDate, setCustomDate] = useState(initialDate ?? todayLocal());
+  const [customTime, setCustomTime] = useState(initialTime ?? "");
+  const [customTimeOpen, setCustomTimeOpen] = useState(false);
   const weekDays = useMemo(() => {
     const start = addDays(new Date(`${todayLocal()}T12:00:00`), weekOffset * 6);
     return Array.from({ length: 6 }, (_, index) => addDays(start, index));
@@ -69,10 +69,12 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
   const weekRange = formatWeekRange(weekDays[0], weekDays[weekDays.length - 1]);
 
   function handleConfirm() {
-    const date = dateRef.current?.value || selectedDate || todayLocal();
-    const time = timeRef.current?.value || selectedTime || "";
-    const notes = notesRef.current?.value || "";
-    onConfirm(date, time, notes);
+    onConfirm(selectedDate || todayLocal(), selectedTime || "", initialNotes ?? "");
+  }
+
+  function selectCustomTime() {
+    setSelectedDate(customDate || todayLocal());
+    setSelectedTime(customTime);
   }
 
   return (
@@ -138,40 +140,60 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                         </button>
                       );
                     })}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCustomDate(dateKey);
+                        setCustomTimeOpen(true);
+                      }}
+                      className={clsx(
+                        "rounded-2xl px-3 py-3 text-sm font-black transition sm:text-base",
+                        customTimeOpen && customDate === dateKey
+                          ? "bg-white text-slate-950"
+                          : "bg-slate-900 text-slate-200 ring-1 ring-white/10 hover:bg-white/10 hover:text-white"
+                      )}
+                    >
+                      Custom time
+                    </button>
                   </div>
                 </section>
               );
             })}
           </div>
-        </div>
 
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-1.5 text-sm font-bold text-slate-700">
-            Custom date
-            <input ref={dateRef} type="date" value={selectedDate} onChange={(event) => setSelectedDate(event.target.value)} className="field" />
-          </label>
-          <label className="grid gap-1.5 text-sm font-bold text-slate-700">
-            Custom time <span className="font-normal text-slate-600">(optional)</span>
-            <input ref={timeRef} type="time" value={selectedTime} onChange={(event) => setSelectedTime(event.target.value)} className="field" />
-          </label>
-        </div>
-
-        <div className="mt-4">
-          <label className="grid gap-1.5 text-sm font-bold text-slate-700">
-            Notes <span className="font-normal text-slate-600">(optional)</span>
-            <textarea
-              ref={notesRef}
-              rows={3}
-              defaultValue={initialNotes ?? ""}
-              placeholder="Interviewer name, format, things to prepare..."
-              className="field resize-none text-sm"
-            />
-          </label>
+          {customTimeOpen && (
+            <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="text-sm font-black text-white">Custom interview time</p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
+                <input
+                  type="date"
+                  value={customDate}
+                  onChange={(event) => setCustomDate(event.target.value)}
+                  className="rounded-2xl border border-white/10 bg-black px-4 py-3 text-sm font-bold text-white outline-none focus:border-sky focus:ring-4 focus:ring-sky/20"
+                  aria-label="Custom interview date"
+                />
+                <input
+                  type="time"
+                  value={customTime}
+                  onChange={(event) => setCustomTime(event.target.value)}
+                  className="rounded-2xl border border-white/10 bg-black px-4 py-3 text-sm font-bold text-white outline-none focus:border-sky focus:ring-4 focus:ring-sky/20"
+                  aria-label="Custom interview time"
+                />
+                <button
+                  type="button"
+                  onClick={selectCustomTime}
+                  className="rounded-2xl bg-sky px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-brand"
+                >
+                  Use time
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-5 flex gap-3">
           <button onClick={handleConfirm} className="primary-button flex-1">
-            Add to Calendar
+            Add Calendar
           </button>
         </div>
       </div>

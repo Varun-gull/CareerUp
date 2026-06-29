@@ -34,6 +34,18 @@ Then open:
 http://localhost:3000
 ```
 
+## 21st.dev Components
+
+CareerUp is configured for the shadcn-compatible 21st.dev component registry. The setup lives in `components.json`, `lib/utils.ts`, `tailwind.config.ts`, and `app/globals.css`.
+
+To add a specific 21st.dev component, copy its registry URL from 21st.dev and run:
+
+```bash
+npx shadcn@latest add https://21st.dev/r/<component>
+```
+
+Imported registry components should go under `components/ui` and can use the shared `cn()` helper from `@/lib/utils`.
+
 ## Supabase Setup Later
 
 Create `.env.local` when you have a Supabase project:

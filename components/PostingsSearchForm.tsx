@@ -27,7 +27,7 @@ function SuggestionInput({
   }, [suggestions, value]);
 
   return (
-    <label className="relative grid gap-2 text-sm font-black text-slate-700">
+    <label className="relative z-10 grid gap-2 text-sm font-black text-slate-700">
       {label}
       <input
         name={name}
@@ -40,7 +40,7 @@ function SuggestionInput({
         autoComplete="off"
       />
       {open && visibleSuggestions.length > 0 && (
-        <div className="absolute left-0 right-0 top-full z-20 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-strong">
+        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-strong">
           {visibleSuggestions.map((suggestion) => (
             <button
               key={suggestion}

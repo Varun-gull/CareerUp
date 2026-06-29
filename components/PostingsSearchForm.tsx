@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { type FormEvent, useMemo, useState } from "react";
 
 function SuggestionInput({
@@ -80,14 +80,13 @@ export function PostingsSearchForm({
 }) {
   const [query, setQuery] = useState(defaultQuery);
   const [location, setLocation] = useState(defaultLocation);
+  const [loading, setLoading] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     const form = event.currentTarget;
     const sortInput = form.elements.namedItem("sort") as HTMLInputElement | null;
-
-    if (sortInput) {
-      sortInput.value = "newest";
-    }
+    if (sortInput) sortInput.value = "newest";
+    setLoading(true);
   }
 
   return (
@@ -113,8 +112,9 @@ export function PostingsSearchForm({
           <option value="80">80%+</option>
         </select>
       </label>
-      <button type="submit" className="primary-button self-end">
-        <Search className="mr-2" size={18} /> Search
+      <button type="submit" disabled={loading} className="primary-button self-end disabled:opacity-70">
+        {loading ? <Loader2 className="mr-2 animate-spin" size={18} /> : <Search className="mr-2" size={18} />}
+        {loading ? "Searching…" : "Search"}
       </button>
     </form>
   );

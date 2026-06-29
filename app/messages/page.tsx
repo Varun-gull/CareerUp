@@ -1,11 +1,13 @@
-import { CheckCheck, Inbox, Mail, Send, UsersRound } from "lucide-react";
+import { Check, CheckCheck, Inbox, Mail, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
+import { AutoMarkRead } from "@/components/AutoMarkRead";
+import { MessageReplyForm } from "@/components/MessageReplyForm";
 import { Navbar } from "@/components/Navbar";
 import { ProfileLink } from "@/components/ProfileLink";
 import { RolePeerSetupNotice } from "@/components/RolePeerSetupNotice";
 import { getPeerMessages, getRolePeerFeatureStatus } from "@/lib/data";
-import { markPeerMessageRead, sendPeerMessage } from "@/lib/messages/actions";
+import { markPeerMessageRead } from "@/lib/messages/actions";
 import type { PeerMessage } from "@/lib/types";
 
 type Conversation = {
@@ -188,9 +190,21 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                 </div>
               </div>
 
+              {/* Auto-mark unread received messages as read when conversation opens */}
+              {(() => {
+                const firstUnread = selectedConversation.messages.find((m) => m.direction === "received" && m.unread);
+                return firstUnread ? (
+                  <AutoMarkRead
+                    messageId={firstUnread.id}
+                    returnTo={`/messages?thread=${encodeURIComponent(selectedConversation.id)}`}
+                  />
+                ) : null;
+              })()}
+
               <div className="flex-1 space-y-4 overflow-y-auto p-5">
                 {selectedConversation.messages.map((message) => {
                   const outbound = message.direction === "sent";
+                  const isRead = outbound && !!message.readAt;
                   return (
                     <article key={message.id} className={`flex ${outbound ? "justify-end" : "justify-start"}`}>
                       <div className={`max-w-[80%] rounded-3xl border p-4 ${
@@ -201,42 +215,35 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                         <div className="flex flex-wrap items-center gap-2">
                           <p className="text-sm font-black">{outbound ? "You" : message.otherName}</p>
                           <span className="text-xs font-bold text-slate-500">{message.createdAt}</span>
-                          {message.unread && <span className="rounded-full bg-sky px-2 py-0.5 text-[10px] font-black text-slate-950">Unread</span>}
+                          {message.unread && !outbound && (
+                            <span className="rounded-full bg-sky px-2 py-0.5 text-[10px] font-black text-slate-950">Unread</span>
+                          )}
                         </div>
                         <p className="mt-2 text-sm font-black text-ink">{message.subject}</p>
                         <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6 text-slate-700">{message.body}</p>
+                        {outbound && (
+                          <div className={`mt-2 flex items-center justify-end gap-1 text-xs font-bold ${isRead ? "text-sky" : "text-slate-400"}`}>
+                            {isRead ? (
+                              <><CheckCheck size={14} /> Read {message.readAt}</>
+                            ) : (
+                              <><Check size={14} /> Sent</>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </article>
                   );
                 })}
               </div>
 
-              <form action={sendPeerMessage} className="border-t border-slate-200 bg-white/90 p-4">
-                <input type="hidden" name="recipientId" value={selectedConversation.otherProfileId} />
-                <input type="hidden" name="applicationId" value={selectedConversation.lastMessage.applicationId} />
-                <input type="hidden" name="roleKey" value={selectedConversation.roleKey} />
-                <input type="hidden" name="sourceMessageId" value={selectedConversation.lastMessage.id} />
-                <input type="hidden" name="returnTo" value={`/messages?thread=${encodeURIComponent(selectedConversation.id)}`} />
-                <div className="grid gap-3">
-                  <input
-                    name="subject"
-                    defaultValue={selectedConversation.lastMessage.subject.startsWith("Re:") ? selectedConversation.lastMessage.subject : `Re: ${selectedConversation.lastMessage.subject}`}
-                    className="field min-h-10 py-2 text-sm"
-                    aria-label="Reply subject"
-                  />
-                  <div className="flex flex-col gap-3 sm:flex-row">
-                    <textarea
-                      name="body"
-                      rows={2}
-                      className="field min-h-20 flex-1 text-sm"
-                      placeholder="Write a reply..."
-                    />
-                    <button type="submit" className="primary-button self-end">
-                      <Send className="mr-2" size={16} /> Send
-                    </button>
-                  </div>
-                </div>
-              </form>
+              <MessageReplyForm
+                recipientId={selectedConversation.otherProfileId}
+                applicationId={selectedConversation.lastMessage.applicationId}
+                roleKey={selectedConversation.roleKey}
+                sourceMessageId={selectedConversation.lastMessage.id}
+                defaultSubject={selectedConversation.lastMessage.subject.startsWith("Re:") ? selectedConversation.lastMessage.subject : `Re: ${selectedConversation.lastMessage.subject}`}
+                returnTo={`/messages?thread=${encodeURIComponent(selectedConversation.id)}`}
+              />
             </section>
 
             <aside className="border-t border-slate-200 bg-white/90 p-5 lg:border-l lg:border-t-0">

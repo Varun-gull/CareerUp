@@ -118,7 +118,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               return (
                 <section key={dateKey}>
                   <h3 className="text-xs font-black uppercase tracking-wide text-slate-400">{formatDayLabel(day, dayIndex)}</h3>
-                  <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6 md:grid-cols-9">
+                  <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6 md:grid-cols-9 [&>*]:w-full">
                     {timeSlots.map((time) => {
                       const selected = selectedDate === dateKey && selectedTime === time;
                       return (
@@ -153,7 +153,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                           : "bg-slate-50 text-slate-500 ring-1 ring-slate-200 hover:bg-slate-100 hover:text-slate-700"
                       )}
                     >
-                      Custom time
+                      Custom
                     </button>
                   </div>
                 </section>

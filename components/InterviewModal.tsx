@@ -90,35 +90,35 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
           </button>
         </div>
 
-        <div className="mt-5 rounded-3xl bg-slate-950 p-4 text-white sm:p-5">
+        <div className="mt-5">
           <div className="flex items-center justify-between gap-3">
             <button
               type="button"
               onClick={() => setWeekOffset((current) => Math.max(0, current - 1))}
               disabled={weekOffset === 0}
-              className="flex h-11 w-11 items-center justify-center rounded-2xl text-slate-300 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+              className="flex h-10 w-10 items-center justify-center rounded-2xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-30"
               aria-label="Previous interview slots"
             >
-              <ChevronLeft size={22} />
+              <ChevronLeft size={20} />
             </button>
-            <p className="text-lg font-black sm:text-2xl">{weekRange}</p>
+            <p className="text-base font-black text-ink sm:text-lg">{weekRange}</p>
             <button
               type="button"
               onClick={() => setWeekOffset((current) => current + 1)}
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 text-slate-300 transition hover:bg-white/10 hover:text-white"
+              className="flex h-10 w-10 items-center justify-center rounded-2xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
               aria-label="Next interview slots"
             >
-              <ChevronRight size={22} />
+              <ChevronRight size={20} />
             </button>
           </div>
 
-          <div className="mt-5 max-h-[22rem] space-y-6 overflow-y-auto pr-1">
+          <div className="mt-4 max-h-[22rem] space-y-5 overflow-y-auto pr-1">
             {weekDays.map((day, dayIndex) => {
               const dateKey = toDateKey(day);
               return (
                 <section key={dateKey}>
-                  <h3 className="text-lg font-black text-white">{formatDayLabel(day, dayIndex)}</h3>
-                  <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5">
+                  <h3 className="text-xs font-black uppercase tracking-wide text-slate-400">{formatDayLabel(day, dayIndex)}</h3>
+                  <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5">
                     {timeSlots.map((time) => {
                       const selected = selectedDate === dateKey && selectedTime === time;
                       return (
@@ -130,10 +130,10 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                             setSelectedTime(time);
                           }}
                           className={clsx(
-                            "rounded-2xl px-3 py-3 text-sm font-black transition sm:text-base",
+                            "rounded-2xl px-3 py-2.5 text-sm font-black transition",
                             selected
-                              ? "bg-sky text-slate-950 shadow-glow"
-                              : "bg-black text-white ring-1 ring-white/5 hover:bg-white/10 hover:ring-white/20"
+                              ? "bg-sky text-slate-950 shadow-sm"
+                              : "bg-slate-100 text-slate-700 hover:bg-sky/20 hover:text-slate-900"
                           )}
                         >
                           {formatSlotLabel(time)}
@@ -147,10 +147,10 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                         setCustomTimeOpen(true);
                       }}
                       className={clsx(
-                        "rounded-2xl px-3 py-3 text-sm font-black transition sm:text-base",
+                        "rounded-2xl px-3 py-2.5 text-sm font-black transition",
                         customTimeOpen && customDate === dateKey
-                          ? "bg-white text-slate-950"
-                          : "bg-slate-900 text-slate-200 ring-1 ring-white/10 hover:bg-white/10 hover:text-white"
+                          ? "bg-brand/20 text-slate-900 ring-1 ring-brand/40"
+                          : "bg-slate-50 text-slate-500 ring-1 ring-slate-200 hover:bg-slate-100 hover:text-slate-700"
                       )}
                     >
                       Custom time
@@ -162,21 +162,21 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
           </div>
 
           {customTimeOpen && (
-            <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-sm font-black text-white">Custom interview time</p>
+            <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-sm font-black text-slate-700">Custom interview time</p>
               <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
                 <input
                   type="date"
                   value={customDate}
                   onChange={(event) => setCustomDate(event.target.value)}
-                  className="rounded-2xl border border-white/10 bg-black px-4 py-3 text-sm font-bold text-white outline-none focus:border-sky focus:ring-4 focus:ring-sky/20"
+                  className="field text-sm"
                   aria-label="Custom interview date"
                 />
                 <input
                   type="time"
                   value={customTime}
                   onChange={(event) => setCustomTime(event.target.value)}
-                  className="rounded-2xl border border-white/10 bg-black px-4 py-3 text-sm font-bold text-white outline-none focus:border-sky focus:ring-4 focus:ring-sky/20"
+                  className="field text-sm"
                   aria-label="Custom interview time"
                 />
                 <button

@@ -442,14 +442,21 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                     <div
                       key={ev.id}
                       draggable
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (ev.eventType === "interview") {
+                          const app = applications.find((a) => a.id === ev.applicationId);
+                          if (app) setScheduleApp(app);
+                        }
+                      }}
                       onDragStart={(e) => {
                         e.dataTransfer.effectAllowed = "move";
                         setDragEvent(ev);
                       }}
                       onDragEnd={() => setDragEvent(null)}
                       className={clsx(
-                        "group cursor-grab rounded border px-1.5 py-1 active:cursor-grabbing active:opacity-50",
+                        "group rounded border px-1.5 py-1 active:opacity-50",
+                        ev.eventType === "interview" ? "cursor-pointer hover:ring-1 hover:ring-yellow-400" : "cursor-grab active:cursor-grabbing",
                         EVENT_TYPE_COLORS[ev.eventType] ?? EVENT_TYPE_COLORS.custom
                       )}
                     >

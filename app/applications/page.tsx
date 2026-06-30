@@ -1,6 +1,7 @@
-import { BriefcaseBusiness, CheckCircle2, Clock3, MessageSquareText, Plus, Search, Trophy } from "lucide-react";
+import { BriefcaseBusiness, CheckCircle2, Clock3, MessageSquareText, Plus, Trophy } from "lucide-react";
 import Link from "next/link";
 import { ApplicationPipelineBoard } from "@/components/ApplicationPipelineBoard";
+import { ApplicationsFilterForm } from "@/components/ApplicationsFilterForm";
 import { DashboardCard } from "@/components/DashboardCard";
 import { EmptyState } from "@/components/EmptyState";
 import { Navbar } from "@/components/Navbar";
@@ -127,27 +128,12 @@ export default async function ApplicationsPage({
               <DashboardCard title="Offers" value={offerCount.toString()} helper="Unlocked wins." icon={Trophy} />
             </section>
 
-            <form className="card mt-6 grid gap-4 p-5 md:grid-cols-[1fr_220px_auto]">
-              <input type="hidden" name="year" value={selectedYear} />
-              <label className="grid gap-2 text-sm font-bold text-slate-700">
-                Search
-                <input name="q" defaultValue={query} className="field" placeholder="Company, role, or location" />
-              </label>
-              <label className="grid gap-2 text-sm font-bold text-slate-700">
-                Status
-                <select name="status" defaultValue={statusFilter} className="field">
-                  <option value="all">All statuses</option>
-                  {pipelineColumns.map((column) => (
-                    <option key={column.status} value={column.status}>
-                      {column.title}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button type="submit" className="primary-button self-end">
-                <Search className="mr-2" size={18} /> Filter
-              </button>
-            </form>
+            <ApplicationsFilterForm
+              defaultQuery={query}
+              defaultStatus={statusFilter}
+              selectedYear={selectedYear}
+              columns={pipelineColumns}
+            />
 
             <ApplicationPipelineBoard applications={visibleApplications} columns={pipelineColumns} />
           </>

@@ -3,6 +3,7 @@
 import { Loader2, Search } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { SelectDropdown } from "@/components/SelectDropdown";
 
 function SuggestionInput({
   label,
@@ -116,6 +117,8 @@ export function PostingsSearchForm({
 }) {
   const [query, setQuery] = useState(defaultQuery);
   const [location, setLocation] = useState(defaultLocation);
+  const [remote, setRemote] = useState(remoteFilter);
+  const [fit, setFit] = useState(minFit.toString());
   const [loading, setLoading] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -130,24 +133,30 @@ export function PostingsSearchForm({
       <input type="hidden" name="sort" value="newest" />
       <SuggestionInput label="Role or keyword" name="q" value={query} onChange={setQuery} placeholder="Data science intern" suggestions={roleSuggestions} />
       <SuggestionInput label="Location" name="location" value={location} onChange={setLocation} placeholder={locationPlaceholder} suggestions={locationSuggestions} />
-      <label className="grid gap-2 text-sm font-black text-slate-700">
-        Work mode
-        <select name="remote" defaultValue={remoteFilter} className="field">
-          <option value="all">All roles</option>
-          <option value="remote">Remote only</option>
-          <option value="hybrid">Hybrid only</option>
-          <option value="onsite">On-site only</option>
-        </select>
-      </label>
-      <label className="grid gap-2 text-sm font-black text-slate-700">
-        Minimum fit
-        <select name="minFit" defaultValue={minFit.toString()} className="field">
-          <option value="0">Any fit</option>
-          <option value="60">60%+</option>
-          <option value="70">70%+</option>
-          <option value="80">80%+</option>
-        </select>
-      </label>
+      <SelectDropdown
+        label="Work mode"
+        name="remote"
+        value={remote}
+        onChange={setRemote}
+        options={[
+          { value: "all", label: "All roles" },
+          { value: "remote", label: "Remote only" },
+          { value: "hybrid", label: "Hybrid only" },
+          { value: "onsite", label: "On-site only" },
+        ]}
+      />
+      <SelectDropdown
+        label="Minimum fit"
+        name="minFit"
+        value={fit}
+        onChange={setFit}
+        options={[
+          { value: "0", label: "Any fit" },
+          { value: "60", label: "60%+" },
+          { value: "70", label: "70%+" },
+          { value: "80", label: "80%+" },
+        ]}
+      />
       <button type="submit" disabled={loading} className="primary-button self-end disabled:opacity-70">
         {loading ? <Loader2 className="mr-2 animate-spin" size={18} /> : <Search className="mr-2" size={18} />}
         {loading ? "Searching…" : "Search"}

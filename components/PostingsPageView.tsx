@@ -6,7 +6,7 @@ import { PostingsSearchForm } from "@/components/PostingsSearchForm";
 import { PostingsTable } from "@/components/PostingsTable";
 import { RolePeerSetupNotice } from "@/components/RolePeerSetupNotice";
 import { getApplications, getCurrentProfile, getRolePeerFeatureStatus, getRolePeerInsights } from "@/lib/data";
-import { getPostingRecencyScore, searchInternshipPostings, type PostingKind } from "@/lib/postings";
+import { getPostingRecencyScore, searchCachedPostings, searchInternshipPostings, type PostingKind } from "@/lib/postings";
 import { buildRoleKey } from "@/lib/role-key";
 import type { InternshipPosting } from "@/lib/types";
 
@@ -36,6 +36,7 @@ const newGradRoleExamples = [
 ];
 
 const locationExamples = ["Remote", "Hybrid", "New York", "San Francisco", "Washington DC", "Seattle", "Boston", "Austin", "Chicago"];
+const POSTINGS_PAGE_LIMIT = 120;
 
 function uniqueExamples(values: string[]) {
   return Array.from(new Set(values.map((value) => value.trim()).filter(Boolean))).slice(0, 12);
@@ -135,7 +136,17 @@ export async function PostingsPageView({
   const roleExamples = kind === "new-grad" ? newGradRoleExamples : internshipRoleExamples;
   const roleSuggestions = uniqueExamples([...profile.targetRoles, ...profile.resumeKeywords, ...roleExamples]);
   const locationSuggestions = uniqueExamples([...profile.targetLocations, ...locationExamples]);
-  const searchResult = await searchInternshipPostings({
+  const cachedSearchResult = await searchCachedPostings({
+    query: submittedQuery,
+    location: submittedLocation,
+    profile,
+    kind,
+    remote: remoteFilter,
+    minFit,
+    sort,
+    limit: POSTINGS_PAGE_LIMIT
+  });
+  const searchResult = cachedSearchResult ?? await searchInternshipPostings({
     query: submittedQuery,
     location: submittedLocation,
     profile,
@@ -143,7 +154,7 @@ export async function PostingsPageView({
   });
   const applications = await getApplications();
   const savedSourceUrls = new Set(applications.map((application) => application.source).filter((source) => source.startsWith("http")));
-  const postings = sortPostings(filterPostings(searchResult.postings, remoteFilter, minFit), sort);
+  const postings = searchResult.cached ? searchResult.postings : sortPostings(filterPostings(searchResult.postings, remoteFilter, minFit), sort).slice(0, POSTINGS_PAGE_LIMIT);
   const [peerInsights, peerFeatureStatus] = await Promise.all([
     getRolePeerInsights(postings.map((posting) => buildRoleKey(posting.company, posting.title))),
     getRolePeerFeatureStatus()
@@ -197,7 +208,7 @@ export async function PostingsPageView({
           </Link>
           <div className="flex flex-wrap items-center gap-3">
             <span>
-              Showing {postings.length} of {searchResult.postings.length} results
+              Showing {postings.length} of {searchResult.postings.length} results{searchResult.cached ? " from cache" : ""}
             </span>
             <span className="inline-flex overflow-hidden rounded-full bg-slate-50 text-xs font-black shadow-sm ring-1 ring-slate-200">
               <Link href={bestFitHref} className={sort === "fit" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky"}>

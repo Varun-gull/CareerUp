@@ -14,7 +14,7 @@ export function ApplicationsFilterForm({
 }: {
   defaultQuery: string;
   defaultStatus: string;
-  selectedYear: number;
+  selectedYear: number | "all";
   columns: Column[];
 }) {
   const [status, setStatus] = useState(defaultStatus);

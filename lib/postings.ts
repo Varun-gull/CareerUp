@@ -1,4 +1,5 @@
 import type { InternshipPosting, Profile } from "./types";
+import { getSupabaseServerClient } from "./supabase/server";
 
 type SearchPostingsOptions = {
   query?: string;
@@ -8,12 +9,37 @@ type SearchPostingsOptions = {
 };
 
 export type PostingKind = "internship" | "new-grad";
-export type PostingProvider = "Jobright / Intern-list" | "Jobright / Intern-list + GitHub" | "Curated GitHub" | "CareerUp sample";
+export type PostingSort = "fit" | "newest" | "company";
+export type PostingProvider = "Cached postings" | "Jobright / Intern-list" | "Jobright / Intern-list + GitHub" | "Curated GitHub" | "CareerUp sample";
 
 export type PostingSearchResult = {
   postings: InternshipPosting[];
   provider: PostingProvider;
   usingFallback: boolean;
+  cached?: boolean;
+};
+
+type CachedPostingRow = {
+  posting_key: string;
+  kind: PostingKind;
+  company: string;
+  title: string;
+  location: string;
+  source: string;
+  source_url: string;
+  work_mode: InternshipPosting["workMode"];
+  remote: boolean;
+  posted_at_label: string;
+  recency_score: number;
+  tags: string[] | null;
+  description: string;
+};
+
+export type CachedPostingSearchOptions = SearchPostingsOptions & {
+  remote?: "all" | InternshipPosting["workMode"];
+  minFit?: number;
+  sort?: PostingSort;
+  limit?: number;
 };
 
 function includesAny(value: string, terms: string[]) {
@@ -199,6 +225,40 @@ function matchesPostingSearch(posting: InternshipPosting, searchQuery: string, t
   const locationMatch = companyMatch || !location || includesAny(posting.location, [location, "remote", "united states", "usa"]);
 
   return queryMatch && locationMatch;
+}
+
+function sortPostingsByMode(postings: InternshipPosting[], sort: PostingSort = "newest") {
+  return [...postings].sort((a, b) => {
+    if (sort === "company") {
+      return a.company.localeCompare(b.company);
+    }
+
+    if (sort === "newest") {
+      const aRecency = getPostingRecencyScore(a.postedAt);
+      const bRecency = getPostingRecencyScore(b.postedAt);
+
+      if (aRecency === bRecency) {
+        return 0;
+      }
+
+      return aRecency - bRecency;
+    }
+
+    const fitDifference = b.fitScore - a.fitScore;
+
+    if (fitDifference !== 0) {
+      return fitDifference;
+    }
+
+    const aRecency = getPostingRecencyScore(a.postedAt);
+    const bRecency = getPostingRecencyScore(b.postedAt);
+
+    if (aRecency === bRecency) {
+      return 0;
+    }
+
+    return aRecency - bRecency;
+  });
 }
 
 function makeCuratedPosting({
@@ -408,6 +468,19 @@ async function fetchText(url: string) {
 }
 
 async function searchCuratedGithubPostings(searchQuery: string, targetLocation: string, profile?: Profile, kind: PostingKind = "internship"): Promise<PostingSearchResult | null> {
+  const postings = (await fetchCuratedGithubPostings(kind, profile)).filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation, kind));
+  const deduped = dedupePostings(postings);
+
+  return deduped.length > 0
+    ? {
+        provider: "Curated GitHub",
+        usingFallback: false,
+        postings: deduped
+      }
+    : null;
+}
+
+export async function fetchCuratedGithubPostings(kind: PostingKind = "internship", profile?: Profile) {
   const sourceUrls =
     kind === "new-grad"
       ? [
@@ -424,25 +497,28 @@ async function searchCuratedGithubPostings(searchQuery: string, targetLocation: 
         ];
   const [simplifyReadme, speedySweReadme, speedyAiReadme, zapplyReadme] = await Promise.all(sourceUrls.map((url) => fetchText(url)));
 
-  const postings = [
+  return dedupePostings([
     ...parseSimplifyReadme(simplifyReadme, profile),
     ...parseSpeedyApplyReadme(speedySweReadme, kind === "new-grad" ? "SpeedyApply SWE New Grad" : "SpeedyApply SWE", profile),
     ...parseSpeedyApplyReadme(speedyAiReadme, kind === "new-grad" ? "SpeedyApply AI New Grad" : "SpeedyApply AI", profile),
     ...parseZapplyReadme(zapplyReadme, kind === "new-grad" ? "Zapply New Grad 2027" : "Zapply Internships 2027", profile)
-  ].filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation, kind));
+  ]);
+}
 
+async function searchJobrightPostings(searchQuery: string, targetLocation: string, profile?: Profile, kind: PostingKind = "internship"): Promise<PostingSearchResult | null> {
+  const postings = (await fetchJobrightPostings(kind, profile)).filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation, kind));
   const deduped = dedupePostings(postings);
 
   return deduped.length > 0
     ? {
-        provider: "Curated GitHub",
+        provider: "Jobright / Intern-list",
         usingFallback: false,
         postings: deduped
       }
     : null;
 }
 
-async function searchJobrightPostings(searchQuery: string, targetLocation: string, profile?: Profile, kind: PostingKind = "internship"): Promise<PostingSearchResult | null> {
+export async function fetchJobrightPostings(kind: PostingKind = "internship", profile?: Profile) {
   const jobrightSources =
     kind === "new-grad"
       ? ([
@@ -461,18 +537,7 @@ async function searchJobrightPostings(searchQuery: string, targetLocation: strin
         ] as const);
 
   const readmes = await Promise.all(jobrightSources.map(([url]) => fetchText(url)));
-  const postings = readmes
-    .flatMap((readme, index) => parseJobrightReadme(readme, jobrightSources[index][1], profile))
-    .filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation, kind));
-  const deduped = dedupePostings(postings);
-
-  return deduped.length > 0
-    ? {
-        provider: "Jobright / Intern-list",
-        usingFallback: false,
-        postings: deduped
-      }
-    : null;
+  return dedupePostings(readmes.flatMap((readme, index) => parseJobrightReadme(readme, jobrightSources[index][1], profile)));
 }
 
 function dedupePostings(postings: InternshipPosting[]) {
@@ -644,6 +709,122 @@ function fallbackPostings(profile?: Profile): PostingSearchResult {
       ...posting,
       fitScore: getFitScore(posting, profile)
     }))
+  };
+}
+
+function mapCachedPosting(row: CachedPostingRow, profile?: Profile): InternshipPosting {
+  const posting = {
+    id: row.posting_key,
+    company: row.company,
+    title: row.title,
+    location: row.location,
+    source: row.source,
+    url: row.source_url,
+    remote: row.remote,
+    workMode: row.work_mode,
+    postedAt: row.posted_at_label,
+    tags: row.tags ?? [],
+    description: row.description,
+  };
+
+  return {
+    ...posting,
+    fitScore: getFitScore(posting, profile),
+  };
+}
+
+function sanitizeSearchTerm(value: string) {
+  return value.replace(/[%_,().]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function buildCacheSearchTerms(query: string, kind: PostingKind) {
+  return Array.from(
+    new Set(
+      buildPostingQueryVariants(query, kind)
+        .flatMap((variant) => variant.split(/\s+/))
+        .map(sanitizeSearchTerm)
+        .filter((term) => term.length > 2 && !["intern", "internship", "grad", "graduate"].includes(term.toLowerCase()))
+        .slice(0, 8)
+    )
+  );
+}
+
+export async function searchCachedPostings({
+  query,
+  location,
+  profile,
+  kind = "internship",
+  remote = "all",
+  minFit = 0,
+  sort = "newest",
+  limit = 600,
+}: CachedPostingSearchOptions = {}): Promise<PostingSearchResult | null> {
+  const supabase = getSupabaseServerClient();
+
+  if (!supabase) {
+    return null;
+  }
+
+  const rawQuery = typeof query === "string" ? query.trim() : "";
+  const rawLocation = typeof location === "string" ? location.trim() : "";
+  const hasSubmittedSearch = typeof query === "string" || typeof location === "string";
+  const searchQuery = rawQuery || (hasSubmittedSearch ? (kind === "new-grad" ? "new grad" : "intern") : profile?.targetRoles[0] || (kind === "new-grad" ? "new grad" : "intern"));
+  const targetLocation = rawLocation || (hasSubmittedSearch || rawQuery ? "" : profile?.targetLocations[0] || "");
+  const terms = buildCacheSearchTerms(searchQuery, kind);
+
+  let request = supabase
+    .from("postings")
+    .select("posting_key, kind, company, title, location, source, source_url, work_mode, remote, posted_at_label, recency_score, tags, description")
+    .eq("kind", kind);
+
+  if (remote !== "all") {
+    request = request.eq("work_mode", remote);
+  }
+
+  if (terms.length > 0) {
+    request = request.or(
+      terms
+        .flatMap((term) => [
+          `company.ilike.%${term}%`,
+          `title.ilike.%${term}%`,
+          `description.ilike.%${term}%`,
+          `tags_text.ilike.%${term}%`,
+        ])
+        .join(",")
+    );
+  }
+
+  if (targetLocation) {
+    const cleanLocation = sanitizeSearchTerm(targetLocation);
+    request = request.or(`location.ilike.%${cleanLocation}%,location.ilike.%Remote%,location.ilike.%United States%,location.ilike.%USA%`);
+  }
+
+  const { data, error } = await request
+    .order(sort === "company" ? "company" : "recency_score", { ascending: true })
+    .limit(Math.max(50, Math.min(2000, limit * 3)))
+    .returns<CachedPostingRow[]>();
+
+  if (error || !data) {
+    return null;
+  }
+
+  const postings = sortPostingsByMode(
+    data
+      .map((row) => mapCachedPosting(row, profile))
+      .filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation, kind))
+      .filter((posting) => posting.fitScore >= minFit),
+    sort
+  ).slice(0, limit);
+
+  if (postings.length === 0 && data.length === 0) {
+    return null;
+  }
+
+  return {
+    provider: "Cached postings",
+    usingFallback: false,
+    cached: true,
+    postings,
   };
 }
 

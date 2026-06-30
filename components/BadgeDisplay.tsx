@@ -32,19 +32,6 @@ export function BadgeShelf({ applicationsApplied }: { applicationsApplied: numbe
           ))}
         </div>
       )}
-      {earned.length < applicationBadges.length && (
-        <div className="mt-3 flex flex-wrap gap-2">
-          {applicationBadges.slice(earned.length).map((badge) => (
-            <span
-              key={badge.id}
-              title={`${badge.description} — locked`}
-              className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-400 ring-1 ring-slate-200"
-            >
-              🔒 {badge.label}
-            </span>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

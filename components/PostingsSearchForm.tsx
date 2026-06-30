@@ -1,7 +1,8 @@
 "use client";
 
 import { Loader2, Search } from "lucide-react";
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 function SuggestionInput({
   label,
@@ -19,6 +20,9 @@ function SuggestionInput({
   suggestions: string[];
 }) {
   const [open, setOpen] = useState(false);
+  const [rect, setRect] = useState<DOMRect | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const visibleSuggestions = useMemo(() => {
     const normalizedValue = value.trim().toLowerCase();
     return suggestions
@@ -26,37 +30,69 @@ function SuggestionInput({
       .slice(0, 8);
   }, [suggestions, value]);
 
+  function handleFocus() {
+    if (inputRef.current) setRect(inputRef.current.getBoundingClientRect());
+    setOpen(true);
+  }
+
+  // Keep rect in sync on scroll/resize while open
+  useEffect(() => {
+    if (!open) return;
+    function update() {
+      if (inputRef.current) setRect(inputRef.current.getBoundingClientRect());
+    }
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [open]);
+
+  const dropdown = open && visibleSuggestions.length > 0 && rect ? createPortal(
+    <div
+      style={{
+        position: "fixed",
+        top: rect.bottom + 8,
+        left: rect.left,
+        width: rect.width,
+        zIndex: 9999,
+      }}
+      className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-strong"
+    >
+      {visibleSuggestions.map((suggestion) => (
+        <button
+          key={suggestion}
+          type="button"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => {
+            onChange(suggestion);
+            setOpen(false);
+          }}
+          className="flex w-full items-center rounded-xl px-3 py-2 text-left text-sm font-bold text-slate-700 transition hover:bg-sky/10 hover:text-slate-950"
+        >
+          {suggestion}
+        </button>
+      ))}
+    </div>,
+    document.body
+  ) : null;
+
   return (
-    <label className="relative z-10 grid gap-2 text-sm font-black text-slate-700">
+    <label className="grid gap-2 text-sm font-black text-slate-700">
       {label}
       <input
+        ref={inputRef}
         name={name}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        onFocus={() => setOpen(true)}
+        onFocus={handleFocus}
         onBlur={() => window.setTimeout(() => setOpen(false), 120)}
         className="field"
         placeholder={placeholder}
         autoComplete="off"
       />
-      {open && visibleSuggestions.length > 0 && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-strong">
-          {visibleSuggestions.map((suggestion) => (
-            <button
-              key={suggestion}
-              type="button"
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => {
-                onChange(suggestion);
-                setOpen(false);
-              }}
-              className="flex w-full items-center rounded-xl px-3 py-2 text-left text-sm font-bold text-slate-700 transition hover:bg-sky/10 hover:text-slate-950"
-            >
-              {suggestion}
-            </button>
-          ))}
-        </div>
-      )}
+      {dropdown}
     </label>
   );
 }

@@ -264,7 +264,7 @@ export async function PostingsPageView({
           <>
             <PostingsTable postings={postings} returnTo={returnHref} savedSourceUrls={savedSourceUrls} peerInsights={peerInsights} />
             {totalPages > 1 && (
-              <nav className="mt-5 flex flex-wrap items-center justify-center gap-1 text-sm font-black" aria-label="Posting pages">
+              <nav className="mt-5 flex flex-wrap items-center justify-end gap-1 text-sm font-black" aria-label="Posting pages">
                 <Link
                   href={buildPostingsHref(kind, searchParams, { page: Math.max(1, currentPage - 1) })}
                   className={`flex items-center gap-1 rounded-xl px-3 py-2 transition ${currentPage === 1 ? "pointer-events-none text-slate-300" : "text-slate-600 hover:bg-slate-100 hover:text-sky"}`}

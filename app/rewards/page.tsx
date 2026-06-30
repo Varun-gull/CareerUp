@@ -60,7 +60,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
             </div>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-3">
-            {challenges.map((challenge) => (
+            {[...challenges.tiered, ...challenges.oneOff].map((challenge) => (
               <ChallengeCard key={challenge.id} challenge={challenge} />
             ))}
           </div>

@@ -218,6 +218,11 @@ export async function PostingsPageView({
               {allPostings.length > 0 ? `Showing ${pageStart + 1}-${pageStart + postings.length} of ${allPostings.length} results` : "Showing 0 results"}
               {searchResult.cached ? " from cache" : ""}
             </span>
+            {allPostings.length > 0 && (
+              <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-black text-slate-700 shadow-sm ring-1 ring-slate-200">
+                Page {currentPage} of {totalPages}
+              </span>
+            )}
             <span className="inline-flex overflow-hidden rounded-full bg-slate-50 text-xs font-black shadow-sm ring-1 ring-slate-200">
               <Link href={bestFitHref} className={sort === "fit" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky"}>
                 Best fit
@@ -241,19 +246,24 @@ export async function PostingsPageView({
                 >
                   Previous
                 </Link>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {visiblePages.map((page) => (
-                    <Link
-                      key={page}
-                      href={buildPostingsHref(kind, searchParams, { page })}
-                      className={`min-w-10 rounded-xl px-3 py-2 text-center transition ${
-                        page === currentPage ? "bg-sky text-slate-950 shadow-glow" : "text-slate-700 hover:bg-slate-100 hover:text-sky"
-                      }`}
-                      aria-current={page === currentPage ? "page" : undefined}
-                    >
-                      {page}
-                    </Link>
-                  ))}
+                <div className="grid gap-2 text-center">
+                  <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+                    Page {currentPage} of {totalPages}
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {visiblePages.map((page) => (
+                      <Link
+                        key={page}
+                        href={buildPostingsHref(kind, searchParams, { page })}
+                        className={`min-w-10 rounded-xl px-3 py-2 text-center transition ${
+                          page === currentPage ? "bg-sky text-slate-950 shadow-glow" : "text-slate-700 hover:bg-slate-100 hover:text-sky"
+                        }`}
+                        aria-current={page === currentPage ? "page" : undefined}
+                      >
+                        {page}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
                 <Link
                   href={buildPostingsHref(kind, searchParams, { page: Math.min(totalPages, currentPage + 1) })}

@@ -931,27 +931,28 @@ export async function getChallenges(): Promise<ChallengesData> {
 
   const completedIds = new Set((completedAny ?? []).map((c) => c.challenge_id));
 
-  function getProgressForType(type: string, target: number): number {
+  function getRawCount(type: string): number {
     switch (type) {
-      case "applied": return Math.min(target, appliedCount ?? 0);
-      case "interviewing": return Math.min(target, interviewCount ?? 0);
-      case "messages": return Math.min(target, messageCount ?? 0);
-      case "groups": return Math.min(target, groupCount ?? 0);
-      case "friends": return Math.min(target, friendCount ?? 0);
-      case "resume": return Math.min(target, profileData?.resume_file_name ? 1 : 0);
+      case "applied": return appliedCount ?? 0;
+      case "interviewing": return interviewCount ?? 0;
+      case "messages": return messageCount ?? 0;
+      case "groups": return groupCount ?? 0;
+      case "friends": return friendCount ?? 0;
+      case "resume": return profileData?.resume_file_name ? 1 : 0;
       case "profile": {
         const fields = [profileData?.school, profileData?.major, profileData?.graduation_year, profileData?.target_roles?.length, profileData?.target_locations?.length, profileData?.resume_keywords?.length];
-        return Math.min(target, fields.filter(Boolean).length);
+        return fields.filter(Boolean).length;
       }
       default: return 0;
     }
   }
 
-  // Tiered: only expose the first incomplete tier
+  // Tiered: use live count to determine active tier so it advances as soon as the threshold is crossed
   const tiered: Challenge[] = tieredChallenges.map((def) => {
-    const activeTier = def.tiers.find((t) => !completedIds.has(t.id)) ?? def.tiers[def.tiers.length - 1];
-    const completed = completedIds.has(activeTier.id);
-    const progress = completed ? activeTier.target : getProgressForType(def.progressType, activeTier.target);
+    const rawCount = getRawCount(def.progressType);
+    const activeTier = def.tiers.find((t) => rawCount < t.target) ?? def.tiers[def.tiers.length - 1];
+    const completed = rawCount >= activeTier.target;
+    const progress = Math.min(rawCount, activeTier.target);
     return {
       id: activeTier.id,
       title: def.baseTitle,

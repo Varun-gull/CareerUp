@@ -11,16 +11,21 @@ const TIER_COLORS = [
   "text-sky-600 bg-sky-50 ring-sky-200",
   "text-violet-600 bg-violet-50 ring-violet-200",
 ];
+const TIER_EMOJIS = ["", "🥉", "🥈", "🥇", "💎", "👑"];
 
 export function ChallengeCard({ challenge }: { challenge: Challenge }) {
   const percent = Math.min(100, Math.round((challenge.progress / challenge.target) * 100));
   const isTiered = challenge.tier !== undefined;
+  const completedTier = challenge.completed && isTiered ? challenge.tier! - 1 : null;
+  const badgeEmoji = completedTier !== null ? TIER_EMOJIS[completedTier] : null;
 
   return (
     <article className={clsx("card p-5 transition hover:-translate-y-1 hover:shadow-strong", challenge.completed && "ring-2 ring-emerald-400/60")}>
       <div className="flex items-start justify-between gap-4">
-        <div className={clsx("flex h-11 w-11 items-center justify-center rounded-2xl shadow-glow", challenge.completed ? "bg-emerald-500 text-white" : "bg-gradient-to-br from-sky to-electric text-slate-950")}>
-          {challenge.completed ? <CheckCircle2 size={22} /> : <Trophy size={22} />}
+        <div className={clsx("flex h-11 w-11 items-center justify-center rounded-2xl shadow-glow text-xl", challenge.completed ? "bg-emerald-500" : "bg-gradient-to-br from-sky to-electric text-slate-950")}>
+          {challenge.completed
+            ? (badgeEmoji ?? <CheckCircle2 size={22} className="text-white" />)
+            : <Trophy size={22} />}
         </div>
         <div className="flex items-center gap-2">
           {isTiered && challenge.tier !== undefined && !challenge.completed && (

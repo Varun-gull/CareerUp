@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { InterviewModal } from "@/components/InterviewModal";
+import { SelectDropdown } from "@/components/SelectDropdown";
 import { addInterviewEvent } from "@/lib/calendar/actions";
 import { updateApplicationStatus } from "@/lib/applications/actions";
 import { dispatchInterviewScheduled } from "@/lib/interviewEvents";
@@ -72,16 +73,13 @@ export function StatusUpdateForm({ application, compact }: { application: Applic
       )}
       <form onSubmit={handleSubmit} className={compact ? "grid gap-2" : "flex flex-wrap items-center gap-2"}>
         <input type="hidden" name="applicationId" value={application.id} />
-        <select
+        <SelectDropdown
+          label=""
           name="status"
           value={selected}
-          onChange={(e) => setSelected(e.target.value as Application["status"])}
-          className="field min-h-10 px-3 text-sm font-bold"
-        >
-          {statusOptions.map((s) => (
-            <option key={s.value} value={s.value}>{s.label}</option>
-          ))}
-        </select>
+          onChange={(v) => setSelected(v as Application["status"])}
+          options={statusOptions.map((s) => ({ value: s.value, label: s.label }))}
+        />
         <button type="submit" className="min-h-10 rounded-xl bg-sky px-4 text-sm font-bold text-slate-950 shadow-sm transition hover:bg-brand focus:outline-none focus:ring-4 focus:ring-sky/20">
           Update
         </button>

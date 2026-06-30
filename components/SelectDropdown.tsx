@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 type Option = { label: string; value: string };
 
 type Props = {
-  label: string;
+  label?: string;
   name: string;
   value: string;
   onChange: (value: string) => void;
@@ -70,8 +70,8 @@ export function SelectDropdown({ label, name, value, onChange, options }: Props)
   ) : null;
 
   return (
-    <label className="grid gap-2 text-sm font-black text-slate-700">
-      {label}
+    <label className={label ? "grid gap-2 text-sm font-black text-slate-700" : "block"}>
+      {label && <span>{label}</span>}
       {/* Hidden input so the value is included in form submissions */}
       <input type="hidden" name={name} value={value} />
       <button

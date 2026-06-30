@@ -922,7 +922,9 @@ export async function getChallenges(): Promise<Challenge[]> {
     { count: friendCount },
     { count: messageCount },
     { count: groupCount },
-    { data: profile }
+    { data: profile },
+    { data: streakProfile },
+    { count: interviewingThisWeek }
   ] = await Promise.all([
     supabase.from("challenges").select("id, title, description, xp_reward, target").eq("active", true).returns<DbChallenge[]>(),
     supabase
@@ -954,7 +956,18 @@ export async function getChallenges(): Promise<Challenge[]> {
       .from("profiles")
       .select("school, major, graduation_year, target_roles, target_locations, resume_keywords")
       .eq("id", user.id)
-      .single<Pick<DbProfile, "school" | "major" | "graduation_year" | "target_roles" | "target_locations" | "resume_keywords">>()
+      .single<Pick<DbProfile, "school" | "major" | "graduation_year" | "target_roles" | "target_locations" | "resume_keywords">>(),
+    supabase
+      .from("profiles")
+      .select("current_streak, last_applied_on")
+      .eq("id", user.id)
+      .single<{ current_streak: number | null; last_applied_on: string | null }>(),
+    supabase
+      .from("applications")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("status", "interviewing")
+      .gte("updated_at", getDateKeyStartUtcIso((() => { const d = new Date(); d.setDate(d.getDate() - 7); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; })()))
   ]);
 
   if (challengesError || !dbChallenges) {
@@ -972,6 +985,16 @@ export async function getChallenges(): Promise<Challenge[]> {
     profile?.resume_keywords?.length
   ].filter(Boolean).length;
 
+  const visibleStreak = getVisibleStreak(streakProfile?.last_applied_on ?? null, streakProfile?.current_streak ?? 0);
+
+  function getTier(title: string): Challenge["tier"] {
+    const t = title.toLowerCase();
+    if (t.includes("— bronze") || t === "first step") return "bronze";
+    if (t.includes("— silver") || t === "ten strong") return "silver";
+    if (t.includes("— gold") || t === "application machine") return "gold";
+    return undefined;
+  }
+
   return dbChallenges.map((challenge) => {
     const lowerTitle = challenge.title.toLowerCase();
     let progress = completedIds.has(challenge.id) ? challenge.target : 0;
@@ -980,6 +1003,8 @@ export async function getChallenges(): Promise<Challenge[]> {
       progress = Math.min(challenge.target, appliedToday ?? 0);
     } else if (lowerTitle.includes("two-a-day") || lowerTitle.includes("apply duo")) {
       progress = Math.min(challenge.target, appliedToday ?? 0);
+    } else if (lowerTitle.includes("apply streak")) {
+      progress = Math.min(challenge.target, visibleStreak);
     } else if (lowerTitle.includes("profile")) {
       progress = Math.min(challenge.target, profileProgress);
     } else if (lowerTitle.includes("resume")) {
@@ -988,6 +1013,10 @@ export async function getChallenges(): Promise<Challenge[]> {
       progress = Math.min(challenge.target, savedCount ?? 0);
     } else if (lowerTitle.includes("pipeline")) {
       progress = Math.min(challenge.target, trackedCount ?? 0);
+    } else if (lowerTitle.includes("calendar champion")) {
+      progress = Math.min(challenge.target, interviewCount ?? 0);
+    } else if (lowerTitle.includes("interview streak")) {
+      progress = Math.min(challenge.target, interviewingThisWeek ?? 0);
     } else if (lowerTitle.includes("interview")) {
       progress = Math.min(challenge.target, interviewCount ?? 0);
     } else if (lowerTitle.includes("offer")) {
@@ -998,6 +1027,8 @@ export async function getChallenges(): Promise<Challenge[]> {
       progress = Math.min(challenge.target, groupCount ?? 0);
     } else if (lowerTitle.includes("message")) {
       progress = Math.min(challenge.target, messageCount ?? 0);
+    } else if (lowerTitle.includes("first step") || lowerTitle.includes("ten strong") || lowerTitle.includes("application machine")) {
+      progress = Math.min(challenge.target, appliedCount ?? 0);
     } else if (lowerTitle.includes("apply")) {
       progress = Math.min(challenge.target, appliedCount ?? 0);
     }
@@ -1010,7 +1041,8 @@ export async function getChallenges(): Promise<Challenge[]> {
       xp: challenge.xp_reward,
       progress,
       target: challenge.target,
-      completed: progress >= challenge.target || completed
+      completed: progress >= challenge.target || completed,
+      tier: getTier(challenge.title),
     };
   });
 }

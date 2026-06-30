@@ -111,6 +111,19 @@ async function getChallengeProgress(supabase: SupabaseServer, userId: string, ti
 
   if (lowerTitle.includes("daily apply")) return countApplications(supabase, userId, "applied", true);
   if (lowerTitle.includes("two-a-day") || lowerTitle.includes("apply duo")) return countApplications(supabase, userId, "applied", true);
+  if (lowerTitle.includes("apply streak")) {
+    const { data } = await supabase.from("profiles").select("current_streak, last_applied_on").eq("id", userId).single<{ current_streak: number | null; last_applied_on: string | null }>();
+    const { getVisibleStreak } = await import("@/lib/streak");
+    return getVisibleStreak(data?.last_applied_on ?? null, data?.current_streak ?? 0);
+  }
+  if (lowerTitle.includes("first step") || lowerTitle.includes("ten strong") || lowerTitle.includes("application machine")) return countApplications(supabase, userId, "applied");
+  if (lowerTitle.includes("calendar champion")) return countApplications(supabase, userId, "interviewing");
+  if (lowerTitle.includes("interview streak")) {
+    const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+    const weekAgoKey = `${weekAgo.getFullYear()}-${String(weekAgo.getMonth()+1).padStart(2,"0")}-${String(weekAgo.getDate()).padStart(2,"0")}`;
+    const { count } = await supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", userId).eq("status", "interviewing").gte("updated_at", getDateKeyStartUtcIso(weekAgoKey));
+    return count ?? 0;
+  }
   if (lowerTitle.includes("save") || lowerTitle.includes("watchlist")) return countApplications(supabase, userId, "saved");
   if (lowerTitle.includes("pipeline")) return countApplications(supabase, userId);
   if (lowerTitle.includes("interview")) return countApplications(supabase, userId, "interviewing");

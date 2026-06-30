@@ -17,18 +17,24 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
   const isTiered = challenge.tier !== undefined;
 
   return (
-    <article className="card p-5 transition hover:-translate-y-1 hover:shadow-strong">
+    <article className={clsx("card p-5 transition hover:-translate-y-1 hover:shadow-strong", challenge.completed && "ring-2 ring-emerald-400/60")}>
       <div className="flex items-start justify-between gap-4">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-sky to-electric text-slate-950 shadow-glow">
+        <div className={clsx("flex h-11 w-11 items-center justify-center rounded-2xl shadow-glow", challenge.completed ? "bg-emerald-500 text-white" : "bg-gradient-to-br from-sky to-electric text-slate-950")}>
           {challenge.completed ? <CheckCircle2 size={22} /> : <Trophy size={22} />}
         </div>
         <div className="flex items-center gap-2">
-          {isTiered && challenge.tier !== undefined && (
+          {isTiered && challenge.tier !== undefined && !challenge.completed && (
             <span className={clsx("rounded-full px-2.5 py-1 text-xs font-bold ring-1", TIER_COLORS[challenge.tier])}>
               {TIER_LABELS[challenge.tier]}
             </span>
           )}
-          <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-black text-sky ring-1 ring-sky/20">+{challenge.xp} XP</span>
+          {challenge.completed ? (
+            <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-600 ring-1 ring-emerald-200">
+              <CheckCircle2 size={12} /> Completed
+            </span>
+          ) : (
+            <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-black text-sky ring-1 ring-sky/20">+{challenge.xp} XP</span>
+          )}
         </div>
       </div>
 

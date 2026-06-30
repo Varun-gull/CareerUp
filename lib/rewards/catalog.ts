@@ -95,6 +95,20 @@ export const rewardCatalog: Array<Omit<Reward, "unlocked">> = [
     ]
   },
   {
+    id: "cold-email-outline",
+    title: "Cold Email Outline",
+    description: "A proven structure for cold emails to recruiters and hiring managers you haven't met.",
+    category: "Networking",
+    xpCost: 95,
+    contents: [
+      "Subject line: specific role + school + one proof point (e.g. 'CS junior at Penn — interest in SWE internship').",
+      "Opening: one sentence on why this company specifically, not a generic compliment.",
+      "Middle: two to three sentences on a relevant project, skill, or experience that matches the team.",
+      "Ask: one clear, low-friction ask — a 15-minute call or a resume review, not a job offer.",
+      "Sign-off: full name, LinkedIn URL, and portfolio or GitHub if relevant."
+    ]
+  },
+  {
     id: "offer-negotiation-primer",
     title: "Offer Negotiation Primer",
     description: "A prep sheet for comparing internship offers and asking smart questions.",

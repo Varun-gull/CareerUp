@@ -505,20 +505,20 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, school_logo_url, xp, total_xp, streak_count, last_applied_on")
+    .select("id, full_name, school, school_logo_url, xp, total_xp, streak_count, last_applied_on, applications_applied")
     .order("total_xp", { ascending: false })
     .limit(25)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "total_xp" | "streak_count" | "last_applied_on">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "total_xp" | "streak_count" | "last_applied_on" | "applications_applied">>>();
 
   const rows =
     error || !data
       ? (
           await supabase
             .from("profiles")
-            .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
+            .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on, applications_applied")
             .order("xp", { ascending: false })
             .limit(25)
-            .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>()
+            .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on" | "applications_applied">>>()
         ).data
       : data;
 
@@ -532,7 +532,8 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
     school: user.school ?? "Student",
     schoolLogoUrl: resolveSchoolLogoUrl(user.school, user.school_logo_url),
     xp: getLeaderboardXp({ xp: user.xp, total_xp: getOptionalTotalXp(user) }),
-    streak: getVisibleStreak(user.last_applied_on ?? null, user.streak_count ?? 0)
+    streak: getVisibleStreak(user.last_applied_on ?? null, user.streak_count ?? 0),
+    applicationsApplied: user.applications_applied ?? 0,
   }));
 }
 
@@ -607,20 +608,20 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, school_logo_url, xp, total_xp, streak_count, last_applied_on")
+    .select("id, full_name, school, school_logo_url, xp, total_xp, streak_count, last_applied_on, applications_applied")
     .in("id", ids)
     .order("total_xp", { ascending: false })
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "total_xp" | "streak_count" | "last_applied_on">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "total_xp" | "streak_count" | "last_applied_on" | "applications_applied">>>();
 
   const rows =
     error || !data
       ? (
           await supabase
             .from("profiles")
-            .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
+            .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on, applications_applied")
             .in("id", ids)
             .order("xp", { ascending: false })
-            .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>()
+            .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on" | "applications_applied">>>()
         ).data
       : data;
 
@@ -634,7 +635,8 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
     school: profile.school ?? "Student",
     schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
     xp: getLeaderboardXp({ xp: profile.xp, total_xp: getOptionalTotalXp(profile) }),
-    streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0)
+    streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0),
+    applicationsApplied: profile.applications_applied ?? 0,
   }));
 }
 
@@ -669,16 +671,16 @@ export async function getGroups(): Promise<CareerGroup[]> {
   const memberIds = Array.from(new Set(allMembers.map((member) => member.user_id)));
   const { data: profiles, error: profilesError } = await supabase
     .from("profiles")
-    .select("id, full_name, school, school_logo_url, xp, total_xp, streak_count, last_applied_on")
+    .select("id, full_name, school, school_logo_url, xp, total_xp, streak_count, last_applied_on, applications_applied")
     .in("id", memberIds)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "total_xp" | "streak_count" | "last_applied_on">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "total_xp" | "streak_count" | "last_applied_on" | "applications_applied">>>();
 
   const profileRows =
     profilesError || !profiles
       ? (
           await supabase
             .from("profiles")
-            .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on")
+            .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on, applications_applied")
             .in("id", memberIds)
             .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>()
         ).data
@@ -697,7 +699,8 @@ export async function getGroups(): Promise<CareerGroup[]> {
         school: profile.school ?? "Student",
         schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
         xp: getLeaderboardXp({ xp: profile.xp, total_xp: getOptionalTotalXp(profile) }),
-        streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0)
+        streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0),
+        applicationsApplied: profile.applications_applied ?? 0,
       } satisfies LeaderboardUser
     ])
   );

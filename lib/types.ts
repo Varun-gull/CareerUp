@@ -75,6 +75,7 @@ export type LeaderboardUser = {
   schoolLogoUrl: string;
   xp: number;
   streak: number;
+  applicationsApplied: number;
 };
 
 export type Friend = {

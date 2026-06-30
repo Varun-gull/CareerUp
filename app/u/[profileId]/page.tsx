@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { ProfileLink } from "@/components/ProfileLink";
 import { PublicApplicationBoard } from "@/components/PublicApplicationBoard";
 import { RankBadge } from "@/components/RankBadge";
+import { BadgeShelf } from "@/components/BadgeDisplay";
 import { XpProgressBar } from "@/components/XpProgressBar";
 import { sendFriendRequestById } from "@/lib/friends/actions";
 import { getCurrentUser, getFriendshipWith, getMutualFriends, getPublicProfile, getSharedApplicationBoard } from "@/lib/data";
@@ -99,6 +100,7 @@ export default async function PublicProfilePage({
                   <RankBadge xp={profile.xp} />
                 </div>
                 <XpProgressBar xp={profile.xp} />
+                <BadgeShelf applicationsApplied={profile.applicationsApplied} />
                 {!isOwnProfile && user && (
                   <form action={sendPeerMessage} className="rounded-3xl border border-sky/20 bg-sky/10 p-4">
                     <div className="flex items-center gap-2">

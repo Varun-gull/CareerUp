@@ -2,6 +2,7 @@ import { FileText, Save, Share2, Upload } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { RankBadge } from "@/components/RankBadge";
+import { BadgeShelf } from "@/components/BadgeDisplay";
 import { SchoolField } from "@/components/SchoolField";
 import { XpProgressBar } from "@/components/XpProgressBar";
 import { getCurrentProfile } from "@/lib/data";
@@ -81,6 +82,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                 <RankBadge xp={profile.xp} />
               </div>
               <XpProgressBar xp={profile.xp} />
+              <BadgeShelf applicationsApplied={profile.applicationsApplied} />
               <div className="rounded-3xl border border-slate-200 bg-white/85 p-4">
                 <div className="flex items-start gap-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">

@@ -2,6 +2,7 @@ import { Flame, Medal, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { ProfileLink } from "./ProfileLink";
 import { RankBadge } from "./RankBadge";
+import { TopBadge } from "./BadgeDisplay";
 import type { LeaderboardUser } from "@/lib/types";
 
 export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }: { users: LeaderboardUser[]; currentUserId?: string; emptyMode?: "global" | "friends" }) {
@@ -59,6 +60,7 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
                 {currentUserId === user.id && <span className="ml-2 rounded-full bg-sky/10 px-2 py-0.5 text-xs font-black text-brand">You</span>}
               </p>
               <p className="truncate text-sm text-slate-500">{user.school}</p>
+              <TopBadge applicationsApplied={user.applicationsApplied} />
             </div>
           </div>
           <div className="space-y-2">

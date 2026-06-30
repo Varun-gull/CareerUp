@@ -13,7 +13,7 @@ export default async function SettingsPage({ searchParams }: { searchParams?: { 
         <div className="page-hero">
           <p className="eyebrow">Account controls</p>
           <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Settings</h1>
-          <p className="mt-2 max-w-2xl text-slate-600">Control what friends can see and how your CareerUp profile behaves.</p>
+          <p className="mt-2 max-w-2xl text-slate-600">Control what friends can see and how your CorpClimbr profile behaves.</p>
         </div>
 
         {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}

@@ -39,7 +39,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
           <form action={sendFriendRequestById} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-white/90 p-4 shadow-soft backdrop-blur">
             <div>
               <p className="font-black text-sky">Friend invite opened</p>
-              <p className="text-sm font-bold text-brand">Send a request to add this CareerUp profile.</p>
+              <p className="text-sm font-bold text-brand">Send a request to add this CorpClimbr profile.</p>
             </div>
             <input type="hidden" name="profileId" value={inviteId} />
             <button className="primary-button">
@@ -75,7 +75,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
               </span>
               <div>
                 <h2 className="font-black text-ink">Profile invite</h2>
-                <p className="text-sm text-slate-600">Share your CareerUp friend link.</p>
+                <p className="text-sm text-slate-600">Share your CorpClimbr friend link.</p>
               </div>
             </div>
             <CopyInviteLink url={shareLink} />
@@ -129,7 +129,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
                         <h3 className="font-black text-ink">{group.name}</h3>
-                        <p className="mt-1 text-sm text-slate-600">{group.description || "CareerUp group"}</p>
+                        <p className="mt-1 text-sm text-slate-600">{group.description || "CorpClimbr group"}</p>
                         <p className="mt-2 text-sm font-black text-brand">
                           {group.totalXp.toLocaleString()} XP · {group.memberCount} members
                         </p>

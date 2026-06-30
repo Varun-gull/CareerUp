@@ -1,6 +1,6 @@
-# CareerUp
+# CorpClimbr
 
-CareerUp is a gamified internship application tracker for students. The MVP focuses on the core solo loop: track applications, mark roles as applied, earn XP, build streaks, level up through ranks, and complete simple challenges.
+CorpClimbr is a gamified internship application tracker for students. The MVP focuses on the core solo loop: track applications, mark roles as applied, earn XP, build streaks, level up through ranks, and complete simple challenges.
 
 ## Tech Stack
 
@@ -36,7 +36,7 @@ http://localhost:3000
 
 ## 21st.dev Components
 
-CareerUp is configured for the shadcn-compatible 21st.dev component registry. The setup lives in `components.json`, `lib/utils.ts`, `tailwind.config.ts`, and `app/globals.css`.
+CorpClimbr is configured for the shadcn-compatible 21st.dev component registry. The setup lives in `components.json`, `lib/utils.ts`, `tailwind.config.ts`, and `app/globals.css`.
 
 To add a specific 21st.dev component, copy its registry URL from 21st.dev and run:
 

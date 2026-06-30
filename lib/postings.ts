@@ -10,7 +10,7 @@ type SearchPostingsOptions = {
 
 export type PostingKind = "internship" | "new-grad";
 export type PostingSort = "fit" | "newest" | "company";
-export type PostingProvider = "Cached postings" | "Jobright / Intern-list" | "Jobright / Intern-list + GitHub" | "Curated GitHub" | "CareerUp sample";
+export type PostingProvider = "Cached postings" | "Jobright / Intern-list" | "Jobright / Intern-list + GitHub" | "Curated GitHub" | "CorpClimbr sample";
 
 export type PostingSearchResult = {
   postings: InternshipPosting[];
@@ -666,7 +666,7 @@ function fallbackPostings(profile?: Profile): PostingSearchResult {
       company: "Northstar Labs",
       title: "Software Engineering Intern",
       location: "Remote",
-      source: "CareerUp sample",
+      source: "CorpClimbr sample",
       url: "https://example.com/software-engineering-intern",
       remote: true,
       workMode: "remote" as const,
@@ -679,7 +679,7 @@ function fallbackPostings(profile?: Profile): PostingSearchResult {
       company: "BlueGrid AI",
       title: "Data Science Intern",
       location: "New York, NY",
-      source: "CareerUp sample",
+      source: "CorpClimbr sample",
       url: "https://example.com/data-science-intern",
       remote: false,
       workMode: "onsite" as const,
@@ -692,7 +692,7 @@ function fallbackPostings(profile?: Profile): PostingSearchResult {
       company: "Summit Systems",
       title: "Product Management Intern",
       location: "Washington, DC",
-      source: "CareerUp sample",
+      source: "CorpClimbr sample",
       url: "https://example.com/product-management-intern",
       remote: false,
       workMode: "onsite" as const,
@@ -703,7 +703,7 @@ function fallbackPostings(profile?: Profile): PostingSearchResult {
   ];
 
   return {
-    provider: "CareerUp sample",
+    provider: "CorpClimbr sample",
     usingFallback: true,
     postings: seed.map((posting) => ({
       ...posting,

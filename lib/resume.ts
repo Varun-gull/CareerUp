@@ -234,7 +234,7 @@ export function buildResumeOptimization({
 
   return `TAILORED RESUME SUGGESTION FOR ${company.toUpperCase()} - ${role.toUpperCase()}
 
-Important: this is a suggested application version. Your saved CareerUp resume has not been changed.
+Important: this is a suggested application version. Your saved CorpClimbr resume has not been changed.
 
 TARGETED SUMMARY
 ${role} candidate with experience across ${skillsLine}. Interested in contributing to ${company} by applying technical problem-solving, project execution, and clear communication to internship-level work.

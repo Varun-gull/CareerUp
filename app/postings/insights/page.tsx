@@ -102,7 +102,7 @@ export default async function PostingInsightsPage({
             <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">{role}</h1>
             <p className="mt-2 text-lg font-bold text-slate-600">{company}</p>
             <p className="mt-3 max-w-3xl text-slate-600">
-              See CareerUp users who have tracked this role, whether they reached interviews or offers, and reach out for advice when their profile is visible.
+              See CorpClimbr users who have tracked this role, whether they reached interviews or offers, and reach out for advice when their profile is visible.
             </p>
           </div>
 
@@ -112,7 +112,7 @@ export default async function PostingInsightsPage({
                 <UsersRound size={24} />
               </span>
               <div>
-                <p className="text-sm font-black uppercase text-slate-500">CareerUp signal</p>
+                <p className="text-sm font-black uppercase text-slate-500">CorpClimbr signal</p>
                 <p className="text-2xl font-black text-ink">{insight?.trackedCount ?? applicants.length} tracked</p>
               </div>
             </div>

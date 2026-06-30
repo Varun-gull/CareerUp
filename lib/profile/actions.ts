@@ -181,7 +181,7 @@ export async function saveResumeProfile(formData: FormData) {
     redirectWithMessage(
       "/profile",
       fileReadFailed
-        ? "CareerUp could not read that file. Paste your resume text in the box and save again."
+        ? "CorpClimbr could not read that file. Paste your resume text in the box and save again."
         : "Add resume text from a text-based resume before saving."
     );
   }

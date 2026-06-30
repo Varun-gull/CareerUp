@@ -50,14 +50,14 @@ const missing = requiredEnv.filter((key) => !process.env[key]);
 
 if (missing.length > 0) {
   console.error(`Missing required env vars: ${missing.join(", ")}`);
-  console.error("Use two confirmed CareerUp test accounts so Supabase Auth can return sessions.");
+  console.error("Use two confirmed CorpClimbr test accounts so Supabase Auth can return sessions.");
   process.exit(1);
 }
 
 const sender = await signIn("sender", process.env.CAREERUP_TEST_SENDER_EMAIL, process.env.CAREERUP_TEST_SENDER_PASSWORD);
 const recipient = await signIn("recipient", process.env.CAREERUP_TEST_RECIPIENT_EMAIL, process.env.CAREERUP_TEST_RECIPIENT_PASSWORD);
 const roleKey = `profile::${recipient.user.id}`;
-const subject = `CareerUp profile message verification ${new Date().toISOString()}`;
+const subject = `CorpClimbr profile message verification ${new Date().toISOString()}`;
 
 const { data: messageId, error: sendError } = await sender.supabase.rpc("send_direct_profile_message", {
   target_recipient_id: recipient.user.id,

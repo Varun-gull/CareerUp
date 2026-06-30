@@ -24,7 +24,7 @@ export default async function PrivacyPage({ searchParams }: { searchParams?: { m
           <p className="eyebrow">Privacy setup</p>
           <h1 className="mt-2 text-3xl font-black text-ink">Who can view your application board?</h1>
           <p className="mt-3 leading-7 text-slate-600">
-            CareerUp can let accepted friends view your application pipeline on your profile. They can only see it if you allow it, and they cannot edit your roles.
+            CorpClimbr can let accepted friends view your application pipeline on your profile. They can only see it if you allow it, and they cannot edit your roles.
           </p>
           {searchParams?.message && <p className="mt-4 rounded-2xl bg-sky/10 p-3 text-sm font-bold text-sky">{searchParams.message}</p>}
           <form action={updatePrivacySettings} className="mt-6 grid gap-4">

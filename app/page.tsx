@@ -17,7 +17,7 @@ export default async function HomePage() {
           <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-navy text-white shadow-glow">
             <BriefcaseBusiness size={24} />
           </span>
-          <span className="text-2xl">CareerUp</span>
+          <span className="text-2xl">CorpClimbr</span>
         </Link>
 
         <p className="mt-10 text-xs font-black uppercase text-sky">Internship tracker</p>

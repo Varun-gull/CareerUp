@@ -37,7 +37,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-sky/10 text-sky">
                 <Sparkles size={18} />
               </span>
-              <span>{profile.xp.toLocaleString()} XP earned · {profile.streak} day streak · {profile.school || "CareerUp student"}</span>
+              <span>{profile.xp.toLocaleString()} XP earned · {profile.streak} day streak · {profile.school || "CorpClimbr student"}</span>
             </div>
           </div>
         </section>

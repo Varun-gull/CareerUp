@@ -37,7 +37,7 @@ export function GroupLeaderboardTable({ groups }: { groups: GroupLeaderboardRow[
               {group.name}
               {group.currentUserMember && <span className="ml-2 rounded-full bg-sky/10 px-2 py-0.5 text-xs font-black text-brand">Your group</span>}
             </p>
-            <p className="truncate text-sm text-slate-500">{group.description || "CareerUp squad"}</p>
+            <p className="truncate text-sm text-slate-500">{group.description || "CorpClimbr squad"}</p>
           </div>
           <div>
             <p className="font-black text-brand">{group.totalXp.toLocaleString()} XP</p>

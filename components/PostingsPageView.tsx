@@ -106,14 +106,37 @@ function buildPostingsHref(
   return `${basePath}?${params.toString()}`;
 }
 
-function getVisiblePages(currentPage: number, totalPages: number): (number | "…")[] {
-  if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
-  const pages: (number | "…")[] = [1];
-  if (currentPage > 3) pages.push("…");
-  for (let p = Math.max(2, currentPage - 1); p <= Math.min(totalPages - 1, currentPage + 1); p++) pages.push(p);
-  if (currentPage < totalPages - 2) pages.push("…");
-  pages.push(totalPages);
-  return pages;
+function getPaginationItems(currentPage: number, totalPages: number): Array<number | "ellipsis"> {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  const pages = new Set([1, totalPages, currentPage - 1, currentPage, currentPage + 1]);
+
+  if (currentPage <= 4) {
+    [2, 3, 4, 5].forEach((page) => pages.add(page));
+  }
+
+  if (currentPage >= totalPages - 3) {
+    [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1].forEach((page) => pages.add(page));
+  }
+
+  const validPages = Array.from(pages)
+    .filter((page) => page >= 1 && page <= totalPages)
+    .sort((a, b) => a - b);
+  const items: Array<number | "ellipsis"> = [];
+
+  validPages.forEach((page, index) => {
+    const previousPage = validPages[index - 1];
+
+    if (previousPage && page - previousPage > 1) {
+      items.push("ellipsis");
+    }
+
+    items.push(page);
+  });
+
+  return items;
 }
 
 export async function PostingsPageView({
@@ -177,7 +200,7 @@ export async function PostingsPageView({
   const returnHref = buildPostingsHref(kind, searchParams, { page: currentPage });
   const bestFitHref = buildPostingsHref(kind, searchParams, { sort: "fit", page: 1 });
   const newestHref = buildPostingsHref(kind, searchParams, { sort: "newest", page: 1 });
-  const visiblePages = getVisiblePages(currentPage, totalPages);
+  const paginationItems = getPaginationItems(currentPage, totalPages);
 
   return (
     <>
@@ -241,7 +264,7 @@ export async function PostingsPageView({
           <>
             <PostingsTable postings={postings} returnTo={returnHref} savedSourceUrls={savedSourceUrls} peerInsights={peerInsights} />
             {totalPages > 1 && (
-              <nav className="mt-5 flex items-center justify-center gap-1 text-sm font-black" aria-label="Posting pages">
+              <nav className="mt-5 flex flex-wrap items-center justify-center gap-1 text-sm font-black" aria-label="Posting pages">
                 <Link
                   href={buildPostingsHref(kind, searchParams, { page: Math.max(1, currentPage - 1) })}
                   className={`flex items-center gap-1 rounded-xl px-3 py-2 transition ${currentPage === 1 ? "pointer-events-none text-slate-300" : "text-slate-600 hover:bg-slate-100 hover:text-sky"}`}
@@ -250,21 +273,21 @@ export async function PostingsPageView({
                   <ChevronLeft size={16} /> Previous
                 </Link>
 
-                {visiblePages.map((page, i) =>
-                  page === "…" ? (
-                    <span key={`ellipsis-${i}`} className="px-2 py-2 text-slate-400">···</span>
+                {paginationItems.map((item, index) =>
+                  item === "ellipsis" ? (
+                    <span key={`ellipsis-${index}`} className="px-2 py-2 text-slate-400">...</span>
                   ) : (
                     <Link
-                      key={page}
-                      href={buildPostingsHref(kind, searchParams, { page })}
+                      key={item}
+                      href={buildPostingsHref(kind, searchParams, { page: item })}
                       className={`min-w-[2.25rem] rounded-xl px-3 py-2 text-center transition ${
-                        page === currentPage
+                        item === currentPage
                           ? "bg-slate-900 text-white shadow-sm ring-1 ring-slate-700"
                           : "text-slate-600 hover:bg-slate-100 hover:text-sky"
                       }`}
-                      aria-current={page === currentPage ? "page" : undefined}
+                      aria-current={item === currentPage ? "page" : undefined}
                     >
-                      {page}
+                      {item}
                     </Link>
                   )
                 )}

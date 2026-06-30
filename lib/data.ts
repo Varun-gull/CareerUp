@@ -682,7 +682,7 @@ export async function getGroups(): Promise<CareerGroup[]> {
             .from("profiles")
             .select("id, full_name, school, school_logo_url, xp, streak_count, last_applied_on, applications_applied")
             .in("id", memberIds)
-            .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>()
+            .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on" | "applications_applied">>>()
         ).data
       : profiles;
 

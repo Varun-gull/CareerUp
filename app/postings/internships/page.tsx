@@ -9,6 +9,7 @@ export default function InternshipPostingsPage({
     remote?: "all" | "remote" | "hybrid" | "onsite";
     minFit?: string;
     sort?: "fit" | "newest" | "company";
+    page?: string;
     message?: string;
   };
 }) {

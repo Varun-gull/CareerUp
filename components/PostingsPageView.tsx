@@ -36,7 +36,8 @@ const newGradRoleExamples = [
 ];
 
 const locationExamples = ["Remote", "Hybrid", "New York", "San Francisco", "Washington DC", "Seattle", "Boston", "Austin", "Chicago"];
-const POSTINGS_PAGE_LIMIT = 120;
+const POSTINGS_PER_PAGE = 50;
+const POSTINGS_FETCH_LIMIT = 2000;
 
 function uniqueExamples(values: string[]) {
   return Array.from(new Set(values.map((value) => value.trim()).filter(Boolean))).slice(0, 12);
@@ -87,7 +88,11 @@ function activeTabClass(active: boolean) {
   return active ? "bg-sky text-slate-950 shadow-glow" : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:text-sky";
 }
 
-function buildReturnHref(kind: PostingKind, searchParams?: { q?: string; location?: string; remote?: RemoteFilter; minFit?: string; sort?: PostingSort }) {
+function buildPostingsHref(
+  kind: PostingKind,
+  searchParams?: { q?: string; location?: string; remote?: RemoteFilter; minFit?: string; sort?: PostingSort },
+  overrides?: { sort?: PostingSort; page?: number }
+) {
   const basePath = kind === "new-grad" ? "/postings/new-grad" : "/postings/internships";
   const params = new URLSearchParams();
 
@@ -95,22 +100,17 @@ function buildReturnHref(kind: PostingKind, searchParams?: { q?: string; locatio
   if (searchParams?.location) params.set("location", searchParams.location);
   if (searchParams?.remote) params.set("remote", searchParams.remote);
   if (searchParams?.minFit) params.set("minFit", searchParams.minFit);
-  params.set("sort", searchParams?.sort ?? "newest");
+  params.set("sort", overrides?.sort ?? searchParams?.sort ?? "newest");
+  if (overrides?.page && overrides.page > 1) params.set("page", String(overrides.page));
 
   return `${basePath}?${params.toString()}`;
 }
 
-function buildSortHref(kind: PostingKind, sort: PostingSort, searchParams?: { q?: string; location?: string; remote?: RemoteFilter; minFit?: string }) {
-  const basePath = kind === "new-grad" ? "/postings/new-grad" : "/postings/internships";
-  const params = new URLSearchParams();
+function getVisiblePages(currentPage: number, totalPages: number) {
+  const first = Math.max(1, currentPage - 2);
+  const last = Math.min(totalPages, currentPage + 2);
 
-  if (searchParams?.q) params.set("q", searchParams.q);
-  if (searchParams?.location) params.set("location", searchParams.location);
-  if (searchParams?.remote) params.set("remote", searchParams.remote);
-  if (searchParams?.minFit) params.set("minFit", searchParams.minFit);
-  params.set("sort", sort);
-
-  return `${basePath}?${params.toString()}`;
+  return Array.from({ length: last - first + 1 }, (_, index) => first + index);
 }
 
 export async function PostingsPageView({
@@ -124,6 +124,7 @@ export async function PostingsPageView({
     remote?: RemoteFilter;
     minFit?: string;
     sort?: PostingSort;
+    page?: string;
     message?: string;
   };
 }) {
@@ -131,6 +132,7 @@ export async function PostingsPageView({
   const remoteFilter = searchParams?.remote === "remote" || searchParams?.remote === "hybrid" || searchParams?.remote === "onsite" ? searchParams.remote : "all";
   const sort = searchParams?.sort === "fit" || searchParams?.sort === "company" ? searchParams.sort : "newest";
   const minFit = Math.min(95, Math.max(0, Number(searchParams?.minFit ?? 0) || 0));
+  const requestedPage = Math.max(1, Number(searchParams?.page ?? 1) || 1);
   const submittedQuery = typeof searchParams?.q === "string" ? searchParams.q.trim() : "";
   const submittedLocation = typeof searchParams?.location === "string" ? searchParams.location.trim() : "";
   const roleExamples = kind === "new-grad" ? newGradRoleExamples : internshipRoleExamples;
@@ -144,7 +146,7 @@ export async function PostingsPageView({
     remote: remoteFilter,
     minFit,
     sort,
-    limit: POSTINGS_PAGE_LIMIT
+    limit: POSTINGS_FETCH_LIMIT
   });
   const searchResult = cachedSearchResult ?? await searchInternshipPostings({
     query: submittedQuery,
@@ -154,7 +156,11 @@ export async function PostingsPageView({
   });
   const applications = await getApplications();
   const savedSourceUrls = new Set(applications.map((application) => application.source).filter((source) => source.startsWith("http")));
-  const postings = searchResult.cached ? searchResult.postings : sortPostings(filterPostings(searchResult.postings, remoteFilter, minFit), sort).slice(0, POSTINGS_PAGE_LIMIT);
+  const allPostings = searchResult.cached ? searchResult.postings : sortPostings(filterPostings(searchResult.postings, remoteFilter, minFit), sort);
+  const totalPages = Math.max(1, Math.ceil(allPostings.length / POSTINGS_PER_PAGE));
+  const currentPage = Math.min(requestedPage, totalPages);
+  const pageStart = (currentPage - 1) * POSTINGS_PER_PAGE;
+  const postings = allPostings.slice(pageStart, pageStart + POSTINGS_PER_PAGE);
   const [peerInsights, peerFeatureStatus] = await Promise.all([
     getRolePeerInsights(postings.map((posting) => buildRoleKey(posting.company, posting.title))),
     getRolePeerFeatureStatus()
@@ -165,9 +171,10 @@ export async function PostingsPageView({
       ? "Search current entry-level and new graduate roles from Jobright, Intern-list, and curated GitHub sources."
       : "Search current internship-style roles from Jobright, Intern-list, and curated GitHub sources.";
   const resetHref = kind === "new-grad" ? "/postings/new-grad" : "/postings/internships";
-  const returnHref = buildReturnHref(kind, searchParams);
-  const bestFitHref = buildSortHref(kind, "fit", searchParams);
-  const newestHref = buildSortHref(kind, "newest", searchParams);
+  const returnHref = buildPostingsHref(kind, searchParams, { page: currentPage });
+  const bestFitHref = buildPostingsHref(kind, searchParams, { sort: "fit", page: 1 });
+  const newestHref = buildPostingsHref(kind, searchParams, { sort: "newest", page: 1 });
+  const visiblePages = getVisiblePages(currentPage, totalPages);
 
   return (
     <>
@@ -208,7 +215,8 @@ export async function PostingsPageView({
           </Link>
           <div className="flex flex-wrap items-center gap-3">
             <span>
-              Showing {postings.length} of {searchResult.postings.length} results{searchResult.cached ? " from cache" : ""}
+              {allPostings.length > 0 ? `Showing ${pageStart + 1}-${pageStart + postings.length} of ${allPostings.length} results` : "Showing 0 results"}
+              {searchResult.cached ? " from cache" : ""}
             </span>
             <span className="inline-flex overflow-hidden rounded-full bg-slate-50 text-xs font-black shadow-sm ring-1 ring-slate-200">
               <Link href={bestFitHref} className={sort === "fit" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky"}>
@@ -222,7 +230,41 @@ export async function PostingsPageView({
         </div>
 
         {postings.length > 0 ? (
-          <PostingsTable postings={postings} returnTo={returnHref} savedSourceUrls={savedSourceUrls} peerInsights={peerInsights} />
+          <>
+            <PostingsTable postings={postings} returnTo={returnHref} savedSourceUrls={savedSourceUrls} peerInsights={peerInsights} />
+            {totalPages > 1 && (
+              <nav className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white/80 p-3 text-sm font-black shadow-soft ring-1 ring-slate-200" aria-label="Posting pages">
+                <Link
+                  href={buildPostingsHref(kind, searchParams, { page: Math.max(1, currentPage - 1) })}
+                  className={`rounded-xl px-4 py-2 transition ${currentPage === 1 ? "pointer-events-none text-slate-300" : "text-slate-700 hover:bg-slate-100 hover:text-sky"}`}
+                  aria-disabled={currentPage === 1}
+                >
+                  Previous
+                </Link>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {visiblePages.map((page) => (
+                    <Link
+                      key={page}
+                      href={buildPostingsHref(kind, searchParams, { page })}
+                      className={`min-w-10 rounded-xl px-3 py-2 text-center transition ${
+                        page === currentPage ? "bg-sky text-slate-950 shadow-glow" : "text-slate-700 hover:bg-slate-100 hover:text-sky"
+                      }`}
+                      aria-current={page === currentPage ? "page" : undefined}
+                    >
+                      {page}
+                    </Link>
+                  ))}
+                </div>
+                <Link
+                  href={buildPostingsHref(kind, searchParams, { page: Math.min(totalPages, currentPage + 1) })}
+                  className={`rounded-xl px-4 py-2 transition ${currentPage === totalPages ? "pointer-events-none text-slate-300" : "text-slate-700 hover:bg-slate-100 hover:text-sky"}`}
+                  aria-disabled={currentPage === totalPages}
+                >
+                  Next
+                </Link>
+              </nav>
+            )}
+          </>
         ) : (
           <div className="mt-8">
             <EmptyState icon={Search} title="No postings found" description="Try a broader keyword, clear the location, or lower the minimum fit." actionHref={resetHref} actionLabel="Reset search" />

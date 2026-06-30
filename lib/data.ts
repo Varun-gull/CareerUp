@@ -950,8 +950,9 @@ export async function getChallenges(): Promise<ChallengesData> {
   // Tiered: use live count to determine active tier so it advances as soon as the threshold is crossed
   const tiered: Challenge[] = tieredChallenges.map((def) => {
     const rawCount = getRawCount(def.progressType);
-    const activeTier = def.tiers.find((t) => rawCount < t.target) ?? def.tiers[def.tiers.length - 1];
-    const completed = rawCount >= activeTier.target;
+    const lastTier = def.tiers[def.tiers.length - 1];
+    const activeTier = def.tiers.find((t) => rawCount < t.target) ?? lastTier;
+    const completed = activeTier === lastTier && rawCount >= lastTier.target;
     const progress = Math.min(rawCount, activeTier.target);
     return {
       id: activeTier.id,
@@ -968,8 +969,9 @@ export async function getChallenges(): Promise<ChallengesData> {
 
   // One-off
   const oneOff: Challenge[] = oneOffChallenges.map((def) => {
-    const completed = completedIds.has(def.id);
-    const progress = completed ? def.target : getProgressForType(def.progressType, def.target);
+    const rawCount = getRawCount(def.progressType);
+    const completed = completedIds.has(def.id) || rawCount >= def.target;
+    const progress = Math.min(rawCount, def.target);
     return {
       id: def.id,
       title: def.title,

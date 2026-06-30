@@ -38,7 +38,6 @@ export type Challenge = {
   progress: number;
   target: number;
   completed: boolean;
-  tier?: "bronze" | "silver" | "gold";
 };
 
 export type Reward = {

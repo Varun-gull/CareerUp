@@ -106,20 +106,5 @@ export const rewardCatalog: Array<Omit<Reward, "unlocked">> = [
       "Use a polite negotiation frame: appreciation, competing context, specific ask, flexibility.",
       "Never invent competing offers or deadlines."
     ]
-  },
-  {
-    id: "cold-email-outline",
-    title: "Cold Email Outline",
-    description: "A fill-in-the-blank cold email template for reaching out to recruiters, employees, and hiring managers you have no connection to.",
-    category: "Networking",
-    xpCost: 95,
-    contents: [
-      "Subject: [Role] Interest — [Your Name], [School] [Grad Year]",
-      "Line 1 (hook): One sentence on why this specific company or team caught your attention.",
-      "Line 2 (credibility): One sentence on who you are — major, school, one relevant project or skill.",
-      "Line 3 (ask): A single clear ask — 15-minute chat, referral, or advice on breaking in.",
-      "Line 4 (close): Thank them, confirm you attached your resume, and offer to share more.",
-      "Keep the entire email under 100 words. Never ask for a job directly in a cold email."
-    ]
   }
 ];

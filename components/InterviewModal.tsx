@@ -35,8 +35,15 @@ function getMonthGrid(year: number, month: number): (Date | null)[] {
   const first = new Date(year, month, 1);
   const last = new Date(year, month + 1, 0);
   const cells: (Date | null)[] = Array(first.getDay()).fill(null);
-  for (let d = 1; d <= last.getDate(); d++) cells.push(new Date(year, month, d));
-  while (cells.length % 7 !== 0) cells.push(null);
+
+  for (let d = 1; d <= last.getDate(); d += 1) {
+    cells.push(new Date(year, month, d));
+  }
+
+  while (cells.length % 7 !== 0) {
+    cells.push(null);
+  }
+
   return cells;
 }
 
@@ -67,12 +74,21 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
   const grid = getMonthGrid(calYear, calMonth);
 
   function prevMonth() {
-    if (calMonth === 0) { setCalYear(y => y - 1); setCalMonth(11); }
-    else setCalMonth(m => m - 1);
+    if (calMonth === 0) {
+      setCalYear((year) => year - 1);
+      setCalMonth(11);
+    } else {
+      setCalMonth((month) => month - 1);
+    }
   }
+
   function nextMonth() {
-    if (calMonth === 11) { setCalYear(y => y + 1); setCalMonth(0); }
-    else setCalMonth(m => m + 1);
+    if (calMonth === 11) {
+      setCalYear((year) => year + 1);
+      setCalMonth(0);
+    } else {
+      setCalMonth((month) => month + 1);
+    }
   }
 
   function pickDate(dateStr: string) {
@@ -89,7 +105,6 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
       <div className="w-full max-w-md rounded-[2rem] bg-white shadow-2xl">
-        {/* Header */}
         <div className="flex items-start justify-between p-6 pb-4">
           <div>
             <h2 className="text-xl font-black text-ink">Schedule interview</h2>
@@ -100,10 +115,8 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
           </button>
         </div>
 
-        {/* Step 1 — Mini calendar */}
         {step === 1 && (
           <div className="px-6 pb-6">
-            {/* Month nav */}
             <div className="flex items-center justify-between">
               <button type="button" onClick={prevMonth} className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
                 <ChevronLeft size={18} />
@@ -114,21 +127,23 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               </button>
             </div>
 
-            {/* Day headers */}
             <div className="mt-4 grid grid-cols-7">
-              {DAYS.map(d => (
-                <div key={d} className="py-1 text-center text-[11px] font-black uppercase tracking-wide text-slate-400">{d}</div>
+              {DAYS.map((day) => (
+                <div key={day} className="py-1 text-center text-[11px] font-black uppercase tracking-wide text-slate-400">{day}</div>
               ))}
             </div>
 
-            {/* Date grid */}
             <div className="mt-1 grid grid-cols-7 gap-y-1">
-              {grid.map((date, i) => {
-                if (!date) return <div key={i} />;
+              {grid.map((date, index) => {
+                if (!date) {
+                  return <div key={index} />;
+                }
+
                 const key = toYMD(date);
                 const isToday = key === today;
                 const isPast = key < today;
                 const isSelected = key === selectedDate;
+
                 return (
                   <button
                     key={key}
@@ -137,10 +152,10 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                     onClick={() => pickDate(key)}
                     className={clsx(
                       "mx-auto flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition",
-                      isSelected && "bg-sky text-slate-950 font-black",
-                      !isSelected && isToday && "ring-2 ring-sky text-sky font-black",
+                      isSelected && "bg-sky font-black text-slate-950",
+                      !isSelected && isToday && "font-black text-sky ring-2 ring-sky",
                       !isSelected && !isToday && !isPast && "text-slate-700 hover:bg-sky/15 hover:text-slate-900",
-                      isPast && "text-slate-300 cursor-not-allowed"
+                      isPast && "cursor-not-allowed text-slate-300"
                     )}
                   >
                     {date.getDate()}
@@ -153,10 +168,8 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
           </div>
         )}
 
-        {/* Step 2 — Time slots */}
         {step === 2 && (
           <div className="px-6 pb-6">
-            {/* Back + selected date */}
             <div className="flex items-center gap-3">
               <button type="button" onClick={() => setStep(1)} className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
                 <ChevronLeft size={18} />
@@ -164,15 +177,17 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               <span className="text-sm font-black text-ink">{selectedDate ? formatDateLabel(selectedDate) : ""}</span>
             </div>
 
-            {/* Time slot grid */}
             <div className="mt-4 grid grid-cols-3 gap-2">
-              {TIME_SLOTS.map(time => {
+              {TIME_SLOTS.map((time) => {
                 const selected = selectedTime === time;
                 return (
                   <button
                     key={time}
                     type="button"
-                    onClick={() => { setSelectedTime(time); setCustomTimeOpen(false); }}
+                    onClick={() => {
+                      setSelectedTime(time);
+                      setCustomTimeOpen(false);
+                    }}
                     className={clsx(
                       "rounded-xl py-2.5 text-sm font-black transition",
                       selected
@@ -186,7 +201,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               })}
               <button
                 type="button"
-                onClick={() => setCustomTimeOpen(o => !o)}
+                onClick={() => setCustomTimeOpen((open) => !open)}
                 className={clsx(
                   "rounded-xl py-2.5 text-sm font-black transition",
                   customTimeOpen
@@ -203,13 +218,19 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                 <input
                   type="time"
                   value={customTime}
-                  onChange={e => setCustomTime(e.target.value)}
+                  onChange={(event) => {
+                    setCustomTime(event.target.value);
+                    setSelectedTime(event.target.value);
+                  }}
                   className="field flex-1 text-sm"
                   aria-label="Custom time"
                 />
                 <button
                   type="button"
-                  onClick={() => { setSelectedTime(customTime); setCustomTimeOpen(false); }}
+                  onClick={() => {
+                    setSelectedTime(customTime);
+                    setCustomTimeOpen(false);
+                  }}
                   className="rounded-xl bg-sky px-4 text-sm font-black text-slate-950 transition hover:bg-brand"
                 >
                   Use

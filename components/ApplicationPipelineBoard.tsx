@@ -48,8 +48,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
       return;
     }
 
-    // Intercept interviewing drop — show modal to collect date/time/notes
-    if (nextStatus === "interviewing" && application.status !== "interviewing") {
+    if (application.status === "applied" && nextStatus === "interviewing") {
       setPendingInterview({ applicationId, app: application });
       return;
     }

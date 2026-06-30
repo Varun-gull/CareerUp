@@ -6,7 +6,7 @@ import { PostingsSearchForm } from "@/components/PostingsSearchForm";
 import { PostingsTable } from "@/components/PostingsTable";
 import { RolePeerSetupNotice } from "@/components/RolePeerSetupNotice";
 import { getApplications, getCurrentProfile, getRolePeerFeatureStatus, getRolePeerInsights } from "@/lib/data";
-import { searchInternshipPostings, type PostingKind } from "@/lib/postings";
+import { getPostingRecencyScore, searchInternshipPostings, type PostingKind } from "@/lib/postings";
 import { buildRoleKey } from "@/lib/role-key";
 import type { InternshipPosting } from "@/lib/types";
 
@@ -55,28 +55,31 @@ function sortPostings(postings: InternshipPosting[], sort: PostingSort) {
     }
 
     if (sort === "newest") {
-      return getPostingAgeScore(a.postedAt) - getPostingAgeScore(b.postedAt);
+      const aRecency = getPostingRecencyScore(a.postedAt);
+      const bRecency = getPostingRecencyScore(b.postedAt);
+
+      if (aRecency === bRecency) {
+        return 0;
+      }
+
+      return aRecency - bRecency;
     }
 
-    return b.fitScore - a.fitScore;
+    const fitDifference = b.fitScore - a.fitScore;
+
+    if (fitDifference !== 0) {
+      return fitDifference;
+    }
+
+    const aRecency = getPostingRecencyScore(a.postedAt);
+    const bRecency = getPostingRecencyScore(b.postedAt);
+
+    if (aRecency === bRecency) {
+      return 0;
+    }
+
+    return aRecency - bRecency;
   });
-}
-
-function getPostingAgeScore(value: string) {
-  const normalized = value.trim().toLowerCase();
-  const hoursMatch = normalized.match(/^(\d+)\s*h/);
-  if (hoursMatch) return Number(hoursMatch[1]) / 24;
-
-  const daysMatch = normalized.match(/^(\d+)\s*d/);
-  if (daysMatch) return Number(daysMatch[1]);
-
-  const minutesMatch = normalized.match(/^(\d+)\s*m/);
-  if (minutesMatch) return Number(minutesMatch[1]) / 1440;
-
-  if (/today|now|just|recent/.test(normalized)) return 0;
-
-  const parsedDate = Date.parse(value);
-  return Number.isNaN(parsedDate) ? 999 : Math.max(0, Math.round((Date.now() - parsedDate) / 86_400_000));
 }
 
 function activeTabClass(active: boolean) {

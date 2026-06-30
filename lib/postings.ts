@@ -354,6 +354,47 @@ function parseJobrightReadme(markdown: string, source: string, profile?: Profile
     .filter((posting): posting is InternshipPosting => Boolean(posting));
 }
 
+function parseZapplyReadme(markdown: string, source: string, profile?: Profile) {
+  return markdown
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith("|") && /\]\(https?:\/\//.test(line) && !/^\|\s*-/.test(line))
+    .map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim()))
+    .map((cells) => {
+      if (cells.length < 6) {
+        return null;
+      }
+
+      const company = stripMarkdown(cells[0] ?? "");
+      const title = stripMarkdown(cells[1] ?? "");
+      const location = stripMarkdown(cells[2] ?? "");
+      const postedAt = stripMarkdown(cells[3] ?? "");
+      const visa = stripMarkdown(cells[4] ?? "");
+      const url = getMarkdownHref(cells[5] ?? "");
+      const workMode = getWorkMode(`${title} ${location}`);
+      const posting = makeCuratedPosting({
+        source,
+        company,
+        title,
+        location,
+        url,
+        age: postedAt,
+        profile
+      });
+
+      return posting
+        ? {
+            ...posting,
+            workMode,
+            remote: workMode === "remote",
+            tags: Array.from(new Set([...posting.tags, visa].filter(Boolean))).slice(0, 5),
+            description: `${title} at ${company}. Curated from ${source} with a direct application link.`
+          }
+        : null;
+    })
+    .filter((posting): posting is InternshipPosting => Boolean(posting));
+}
+
 async function fetchText(url: string) {
   const response = await fetch(url, {
     next: { revalidate: 1800 }
@@ -372,19 +413,22 @@ async function searchCuratedGithubPostings(searchQuery: string, targetLocation: 
       ? [
           "https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md",
           "https://raw.githubusercontent.com/speedyapply/2026-SWE-College-Jobs/main/NEW_GRAD_USA.md",
-          "https://raw.githubusercontent.com/speedyapply/2026-AI-College-Jobs/main/NEW_GRAD_USA.md"
+          "https://raw.githubusercontent.com/speedyapply/2026-AI-College-Jobs/main/NEW_GRAD_USA.md",
+          "https://raw.githubusercontent.com/zapplyjobs/New-Grad-Jobs-2027/main/README.md"
         ]
       : [
           "https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md",
           "https://raw.githubusercontent.com/speedyapply/2026-SWE-College-Jobs/main/README.md",
-          "https://raw.githubusercontent.com/speedyapply/2026-AI-College-Jobs/main/README.md"
+          "https://raw.githubusercontent.com/speedyapply/2026-AI-College-Jobs/main/README.md",
+          "https://raw.githubusercontent.com/zapplyjobs/Internships-2027/main/README.md"
         ];
-  const [simplifyReadme, speedySweReadme, speedyAiReadme] = await Promise.all(sourceUrls.map((url) => fetchText(url)));
+  const [simplifyReadme, speedySweReadme, speedyAiReadme, zapplyReadme] = await Promise.all(sourceUrls.map((url) => fetchText(url)));
 
   const postings = [
     ...parseSimplifyReadme(simplifyReadme, profile),
     ...parseSpeedyApplyReadme(speedySweReadme, kind === "new-grad" ? "SpeedyApply SWE New Grad" : "SpeedyApply SWE", profile),
-    ...parseSpeedyApplyReadme(speedyAiReadme, kind === "new-grad" ? "SpeedyApply AI New Grad" : "SpeedyApply AI", profile)
+    ...parseSpeedyApplyReadme(speedyAiReadme, kind === "new-grad" ? "SpeedyApply AI New Grad" : "SpeedyApply AI", profile),
+    ...parseZapplyReadme(zapplyReadme, kind === "new-grad" ? "Zapply New Grad 2027" : "Zapply Internships 2027", profile)
   ].filter((posting) => matchesPostingSearch(posting, searchQuery, targetLocation, kind));
 
   const deduped = dedupePostings(postings);
@@ -446,30 +490,108 @@ function dedupePostings(postings: InternshipPosting[]) {
   });
 
   return Array.from(collectedPostings.values()).sort((a, b) => {
-    const aAge = parsePostingAge(a.postedAt);
-    const bAge = parsePostingAge(b.postedAt);
+    const aAge = getPostingRecencyScore(a.postedAt);
+    const bAge = getPostingRecencyScore(b.postedAt);
 
     if (aAge !== bAge) {
       return aAge - bAge;
     }
 
-    return b.fitScore - a.fitScore;
+    return a.company.localeCompare(b.company) || a.title.localeCompare(b.title);
   });
 }
 
-function parsePostingAge(value: string) {
-  const daysMatch = value.match(/^(\d+)d$/i);
-  if (daysMatch) {
-    return Number(daysMatch[1]);
+const MONTH_INDEX: Record<string, number> = {
+  jan: 0,
+  january: 0,
+  feb: 1,
+  february: 1,
+  mar: 2,
+  march: 2,
+  apr: 3,
+  april: 3,
+  may: 4,
+  jun: 5,
+  june: 5,
+  jul: 6,
+  july: 6,
+  aug: 7,
+  august: 7,
+  sep: 8,
+  sept: 8,
+  september: 8,
+  oct: 9,
+  october: 9,
+  nov: 10,
+  november: 10,
+  dec: 11,
+  december: 11
+};
+
+function daysSince(date: Date) {
+  const now = new Date();
+  return Math.max(0, (now.getTime() - date.getTime()) / 86_400_000);
+}
+
+function parseMonthDay(value: string) {
+  const match = value.match(/^([a-z]{3,9})\.?\s+(\d{1,2})(?:,?\s+(\d{4}))?$/i);
+
+  if (!match) {
+    return null;
   }
 
-  const monthMatch = value.match(/^(\d+)\s*mo/i);
-  if (monthMatch) {
-    return Number(monthMatch[1]) * 30;
+  const month = MONTH_INDEX[match[1].toLowerCase()];
+
+  if (month === undefined) {
+    return null;
+  }
+
+  const day = Number(match[2]);
+  const now = new Date();
+  const year = match[3] ? Number(match[3]) : now.getFullYear();
+  let date = new Date(year, month, day);
+
+  if (!match[3] && date.getTime() - now.getTime() > 86_400_000) {
+    date = new Date(year - 1, month, day);
+  }
+
+  return daysSince(date);
+}
+
+export function getPostingRecencyScore(value: string) {
+  const normalized = value.trim().toLowerCase().replace(/^posted\s+/i, "").replace(/\s+ago$/i, "");
+
+  if (!normalized) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  if (/^(now|just now|today|recent|recently|new)$/.test(normalized)) {
+    return 0;
+  }
+
+  if (normalized === "yesterday") {
+    return 1;
+  }
+
+  const relativeMatch = normalized.match(/^(\d+(?:\.\d+)?)\s*(m|min|mins|minute|minutes|h|hr|hrs|hour|hours|d|day|days|w|wk|wks|week|weeks|mo|mos|month|months)$/i);
+  if (relativeMatch) {
+    const amount = Number(relativeMatch[1]);
+    const unit = relativeMatch[2].toLowerCase();
+
+    if (/^mo/.test(unit)) return amount * 30;
+    if (/^m/.test(unit)) return amount / 1440;
+    if (/^h/.test(unit)) return amount / 24;
+    if (/^(w|wk)/.test(unit)) return amount * 7;
+    return amount;
+  }
+
+  const monthDayAge = parseMonthDay(value.trim());
+  if (monthDayAge !== null) {
+    return monthDayAge;
   }
 
   const parsedDate = Date.parse(value);
-  return Number.isNaN(parsedDate) ? 999 : Math.max(0, Math.round((Date.now() - parsedDate) / 86_400_000));
+  return Number.isNaN(parsedDate) ? Number.POSITIVE_INFINITY : daysSince(new Date(parsedDate));
 }
 
 function fallbackPostings(profile?: Profile): PostingSearchResult {

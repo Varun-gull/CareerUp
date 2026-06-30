@@ -38,6 +38,13 @@ export type Challenge = {
   progress: number;
   target: number;
   completed: boolean;
+  tier?: number;
+  totalTiers?: number;
+};
+
+export type ChallengesData = {
+  tiered: Challenge[];
+  oneOff: Challenge[];
 };
 
 export type Reward = {

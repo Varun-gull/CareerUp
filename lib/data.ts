@@ -1,8 +1,9 @@
 import { applications as mockApplications, challenges as mockChallenges, leaderboard as mockLeaderboard, profile as mockProfile } from "./mock-data";
 import { rewardCatalog } from "./rewards/catalog";
+import { tieredChallenges, oneOffChallenges } from "./challenges/catalog";
 import { buildRoleKey } from "./role-key";
 import { getSchoolLogoUrl } from "./schools";
-import type { Application, CalendarEvent, CareerGroup, Challenge, Friend, GroupLeaderboardRow, InterviewAnswer, LeaderboardUser, MutualFriend, PeerMessage, Profile, PublicProfile, Reward, RolePeerApplicant, RolePeerFeatureStatus, RolePeerInsight } from "./types";
+import type { Application, CalendarEvent, CareerGroup, Challenge, ChallengesData, Friend, GroupLeaderboardRow, InterviewAnswer, LeaderboardUser, MutualFriend, PeerMessage, Profile, PublicProfile, Reward, RolePeerApplicant, RolePeerFeatureStatus, RolePeerInsight } from "./types";
 import { getSupabaseServerClient } from "./supabase/server";
 import { getDateKeyStartUtcIso, getTodayKey, getVisibleStreak, isBrokenStreak } from "./streak";
 
@@ -900,119 +901,86 @@ export async function getMutualFriends(profileId: string): Promise<MutualFriend[
   }));
 }
 
-export async function getChallenges(): Promise<Challenge[]> {
+export async function getChallenges(): Promise<ChallengesData> {
   const supabase = getSupabaseServerClient();
   const user = await getCurrentUser();
 
+  const emptyData: ChallengesData = { tiered: [], oneOff: [] };
+
   if (!supabase || !user) {
-    return mockChallenges;
+    return emptyData;
   }
 
-  const today = getTodayKey();
   const [
-    { data: dbChallenges, error: challengesError },
-    { data: completedToday },
     { data: completedAny },
-    { count: appliedToday },
     { count: appliedCount },
-    { count: savedCount },
-    { count: trackedCount },
     { count: interviewCount },
-    { count: offerCount },
-    { count: friendCount },
     { count: messageCount },
     { count: groupCount },
-    { data: profile }
+    { count: friendCount },
+    { data: profileData },
   ] = await Promise.all([
-    supabase.from("challenges").select("id, title, description, xp_reward, target").eq("active", true).returns<DbChallenge[]>(),
-    supabase
-      .from("completed_challenges")
-      .select("challenge_id, completed_on")
-      .eq("user_id", user.id)
-      .eq("completed_on", today)
-      .returns<DbCompletedChallenge[]>(),
-    supabase.from("completed_challenges").select("challenge_id, completed_on").eq("user_id", user.id).returns<DbCompletedChallenge[]>(),
-    supabase
-      .from("applications")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .eq("status", "applied")
-      .gte("updated_at", getDateKeyStartUtcIso()),
+    supabase.from("completed_challenges").select("challenge_id").eq("user_id", user.id),
     supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "applied"),
-    supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "saved"),
-    supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id),
     supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "interviewing"),
-    supabase.from("applications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "offer"),
-    supabase
-      .from("friends")
-      .select("id", { count: "exact", head: true })
-      .eq("status", "accepted")
-      .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`),
     supabase.from("peer_messages").select("id", { count: "exact", head: true }).eq("sender_id", user.id),
     supabase.from("career_group_members").select("id", { count: "exact", head: true }).eq("user_id", user.id),
-    supabase
-      .from("profiles")
-      .select("school, major, graduation_year, target_roles, target_locations, resume_keywords")
-      .eq("id", user.id)
-      .single<Pick<DbProfile, "school" | "major" | "graduation_year" | "target_roles" | "target_locations" | "resume_keywords">>()
+    supabase.from("friends").select("id", { count: "exact", head: true }).eq("status", "accepted").or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`),
+    supabase.from("profiles").select("school, major, graduation_year, target_roles, target_locations, resume_keywords, resume_file_name").eq("id", user.id).single<Pick<DbProfile, "school" | "major" | "graduation_year" | "target_roles" | "target_locations" | "resume_keywords" | "resume_file_name">>(),
   ]);
 
-  if (challengesError || !dbChallenges) {
-    return mockChallenges;
+  const completedIds = new Set((completedAny ?? []).map((c) => c.challenge_id));
+
+  function getProgressForType(type: string, target: number): number {
+    switch (type) {
+      case "applied": return Math.min(target, appliedCount ?? 0);
+      case "interviewing": return Math.min(target, interviewCount ?? 0);
+      case "messages": return Math.min(target, messageCount ?? 0);
+      case "groups": return Math.min(target, groupCount ?? 0);
+      case "friends": return Math.min(target, friendCount ?? 0);
+      case "resume": return Math.min(target, profileData?.resume_file_name ? 1 : 0);
+      case "profile": {
+        const fields = [profileData?.school, profileData?.major, profileData?.graduation_year, profileData?.target_roles?.length, profileData?.target_locations?.length, profileData?.resume_keywords?.length];
+        return Math.min(target, fields.filter(Boolean).length);
+      }
+      default: return 0;
+    }
   }
 
-  const completedIds = new Set((completedToday ?? []).map((challenge) => challenge.challenge_id));
-  const completedAnyIds = new Set((completedAny ?? []).map((challenge) => challenge.challenge_id));
-  const profileProgress = [
-    profile?.school,
-    profile?.major,
-    profile?.graduation_year,
-    profile?.target_roles?.length,
-    profile?.target_locations?.length,
-    profile?.resume_keywords?.length
-  ].filter(Boolean).length;
-
-  return dbChallenges.map((challenge) => {
-    const lowerTitle = challenge.title.toLowerCase();
-    let progress = completedIds.has(challenge.id) ? challenge.target : 0;
-
-    if (lowerTitle.includes("daily apply")) {
-      progress = Math.min(challenge.target, appliedToday ?? 0);
-    } else if (lowerTitle.includes("two-a-day") || lowerTitle.includes("apply duo")) {
-      progress = Math.min(challenge.target, appliedToday ?? 0);
-    } else if (lowerTitle.includes("profile")) {
-      progress = Math.min(challenge.target, profileProgress);
-    } else if (lowerTitle.includes("resume")) {
-      progress = Math.min(challenge.target, profile?.resume_keywords?.length ? 1 : 0);
-    } else if (lowerTitle.includes("save") || lowerTitle.includes("watchlist")) {
-      progress = Math.min(challenge.target, savedCount ?? 0);
-    } else if (lowerTitle.includes("pipeline")) {
-      progress = Math.min(challenge.target, trackedCount ?? 0);
-    } else if (lowerTitle.includes("interview")) {
-      progress = Math.min(challenge.target, interviewCount ?? 0);
-    } else if (lowerTitle.includes("offer")) {
-      progress = Math.min(challenge.target, offerCount ?? 0);
-    } else if (lowerTitle.includes("friend")) {
-      progress = Math.min(challenge.target, friendCount ?? 0);
-    } else if (lowerTitle.includes("group")) {
-      progress = Math.min(challenge.target, groupCount ?? 0);
-    } else if (lowerTitle.includes("message")) {
-      progress = Math.min(challenge.target, messageCount ?? 0);
-    } else if (lowerTitle.includes("apply")) {
-      progress = Math.min(challenge.target, appliedCount ?? 0);
-    }
-    const completed = lowerTitle.includes("daily") ? completedIds.has(challenge.id) : completedAnyIds.has(challenge.id);
-
+  // Tiered: only expose the first incomplete tier
+  const tiered: Challenge[] = tieredChallenges.map((def) => {
+    const activeTier = def.tiers.find((t) => !completedIds.has(t.id)) ?? def.tiers[def.tiers.length - 1];
+    const completed = completedIds.has(activeTier.id);
+    const progress = completed ? activeTier.target : getProgressForType(def.progressType, activeTier.target);
     return {
-      id: challenge.id,
-      title: challenge.title,
-      description: challenge.description,
-      xp: challenge.xp_reward,
+      id: activeTier.id,
+      title: def.baseTitle,
+      description: activeTier.description,
+      xp: activeTier.xp,
       progress,
-      target: challenge.target,
-      completed: progress >= challenge.target || completed
+      target: activeTier.target,
+      completed,
+      tier: activeTier.tierNum,
+      totalTiers: def.tiers.length,
     };
   });
+
+  // One-off
+  const oneOff: Challenge[] = oneOffChallenges.map((def) => {
+    const completed = completedIds.has(def.id);
+    const progress = completed ? def.target : getProgressForType(def.progressType, def.target);
+    return {
+      id: def.id,
+      title: def.title,
+      description: def.description,
+      xp: def.xp,
+      progress,
+      target: def.target,
+      completed,
+    };
+  });
+
+  return { tiered, oneOff };
 }
 
 export async function getRewards(): Promise<Reward[]> {

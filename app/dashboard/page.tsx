@@ -68,7 +68,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
                 </Link>
               </div>
               <div className="mt-4 grid gap-4">
-                {challenges.map((challenge) => (
+                {[...challenges.tiered, ...challenges.oneOff].slice(0, 4).map((challenge) => (
                   <ChallengeCard key={challenge.id} challenge={challenge} />
                 ))}
               </div>

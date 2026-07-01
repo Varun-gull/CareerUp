@@ -1,4 +1,4 @@
--- CorpClimbr MVP schema
+-- CareerUp MVP schema
 -- Run this in Supabase SQL Editor after creating your project.
 
 create extension if not exists "pgcrypto";
@@ -701,7 +701,7 @@ values
   ('Resume Ready', 'Upload or paste a readable resume so matching can improve.', 40, 1),
   ('Interview Momentum', 'Move one role into interviewing.', 90, 1),
   ('Offer Celebration', 'Move one role into offer.', 150, 1),
-  ('Friend Builder', 'Add one accepted friend to CorpClimbr.', 35, 1),
+  ('Friend Builder', 'Add one accepted friend to CareerUp.', 35, 1),
   ('Group Launch', 'Create or join one recruiting group.', 55, 1),
   ('Peer Message', 'Send one helpful message to another applicant.', 30, 1)
 on conflict do nothing;

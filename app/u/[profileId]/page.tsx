@@ -58,9 +58,9 @@ export default async function PublicProfilePage({
                     {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="text-xs font-black uppercase text-sky">CorpClimbr profile</p>
+                    <p className="text-xs font-black uppercase text-sky">CareerUp profile</p>
                     <h1 className="mt-1 text-3xl font-black">{profile.name}</h1>
-                    <p className="text-slate-700">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "CorpClimbr Student"}</p>
+                    <p className="text-slate-700">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "CareerUp Student"}</p>
                   </div>
                 </div>
 
@@ -115,7 +115,7 @@ export default async function PublicProfilePage({
                       Subject
                       <input
                         name="subject"
-                        defaultValue="CorpClimbr question"
+                        defaultValue="CareerUp question"
                         className="field text-sm normal-case"
                       />
                     </label>

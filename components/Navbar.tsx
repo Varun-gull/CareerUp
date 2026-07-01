@@ -30,7 +30,7 @@ function getInitials(name: string) {
     .map((part) => part[0]?.toUpperCase())
     .join("");
 
-  return initials || "CC";
+  return initials || "CU";
 }
 
 function getFirstName(name: string) {
@@ -40,7 +40,7 @@ function getFirstName(name: string) {
 export async function Navbar() {
   const user = await getCurrentUser();
   const [profile, unreadMessages] = user ? await Promise.all([getCurrentProfile(), getUnreadPeerMessageCount()]) : [null, 0];
-  const profileName = profile?.name ?? user?.email ?? "CorpClimbr";
+  const profileName = profile?.name ?? user?.email ?? "CareerUp";
   const initials = user ? getInitials(profileName) : "";
   const firstName = user ? getFirstName(profile?.name ?? "") : "";
 
@@ -51,7 +51,7 @@ export async function Navbar() {
           <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-sky text-white shadow-glow transition group-hover:-translate-y-0.5">
             <BriefcaseBusiness size={22} />
           </span>
-          <span className="text-lg">CorpClimbr</span>
+          <span className="text-lg">CareerUp</span>
         </Link>
         <NavLinks />
         <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-end gap-2 justify-self-end lg:col-start-3">

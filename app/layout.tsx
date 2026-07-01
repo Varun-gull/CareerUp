@@ -4,7 +4,7 @@ import { NavigationProgress } from "@/components/NavigationProgress";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CorpClimbr | Gamified Internship Tracker",
+  title: "CareerUp | Gamified Internship Tracker",
   description: "Track internship applications, build streaks, earn XP, and level up your search."
 };
 

@@ -202,7 +202,7 @@ export async function getCurrentProfile(): Promise<Profile> {
 
   return {
     name: data.full_name ?? user.email ?? "Student",
-    school: data.school ?? "CorpClimbr Student",
+    school: data.school ?? "CareerUp Student",
     schoolLogoUrl: resolveSchoolLogoUrl(data.school, data.school_logo_url),
     major: data.major ?? "",
     graduationYear: data.graduation_year ?? "",
@@ -281,8 +281,8 @@ export async function getRolePeerFeatureStatus(): Promise<RolePeerFeatureStatus>
   const checks = await Promise.all([
     supabase.from("applications").select("role_key, application_year").limit(1),
     supabase.from("peer_messages").select("id", { count: "exact", head: true }),
-    supabase.rpc("get_role_peer_summaries", { role_keys: ["corpclimbr_setup_check"] }),
-    supabase.rpc("get_role_peer_applicants", { target_role_key: "corpclimbr_setup_check" }),
+    supabase.rpc("get_role_peer_summaries", { role_keys: ["careerup_setup_check"] }),
+    supabase.rpc("get_role_peer_applicants", { target_role_key: "careerup_setup_check" }),
     supabase.rpc("get_peer_messages")
   ]);
 
@@ -350,7 +350,7 @@ export async function getRolePeerApplicants(roleKey: string): Promise<RolePeerAp
   return applicants.map((applicant) => ({
     applicationId: applicant.application_id,
     profileId: applicant.profile_id,
-    name: applicant.full_name ?? "CorpClimbr Student",
+    name: applicant.full_name ?? "CareerUp Student",
     school: applicant.school ?? "Student",
     schoolLogoUrl: resolveSchoolLogoUrl(applicant.school, applicant.school_logo_url),
     company: applicant.company,
@@ -384,7 +384,7 @@ export async function getPeerMessages(): Promise<PeerMessage[]> {
         senderId: message.sender_id,
         recipientId: message.recipient_id,
         otherProfileId: message.other_profile_id ?? (direction === "sent" ? message.recipient_id : message.sender_id),
-        otherName: message.other_full_name ?? "CorpClimbr Student",
+        otherName: message.other_full_name ?? "CareerUp Student",
         otherSchool: message.other_school ?? "Student",
         otherSchoolLogoUrl: resolveSchoolLogoUrl(message.other_school, message.other_school_logo_url),
         subject: message.subject,
@@ -399,7 +399,7 @@ export async function getPeerMessages(): Promise<PeerMessage[]> {
         }),
         direction,
         applicationCompany: message.application_company ?? "Role",
-        applicationRole: message.application_role ?? "CorpClimbr role",
+        applicationRole: message.application_role ?? "CareerUp role",
         applicationStatus: message.application_status ?? "saved",
         applicationYear: message.application_year ?? new Date(message.created_at).getFullYear()
       };
@@ -453,7 +453,7 @@ export async function getPeerMessages(): Promise<PeerMessage[]> {
       senderId: message.sender_id,
       recipientId: message.recipient_id,
       otherProfileId,
-      otherName: otherProfile?.full_name ?? "CorpClimbr Student",
+      otherName: otherProfile?.full_name ?? "CareerUp Student",
       otherSchool: otherProfile?.school ?? "Student",
       otherSchoolLogoUrl: resolveSchoolLogoUrl(otherProfile?.school, otherProfile?.school_logo_url),
       subject: message.subject,
@@ -468,7 +468,7 @@ export async function getPeerMessages(): Promise<PeerMessage[]> {
       }),
       direction,
       applicationCompany: application?.company ?? "Role",
-      applicationRole: application?.role ?? "CorpClimbr role",
+      applicationRole: application?.role ?? "CareerUp role",
       applicationStatus: application?.status ?? "saved",
       applicationYear: application?.applicationYear ?? new Date(message.created_at).getFullYear()
     };
@@ -528,7 +528,7 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
 
   return rows.map((user) => ({
     id: user.id,
-    name: user.full_name ?? "CorpClimbr Student",
+    name: user.full_name ?? "CareerUp Student",
     school: user.school ?? "Student",
     schoolLogoUrl: resolveSchoolLogoUrl(user.school, user.school_logo_url),
     xp: getLeaderboardXp({ xp: user.xp, total_xp: getOptionalTotalXp(user) }),
@@ -581,7 +581,7 @@ export async function getFriends(): Promise<Friend[]> {
       return {
         id: friendship.id,
         userId: friendId,
-        name: profile.full_name ?? profile.email ?? "CorpClimbr Student",
+        name: profile.full_name ?? profile.email ?? "CareerUp Student",
         email: profile.email ?? "",
         school: profile.school ?? "Student",
         schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
@@ -631,7 +631,7 @@ export async function getFriendLeaderboard(): Promise<LeaderboardUser[]> {
 
   return rows.map((profile) => ({
     id: profile.id,
-    name: profile.full_name ?? "CorpClimbr Student",
+    name: profile.full_name ?? "CareerUp Student",
     school: profile.school ?? "Student",
     schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
     xp: getLeaderboardXp({ xp: profile.xp, total_xp: getOptionalTotalXp(profile) }),
@@ -695,7 +695,7 @@ export async function getGroups(): Promise<CareerGroup[]> {
       profile.id,
       {
         id: profile.id,
-        name: profile.full_name ?? "CorpClimbr Student",
+        name: profile.full_name ?? "CareerUp Student",
         school: profile.school ?? "Student",
         schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
         xp: getLeaderboardXp({ xp: profile.xp, total_xp: getOptionalTotalXp(profile) }),
@@ -768,7 +768,7 @@ export async function getPublicProfile(profileId: string): Promise<PublicProfile
 
   return {
     id: data.id,
-    name: data.full_name ?? "CorpClimbr Student",
+    name: data.full_name ?? "CareerUp Student",
     school: data.school ?? "Student",
     schoolLogoUrl: resolveSchoolLogoUrl(data.school, data.school_logo_url),
     major: data.major ?? "",
@@ -897,7 +897,7 @@ export async function getMutualFriends(profileId: string): Promise<MutualFriend[
 
   return profiles.map((profile) => ({
     id: profile.id,
-    name: profile.full_name ?? "CorpClimbr Student",
+    name: profile.full_name ?? "CareerUp Student",
     school: profile.school ?? "Student",
     schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
     xp: profile.xp ?? 0

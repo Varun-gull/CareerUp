@@ -37,7 +37,7 @@ export async function sendFriendRequest(formData: FormData) {
     .maybeSingle<{ id: string; email: string | null }>();
 
   if (targetError || !targetProfile) {
-    redirectWithMessage("/friends", "No CorpClimbr account found with that email.");
+    redirectWithMessage("/friends", "No CareerUp account found with that email.");
   }
 
   if (targetProfile.id === user.id) {
@@ -102,7 +102,7 @@ export async function sendFriendRequestById(formData: FormData) {
   const { data: targetProfile, error: targetError } = await supabase.from("profiles").select("id").eq("id", profileId).maybeSingle<{ id: string }>();
 
   if (targetError || !targetProfile) {
-    redirectWithMessage("/friends", "That CorpClimbr profile could not be found.");
+    redirectWithMessage("/friends", "That CareerUp profile could not be found.");
   }
 
   const { data: existing } = await supabase

@@ -659,14 +659,14 @@ export function getPostingRecencyScore(value: string) {
   return Number.isNaN(parsedDate) ? Number.POSITIVE_INFINITY : daysSince(new Date(parsedDate));
 }
 
-function fallbackPostings(profile?: Profile): PostingSearchResult {
-  const seed = [
+function fallbackPostings(kind: PostingKind = "internship", profile?: Profile): PostingSearchResult {
+  const internshipSeed = [
     {
-      id: "fallback-software",
+      id: "fallback-software-internship",
       company: "Northstar Labs",
       title: "Software Engineering Intern",
       location: "Remote",
-      source: "CareerUp sample",
+      source: "CareerUp internship sample",
       url: "https://example.com/software-engineering-intern",
       remote: true,
       workMode: "remote" as const,
@@ -675,11 +675,11 @@ function fallbackPostings(profile?: Profile): PostingSearchResult {
       description: "Build user-facing product features with a small engineering team."
     },
     {
-      id: "fallback-data",
+      id: "fallback-data-internship",
       company: "BlueGrid AI",
       title: "Data Science Intern",
       location: "New York, NY",
-      source: "CareerUp sample",
+      source: "CareerUp internship sample",
       url: "https://example.com/data-science-intern",
       remote: false,
       workMode: "onsite" as const,
@@ -688,11 +688,11 @@ function fallbackPostings(profile?: Profile): PostingSearchResult {
       description: "Analyze datasets, build dashboards, and support product experiments."
     },
     {
-      id: "fallback-product",
+      id: "fallback-product-internship",
       company: "Summit Systems",
       title: "Product Management Intern",
       location: "Washington, DC",
-      source: "CareerUp sample",
+      source: "CareerUp internship sample",
       url: "https://example.com/product-management-intern",
       remote: false,
       workMode: "onsite" as const,
@@ -701,6 +701,48 @@ function fallbackPostings(profile?: Profile): PostingSearchResult {
       description: "Work with design and engineering to scope student-facing features."
     }
   ];
+  const newGradSeed = [
+    {
+      id: "fallback-software-new-grad",
+      company: "Northstar Labs",
+      title: "Software Engineer New Grad",
+      location: "Remote",
+      source: "CareerUp new grad sample",
+      url: "https://example.com/software-engineer-new-grad",
+      remote: true,
+      workMode: "remote" as const,
+      postedAt: "Sample",
+      tags: ["Software Engineering", "React", "TypeScript"],
+      description: "Join a product engineering team as an entry-level software engineer."
+    },
+    {
+      id: "fallback-data-new-grad",
+      company: "BlueGrid AI",
+      title: "Data Analyst New Grad",
+      location: "New York, NY",
+      source: "CareerUp new grad sample",
+      url: "https://example.com/data-analyst-new-grad",
+      remote: false,
+      workMode: "onsite" as const,
+      postedAt: "Sample",
+      tags: ["Data", "Python", "Analytics"],
+      description: "Analyze datasets, build dashboards, and support business decisions in an entry-level analytics role."
+    },
+    {
+      id: "fallback-product-new-grad",
+      company: "Summit Systems",
+      title: "Associate Product Manager",
+      location: "Washington, DC",
+      source: "CareerUp new grad sample",
+      url: "https://example.com/associate-product-manager",
+      remote: false,
+      workMode: "onsite" as const,
+      postedAt: "Sample",
+      tags: ["Product", "Research", "Strategy"],
+      description: "Work with design and engineering to scope product features in an entry-level product role."
+    }
+  ];
+  const seed = kind === "new-grad" ? newGradSeed : internshipSeed;
 
   return {
     provider: "CareerUp sample",
@@ -855,8 +897,8 @@ export async function searchInternshipPostings({ query, location, profile, kind 
       return curatedResults;
     }
 
-    return fallbackPostings(profile);
+    return fallbackPostings(kind, profile);
   } catch {
-    return fallbackPostings(profile);
+    return fallbackPostings(kind, profile);
   }
 }

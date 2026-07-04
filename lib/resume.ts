@@ -99,6 +99,17 @@ type UploadedResumeFile = {
   text: () => Promise<string>;
 };
 
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string) {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const timeoutPromise = new Promise<T>((_, reject) => {
+    timeout = setTimeout(() => reject(new Error(`${label} timed out`)), timeoutMs);
+  });
+
+  return Promise.race([promise, timeoutPromise]).finally(() => {
+    if (timeout) clearTimeout(timeout);
+  });
+}
+
 async function extractPdfTextWithPdfParse(buffer: Buffer) {
   const { PDFParse } = await import("pdf-parse");
   const parser = new PDFParse({ data: buffer });
@@ -141,19 +152,23 @@ export async function extractResumeTextFromFile(file: UploadedResumeFile) {
 
   if (fileName.endsWith(".pdf")) {
     try {
-      return await extractPdfTextWithPdfParse(buffer);
-    } catch {
-      return extractPdfTextWithPdfJs(buffer);
+      return await withTimeout(extractPdfTextWithPdfJs(buffer), 4_000, "PDF text extraction");
+    } catch (pdfJsError) {
+      try {
+        return await withTimeout(extractPdfTextWithPdfParse(buffer), 4_000, "PDF fallback extraction");
+      } catch {
+        throw pdfJsError;
+      }
     }
   }
 
   if (fileName.endsWith(".docx")) {
-    const mammoth = await import("mammoth");
-    const result = await mammoth.extractRawText({ buffer });
+    const mammoth = await withTimeout(import("mammoth"), 4_000, "DOCX parser load");
+    const result = await withTimeout(mammoth.extractRawText({ buffer }), 4_000, "DOCX text extraction");
     return normalizeResumeText(result.value ?? "");
   }
 
-  return normalizeResumeText(await file.text());
+  return normalizeResumeText(await withTimeout(file.text(), 4_000, "Resume text extraction"));
 }
 
 export function extractResumeKeywords(text: string) {
@@ -175,6 +190,14 @@ export function extractResumeKeywords(text: string) {
         keywords.add(word);
       }
     });
+
+  if (keywords.size === 0) {
+    normalized
+      .match(/\b[a-z][a-z+#.-]{3,}\b/g)
+      ?.filter((word) => !stopWords.has(word))
+      .slice(0, 12)
+      .forEach((word) => keywords.add(word));
+  }
 
   return Array.from(keywords).slice(0, 24);
 }

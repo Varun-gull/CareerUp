@@ -158,9 +158,11 @@ export async function saveResumeProfile(formData: FormData) {
   let resumeText = pastedText;
   let fileName = "";
   let fileReadFailed = false;
+  let uploadedFile = false;
 
   if (isUploadedFile(resumeFile)) {
     fileName = resumeFile.name;
+    uploadedFile = true;
 
     if (Number(resumeFile.size) > 8 * 1024 * 1024) {
       redirectWithMessage("/profile", "Resume file is too large. Upload a file under 8 MB or paste the text instead.");
@@ -177,12 +179,10 @@ export async function saveResumeProfile(formData: FormData) {
   const normalizedText = normalizeResumeText(resumeText);
   const keywords = extractResumeKeywords(normalizedText);
 
-  if (!normalizedText || keywords.length === 0) {
+  if (!normalizedText && !uploadedFile) {
     redirectWithMessage(
       "/profile",
-      fileReadFailed
-        ? "CareerUp could not read that file. Paste your resume text in the box and save again."
-        : "Add resume text from a text-based resume before saving."
+      "Upload a resume file or paste resume text before saving."
     );
   }
 
@@ -232,7 +232,9 @@ export async function saveResumeProfile(formData: FormData) {
   redirectWithMessage(
     "/profile",
     fileReadFailed
-      ? "Resume text saved from the pasted box because the file could not be read."
+      ? normalizedText
+        ? "Resume text saved from the pasted box because the file could not be read."
+        : "Resume file saved, but CareerUp could not read the text. Paste the resume text later to improve matching."
       : shouldAwardResumeXp
         ? "Resume saved. You earned 40 XP."
         : "Resume saved."

@@ -1,7 +1,9 @@
-import { FileText, Save, Share2, Upload } from "lucide-react";
+import { FileCheck2, FileText, Save, Share2, UploadCloud } from "lucide-react";
 import Link from "next/link";
+import { MultiSelectField } from "@/components/MultiSelectField";
 import { Navbar } from "@/components/Navbar";
 import { RankBadge } from "@/components/RankBadge";
+import { ResumeUploadField } from "@/components/ResumeUploadField";
 import { BadgeShelf } from "@/components/BadgeDisplay";
 import { SchoolField } from "@/components/SchoolField";
 import { XpProgressBar } from "@/components/XpProgressBar";
@@ -11,23 +13,69 @@ import { schoolOptions } from "@/lib/schools";
 
 export const runtime = "nodejs";
 
+const targetRoleOptions = [
+  "Software Engineering Intern",
+  "Data Science Intern",
+  "AI / ML Intern",
+  "Product Management Intern",
+  "Business Analyst Intern",
+  "Cybersecurity Intern",
+  "Quant Intern",
+  "UX Design Intern",
+  "Software Engineer New Grad",
+  "Data Analyst New Grad",
+  "Associate Product Manager",
+  "Business Analyst New Grad"
+].map((value) => ({ label: value, value }));
+
+const targetLocationOptions = [
+  "Remote",
+  "Hybrid",
+  "New York, NY",
+  "San Francisco, CA",
+  "Seattle, WA",
+  "Austin, TX",
+  "Boston, MA",
+  "Chicago, IL",
+  "Washington, DC",
+  "Atlanta, GA",
+  "Los Angeles, CA",
+  "Dallas, TX"
+].map((value) => ({ label: value, value }));
+
 export default async function ProfilePage({ searchParams }: { searchParams?: { message?: string } }) {
   const profile = await getCurrentProfile();
+  const profileDetails = [
+    profile.school && profile.school !== "CareerUp Student" ? profile.school : "",
+    profile.major,
+    profile.graduationYear ? `Class of ${profile.graduationYear}` : ""
+  ].filter(Boolean);
 
   return (
     <>
       <Navbar />
       <main className="page-shell">
         <section className="card overflow-hidden">
-          <div className="bg-navy px-6 py-10 text-white">
-            <div className="flex flex-wrap items-center justify-between gap-5">
+          <div className="border-b border-white/10 bg-gradient-to-r from-navy via-slate-950 to-slate-900 px-6 py-10 text-white">
+            <div className="flex flex-wrap items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-electric text-2xl font-black shadow-glow">
+                <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white text-2xl font-black text-navy shadow-glow">
                   {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                 </div>
                 <div>
-                  <h1 className="text-3xl font-black">{profile.name}</h1>
-                  <p className="text-slate-700">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "Complete your profile"}</p>
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-sky">Student profile</p>
+                  <h1 className="mt-1 text-4xl font-black">{profile.name}</h1>
+                  {profileDetails.length > 0 ? (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {profileDetails.map((detail) => (
+                        <span key={detail} className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm font-black text-white shadow-sm">
+                          {detail}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm font-bold text-slate-300">Add your school, major, and graduation year.</p>
+                  )}
                 </div>
               </div>
               <Link href="/friends" className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold transition hover:-translate-y-0.5 hover:border-sky/40 hover:bg-white/10">
@@ -56,14 +104,20 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                   Graduation year
                   <input name="graduationYear" defaultValue={profile.graduationYear} className="field" placeholder="2027" inputMode="numeric" />
                 </label>
-                <label className="grid gap-2 text-sm font-bold text-slate-700">
-                  Target roles
-                  <input name="targetRoles" defaultValue={profile.targetRoles.join(", ")} className="field" placeholder="Software Engineering, Data Science, Product" />
-                </label>
-                <label className="grid gap-2 text-sm font-bold text-slate-700">
-                  Target locations
-                  <input name="targetLocations" defaultValue={profile.targetLocations.join(", ")} className="field" placeholder="New York, Remote, Washington DC" />
-                </label>
+                <MultiSelectField
+                  label="Target roles"
+                  name="targetRoles"
+                  options={targetRoleOptions}
+                  initialValues={profile.targetRoles}
+                  placeholder="Choose target roles"
+                />
+                <MultiSelectField
+                  label="Target locations"
+                  name="targetLocations"
+                  options={targetLocationOptions}
+                  initialValues={profile.targetLocations}
+                  placeholder="Choose target locations"
+                />
                 <label className="flex gap-3 rounded-2xl border border-sky/20 bg-sky/10 p-4 text-sm font-bold text-slate-700">
                   <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand" />
                   <span>
@@ -84,28 +138,28 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
               <XpProgressBar xp={profile.xp} />
               <BadgeShelf applicationsApplied={profile.applicationsApplied} />
               <div className="rounded-3xl border border-slate-200 bg-white/85 p-4">
-                <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
-                    <FileText size={20} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-500">Resume status</p>
-                    <p className="mt-1 text-lg font-black text-ink">{profile.resumeFileName || "No resume saved"}</p>
+                <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+                      {profile.resumeFileName ? <FileCheck2 size={21} /> : <FileText size={21} />}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-slate-500">Resume</p>
+                      <p className="mt-1 truncate text-lg font-black text-ink">{profile.resumeFileName || "No resume saved"}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-500">
+                        {profile.resumeUpdatedAt ? `Updated ${profile.resumeUpdatedAt}` : "Upload or paste resume text to improve matching."}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                {profile.resumeUpdatedAt && <p className="mt-1 text-sm font-bold text-slate-500">Updated {profile.resumeUpdatedAt}</p>}
                 <form action={saveResumeProfile} className="mt-5 grid gap-4">
+                  <ResumeUploadField />
                   <label className="grid gap-2 text-sm font-bold text-slate-700">
-                    Upload resume
-                    <input name="resumeFile" type="file" accept=".txt,.md,.csv,.pdf,.docx" className="field text-sm" />
-                    <span className="text-xs font-semibold text-slate-500">PDF, DOCX, TXT, MD, and CSV resumes are supported. Text-based PDFs work best.</span>
-                  </label>
-                  <label className="grid gap-2 text-sm font-bold text-slate-700">
-                    Paste text fallback
-                    <textarea name="resumeText" rows={6} className="field resize-none text-sm" placeholder="Paste resume text if the upload cannot be read." />
+                    Paste resume text
+                    <textarea name="resumeText" rows={5} className="field resize-none text-sm" placeholder="Optional fallback if the file cannot be read." />
                   </label>
                   <button type="submit" className="primary-button w-full">
-                    <Upload className="mr-2" size={18} /> Save resume
+                    <UploadCloud className="mr-2" size={18} /> Save resume
                   </button>
                 </form>
               </div>

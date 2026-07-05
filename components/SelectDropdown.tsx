@@ -62,7 +62,7 @@ export function SelectDropdown({ label, name, value, onChange, options }: Props)
           className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-bold text-slate-700 transition hover:bg-sky/10 hover:text-slate-950"
         >
           {opt.label}
-          {opt.value === value && <Check size={14} className="text-sky" />}
+          {opt.value === value && <Check size={14} className="text-sky-600" />}
         </button>
       ))}
     </div>,
@@ -70,7 +70,7 @@ export function SelectDropdown({ label, name, value, onChange, options }: Props)
   ) : null;
 
   return (
-    <label className={label ? "grid gap-2 text-sm font-black text-slate-700" : "block"}>
+    <label className={label ? "grid gap-2 text-sm font-bold text-slate-700" : "block"}>
       {label && <span>{label}</span>}
       {/* Hidden input so the value is included in form submissions */}
       <input type="hidden" name={name} value={value} />

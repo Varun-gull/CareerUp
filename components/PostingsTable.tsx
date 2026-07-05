@@ -60,13 +60,13 @@ export function PostingsTable({
           return (
             <article key={posting.id} className="p-4">
               <div className="flex items-start gap-3">
-                <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-sky text-xs font-black text-slate-950">{index + 1}</span>
+                <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-sky text-xs font-bold text-slate-950">{index + 1}</span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-black leading-tight text-ink">{posting.title}</p>
-                  <p className="mt-1 text-xs font-bold text-sky">{posting.company}</p>
+                  <p className="font-bold leading-tight text-ink">{posting.title}</p>
+                  <p className="mt-1 text-xs font-bold text-sky-600">{posting.company}</p>
                   <div className="mt-3 flex flex-wrap gap-2 text-xs font-bold text-slate-600">
-                    <span className={`rounded-full px-2.5 py-1 font-black ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
-                    <span className={`rounded-full px-2.5 py-1 font-black ${fitTone(posting.fitScore)}`}>{posting.fitScore}% fit</span>
+                    <span className={`rounded-full px-2.5 py-1 font-bold ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
+                    <span className={`rounded-full px-2.5 py-1 font-bold ${fitTone(posting.fitScore)}`}>{posting.fitScore}% fit</span>
                     <span className="rounded-full bg-slate-100 px-2.5 py-1">{posting.postedAt}</span>
                   </div>
                   <p className="mt-3 line-clamp-2 text-sm font-semibold text-slate-600">{posting.location}</p>
@@ -78,7 +78,7 @@ export function PostingsTable({
                   href={posting.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex min-h-10 items-center justify-center rounded-2xl bg-emerald-600 px-3 text-sm font-black text-white shadow-sm transition hover:bg-emerald-700"
+                  className="inline-flex min-h-10 items-center justify-center rounded-2xl bg-emerald-600 px-3 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700"
                 >
                   <ExternalLink className="mr-1.5" size={15} /> Apply
                 </a>
@@ -94,8 +94,8 @@ export function PostingsTable({
                     disabled={saved}
                     className={
                       saved
-                        ? "inline-flex min-h-10 w-full cursor-default items-center justify-center rounded-2xl bg-emerald-50 px-3 text-sm font-black text-emerald-700 ring-1 ring-emerald-200"
-                        : "inline-flex min-h-10 w-full items-center justify-center rounded-2xl bg-sky px-3 text-sm font-black text-slate-950 shadow-sm transition hover:bg-brand"
+                        ? "inline-flex min-h-10 w-full cursor-default items-center justify-center rounded-2xl bg-emerald-50 px-3 text-sm font-bold text-emerald-700 ring-1 ring-emerald-200"
+                        : "inline-flex min-h-10 w-full items-center justify-center rounded-2xl bg-sky px-3 text-sm font-bold text-slate-950 shadow-sm transition hover:bg-brand"
                     }
                   >
                     {saved ? <CheckCircle2 className="mr-1.5" size={15} /> : <BookmarkPlus className="mr-1.5" size={15} />}
@@ -106,7 +106,7 @@ export function PostingsTable({
 
               <Link
                 href={insightHref}
-                className="mt-2 inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-sky/10 px-3 text-xs font-black text-sky ring-1 ring-sky/25"
+                className="mt-2 inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-sky/10 px-3 text-xs font-bold text-sky-600 ring-1 ring-sky/25"
               >
                 <UsersRound className="mr-1.5" size={14} />
                 {peerInsight?.trackedCount ?? 0} tracked · {peerInsight?.interviewedCount ?? 0} interviewing
@@ -118,7 +118,7 @@ export function PostingsTable({
 
       <div className="hidden overflow-hidden md:block">
         <table className="w-full table-fixed border-collapse text-left text-sm">
-          <thead className="bg-slate-50 text-xs font-black uppercase text-slate-500">
+          <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
             <tr>
               <th className="hidden w-10 px-2 py-4 lg:table-cell">#</th>
               <th className="w-[32%] px-3 py-4">Position</th>
@@ -148,7 +148,7 @@ export function PostingsTable({
               <tr key={posting.id} className="align-middle transition hover:bg-slate-50">
                 <td className="hidden px-2 py-3 text-center font-bold text-slate-500 lg:table-cell">{index + 1}</td>
                 <td className="px-3 py-3">
-                  <p className="truncate font-black text-ink" title={posting.title}>
+                  <p className="truncate font-bold text-ink" title={posting.title}>
                     {posting.title}
                   </p>
                   <p className="mt-1 truncate text-xs font-bold text-slate-500" title={`${posting.company} · ${posting.source}`}>
@@ -161,13 +161,13 @@ export function PostingsTable({
                     href={posting.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex min-h-9 items-center justify-center rounded-2xl bg-emerald-600 px-3 text-xs font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700"
+                    className="inline-flex min-h-9 items-center justify-center rounded-2xl bg-emerald-600 px-3 text-xs font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700"
                   >
                     <ExternalLink className="mr-1" size={14} /> Apply
                   </a>
                 </td>
                 <td className="hidden whitespace-nowrap px-2 py-3 md:table-cell">
-                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-black ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
+                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
                 </td>
                 <td className="px-3 py-3">
                   <p className="truncate font-bold text-slate-600" title={posting.location}>
@@ -175,14 +175,14 @@ export function PostingsTable({
                   </p>
                 </td>
                 <td className="hidden px-3 py-3 lg:table-cell">
-                  <p className="truncate font-black text-sky" title={posting.company}>
+                  <p className="truncate font-bold text-sky-600" title={posting.company}>
                     {posting.company}
                   </p>
                 </td>
                 <td className="hidden px-2 py-3 xl:table-cell">
                   <Link
                     href={insightHref}
-                    className="inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-sky/10 px-2 text-xs font-black text-sky ring-1 ring-sky/25 transition hover:bg-sky/15"
+                    className="inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-sky/10 px-2 text-xs font-bold text-sky-600 ring-1 ring-sky/25 transition hover:bg-sky/15"
                     title="See who else tracked this role"
                   >
                     <UsersRound className="mr-1" size={14} />
@@ -191,7 +191,7 @@ export function PostingsTable({
                   </Link>
                 </td>
                 <td className="whitespace-nowrap px-2 py-3">
-                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-black ${fitTone(posting.fitScore)}`}>{posting.fitScore}%</span>
+                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${fitTone(posting.fitScore)}`}>{posting.fitScore}%</span>
                 </td>
                 <td className="px-2 py-3">
                   <form action={savePostingApplication}>
@@ -206,8 +206,8 @@ export function PostingsTable({
                       disabled={saved}
                       className={
                         saved
-                          ? "inline-flex min-h-9 w-full cursor-default items-center justify-center rounded-2xl bg-emerald-50 px-2 text-xs font-black text-emerald-700 ring-1 ring-emerald-200"
-                          : "inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-sky px-2 text-xs font-black text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:bg-brand"
+                          ? "inline-flex min-h-9 w-full cursor-default items-center justify-center rounded-2xl bg-emerald-50 px-2 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200"
+                          : "inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-sky px-2 text-xs font-bold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:bg-brand"
                       }
                     >
                       {saved ? <CheckCircle2 className="mr-1" size={14} /> : <BookmarkPlus className="mr-1" size={14} />}

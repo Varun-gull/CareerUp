@@ -13,7 +13,7 @@ export default async function CalendarPage() {
       <main className="page-shell">
         <div className="page-hero mb-6">
           <p className="eyebrow">Schedule</p>
-          <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Calendar</h1>
+          <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Calendar</h1>
           <p className="mt-2 text-slate-600">Drag applications onto dates to track deadlines and submissions.</p>
         </div>
         <CalendarView applications={applications} dbEvents={dbEvents} />

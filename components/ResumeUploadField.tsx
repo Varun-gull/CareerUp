@@ -41,8 +41,8 @@ export function ResumeUploadField() {
       <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-sky/10 text-brand">
         {status === "uploading" ? <Loader2 size={20} className="animate-spin" /> : status === "saved" ? <CheckCircle2 size={20} /> : <UploadCloud size={20} />}
       </span>
-      <span className="text-sm font-black text-slate-800">{fileName || "Upload resume file"}</span>
-      <span className={`text-xs font-bold ${status === "error" ? "text-red-500" : status === "saved" ? "text-sky" : "text-slate-500"}`}>{message}</span>
+      <span className="text-sm font-bold text-slate-800">{fileName || "Upload resume file"}</span>
+      <span className={`text-xs font-bold ${status === "error" ? "text-red-500" : status === "saved" ? "text-sky-600" : "text-slate-500"}`}>{message}</span>
       <input
         name="resumeFile"
         type="file"

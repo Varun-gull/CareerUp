@@ -79,7 +79,7 @@ export function MultiSelectField({ label, name, options, initialValues, placehol
           <span className="flex min-w-0 flex-1 flex-wrap gap-2">
             {normalizedSelected.length > 0 ? (
               normalizedSelected.map((value) => (
-                <span key={value} className="inline-flex max-w-full items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-800">
+                <span key={value} className="inline-flex max-w-full items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-800">
                   <span className="truncate">{value}</span>
                 </span>
               ))
@@ -100,12 +100,12 @@ export function MultiSelectField({ label, name, options, initialValues, placehol
                     key={option.value}
                     type="button"
                     onClick={() => toggleOption(option.value)}
-                    className={`flex items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-black transition ${
+                    className={`flex items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-bold transition ${
                       selected ? "bg-sky/10 text-slate-950" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
                     }`}
                   >
                     <span>{option.label}</span>
-                    {selected && <Check size={16} className="text-sky" />}
+                    {selected && <Check size={16} className="text-sky-600" />}
                   </button>
                 );
               })}
@@ -137,7 +137,7 @@ export function MultiSelectField({ label, name, options, initialValues, placehol
               key={value}
               type="button"
               onClick={() => removeValue(value)}
-              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-black text-slate-600 transition hover:border-sky/50 hover:text-slate-950"
+              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-bold text-slate-600 transition hover:border-sky/50 hover:text-slate-950"
             >
               {value}
               <X size={13} />

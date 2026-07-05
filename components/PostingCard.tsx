@@ -10,10 +10,10 @@ export function PostingCard({ posting }: { posting: InternshipPosting }) {
     <article className="card p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-black text-brand">{posting.company}</p>
-          <h3 className="mt-1 text-xl font-black text-ink">{posting.title}</h3>
+          <p className="text-sm font-bold text-brand">{posting.company}</p>
+          <h3 className="mt-1 text-xl font-bold text-ink">{posting.title}</h3>
         </div>
-        <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${fitTone}`}>
+        <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${fitTone}`}>
           {posting.fitScore}% fit
         </span>
       </div>

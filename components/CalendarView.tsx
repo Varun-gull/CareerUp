@@ -307,7 +307,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-black text-brand">{app.company}</p>
+                  <p className="truncate text-sm font-bold text-brand">{app.company}</p>
                   <p className="truncate text-sm font-bold text-slate-700">{app.role}</p>
                 </div>
                 <ApplicationStatusBadge status={app.status} />
@@ -339,7 +339,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
             >
               <ChevronLeft size={18} />
             </button>
-            <span className="min-w-56 text-center text-lg font-black text-ink">{headerLabel}</span>
+            <span className="min-w-56 text-center text-lg font-bold text-ink">{headerLabel}</span>
             <button
               onClick={() => navigate(1)}
               className="flex h-9 w-9 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand transition-colors"
@@ -396,7 +396,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
         {/* Day header row */}
         <div className="mb-1 grid grid-cols-7 gap-1">
           {DAY_NAMES.map((d) => (
-            <div key={d} className="py-1 text-center text-xs font-black uppercase text-slate-600">
+            <div key={d} className="py-1 text-center text-xs font-bold uppercase text-slate-600">
               {d}
             </div>
           ))}
@@ -461,7 +461,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                       )}
                     >
                       <div className="flex items-start justify-between gap-1">
-                        <p className="truncate text-xs font-black leading-tight">{ev.company}</p>
+                        <p className="truncate text-xs font-bold leading-tight">{ev.company}</p>
                         <button
                           onClick={() => handleDelete(ev.id)}
                           className="flex-none opacity-0 transition-opacity group-hover:opacity-100"

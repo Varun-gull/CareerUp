@@ -11,7 +11,7 @@ const labels: Record<ApplicationStatus, string> = {
 
 const styles: Record<ApplicationStatus, string> = {
   saved: "bg-slate-100 text-slate-700 ring-slate-200",
-  applied: "bg-sky/10 text-sky ring-sky/25",
+  applied: "bg-sky/10 text-sky-600 ring-sky/25",
   interviewing: "bg-cyan-400/10 text-cyan-200 ring-cyan-300/25",
   offer: "bg-emerald-400/10 text-emerald-200 ring-emerald-300/25",
   rejected: "bg-slate-100 text-slate-600 ring-slate-200"

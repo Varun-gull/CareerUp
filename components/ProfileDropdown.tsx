@@ -35,7 +35,7 @@ export function ProfileDropdown({
     return (
       <Link
         href="/login"
-        className="flex h-11 min-w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-2 text-sm font-black text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky"
+        className="flex h-11 min-w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-2 text-sm font-bold text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky-600"
       >
         <UserRound size={20} />
       </Link>
@@ -46,7 +46,7 @@ export function ProfileDropdown({
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex h-11 min-w-11 max-w-44 items-center justify-center gap-2 truncate rounded-2xl border border-slate-200 bg-white px-3 text-sm font-black text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky"
+        className="flex h-11 min-w-11 max-w-44 items-center justify-center gap-2 truncate rounded-2xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/40 hover:text-sky-600"
         aria-label="Open profile menu"
       >
         {schoolLogoUrl ? (
@@ -62,31 +62,31 @@ export function ProfileDropdown({
           <Link
             href="/profile"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky"
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky-600"
           >
             <User size={16} /> Profile
           </Link>
           <Link
             href="/friends"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky"
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky-600"
           >
             <Users size={16} /> Friends
           </Link>
           <Link
             href="/messages"
             onClick={() => setOpen(false)}
-            className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky"
+            className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky-600"
           >
             <span className="inline-flex items-center gap-3">
               <Mail size={16} /> Messages
             </span>
-            {unreadMessages > 0 && <span className="rounded-full bg-sky px-2 py-0.5 text-xs font-black text-slate-950">{unreadMessages}</span>}
+            {unreadMessages > 0 && <span className="rounded-full bg-sky px-2 py-0.5 text-xs font-bold text-slate-950">{unreadMessages}</span>}
           </Link>
           <Link
             href="/settings"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky"
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 hover:bg-sky/10 hover:text-sky-600"
           >
             <Settings size={16} /> Settings
           </Link>

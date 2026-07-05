@@ -28,17 +28,17 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
         <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Squad</p>
-            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Friends</h1>
+            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Friends</h1>
             <p className="mt-2 max-w-2xl text-slate-600">Add classmates, compare progress, and build a leaderboard that feels personal.</p>
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-xl bg-white/90 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 
         {inviteId && (
           <form action={sendFriendRequestById} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-white/90 p-4 shadow-soft backdrop-blur">
             <div>
-              <p className="font-black text-sky">Friend invite opened</p>
+              <p className="font-bold text-sky-600">Friend invite opened</p>
               <p className="text-sm font-bold text-brand">Send a request to add this CareerUp profile.</p>
             </div>
             <input type="hidden" name="profileId" value={inviteId} />
@@ -55,7 +55,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
                 <UserPlus size={20} />
               </span>
               <div>
-                <h2 className="font-black text-ink">Add a friend</h2>
+                <h2 className="font-bold text-ink">Add a friend</h2>
                 <p className="text-sm text-slate-600">Use the email they signed up with.</p>
               </div>
             </div>
@@ -74,7 +74,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
                 <Share2 size={20} />
               </span>
               <div>
-                <h2 className="font-black text-ink">Profile invite</h2>
+                <h2 className="font-bold text-ink">Profile invite</h2>
                 <p className="text-sm text-slate-600">Share your CareerUp friend link.</p>
               </div>
             </div>
@@ -95,7 +95,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
                 <UsersRound size={20} />
               </span>
               <div>
-                <h2 className="font-black text-ink">Create a group</h2>
+                <h2 className="font-bold text-ink">Create a group</h2>
                 <p className="text-sm text-slate-600">Build a recruiting squad leaderboard.</p>
               </div>
             </div>
@@ -116,7 +116,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <p className="eyebrow">Group rankings</p>
-                <h2 className="mt-1 text-2xl font-black text-ink">Your groups</h2>
+                <h2 className="mt-1 text-2xl font-bold text-ink">Your groups</h2>
               </div>
               <Link href="/leaderboard?scope=groups" className="secondary-button min-h-10 px-4 text-sm">
                 View group leaderboard
@@ -128,15 +128,15 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
                   <article key={group.id} className="rounded-2xl border border-slate-200 bg-white/90 p-4">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
-                        <h3 className="font-black text-ink">{group.name}</h3>
+                        <h3 className="font-bold text-ink">{group.name}</h3>
                         <p className="mt-1 text-sm text-slate-600">{group.description || "CareerUp group"}</p>
-                        <p className="mt-2 text-sm font-black text-brand">
+                        <p className="mt-2 text-sm font-bold text-brand">
                           {group.totalXp.toLocaleString()} XP · {group.memberCount} members
                         </p>
                       </div>
                       <form action={leaveGroup}>
                         <input type="hidden" name="groupId" value={group.id} />
-                        <button className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-black text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600">
+                        <button className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600">
                           Leave
                         </button>
                       </form>
@@ -156,7 +156,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
                     )}
                     <div className="mt-4 flex flex-wrap gap-2">
                       {group.members.slice(0, 6).map((member) => (
-                        <span key={member.id} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700">
+                        <span key={member.id} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
                           {member.name.split(" ")[0]} · {member.xp.toLocaleString()} XP
                         </span>
                       ))}
@@ -193,10 +193,10 @@ function FriendSection({
     <div className="rounded-2xl border border-white/70 bg-white/90 p-4 shadow-soft backdrop-blur">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
-          <h2 className="font-black text-ink">{title}</h2>
+          <h2 className="font-bold text-ink">{title}</h2>
           <p className="text-sm text-slate-600">{helper}</p>
         </div>
-        <span className="flex h-9 min-w-9 items-center justify-center rounded-xl bg-slate-100 px-3 text-sm font-black text-slate-700">
+        <span className="flex h-9 min-w-9 items-center justify-center rounded-xl bg-slate-100 px-3 text-sm font-bold text-slate-700">
           {friends.length}
         </span>
       </div>
@@ -215,7 +215,7 @@ function FriendSection({
               </div>
               <div className="mt-4 flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-black text-brand">{friend.xp.toLocaleString()} XP</p>
+                  <p className="text-sm font-bold text-brand">{friend.xp.toLocaleString()} XP</p>
                   <RankBadge xp={friend.xp} />
                 </div>
                 <div className="flex gap-2">

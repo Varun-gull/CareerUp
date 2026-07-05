@@ -87,7 +87,7 @@ export function CalendarCreateModal({ defaultDate, onClose, onCreated }: Props) 
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-xl font-black text-ink">Add to Calendar</h2>
+            <h2 className="text-xl font-bold text-ink">Add to Calendar</h2>
             <p className="mt-1 text-sm text-slate-500">{defaultDate}</p>
           </div>
           <button onClick={onClose} className="text-slate-600 hover:text-slate-700 transition-colors">

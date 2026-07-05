@@ -48,7 +48,7 @@ export function XpProgressBar({ xp }: { xp: number }) {
       <div className="grid gap-2">
         {ranks.map((rank) => (
           <div key={rank.name} className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2">
-            <span className="text-sm font-black text-ink">{rank.name}</span>
+            <span className="text-sm font-bold text-ink">{rank.name}</span>
             <span className="text-right text-xs font-bold text-slate-600">
               {rank.minXp.toLocaleString()} XP
               {rankBonuses.some((b) => b.rankName === rank.name) && (
@@ -67,9 +67,9 @@ export function XpProgressBar({ xp }: { xp: number }) {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-sm font-bold text-slate-500">Rank progress</p>
-          <h2 className="mt-1 text-2xl font-black text-ink">{xp.toLocaleString()} XP</h2>
+          <h2 className="mt-1 text-2xl font-bold text-ink">{xp.toLocaleString()} XP</h2>
         </div>
-        <p className="rounded-full bg-sky/10 px-3 py-1 text-sm font-black text-sky ring-1 ring-sky/20">
+        <p className="rounded-full bg-sky/10 px-3 py-1 text-sm font-bold text-sky-600 ring-1 ring-sky/20">
           {progress.next ? `${progress.remaining} XP to ${progress.next.name}` : "Max rank unlocked"}
         </p>
       </div>
@@ -82,7 +82,7 @@ export function XpProgressBar({ xp }: { xp: number }) {
           ref={btnRef}
           type="button"
           onClick={toggle}
-          className="cursor-pointer rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm font-black text-sky transition hover:border-sky/40 hover:bg-slate-100"
+          className="cursor-pointer rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-sky-600 transition hover:border-sky/40 hover:bg-slate-100"
         >
           Show all ranks
         </button>

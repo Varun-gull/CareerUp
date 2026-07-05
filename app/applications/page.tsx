@@ -80,19 +80,19 @@ export default async function ApplicationsPage({
         <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Pipeline</p>
-            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Applications</h1>
+            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Applications</h1>
             <p className="mt-2 text-slate-600">Track every role from saved to offer without losing momentum.</p>
           </div>
           <Link href="/applications/new" className="primary-button">
             <Plus className="mr-2" size={18} /> Add role
           </Link>
         </div>
-        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
         {applications.length > 0 ? (
           <>
             <section className="mt-6 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-lg font-black text-slate-950">Application history</h2>
+                <h2 className="text-lg font-bold text-slate-950">Application history</h2>
                 <p className="text-sm font-bold text-slate-600">Switch between recruiting cycles without losing your older boards.</p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -100,8 +100,8 @@ export default async function ApplicationsPage({
                   <Link
                     key={year}
                     href={getYearHref(year, query, statusFilter)}
-                    className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
-                      selectedYear === year ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky"
+                    className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
+                      selectedYear === year ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky-600"
                     }`}
                     aria-current={selectedYear === year ? "page" : undefined}
                   >
@@ -110,8 +110,8 @@ export default async function ApplicationsPage({
                 ))}
                 <Link
                   href={getYearHref("all", query, statusFilter)}
-                  className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
-                    selectedYear === "all" ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky"
+                  className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
+                    selectedYear === "all" ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky-600"
                   }`}
                   aria-current={selectedYear === "all" ? "page" : undefined}
                 >

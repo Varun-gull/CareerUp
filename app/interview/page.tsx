@@ -16,7 +16,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
         <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Prep tool</p>
-            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Interview Prep</h1>
+            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Interview Prep</h1>
             <p className="mt-2 max-w-2xl text-slate-600">Draft STAR answers for behavioral interviews and keep your best stories ready.</p>
           </div>
           <Link href="/rewards" className="secondary-button">
@@ -24,7 +24,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
           </Link>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 
         {!isUnlocked ? (
           <section className="card mt-8 p-6">
@@ -33,7 +33,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                 <LockKeyhole size={24} />
               </div>
               <div>
-                <h2 className="text-2xl font-black text-ink">Unlock the Behavioral Interview Pack first</h2>
+                <h2 className="text-2xl font-bold text-ink">Unlock the Behavioral Interview Pack first</h2>
                 <p className="mt-2 text-slate-600">Spend XP on the rewards page to open this builder and start saving interview stories.</p>
               </div>
               <Link href="/rewards" className="primary-button w-fit">
@@ -50,7 +50,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                     <MessageSquareText size={22} />
                   </div>
                   <div>
-                    <h2 className="text-xl font-black text-ink">Build a STAR answer</h2>
+                    <h2 className="text-xl font-bold text-ink">Build a STAR answer</h2>
                     <p className="mt-1 text-sm leading-6 text-slate-600">Keep each section tight enough to speak naturally in 60 to 90 seconds.</p>
                   </div>
                 </div>
@@ -84,8 +84,8 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
               </form>
 
               <aside className="card p-5">
-                <p className="text-sm font-black text-brand">Answer formula</p>
-                <h2 className="mt-1 text-xl font-black text-ink">What a strong answer needs</h2>
+                <p className="text-sm font-bold text-brand">Answer formula</p>
+                <h2 className="mt-1 text-xl font-bold text-ink">What a strong answer needs</h2>
                 <div className="mt-4 grid gap-3">
                   {[
                     ["Situation", "One or two sentences that make the story easy to understand."],
@@ -94,7 +94,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                     ["Result", "Outcome, metric, lesson, or what you would repeat next time."]
                   ].map(([title, body]) => (
                     <div key={title} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                      <p className="font-black text-ink">{title}</p>
+                      <p className="font-bold text-ink">{title}</p>
                       <p className="mt-1 text-sm leading-6 text-slate-600">{body}</p>
                     </div>
                   ))}
@@ -106,9 +106,9 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
               <div className="flex items-end justify-between gap-4">
                 <div>
                   <p className="eyebrow">Saved stories</p>
-                  <h2 className="mt-2 text-2xl font-black text-ink">Saved answers</h2>
+                  <h2 className="mt-2 text-2xl font-bold text-ink">Saved answers</h2>
                 </div>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-black text-slate-700">{answers.length} saved</span>
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700">{answers.length} saved</span>
               </div>
 
               {answers.length > 0 ? (
@@ -117,8 +117,8 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                     <article key={answer.id} className="card p-5">
                       <div className="flex flex-wrap items-start justify-between gap-4">
                         <div>
-                          <p className="text-sm font-black text-brand">{answer.createdAt}</p>
-                          <h3 className="mt-1 text-xl font-black text-ink">{answer.prompt}</h3>
+                          <p className="text-sm font-bold text-brand">{answer.createdAt}</p>
+                          <h3 className="mt-1 text-xl font-bold text-ink">{answer.prompt}</h3>
                         </div>
                         <form action={deleteInterviewAnswer}>
                           <input type="hidden" name="answerId" value={answer.id} />
@@ -142,7 +142,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-brand">
                     <MessageSquareText size={28} />
                   </div>
-                  <h3 className="mt-5 text-2xl font-black text-ink">No answers saved yet</h3>
+                  <h3 className="mt-5 text-2xl font-bold text-ink">No answers saved yet</h3>
                   <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">Use the builder to create your first interview story.</p>
                 </div>
               )}
@@ -166,7 +166,7 @@ function StarTextarea({ name, label, placeholder }: { name: string; label: strin
 function AnswerSection({ title, body }: { title: string; body: string }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-      <p className="text-sm font-black text-slate-500">{title}</p>
+      <p className="text-sm font-bold text-slate-500">{title}</p>
       <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-700">{body}</p>
     </div>
   );

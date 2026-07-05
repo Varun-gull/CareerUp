@@ -26,7 +26,7 @@ function eventLabel(type: CalendarEvent["eventType"]) {
 }
 
 function eventTone(type: CalendarEvent["eventType"]) {
-  if (type === "interview") return "border-sky/40 bg-sky/12 text-sky";
+  if (type === "interview") return "border-sky/40 bg-sky/12 text-sky-600";
   if (type === "offer") return "border-emerald-400/40 bg-emerald-400/10 text-emerald-200";
   if (type === "deadline") return "border-amber-300/40 bg-amber-300/10 text-amber-200";
   return "border-slate-600 bg-slate-100 text-slate-700";
@@ -56,7 +56,7 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="eyebrow">This week</p>
-          <h2 className="mt-1 text-2xl font-black text-ink">Weekly calendar</h2>
+          <h2 className="mt-1 text-2xl font-bold text-ink">Weekly calendar</h2>
         </div>
         <Link href="/calendar" className="secondary-button min-h-10 px-4 text-sm">
           Open calendar
@@ -74,13 +74,13 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <p className="text-xs font-black uppercase text-slate-600">{DAY_LABELS[day.date.getDay()]}</p>
-                <p className={isToday ? "text-sm font-black text-sky" : "text-sm font-black text-slate-200"}>{day.date.getDate()}</p>
+                <p className="text-xs font-bold uppercase text-slate-600">{DAY_LABELS[day.date.getDay()]}</p>
+                <p className={isToday ? "text-sm font-bold text-sky-600" : "text-sm font-bold text-slate-200"}>{day.date.getDate()}</p>
               </div>
               <div className="mt-3 space-y-2">
                 {day.events.length > 0 ? (
                   day.events.map((event) => (
-                    <div key={event.id} className={`rounded-xl border px-2 py-1.5 text-[11px] font-black ${eventTone(event.eventType)}`}>
+                    <div key={event.id} className={`rounded-xl border px-2 py-1.5 text-[11px] font-bold ${eventTone(event.eventType)}`}>
                       <p className="truncate">{eventLabel(event.eventType)}</p>
                       <p className="truncate font-bold opacity-80">{event.company}</p>
                     </div>
@@ -95,8 +95,8 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
       </div>
 
       <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50/90 p-4">
-        <div className="flex items-center gap-2 text-sm font-black text-slate-700">
-          <CalendarDays size={17} className="text-sky" />
+        <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
+          <CalendarDays size={17} className="text-sky-600" />
           Upcoming
         </div>
         <div className="mt-3 grid gap-2">
@@ -104,10 +104,10 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
             upcoming.map((event) => (
               <div key={event.id} className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-black text-ink">{event.role}</p>
+                  <p className="truncate text-sm font-bold text-ink">{event.role}</p>
                   <p className="truncate text-xs font-bold text-slate-600">{event.company}</p>
                 </div>
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-sky/10 px-2.5 py-1 text-xs font-black text-sky">
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-sky/10 px-2.5 py-1 text-xs font-bold text-sky-600">
                   <Clock3 size={13} /> {event.date.slice(5)}
                 </span>
               </div>

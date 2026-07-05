@@ -16,9 +16,9 @@ export function DashboardCard({
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="section-label">{title}</p>
-          <p className="mt-2 text-3xl font-black text-ink">{value}</p>
+          <p className="mt-2 text-3xl font-bold text-ink">{value}</p>
         </div>
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-sky shadow-sm transition group-hover:bg-sky group-hover:text-slate-950 group-hover:shadow-glow">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-sky-600 shadow-sm transition group-hover:bg-sky group-hover:text-slate-950 group-hover:shadow-glow">
           <Icon size={23} />
         </div>
       </div>

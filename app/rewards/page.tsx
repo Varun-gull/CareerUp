@@ -18,23 +18,23 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
         <div className="page-hero flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Unlocks</p>
-            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Rewards</h1>
+            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Rewards</h1>
             <p className="mt-2 max-w-2xl text-slate-600">Turn XP into interview prep tools you can use when recruiting gets serious.</p>
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 
         <section className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="card p-5">
             <Sparkles size={22} className="text-brand" />
             <p className="mt-4 text-sm font-bold text-slate-500">Available XP</p>
-            <p className="mt-1 text-3xl font-black text-ink">{profile.xp.toLocaleString()}</p>
+            <p className="mt-1 text-3xl font-bold text-ink">{profile.xp.toLocaleString()}</p>
           </div>
           <div className="card p-5">
             <Gift size={22} className="text-brand" />
             <p className="mt-4 text-sm font-bold text-slate-500">Unlocked</p>
-            <p className="mt-1 text-3xl font-black text-ink">
+            <p className="mt-1 text-3xl font-bold text-ink">
               {unlockedCount}/{rewards.length}
             </p>
           </div>
@@ -55,7 +55,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="eyebrow">Earn more XP</p>
-              <h2 className="mt-2 text-2xl font-black text-ink">Challenges</h2>
+              <h2 className="mt-2 text-2xl font-bold text-ink">Challenges</h2>
               <p className="mt-2 text-slate-600">Complete quests to build enough XP for the next unlock.</p>
             </div>
           </div>
@@ -74,18 +74,18 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
               <article key={reward.id} className="card p-5">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-black text-brand">{reward.category}</p>
-                    <h2 className="mt-1 text-xl font-black text-ink">{reward.title}</h2>
+                    <p className="text-sm font-bold text-brand">{reward.category}</p>
+                    <h2 className="mt-1 text-xl font-bold text-ink">{reward.title}</h2>
                     <p className="mt-2 text-sm leading-6 text-slate-600">{reward.description}</p>
                   </div>
-                  <span className={reward.unlocked ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700" : "rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700"}>
+                  <span className={reward.unlocked ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700" : "rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700"}>
                     {reward.unlocked ? "Unlocked" : `${reward.xpCost} XP`}
                   </span>
                 </div>
 
                 {reward.unlocked ? (
                   <div className="mt-5 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4">
-                    <div className="mb-3 flex items-center gap-2 font-black text-emerald-800">
+                    <div className="mb-3 flex items-center gap-2 font-bold text-emerald-800">
                       <UnlockKeyhole size={18} /> Prep tool
                     </div>
                     <ul className="grid gap-2 text-sm leading-6 text-slate-700">

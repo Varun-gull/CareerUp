@@ -21,8 +21,8 @@ export function ApplicationCard({ application, compact = false }: { application:
           aria-expanded={expanded}
         >
           <div className="min-w-0">
-            <p className="truncate text-xs font-black uppercase text-sky">{application.company}</p>
-            <h3 className="mt-0.5 truncate text-sm font-black text-ink">{application.role}</h3>
+            <p className="truncate text-xs font-bold uppercase text-sky-600">{application.company}</p>
+            <h3 className="mt-0.5 truncate text-sm font-bold text-ink">{application.role}</h3>
             <p className="mt-1 truncate text-xs font-bold text-slate-500">{application.location}</p>
           </div>
           <div className="flex shrink-0 items-center">
@@ -40,7 +40,7 @@ export function ApplicationCard({ application, compact = false }: { application:
                 <CalendarDays size={16} /> Due {application.deadline}
               </span>
               {sourceIsUrl ? (
-                <a className="inline-flex items-center gap-2 font-bold text-sky hover:text-brand" href={application.source} target="_blank" rel="noreferrer">
+                <a className="inline-flex items-center gap-2 font-bold text-sky-600 hover:text-brand" href={application.source} target="_blank" rel="noreferrer">
                   <ExternalLink size={16} /> Posting
                 </a>
               ) : (
@@ -48,7 +48,7 @@ export function ApplicationCard({ application, compact = false }: { application:
                   <ExternalLink size={16} /> {application.source}
                 </span>
               )}
-              <span className="inline-flex items-center gap-2 font-bold text-sky">
+              <span className="inline-flex items-center gap-2 font-bold text-sky-600">
                 <Sparkles size={16} /> {application.fitScore}% fit
               </span>
             </div>
@@ -71,8 +71,8 @@ export function ApplicationCard({ application, compact = false }: { application:
     <article className="card p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-black uppercase text-sky">{application.company}</p>
-          <h3 className="mt-1 text-lg font-black text-ink">{application.role}</h3>
+          <p className="text-sm font-bold uppercase text-sky-600">{application.company}</p>
+          <h3 className="mt-1 text-lg font-bold text-ink">{application.role}</h3>
         </div>
         <ApplicationStatusBadge status={application.status} />
       </div>
@@ -84,7 +84,7 @@ export function ApplicationCard({ application, compact = false }: { application:
           <CalendarDays size={16} /> Due {application.deadline}
         </span>
         {sourceIsUrl ? (
-          <a className="inline-flex items-center gap-2 font-bold text-sky hover:text-brand" href={application.source} target="_blank" rel="noreferrer">
+          <a className="inline-flex items-center gap-2 font-bold text-sky-600 hover:text-brand" href={application.source} target="_blank" rel="noreferrer">
             <ExternalLink size={16} /> Posting
           </a>
         ) : (
@@ -92,7 +92,7 @@ export function ApplicationCard({ application, compact = false }: { application:
             <ExternalLink size={16} /> {application.source}
           </span>
         )}
-        <span className="inline-flex items-center gap-2 font-bold text-sky">
+        <span className="inline-flex items-center gap-2 font-bold text-sky-600">
           <Sparkles size={16} /> {application.fitScore}% fit
         </span>
       </div>

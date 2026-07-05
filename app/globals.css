@@ -54,7 +54,7 @@ body {
   background-attachment: fixed;
   background-repeat: no-repeat;
   color: #0f172a;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 a {
@@ -79,15 +79,15 @@ textarea {
   }
 
   .eyebrow {
-    @apply text-xs font-black uppercase text-sky;
+    @apply text-xs font-semibold uppercase tracking-wider text-sky-600;
   }
 
   .primary-button {
-    @apply inline-flex min-h-11 items-center justify-center rounded-2xl bg-gradient-to-r from-brand to-electric px-5 font-black text-slate-950 shadow-glow transition hover:-translate-y-0.5 hover:shadow-strong focus:outline-none focus:ring-4 focus:ring-sky/25 disabled:cursor-not-allowed disabled:translate-y-0 disabled:bg-slate-700 disabled:bg-none disabled:text-slate-400 disabled:shadow-none;
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl bg-gradient-to-r from-brand to-electric px-5 font-semibold text-slate-950 shadow-glow transition hover:-translate-y-0.5 hover:shadow-strong focus:outline-none focus:ring-4 focus:ring-sky/25 disabled:cursor-not-allowed disabled:translate-y-0 disabled:bg-slate-700 disabled:bg-none disabled:text-slate-400 disabled:shadow-none;
   }
 
   .secondary-button {
-    @apply inline-flex min-h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white/85 px-5 font-black text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/50 hover:bg-sky/10 hover:text-slate-950 focus:outline-none focus:ring-4 focus:ring-sky/10;
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white/85 px-5 font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/50 hover:bg-sky/10 hover:text-slate-950 focus:outline-none focus:ring-4 focus:ring-sky/10;
   }
 
   .field {
@@ -95,19 +95,19 @@ textarea {
   }
 
   .panel-title {
-    @apply text-lg font-black text-ink;
+    @apply text-lg font-bold text-ink;
   }
 
   .muted-copy {
-    @apply text-sm leading-6 text-slate-400;
+    @apply text-sm leading-6 text-slate-500;
   }
 
   .page-hero {
-    @apply rounded-[2rem] border border-slate-200 bg-white/95 p-5 shadow-soft backdrop-blur-xl sm:p-7;
+    @apply rounded-3xl border border-slate-200 bg-white/95 p-5 shadow-soft backdrop-blur-xl sm:p-7;
   }
 
   .section-label {
-    @apply text-xs font-black uppercase text-slate-500;
+    @apply text-xs font-semibold uppercase tracking-wider text-slate-500;
   }
 
   .soft-panel {

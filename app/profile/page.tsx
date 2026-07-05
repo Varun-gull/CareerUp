@@ -57,16 +57,16 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
           <div className="border-b border-white/10 bg-gradient-to-r from-navy via-slate-950 to-slate-900 px-6 py-10 text-white">
             <div className="flex flex-wrap items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white text-2xl font-black text-navy shadow-glow">
+                <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white text-2xl font-bold text-navy shadow-glow">
                   {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.18em] text-sky">Student profile</p>
-                  <h1 className="mt-1 text-4xl font-black">{profile.name}</h1>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-600">Student profile</p>
+                  <h1 className="mt-1 text-4xl font-bold">{profile.name}</h1>
                   {profileDetails.length > 0 ? (
                     <div className="mt-3 flex flex-wrap gap-2">
                       {profileDetails.map((detail) => (
-                        <span key={detail} className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm font-black text-white shadow-sm">
+                        <span key={detail} className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm font-bold text-white shadow-sm">
                           {detail}
                         </span>
                       ))}
@@ -83,9 +83,9 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
           </div>
           <div className="grid gap-6 p-6 lg:grid-cols-[1fr_360px]">
             <div>
-              <h2 className="text-xl font-black text-ink">Profile setup</h2>
+              <h2 className="text-xl font-bold text-ink">Profile setup</h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">These preferences will power personalized internship recommendations later.</p>
-              {searchParams?.message && <p className="mt-4 rounded-2xl bg-sky/10 p-3 text-sm font-bold text-sky">{searchParams.message}</p>}
+              {searchParams?.message && <p className="mt-4 rounded-2xl bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
               <ProfileAutosaveForm
                 profile={profile}
                 schools={schoolOptions}
@@ -108,7 +108,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-bold text-slate-500">Resume</p>
-                      <p className="mt-1 truncate text-lg font-black text-ink">{profile.resumeFileName || "No resume saved"}</p>
+                      <p className="mt-1 truncate text-lg font-bold text-ink">{profile.resumeFileName || "No resume saved"}</p>
                       <p className="mt-1 text-xs font-bold text-slate-500">
                         {profile.resumeUpdatedAt ? `Updated ${profile.resumeUpdatedAt}` : "Upload or paste resume text to improve matching."}
                       </p>

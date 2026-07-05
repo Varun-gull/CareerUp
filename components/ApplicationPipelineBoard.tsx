@@ -138,10 +138,10 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
             >
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-sm font-black text-ink">{column.title}</h2>
+                  <h2 className="text-sm font-bold text-ink">{column.title}</h2>
                   <p className="text-xs font-bold text-slate-500">{column.helper}</p>
                 </div>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700 ring-1 ring-slate-200">{columnApplications.length}</span>
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 ring-1 ring-slate-200">{columnApplications.length}</span>
               </div>
 
               {columnApplications.length > 0 ? (

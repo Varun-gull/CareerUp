@@ -42,11 +42,11 @@ export default async function PublicProfilePage({
           <ArrowLeft className="mr-2" size={16} /> Friends
         </Link>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 
         {!profile ? (
           <section className="card mt-6 p-8 text-center">
-            <h1 className="text-3xl font-black text-ink">Profile not available</h1>
+            <h1 className="text-3xl font-bold text-ink">Profile not available</h1>
             <p className="mt-2 text-slate-600">This profile may be private until the public profile database policy is enabled.</p>
           </section>
         ) : (
@@ -54,12 +54,12 @@ export default async function PublicProfilePage({
             <div className="bg-navy px-6 py-10 text-white">
               <div className="flex flex-wrap items-center justify-between gap-5">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-electric text-2xl font-black shadow-glow">
+                  <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-electric text-2xl font-bold shadow-glow">
                     {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="text-xs font-black uppercase text-sky">CareerUp profile</p>
-                    <h1 className="mt-1 text-3xl font-black">{profile.name}</h1>
+                    <p className="text-xs font-bold uppercase text-sky-600">CareerUp profile</p>
+                    <h1 className="mt-1 text-3xl font-bold">{profile.name}</h1>
                     <p className="text-slate-700">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "CareerUp Student"}</p>
                   </div>
                 </div>
@@ -69,7 +69,7 @@ export default async function PublicProfilePage({
                     Edit profile
                   </Link>
                 ) : friendship ? (
-                  <span className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold text-sky">
+                  <span className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold text-sky-600">
                     {friendship.status === "accepted" ? "Friends" : friendship.direction === "incoming" ? "Request received" : "Request sent"}
                   </span>
                 ) : user ? (
@@ -105,13 +105,13 @@ export default async function PublicProfilePage({
                   <form action={sendPeerMessage} className="rounded-3xl border border-sky/20 bg-sky/10 p-4">
                     <div className="flex items-center gap-2">
                       <Mail size={18} className="text-brand" />
-                      <h2 className="font-black text-ink">Message {profile.name.split(" ")[0]}</h2>
+                      <h2 className="font-bold text-ink">Message {profile.name.split(" ")[0]}</h2>
                     </div>
                     <input type="hidden" name="recipientId" value={profile.id} />
                     <input type="hidden" name="applicationId" value="" />
                     <input type="hidden" name="roleKey" value={`profile::${profile.id}`} />
                     <input type="hidden" name="returnTo" value={`/u/${profile.id}`} />
-                    <label className="mt-4 grid gap-1 text-xs font-black uppercase text-slate-500">
+                    <label className="mt-4 grid gap-1 text-xs font-bold uppercase text-slate-500">
                       Subject
                       <input
                         name="subject"
@@ -119,7 +119,7 @@ export default async function PublicProfilePage({
                         className="field text-sm normal-case"
                       />
                     </label>
-                    <label className="mt-3 grid gap-1 text-xs font-black uppercase text-slate-500">
+                    <label className="mt-3 grid gap-1 text-xs font-bold uppercase text-slate-500">
                       Message
                       <textarea
                         name="body"
@@ -142,7 +142,7 @@ export default async function PublicProfilePage({
                   <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">
                     <div className="flex items-center gap-2">
                       <UsersRound size={18} className="text-brand" />
-                      <h2 className="font-black text-ink">Mutual friends</h2>
+                      <h2 className="font-bold text-ink">Mutual friends</h2>
                     </div>
                     {isAcceptedFriend ? (
                       mutualFriends.length > 0 ? (
@@ -173,7 +173,7 @@ export default async function PublicProfilePage({
                 <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
                   <div>
                     <p className="eyebrow">Application board</p>
-                    <h2 className="mt-2 text-2xl font-black text-ink">Pipeline</h2>
+                    <h2 className="mt-2 text-2xl font-bold text-ink">Pipeline</h2>
                   </div>
                   {sharedBoard.canView && <p className="text-sm font-bold text-slate-500">{visibleBoardApplications.length} visible roles</p>}
                 </div>
@@ -186,7 +186,7 @@ export default async function PublicProfilePage({
                           <Link
                             key={year}
                             href={`/u/${params.profileId}?year=${year}`}
-                            className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
+                            className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
                               selectedBoardYear === year ? "bg-brand text-white shadow-glow" : "border border-slate-200 bg-white/90 text-slate-600 hover:border-brand/30 hover:text-brand"
                             }`}
                             aria-current={selectedBoardYear === year ? "page" : undefined}
@@ -196,7 +196,7 @@ export default async function PublicProfilePage({
                         ))}
                         <Link
                           href={`/u/${params.profileId}?year=all`}
-                          className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
+                          className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
                             selectedBoardYear === "all" ? "bg-white text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/90 text-slate-600 hover:border-brand/30 hover:text-brand"
                           }`}
                           aria-current={selectedBoardYear === "all" ? "page" : undefined}
@@ -218,7 +218,7 @@ export default async function PublicProfilePage({
                         <Lock size={18} />
                       </span>
                       <div>
-                        <h3 className="font-black text-ink">Application board is private</h3>
+                        <h3 className="font-bold text-ink">Application board is private</h3>
                         <p className="mt-1 text-sm font-bold text-slate-500">This friend has not enabled board sharing.</p>
                       </div>
                     </div>
@@ -230,7 +230,7 @@ export default async function PublicProfilePage({
                         <Lock size={18} />
                       </span>
                       <div>
-                        <h3 className="font-black text-ink">Friends only</h3>
+                        <h3 className="font-bold text-ink">Friends only</h3>
                         <p className="mt-1 text-sm font-bold text-slate-500">Add this profile as a friend to see a shared application board when they allow it.</p>
                       </div>
                     </div>
@@ -250,7 +250,7 @@ function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: strin
     <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">
       <Icon size={20} className="text-brand" />
       <p className="mt-4 text-sm font-bold text-slate-500">{label}</p>
-      <p className="mt-1 text-2xl font-black text-ink">{value}</p>
+      <p className="mt-1 text-2xl font-bold text-ink">{value}</p>
     </div>
   );
 }
@@ -260,7 +260,7 @@ function ProfileTags({ icon: Icon, title, values, empty }: { icon: LucideIcon; t
     <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">
       <div className="flex items-center gap-2">
         <Icon size={18} className="text-brand" />
-        <h2 className="font-black text-ink">{title}</h2>
+        <h2 className="font-bold text-ink">{title}</h2>
       </div>
       {values.length > 0 ? (
         <div className="mt-4 flex flex-wrap gap-2">

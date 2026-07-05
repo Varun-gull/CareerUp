@@ -9,7 +9,7 @@ export default function NewApplicationPage({ searchParams }: { searchParams?: { 
       <main className="page-shell max-w-4xl">
         <div className="page-hero">
           <p className="eyebrow">Add role</p>
-          <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">Track a new role</h1>
+          <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Track a new role</h1>
           <p className="mt-2 text-slate-600">Save the role now, then move it through your pipeline when you apply.</p>
         </div>
         {searchParams?.message && <p className="mt-4 rounded-2xl bg-slate-100 p-3 text-sm font-bold text-slate-700">{searchParams.message}</p>}

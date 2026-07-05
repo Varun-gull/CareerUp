@@ -85,7 +85,7 @@ function sortPostings(postings: InternshipPosting[], sort: PostingSort) {
 }
 
 function activeTabClass(active: boolean) {
-  return active ? "bg-sky text-slate-950 shadow-glow" : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:text-sky";
+  return active ? "bg-sky text-slate-950 shadow-glow" : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:text-sky-600";
 }
 
 function buildPostingsHref(
@@ -209,20 +209,20 @@ export async function PostingsPageView({
         <div className="page-hero flex flex-wrap items-start justify-between gap-5">
           <div>
             <p className="eyebrow">Live search</p>
-            <h1 className="mt-2 text-4xl font-black text-ink sm:text-5xl">{pageTitle}</h1>
+            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">{pageTitle}</h1>
             <p className="mt-2 max-w-3xl text-slate-600">{pageCopy}</p>
           </div>
           <div className="flex gap-2">
-            <Link href="/postings/internships" className={`rounded-xl px-4 py-2 text-sm font-black transition ${activeTabClass(kind === "internship")}`}>
+            <Link href="/postings/internships" className={`rounded-xl px-4 py-2 text-sm font-bold transition ${activeTabClass(kind === "internship")}`}>
               Internships
             </Link>
-            <Link href="/postings/new-grad" className={`rounded-xl px-4 py-2 text-sm font-black transition ${activeTabClass(kind === "new-grad")}`}>
+            <Link href="/postings/new-grad" className={`rounded-xl px-4 py-2 text-sm font-bold transition ${activeTabClass(kind === "new-grad")}`}>
               New Grad
             </Link>
           </div>
         </div>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
         <PostingsSearchForm
@@ -236,7 +236,7 @@ export async function PostingsPageView({
         />
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
-          <Link href={resetHref} className="inline-flex items-center rounded-full bg-slate-50 px-3 py-1 text-xs text-slate-700 shadow-sm ring-1 ring-slate-200 hover:text-sky">
+          <Link href={resetHref} className="inline-flex items-center rounded-full bg-slate-50 px-3 py-1 text-xs text-slate-700 shadow-sm ring-1 ring-slate-200 hover:text-sky-600">
             <RotateCcw className="mr-1" size={14} /> Reset
           </Link>
           <div className="flex flex-wrap items-center gap-3">
@@ -245,15 +245,15 @@ export async function PostingsPageView({
               {searchResult.cached ? " from cache" : ""}
             </span>
             {allPostings.length > 0 && (
-              <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-black text-slate-700 shadow-sm ring-1 ring-slate-200">
+              <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
                 Page {currentPage} of {totalPages}
               </span>
             )}
-            <span className="inline-flex overflow-hidden rounded-full bg-slate-50 text-xs font-black shadow-sm ring-1 ring-slate-200">
-              <Link href={bestFitHref} className={sort === "fit" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky"}>
+            <span className="inline-flex overflow-hidden rounded-full bg-slate-50 text-xs font-bold shadow-sm ring-1 ring-slate-200">
+              <Link href={bestFitHref} className={sort === "fit" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky-600"}>
                 Best fit
               </Link>
-              <Link href={newestHref} className={sort === "newest" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky"}>
+              <Link href={newestHref} className={sort === "newest" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky-600"}>
                 Latest posted
               </Link>
             </span>
@@ -264,10 +264,10 @@ export async function PostingsPageView({
           <>
             <PostingsTable postings={postings} returnTo={returnHref} savedSourceUrls={savedSourceUrls} peerInsights={peerInsights} />
             {totalPages > 1 && (
-              <nav className="mt-5 flex flex-wrap items-center justify-end gap-1 text-sm font-black" aria-label="Posting pages">
+              <nav className="mt-5 flex flex-wrap items-center justify-end gap-1 text-sm font-bold" aria-label="Posting pages">
                 <Link
                   href={buildPostingsHref(kind, searchParams, { page: Math.max(1, currentPage - 1) })}
-                  className={`flex items-center gap-1 rounded-xl px-3 py-2 transition ${currentPage === 1 ? "pointer-events-none text-slate-300" : "text-slate-600 hover:bg-slate-100 hover:text-sky"}`}
+                  className={`flex items-center gap-1 rounded-xl px-3 py-2 transition ${currentPage === 1 ? "pointer-events-none text-slate-300" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600"}`}
                   aria-disabled={currentPage === 1}
                 >
                   <ChevronLeft size={16} /> Previous
@@ -283,7 +283,7 @@ export async function PostingsPageView({
                       className={`min-w-[2.25rem] rounded-xl px-3 py-2 text-center transition ${
                         item === currentPage
                           ? "bg-slate-900 text-white shadow-sm ring-1 ring-slate-700"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-sky"
+                          : "text-slate-600 hover:bg-slate-100 hover:text-sky-600"
                       }`}
                       aria-current={item === currentPage ? "page" : undefined}
                     >
@@ -294,7 +294,7 @@ export async function PostingsPageView({
 
                 <Link
                   href={buildPostingsHref(kind, searchParams, { page: Math.min(totalPages, currentPage + 1) })}
-                  className={`flex items-center gap-1 rounded-xl px-3 py-2 transition ${currentPage === totalPages ? "pointer-events-none text-slate-300" : "text-slate-600 hover:bg-slate-100 hover:text-sky"}`}
+                  className={`flex items-center gap-1 rounded-xl px-3 py-2 transition ${currentPage === totalPages ? "pointer-events-none text-slate-300" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600"}`}
                   aria-disabled={currentPage === totalPages}
                 >
                   Next <ChevronRight size={16} />

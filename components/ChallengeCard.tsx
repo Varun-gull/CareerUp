@@ -34,16 +34,16 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
             </span>
           )}
           {challenge.completed ? (
-            <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-600 ring-1 ring-emerald-200">
+            <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-600 ring-1 ring-emerald-200">
               <CheckCircle2 size={12} /> Completed
             </span>
           ) : (
-            <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-black text-sky ring-1 ring-sky/20">+{challenge.xp} XP</span>
+            <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-bold text-sky-600 ring-1 ring-sky/20">+{challenge.xp} XP</span>
           )}
         </div>
       </div>
 
-      <h3 className="mt-4 text-lg font-black text-ink">{challenge.title}</h3>
+      <h3 className="mt-4 text-lg font-bold text-ink">{challenge.title}</h3>
 
       {isTiered && challenge.tier !== undefined && challenge.totalTiers !== undefined && (
         <div className="mt-1.5 flex gap-1">

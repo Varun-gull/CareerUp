@@ -87,8 +87,8 @@ export function ProfileAutosaveForm({ profile, schools, targetRoleOptions, targe
   return (
     <div className="mt-5 grid gap-5">
       <div className="flex min-h-8 items-center justify-between gap-3">
-        <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Autosaves changes</p>
-        <p className={`text-xs font-black ${saveStatus === "error" ? "text-red-500" : saveStatus === "saving" ? "text-slate-500" : "text-sky"}`}>
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Autosaves changes</p>
+        <p className={`text-xs font-bold ${saveStatus === "error" ? "text-red-500" : saveStatus === "saving" ? "text-slate-500" : "text-sky-600"}`}>
           {message}
         </p>
       </div>

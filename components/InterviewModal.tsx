@@ -104,10 +104,10 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-[2rem] bg-white shadow-2xl">
+      <div className="w-full max-w-md rounded-3xl bg-white shadow-2xl">
         <div className="flex items-start justify-between p-6 pb-4">
           <div>
-            <h2 className="text-xl font-black text-ink">Schedule interview</h2>
+            <h2 className="text-xl font-bold text-ink">Schedule interview</h2>
             <p className="mt-0.5 text-sm text-slate-500">{company} — {role}</p>
           </div>
           <button onClick={onCancel} className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Close">
@@ -121,7 +121,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               <button type="button" onClick={prevMonth} className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
                 <ChevronLeft size={18} />
               </button>
-              <span className="text-base font-black text-ink">{MONTHS[calMonth]} {calYear}</span>
+              <span className="text-base font-bold text-ink">{MONTHS[calMonth]} {calYear}</span>
               <button type="button" onClick={nextMonth} className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
                 <ChevronRight size={18} />
               </button>
@@ -129,7 +129,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
 
             <div className="mt-4 grid grid-cols-7">
               {DAYS.map((day) => (
-                <div key={day} className="py-1 text-center text-[11px] font-black uppercase tracking-wide text-slate-400">{day}</div>
+                <div key={day} className="py-1 text-center text-[11px] font-bold uppercase tracking-wide text-slate-400">{day}</div>
               ))}
             </div>
 
@@ -152,8 +152,8 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                     onClick={() => pickDate(key)}
                     className={clsx(
                       "mx-auto flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition",
-                      isSelected && "bg-sky font-black text-slate-950",
-                      !isSelected && isToday && "font-black text-sky ring-2 ring-sky",
+                      isSelected && "bg-sky font-bold text-slate-950",
+                      !isSelected && isToday && "font-bold text-sky-600 ring-2 ring-sky",
                       !isSelected && !isToday && !isPast && "text-slate-700 hover:bg-sky/15 hover:text-slate-900",
                       isPast && "cursor-not-allowed text-slate-300"
                     )}
@@ -174,7 +174,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
               <button type="button" onClick={() => setStep(1)} className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
                 <ChevronLeft size={18} />
               </button>
-              <span className="text-sm font-black text-ink">{selectedDate ? formatDateLabel(selectedDate) : ""}</span>
+              <span className="text-sm font-bold text-ink">{selectedDate ? formatDateLabel(selectedDate) : ""}</span>
             </div>
 
             <div className="mt-4 grid grid-cols-3 gap-2">
@@ -189,7 +189,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                       setCustomTimeOpen(false);
                     }}
                     className={clsx(
-                      "rounded-xl py-2.5 text-sm font-black transition",
+                      "rounded-xl py-2.5 text-sm font-bold transition",
                       selected
                         ? "bg-sky text-slate-950 shadow-sm"
                         : "bg-slate-100 text-slate-700 hover:bg-sky/20 hover:text-slate-900"
@@ -203,7 +203,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                 type="button"
                 onClick={() => setCustomTimeOpen((open) => !open)}
                 className={clsx(
-                  "rounded-xl py-2.5 text-sm font-black transition",
+                  "rounded-xl py-2.5 text-sm font-bold transition",
                   customTimeOpen
                     ? "bg-brand/20 text-slate-900 ring-1 ring-brand/40"
                     : "bg-slate-50 text-slate-500 ring-1 ring-slate-200 hover:bg-slate-100 hover:text-slate-700"
@@ -231,7 +231,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                     setSelectedTime(customTime);
                     setCustomTimeOpen(false);
                   }}
-                  className="rounded-xl bg-sky px-4 text-sm font-black text-slate-950 transition hover:bg-brand"
+                  className="rounded-xl bg-sky px-4 text-sm font-bold text-slate-950 transition hover:bg-brand"
                 >
                   Use
                 </button>

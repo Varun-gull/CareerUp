@@ -1,14 +1,12 @@
-import { FileCheck2, FileText, Save, Share2, UploadCloud } from "lucide-react";
+import { FileCheck2, FileText, Share2 } from "lucide-react";
 import Link from "next/link";
-import { MultiSelectField } from "@/components/MultiSelectField";
 import { Navbar } from "@/components/Navbar";
+import { ProfileAutosaveForm } from "@/components/ProfileAutosaveForm";
 import { RankBadge } from "@/components/RankBadge";
 import { ResumeUploadField } from "@/components/ResumeUploadField";
 import { BadgeShelf } from "@/components/BadgeDisplay";
-import { SchoolField } from "@/components/SchoolField";
 import { XpProgressBar } from "@/components/XpProgressBar";
 import { getCurrentProfile } from "@/lib/data";
-import { saveResumeProfile, updateProfile } from "@/lib/profile/actions";
 import { schoolOptions } from "@/lib/schools";
 
 export const runtime = "nodejs";
@@ -88,47 +86,12 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
               <h2 className="text-xl font-black text-ink">Profile setup</h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">These preferences will power personalized internship recommendations later.</p>
               {searchParams?.message && <p className="mt-4 rounded-2xl bg-sky/10 p-3 text-sm font-bold text-sky">{searchParams.message}</p>}
-              <form action={updateProfile} className="mt-5 grid gap-5">
-                <label className="grid gap-2 text-sm font-bold text-slate-700">
-                  Name
-                  <input name="fullName" defaultValue={profile.name} className="field" required />
-                </label>
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <SchoolField schools={schoolOptions} initialSchool={profile.school} />
-                  <label className="grid gap-2 text-sm font-bold text-slate-700">
-                    Major
-                    <input name="major" defaultValue={profile.major} className="field" placeholder="Computer Science" />
-                  </label>
-                </div>
-                <label className="grid gap-2 text-sm font-bold text-slate-700">
-                  Graduation year
-                  <input name="graduationYear" defaultValue={profile.graduationYear} className="field" placeholder="2027" inputMode="numeric" />
-                </label>
-                <MultiSelectField
-                  label="Target roles"
-                  name="targetRoles"
-                  options={targetRoleOptions}
-                  initialValues={profile.targetRoles}
-                  placeholder="Choose target roles"
-                />
-                <MultiSelectField
-                  label="Target locations"
-                  name="targetLocations"
-                  options={targetLocationOptions}
-                  initialValues={profile.targetLocations}
-                  placeholder="Choose target locations"
-                />
-                <label className="flex gap-3 rounded-2xl border border-sky/20 bg-sky/10 p-4 text-sm font-bold text-slate-700">
-                  <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand" />
-                  <span>
-                    Let accepted friends view my application board.
-                    <span className="mt-1 block text-xs font-semibold text-slate-500">Only accepted friends can see it, and they cannot edit your applications.</span>
-                  </span>
-                </label>
-                <button type="submit" className="primary-button w-full sm:w-auto">
-                  <Save className="mr-2" size={18} /> Save profile
-                </button>
-              </form>
+              <ProfileAutosaveForm
+                profile={profile}
+                schools={schoolOptions}
+                targetRoleOptions={targetRoleOptions}
+                targetLocationOptions={targetLocationOptions}
+              />
             </div>
             <aside className="space-y-4">
               <div className="rounded-3xl border border-slate-200 bg-white/85 p-4">
@@ -152,16 +115,9 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                     </div>
                   </div>
                 </div>
-                <form action={saveResumeProfile} className="mt-5 grid gap-4">
+                <div className="mt-5">
                   <ResumeUploadField />
-                  <label className="grid gap-2 text-sm font-bold text-slate-700">
-                    Paste resume text
-                    <textarea name="resumeText" rows={5} className="field resize-none text-sm" placeholder="Optional fallback if the file cannot be read." />
-                  </label>
-                  <button type="submit" className="primary-button w-full">
-                    <UploadCloud className="mr-2" size={18} /> Save resume
-                  </button>
-                </form>
+                </div>
               </div>
             </aside>
           </div>

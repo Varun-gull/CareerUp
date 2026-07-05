@@ -152,23 +152,23 @@ export async function extractResumeTextFromFile(file: UploadedResumeFile) {
 
   if (fileName.endsWith(".pdf")) {
     try {
-      return await withTimeout(extractPdfTextWithPdfJs(buffer), 4_000, "PDF text extraction");
-    } catch (pdfJsError) {
+      return await withTimeout(extractPdfTextWithPdfParse(buffer), 10_000, "PDF text extraction");
+    } catch (pdfParseError) {
       try {
-        return await withTimeout(extractPdfTextWithPdfParse(buffer), 4_000, "PDF fallback extraction");
+        return await withTimeout(extractPdfTextWithPdfJs(buffer), 10_000, "PDF fallback extraction");
       } catch {
-        throw pdfJsError;
+        throw pdfParseError;
       }
     }
   }
 
   if (fileName.endsWith(".docx")) {
-    const mammoth = await withTimeout(import("mammoth"), 4_000, "DOCX parser load");
-    const result = await withTimeout(mammoth.extractRawText({ buffer }), 4_000, "DOCX text extraction");
+    const mammoth = await withTimeout(import("mammoth"), 10_000, "DOCX parser load");
+    const result = await withTimeout(mammoth.extractRawText({ buffer }), 10_000, "DOCX text extraction");
     return normalizeResumeText(result.value ?? "");
   }
 
-  return normalizeResumeText(await withTimeout(file.text(), 4_000, "Resume text extraction"));
+  return normalizeResumeText(await withTimeout(file.text(), 10_000, "Resume text extraction"));
 }
 
 export function extractResumeKeywords(text: string) {

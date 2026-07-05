@@ -14,13 +14,14 @@ type MultiSelectFieldProps = {
   options: MultiSelectOption[];
   initialValues: string[];
   placeholder: string;
+  onValuesChange?: (values: string[]) => void;
 };
 
 function normalizeItems(values: string[]) {
   return values.map((value) => value.trim()).filter(Boolean);
 }
 
-export function MultiSelectField({ label, name, options, initialValues, placeholder }: MultiSelectFieldProps) {
+export function MultiSelectField({ label, name, options, initialValues, placeholder, onValuesChange }: MultiSelectFieldProps) {
   const [open, setOpen] = useState(false);
   const [customValue, setCustomValue] = useState("");
   const [selectedValues, setSelectedValues] = useState(() => normalizeItems(initialValues).slice(0, 8));
@@ -38,13 +39,18 @@ export function MultiSelectField({ label, name, options, initialValues, placehol
   function toggleOption(value: string) {
     setSelectedValues((current) => {
       const exists = current.some((item) => item.toLowerCase() === value.toLowerCase());
-      if (exists) return current.filter((item) => item.toLowerCase() !== value.toLowerCase());
-      return [...current, value].slice(0, 8);
+      const nextValues = exists ? current.filter((item) => item.toLowerCase() !== value.toLowerCase()) : [...current, value].slice(0, 8);
+      onValuesChange?.(nextValues);
+      return nextValues;
     });
   }
 
   function removeValue(value: string) {
-    setSelectedValues((current) => current.filter((item) => item.toLowerCase() !== value.toLowerCase()));
+    setSelectedValues((current) => {
+      const nextValues = current.filter((item) => item.toLowerCase() !== value.toLowerCase());
+      onValuesChange?.(nextValues);
+      return nextValues;
+    });
   }
 
   function addCustomValue() {
@@ -53,7 +59,9 @@ export function MultiSelectField({ label, name, options, initialValues, placehol
     setSelectedValues((current) => {
       const exists = current.some((item) => item.toLowerCase() === cleanValue.toLowerCase());
       if (exists) return current;
-      return [...current, cleanValue].slice(0, 8);
+      const nextValues = [...current, cleanValue].slice(0, 8);
+      onValuesChange?.(nextValues);
+      return nextValues;
     });
     setCustomValue("");
   }

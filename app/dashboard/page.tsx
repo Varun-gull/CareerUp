@@ -1,80 +1,130 @@
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Flame, Sparkles, Trophy } from "lucide-react";
 import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
 import { ChallengeCard } from "@/components/ChallengeCard";
+import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Navbar } from "@/components/Navbar";
 import { StreakCard } from "@/components/StreakCard";
 import { WeeklyCalendarSnapshot } from "@/components/WeeklyCalendarSnapshot";
 import { XpProgressBar } from "@/components/XpProgressBar";
-import { getCalendarEvents, getChallenges, getCurrentProfile } from "@/lib/data";
+import { getApplications, getCalendarEvents, getChallenges, getCurrentProfile, getCurrentUser, getUnreadPeerMessageCount } from "@/lib/data";
+
+function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
+  return (
+    <section className="card flex flex-col justify-between gap-6 p-5">
+      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sky/10 text-sky-600">
+        <Icon size={20} />
+      </span>
+      <div>
+        <p className="text-sm font-semibold text-slate-500">{label}</p>
+        <p className="font-display mt-1 text-3xl font-bold tracking-tight text-ink">{value}</p>
+      </div>
+    </section>
+  );
+}
 
 export default async function DashboardPage({ searchParams }: { searchParams?: { message?: string } }) {
-  const [profile, challenges, calendarEvents] = await Promise.all([getCurrentProfile(), getChallenges(), getCalendarEvents()]);
+  const [profile, challenges, calendarEvents, applications, user, unreadMessages] = await Promise.all([
+    getCurrentProfile(),
+    getChallenges(),
+    getCalendarEvents(),
+    getApplications(),
+    getCurrentUser(),
+    getUnreadPeerMessageCount()
+  ]);
+
+  const appliedCount = applications.filter((application) => application.status !== "saved").length;
+  const offerCount = applications.filter((application) => application.status === "offer").length;
+  const streakActive = profile.streak > 0;
 
   return (
     <>
-      <Navbar />
+      <div className="lg:hidden">
+        <Navbar />
+      </div>
       <main className="page-shell">
-        <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white/90 shadow-soft backdrop-blur-xl">
-          <div className="grid gap-6 p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-end">
-            <div>
-              <p className="eyebrow">Command center</p>
-              <h1 className="mt-3 max-w-4xl text-4xl font-bold leading-tight text-ink sm:text-6xl">Welcome back, {profile.name}</h1>
-              <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-slate-600">
-                Keep today simple: check your streak, scan the week, finish a challenge, and move one application forward.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link href="/postings/internships" className="secondary-button">
-                Find roles
-              </Link>
-              <Link href="/applications/new" className="primary-button">
-                Add role <ArrowRight className="ml-2" size={17} />
-              </Link>
-            </div>
-          </div>
-          <div className="border-t border-slate-200 bg-slate-50/80 px-6 py-4 sm:px-8">
-            <div className="flex flex-wrap items-center gap-3 text-sm font-bold text-slate-600">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-sky/10 text-sky-600">
-                <Sparkles size={18} />
-              </span>
-              <span>{profile.xp.toLocaleString()} XP earned · {profile.streak} day streak · {profile.school || "CareerUp student"}</span>
-            </div>
-          </div>
-        </section>
-        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
+        <div className="grid gap-5 lg:grid-cols-[272px_minmax(0,1fr)]">
+          <DashboardSidebar name={profile.name} email={user?.email ?? ""} xp={profile.xp} unreadMessages={unreadMessages} />
 
-        <section className="mt-6 grid gap-5 xl:grid-cols-[1fr_380px]">
-          <div className="space-y-5">
-            <XpProgressBar xp={profile.xp} />
-            <WeeklyCalendarSnapshot events={calendarEvents} />
-          </div>
-          <aside className="space-y-5">
-            <StreakCard
-              streak={profile.streak}
-              xp={profile.xp}
-              streakBroken={profile.streakBroken}
-              freeReviveUsed={profile.streakFreeReviveUsed}
-              paidRevives={profile.streakPaidRevives}
-              reviveRequiredApplications={profile.streakReviveRequiredApplications}
-            />
-            <section className="card p-5">
-              <div className="flex items-end justify-between gap-3">
-                <div>
-                  <p className="eyebrow">XP quests</p>
-                  <h2 className="mt-1 text-2xl font-bold text-ink">Challenges</h2>
+          <div className="min-w-0 space-y-5">
+            <section className="page-hero flex flex-wrap items-center justify-between gap-4">
+              <div className="flex min-w-0 items-center gap-4">
+                <span className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-sky-600 sm:flex">
+                  <Sparkles size={22} />
+                </span>
+                <div className="min-w-0">
+                  <h1 className="truncate text-2xl font-bold text-ink sm:text-3xl">Welcome back, {profile.name}</h1>
+                  <p className="mt-1 text-sm text-slate-600">{profile.school || "CareerUp student"}</p>
                 </div>
-                <Link href="/rewards" className="text-sm font-bold text-sky-600">
-                  Rewards
-                </Link>
               </div>
-              <div className="mt-4 grid gap-4">
-                {[...challenges.tiered, ...challenges.oneOff].slice(0, 4).map((challenge) => (
-                  <ChallengeCard key={challenge.id} challenge={challenge} />
-                ))}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+                <p className="flex items-center gap-2 text-sm font-semibold text-slate-500">
+                  Streak
+                  <span
+                    className={
+                      streakActive
+                        ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-600 ring-1 ring-emerald-200"
+                        : "rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-500 ring-1 ring-slate-200"
+                    }
+                  >
+                    {streakActive ? "Active" : "Paused"}
+                  </span>
+                </p>
+                <div className="flex gap-3">
+                  <Link href="/postings/internships" className="secondary-button">
+                    Find roles
+                  </Link>
+                  <Link href="/applications/new" className="primary-button">
+                    Add role <ArrowRight className="ml-2" size={17} />
+                  </Link>
+                </div>
               </div>
             </section>
-          </aside>
-        </section>
+            {searchParams?.message && (
+              <p className="rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>
+            )}
+
+            <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px]">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} />
+                <StatCard icon={Flame} label="Day streak" value={profile.streak.toLocaleString()} />
+                <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} />
+                <StatCard icon={Trophy} label="Offers" value={offerCount.toLocaleString()} />
+              </div>
+              <WeeklyCalendarSnapshot events={calendarEvents} />
+            </section>
+
+            <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px]">
+              <section className="card p-5">
+                <div className="flex items-end justify-between gap-3">
+                  <div>
+                    <p className="eyebrow">XP quests</p>
+                    <h2 className="mt-1 text-2xl font-bold text-ink">Challenges</h2>
+                  </div>
+                  <Link href="/rewards" className="text-sm font-bold text-sky-600">
+                    Rewards
+                  </Link>
+                </div>
+                <div className="mt-4 grid gap-4">
+                  {[...challenges.tiered, ...challenges.oneOff].slice(0, 4).map((challenge) => (
+                    <ChallengeCard key={challenge.id} challenge={challenge} />
+                  ))}
+                </div>
+              </section>
+              <aside className="space-y-5">
+                <XpProgressBar xp={profile.xp} />
+                <StreakCard
+                  streak={profile.streak}
+                  xp={profile.xp}
+                  streakBroken={profile.streakBroken}
+                  freeReviveUsed={profile.streakFreeReviveUsed}
+                  paidRevives={profile.streakPaidRevives}
+                  reviveRequiredApplications={profile.streakReviveRequiredApplications}
+                />
+              </aside>
+            </section>
+          </div>
+        </div>
       </main>
     </>
   );

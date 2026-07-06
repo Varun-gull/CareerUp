@@ -46,6 +46,13 @@ const events = [
   { time: "3:30", title: "Apply sprint", tone: "bg-amber-400" }
 ];
 
+const challenges = [
+  { title: "Daily Apply Sprint", reward: "+40 XP", progress: "1/1", description: "Submit one high-quality application today.", color: "bg-sky-500" },
+  { title: "Resume Ready", reward: "+40 XP", progress: "1/1", description: "Keep a readable resume attached for matching.", color: "bg-emerald-500" },
+  { title: "Interview Momentum", reward: "+55 XP", progress: "2/3", description: "Move three roles into interviewing this month.", color: "bg-violet-500" },
+  { title: "Network Signal", reward: "+25 XP", progress: "3/5", description: "Message peers tracking similar roles.", color: "bg-amber-500" }
+];
+
 function LogoMark({ className = "" }: { className?: string }) {
   return (
     <span className={`flex h-11 w-11 items-center justify-center rounded-2xl ${className}`}>
@@ -98,7 +105,7 @@ function MiniMetric({ label, value, icon: Icon, dark = false }: { label: string;
 
 export function ConceptIndex() {
   const concepts = [
-    { href: "/ui/v2", name: "V2 Aurora Command", copy: "Dark, cinematic command center with live search and mission cards.", color: "from-slate-950 to-cyan-950" },
+    { href: "/ui/v2", name: "V2 Aurora Command", copy: "Light V1-inspired command center with challenges, streaks, and pipeline focus.", color: "from-sky-50 to-slate-200" },
     { href: "/ui/v3", name: "V3 Campus Ledger", copy: "Bright editorial dashboard with structured tables and academic signals.", color: "from-white to-amber-100" },
     { href: "/ui/v4", name: "V4 Signal Console", copy: "Dense pro console for fast scanning, rankings, and pipeline control.", color: "from-slate-950 to-stone-900" },
     { href: "/ui/v5", name: "V5 Lift OS", copy: "Soft modern workspace with friendly cards and clear next actions.", color: "from-sky-50 to-emerald-50" }
@@ -137,96 +144,107 @@ export function ConceptIndex() {
 
 export function AuroraCommandConcept() {
   return (
-    <ConceptShell title="V2 Aurora Command" subtitle="Dark kinetic product OS" background="bg-[#071018] text-white">
-      <section className="overflow-hidden rounded-[2rem] border border-white/10 bg-[#0b1320] shadow-strong">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-6 py-4">
-          <div className="flex items-center gap-3">
-            <LogoMark className="bg-cyan-300 text-slate-950 shadow-glow" />
-            <div>
-              <p className="text-lg font-black text-white">CareerUp</p>
-              <p className="text-xs font-bold text-cyan-200">Penn State · Data Science · 2026</p>
+    <ConceptShell title="V2 Aurora Command" subtitle="Light command center with V1 navigation" background="bg-[linear-gradient(135deg,#f8fafc_0%,#eef6ff_45%,#e8f0f7_100%)] text-slate-950">
+      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white/90 shadow-soft backdrop-blur-xl">
+        <header className="border-b border-slate-200 bg-navy/95 px-5 py-3 text-white shadow-lg shadow-black/20">
+          <div className="grid grid-cols-[auto_auto] items-center justify-between gap-3 lg:grid-cols-[1fr_auto_1fr]">
+            <div className="flex items-center gap-3">
+              <LogoMark className="bg-gradient-to-br from-slate-800 via-slate-700 to-sky text-white shadow-glow" />
+              <span className="text-lg font-bold">CareerUp</span>
             </div>
-          </div>
-          <nav className="flex flex-wrap items-center justify-center gap-2">
-            {navItems.map((item, index) => (
-              <span key={item} className={`rounded-full px-4 py-2 text-sm font-black ${index === 0 ? "bg-white text-slate-950" : "text-slate-300 hover:bg-white/10"}`}>
-                {item}
+            <nav className="nav-scroll col-span-2 row-start-2 flex min-w-0 items-center gap-2.5 overflow-x-auto pb-1 lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:justify-center lg:overflow-visible lg:pb-0">
+              {navItems.map((item, index) => (
+                <span key={item} className={`shrink-0 rounded-2xl px-4 py-2.5 text-sm font-bold transition ${index === 0 ? "bg-sky text-slate-950 shadow-glow" : "text-slate-300 hover:bg-white/10 hover:text-sky"}`}>
+                  {item}
+                </span>
+              ))}
+            </nav>
+            <div className="col-start-2 row-start-1 flex items-center justify-end gap-2 lg:col-start-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm">
+                <MessageSquare size={18} />
               </span>
-            ))}
-          </nav>
-          <div className="flex items-center gap-2">
-            <span className="rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-sm font-black">Jul 05</span>
-            <span className="rounded-2xl bg-cyan-300 px-4 py-2 text-sm font-black text-slate-950">Varun</span>
+              <span className="relative hidden h-11 w-11 flex-col items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-950 shadow-sm sm:flex">
+                <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-sky text-[8px] font-bold text-slate-950">JUL</span>
+                <span className="relative mt-3 text-[15px] font-bold leading-none">05</span>
+              </span>
+              <span className="rounded-2xl bg-white px-4 py-3 text-sm font-bold text-slate-950 shadow-sm">Varun</span>
+            </div>
           </div>
         </header>
 
         <div className="grid gap-6 p-6 xl:grid-cols-[280px_1fr_380px]">
-          <aside className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4">
-            <div className="rounded-3xl bg-[linear-gradient(135deg,#111827,#0e7490)] p-5">
+          <aside className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="rounded-3xl bg-[linear-gradient(135deg,#0f172a,#0ea5e9)] p-5 text-white shadow-glow">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-cyan-100">Mission level</p>
               <p className="mt-3 text-5xl font-black">145 XP</p>
-              <div className="mt-4 h-2 rounded-full bg-white/15">
-                <div className="h-2 w-7/12 rounded-full bg-cyan-300" />
+              <div className="mt-4 h-2 rounded-full bg-white/20">
+                <div className="h-2 w-7/12 rounded-full bg-white" />
               </div>
+              <p className="mt-3 text-sm font-bold text-cyan-50">105 XP to Silver Strategist</p>
             </div>
             <div className="mt-4 grid gap-3">
               {pipeline.map((stage) => (
-                <div key={stage.label} className="flex items-center justify-between rounded-2xl border border-white/10 bg-slate-950/35 px-4 py-3">
-                  <span className="font-bold text-slate-300">{stage.label}</span>
-                  <span className="text-xl font-black text-white">{stage.count}</span>
+                <div key={stage.label} className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                  <span className="font-bold text-slate-600">{stage.label}</span>
+                  <span className="text-xl font-black text-slate-950">{stage.count}</span>
                 </div>
               ))}
             </div>
           </aside>
 
           <section className="space-y-5">
-            <div className="rounded-[1.5rem] border border-white/10 bg-[linear-gradient(135deg,#0f172a,#082f49)] p-6">
+            <div className="rounded-[1.5rem] border border-slate-200 bg-[linear-gradient(135deg,#ffffff,#eff6ff)] p-6 shadow-sm">
               <div className="flex flex-wrap items-end justify-between gap-5">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-cyan-200">Live role radar</p>
-                  <h2 className="mt-3 max-w-3xl text-5xl font-black leading-tight text-white">Your search command deck is ready.</h2>
+                  <p className="text-xs font-black uppercase tracking-[0.2em] text-sky-600">Command center</p>
+                  <h2 className="mt-3 max-w-3xl text-5xl font-black leading-tight text-slate-950">Your climb dashboard is ready.</h2>
+                  <p className="mt-3 max-w-2xl text-base font-semibold leading-7 text-slate-600">
+                    Keep the V2 momentum layout, but focus the center on streaks, challenges, and application progress.
+                  </p>
                 </div>
-                <button className="rounded-2xl bg-cyan-300 px-5 py-3 font-black text-slate-950 shadow-glow">Apply sprint</button>
-              </div>
-              <div className="mt-6 grid gap-3 md:grid-cols-[1fr_1fr_auto]">
-                <div className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-slate-950">
-                  <Search size={18} />
-                  <span className="font-bold">Data science intern</span>
-                </div>
-                <div className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-slate-950">
-                  <Target size={18} />
-                  <span className="font-bold">New York · Remote</span>
-                </div>
-                <button className="rounded-2xl border border-cyan-300/40 px-5 py-3 font-black text-cyan-100">Scan</button>
+                <button className="rounded-2xl bg-sky px-5 py-3 font-black text-slate-950 shadow-glow">Add role</button>
               </div>
             </div>
 
-            <div className="grid gap-3">
-              {roles.map((role) => (
-                <div key={role.company} className="grid gap-4 rounded-3xl border border-white/10 bg-white/[0.04] p-4 md:grid-cols-[1fr_auto_auto] md:items-center">
-                  <div>
-                    <p className="text-sm font-black text-cyan-200">{role.company}</p>
-                    <h3 className="mt-1 text-xl font-black text-white">{role.title}</h3>
-                    <p className="mt-2 text-sm font-semibold text-slate-400">{role.city} · {role.mode} · Posted {role.age}</p>
-                  </div>
-                  <span className="rounded-full bg-emerald-300 px-3 py-1 text-sm font-black text-slate-950">{role.fit}% fit</span>
-                  <button className="rounded-2xl bg-white px-4 py-3 font-black text-slate-950">Save</button>
+            <div className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.2em] text-sky-600">XP quests</p>
+                  <h3 className="mt-1 text-3xl font-black text-slate-950">Challenges</h3>
                 </div>
-              ))}
+                <span className="rounded-full bg-sky/10 px-4 py-2 text-sm font-black text-sky-700">3 active today</span>
+              </div>
+              <div className="mt-5 grid gap-3">
+                {challenges.map((challenge) => (
+                  <div key={challenge.title} className="grid gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-[auto_1fr_auto] md:items-center">
+                    <span className={`flex h-12 w-12 items-center justify-center rounded-2xl text-white ${challenge.color}`}>
+                      <CheckCircle2 size={21} />
+                    </span>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h4 className="text-lg font-black text-slate-950">{challenge.title}</h4>
+                        <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-slate-500">{challenge.progress}</span>
+                      </div>
+                      <p className="mt-1 text-sm font-semibold text-slate-600">{challenge.description}</p>
+                    </div>
+                    <span className="rounded-2xl bg-slate-950 px-4 py-2 text-sm font-black text-white">{challenge.reward}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
 
           <aside className="space-y-4">
-            <MiniMetric label="Streak" value="6 days" icon={Flame} dark />
-            <MiniMetric label="Interviews" value="3" icon={MessageSquare} dark />
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5">
-              <p className="text-sm font-black text-cyan-200">Today</p>
+            <MiniMetric label="Streak" value="6 days" icon={Flame} />
+            <MiniMetric label="Interviews" value="3" icon={MessageSquare} />
+            <div className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="text-sm font-black text-sky-600">Today</p>
               <div className="mt-4 grid gap-3">
                 {events.map((event) => (
-                  <div key={event.time} className="flex items-center gap-3 rounded-2xl bg-slate-950/40 p-3">
+                  <div key={event.time} className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3">
                     <span className={`h-3 w-3 rounded-full ${event.tone}`} />
-                    <span className="font-black">{event.time}</span>
-                    <span className="text-sm font-bold text-slate-300">{event.title}</span>
+                    <span className="font-black text-slate-950">{event.time}</span>
+                    <span className="text-sm font-bold text-slate-600">{event.title}</span>
                   </div>
                 ))}
               </div>

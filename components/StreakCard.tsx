@@ -27,14 +27,14 @@ export function StreakCard({
 
   return (
     <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-5 text-white shadow-soft">
-      <div className="pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-r from-gold/10 to-transparent" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-r from-sky/10 to-transparent" />
 
       <div className="relative flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gold text-slate-950 shadow-lg shadow-gold/10">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky text-slate-950 shadow-lg shadow-sky/10">
           <Zap size={32} fill="currentColor" />
         </div>
         <div>
-          <p className="text-sm font-bold uppercase text-gold">Current streak</p>
+          <p className="text-sm font-bold uppercase text-sky">Current streak</p>
           <p className="text-4xl font-bold leading-none">{streak} days</p>
         </div>
       </div>
@@ -47,12 +47,12 @@ export function StreakCard({
 
       {showReviveInfo && (
         <div className="relative mt-4 rounded-2xl border border-slate-200 bg-slate-50/90 p-3">
-          <div className="flex items-center gap-2 text-sm font-bold text-amber-700">
+          <div className="flex items-center gap-2 text-sm font-bold text-sky-600">
             <ShieldCheck size={16} /> Streak revive
           </div>
           <p className="mt-2 text-sm leading-6 text-slate-700">{reviveHelper}</p>
           {reviveRequiredApplications > 0 && (
-            <p className="mt-2 rounded-xl bg-gold/10 px-3 py-2 text-xs font-bold text-amber-700">
+            <p className="mt-2 rounded-xl bg-sky/10 px-3 py-2 text-xs font-bold text-sky-600">
               Revive in progress: apply to {reviveRequiredApplications} roles today.
             </p>
           )}
@@ -65,7 +65,7 @@ export function StreakCard({
               <button
                 type="submit"
                 disabled={!canUnlockPaidRevive}
-                className="w-full rounded-xl bg-gold px-3 py-2 text-sm font-bold text-slate-950 transition hover:bg-brand disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500"
+                className="w-full rounded-xl bg-sky px-3 py-2 text-sm font-bold text-slate-950 transition hover:bg-brand disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500"
               >
                 Unlock revive - 250 XP
               </button>

@@ -80,7 +80,7 @@ export function StatusUpdateForm({ application, compact }: { application: Applic
           onChange={(v) => setSelected(v as Application["status"])}
           options={statusOptions.map((s) => ({ value: s.value, label: s.label }))}
         />
-        <button type="submit" className="min-h-10 rounded-xl bg-gold px-4 text-sm font-bold text-slate-950 shadow-sm transition hover:bg-brand focus:outline-none focus:ring-4 focus:ring-sky/20">
+        <button type="submit" className="min-h-10 rounded-xl bg-sky px-4 text-sm font-bold text-slate-950 shadow-sm transition hover:bg-brand focus:outline-none focus:ring-4 focus:ring-sky/20">
           Update
         </button>
       </form>

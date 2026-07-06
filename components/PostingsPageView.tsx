@@ -85,7 +85,7 @@ function sortPostings(postings: InternshipPosting[], sort: PostingSort) {
 }
 
 function activeTabClass(active: boolean) {
-  return active ? "bg-gold text-slate-950 shadow-glow" : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:text-sky-600";
+  return active ? "bg-sky text-slate-950 shadow-glow" : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:text-sky-600";
 }
 
 function buildPostingsHref(
@@ -250,10 +250,10 @@ export async function PostingsPageView({
               </span>
             )}
             <span className="inline-flex overflow-hidden rounded-full bg-slate-50 text-xs font-bold shadow-sm ring-1 ring-slate-200">
-              <Link href={bestFitHref} className={sort === "fit" ? "bg-gold px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky-600"}>
+              <Link href={bestFitHref} className={sort === "fit" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky-600"}>
                 Best fit
               </Link>
-              <Link href={newestHref} className={sort === "newest" ? "bg-gold px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky-600"}>
+              <Link href={newestHref} className={sort === "newest" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky-600"}>
                 Latest posted
               </Link>
             </span>

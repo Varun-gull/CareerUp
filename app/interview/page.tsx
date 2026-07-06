@@ -46,7 +46,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
             <section className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
               <form action={saveInterviewAnswer} className="card min-w-0 p-5">
                 <div className="mb-5 flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gold/10 text-amber-600">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
                     <MessageSquareText size={22} />
                   </div>
                   <div>
@@ -84,7 +84,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
               </form>
 
               <aside className="card p-5">
-                <p className="text-sm font-bold text-amber-700">Answer formula</p>
+                <p className="text-sm font-bold text-brand">Answer formula</p>
                 <h2 className="mt-1 text-xl font-bold text-ink">What a strong answer needs</h2>
                 <div className="mt-4 grid gap-3">
                   {[
@@ -117,7 +117,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                     <article key={answer.id} className="card p-5">
                       <div className="flex flex-wrap items-start justify-between gap-4">
                         <div>
-                          <p className="text-sm font-bold text-amber-700">{answer.createdAt}</p>
+                          <p className="text-sm font-bold text-brand">{answer.createdAt}</p>
                           <h3 className="mt-1 text-xl font-bold text-ink">{answer.prompt}</h3>
                         </div>
                         <form action={deleteInterviewAnswer}>

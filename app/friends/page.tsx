@@ -39,7 +39,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
           <form action={sendFriendRequestById} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-white/90 p-4 shadow-soft backdrop-blur">
             <div>
               <p className="font-bold text-sky-600">Friend invite opened</p>
-              <p className="text-sm font-bold text-amber-700">Send a request to add this CareerUp profile.</p>
+              <p className="text-sm font-bold text-brand">Send a request to add this CareerUp profile.</p>
             </div>
             <input type="hidden" name="profileId" value={inviteId} />
             <button className="primary-button">
@@ -51,7 +51,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
         <section className="mt-8 grid gap-4 lg:grid-cols-[1fr_360px]">
           <form action={sendFriendRequest} className="card grid gap-4 p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gold/10 text-amber-600">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky/10 text-brand">
                 <UserPlus size={20} />
               </span>
               <div>
@@ -91,7 +91,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
         <section className="mt-6 grid gap-4 lg:grid-cols-[360px_1fr]">
           <form action={createGroup} className="card grid gap-4 p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gold/10 text-amber-600">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky/10 text-brand">
                 <UsersRound size={20} />
               </span>
               <div>
@@ -130,7 +130,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
                       <div>
                         <h3 className="font-bold text-ink">{group.name}</h3>
                         <p className="mt-1 text-sm text-slate-600">{group.description || "CareerUp group"}</p>
-                        <p className="mt-2 text-sm font-bold text-amber-700">
+                        <p className="mt-2 text-sm font-bold text-brand">
                           {group.totalXp.toLocaleString()} XP · {group.memberCount} members
                         </p>
                       </div>
@@ -215,7 +215,7 @@ function FriendSection({
               </div>
               <div className="mt-4 flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-bold text-amber-700">{friend.xp.toLocaleString()} XP</p>
+                  <p className="text-sm font-bold text-brand">{friend.xp.toLocaleString()} XP</p>
                   <RankBadge xp={friend.xp} />
                 </div>
                 <div className="flex gap-2">

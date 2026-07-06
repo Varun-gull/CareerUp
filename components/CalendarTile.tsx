@@ -27,7 +27,7 @@ export function CalendarTile() {
       aria-label="Calendar"
       suppressHydrationWarning
     >
-      <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-gold">
+      <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-sky">
         <span className="text-[8px] font-bold uppercase leading-none text-slate-950">{parts?.month ?? "CAL"}</span>
       </span>
       <span className="relative mt-3 text-[15px] font-bold leading-none">{parts?.day ?? ""}</span>

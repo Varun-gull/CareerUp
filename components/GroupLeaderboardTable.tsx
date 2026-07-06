@@ -6,7 +6,7 @@ export function GroupLeaderboardTable({ groups }: { groups: GroupLeaderboardRow[
   if (groups.length === 0) {
     return (
       <div className="card p-8 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/10 text-amber-600">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-sky/10 text-brand">
           <UsersRound size={22} />
         </div>
         <h2 className="mt-4 text-2xl font-bold text-ink">No groups yet</h2>

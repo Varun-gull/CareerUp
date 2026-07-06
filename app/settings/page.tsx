@@ -20,7 +20,7 @@ export default async function SettingsPage({ searchParams }: { searchParams?: { 
 
         <section className="card mt-8 max-w-2xl p-6">
           <div className="flex items-start gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gold/10 text-amber-600">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
               {profile.shareApplicationBoard ? <UsersRound size={20} /> : <Lock size={20} />}
             </span>
             <div>

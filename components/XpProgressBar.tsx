@@ -52,7 +52,7 @@ export function XpProgressBar({ xp }: { xp: number }) {
             <span className="text-right text-xs font-bold text-slate-600">
               {rank.minXp.toLocaleString()} XP
               {rankBonuses.some((b) => b.rankName === rank.name) && (
-                <span className="block text-amber-700">+{rankBonuses.find((b) => b.rankName === rank.name)?.xp} bonus</span>
+                <span className="block text-brand">+{rankBonuses.find((b) => b.rankName === rank.name)?.xp} bonus</span>
               )}
             </span>
           </div>
@@ -69,12 +69,12 @@ export function XpProgressBar({ xp }: { xp: number }) {
           <p className="text-sm font-bold text-slate-500">Rank progress</p>
           <h2 className="mt-1 text-2xl font-bold text-ink">{xp.toLocaleString()} XP</h2>
         </div>
-        <p className="rounded-full bg-gold/10 px-3 py-1 text-sm font-bold text-amber-700 ring-1 ring-gold/30">
+        <p className="rounded-full bg-sky/10 px-3 py-1 text-sm font-bold text-sky-600 ring-1 ring-sky/20">
           {progress.next ? `${progress.remaining} XP to ${progress.next.name}` : "Max rank unlocked"}
         </p>
       </div>
       <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
-        <div className="game-bar-fill" style={{ width: `${progress.percent}%` }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-sky via-electric to-brand" style={{ width: `${progress.percent}%` }} />
       </div>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-bold text-slate-600">{progress.current.name}</p>

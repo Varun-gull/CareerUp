@@ -38,7 +38,7 @@ export default async function PublicProfilePage({
     <>
       <Navbar />
       <main className="page-shell">
-        <Link href="/friends" className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-brand">
+        <Link href="/friends" className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-amber-600">
           <ArrowLeft className="mr-2" size={16} /> Friends
         </Link>
 
@@ -187,7 +187,7 @@ export default async function PublicProfilePage({
                             key={year}
                             href={`/u/${params.profileId}?year=${year}`}
                             className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-                              selectedBoardYear === year ? "bg-brand text-white shadow-glow" : "border border-slate-200 bg-white/90 text-slate-600 hover:border-brand/30 hover:text-brand"
+                              selectedBoardYear === year ? "bg-brand text-white shadow-glow" : "border border-slate-200 bg-white/90 text-slate-600 hover:border-brand/30 hover:text-amber-600"
                             }`}
                             aria-current={selectedBoardYear === year ? "page" : undefined}
                           >
@@ -197,7 +197,7 @@ export default async function PublicProfilePage({
                         <Link
                           href={`/u/${params.profileId}?year=all`}
                           className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-                            selectedBoardYear === "all" ? "bg-white text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/90 text-slate-600 hover:border-brand/30 hover:text-brand"
+                            selectedBoardYear === "all" ? "bg-white text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white/90 text-slate-600 hover:border-brand/30 hover:text-amber-600"
                           }`}
                           aria-current={selectedBoardYear === "all" ? "page" : undefined}
                         >
@@ -214,7 +214,7 @@ export default async function PublicProfilePage({
                 ) : isAcceptedFriend ? (
                   <div className="rounded-3xl border border-slate-200 bg-white/90 p-6">
                     <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gold/10 text-amber-600">
                         <Lock size={18} />
                       </span>
                       <div>
@@ -226,7 +226,7 @@ export default async function PublicProfilePage({
                 ) : (
                   <div className="rounded-3xl border border-slate-200 bg-white/90 p-6">
                     <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gold/10 text-amber-600">
                         <Lock size={18} />
                       </span>
                       <div>

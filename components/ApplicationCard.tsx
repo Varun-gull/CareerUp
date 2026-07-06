@@ -40,7 +40,7 @@ export function ApplicationCard({ application, compact = false }: { application:
                 <CalendarDays size={16} /> Due {application.deadline}
               </span>
               {sourceIsUrl ? (
-                <a className="inline-flex items-center gap-2 font-bold text-sky-600 hover:text-brand" href={application.source} target="_blank" rel="noreferrer">
+                <a className="inline-flex items-center gap-2 font-bold text-sky-600 hover:text-amber-600" href={application.source} target="_blank" rel="noreferrer">
                   <ExternalLink size={16} /> Posting
                 </a>
               ) : (
@@ -84,7 +84,7 @@ export function ApplicationCard({ application, compact = false }: { application:
           <CalendarDays size={16} /> Due {application.deadline}
         </span>
         {sourceIsUrl ? (
-          <a className="inline-flex items-center gap-2 font-bold text-sky-600 hover:text-brand" href={application.source} target="_blank" rel="noreferrer">
+          <a className="inline-flex items-center gap-2 font-bold text-sky-600 hover:text-amber-600" href={application.source} target="_blank" rel="noreferrer">
             <ExternalLink size={16} /> Posting
           </a>
         ) : (

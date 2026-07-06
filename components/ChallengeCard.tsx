@@ -1,5 +1,6 @@
-import { CheckCircle2, Trophy } from "lucide-react";
+import { CheckCircle2, Crown, Gem, Medal, Trophy } from "lucide-react";
 import clsx from "clsx";
+import type { LucideIcon } from "lucide-react";
 import type { Challenge } from "@/lib/types";
 
 const TIER_LABELS = ["", "Bronze", "Silver", "Gold", "Platinum", "Diamond"];
@@ -11,20 +12,20 @@ const TIER_COLORS = [
   "text-sky-600 bg-sky-50 ring-sky-200",
   "text-violet-600 bg-violet-50 ring-violet-200",
 ];
-const TIER_EMOJIS = ["", "🥉", "🥈", "🥇", "💎", "👑"];
+const TIER_ICONS: (LucideIcon | null)[] = [null, Medal, Medal, Medal, Gem, Crown];
 
 export function ChallengeCard({ challenge }: { challenge: Challenge }) {
   const percent = Math.min(100, Math.round((challenge.progress / challenge.target) * 100));
   const isTiered = challenge.tier !== undefined;
   const completedTier = challenge.completed && isTiered ? challenge.tier! - 1 : null;
-  const badgeEmoji = completedTier !== null ? TIER_EMOJIS[completedTier] : null;
+  const CompletedTierIcon = completedTier !== null ? TIER_ICONS[completedTier] : null;
 
   return (
     <article className={clsx("card p-5 transition hover:-translate-y-1 hover:shadow-strong", challenge.completed && "ring-2 ring-emerald-400/60")}>
       <div className="flex items-start justify-between gap-4">
-        <div className={clsx("flex h-11 w-11 items-center justify-center rounded-2xl shadow-glow text-xl", challenge.completed ? "bg-emerald-500" : "bg-gradient-to-br from-sky to-electric text-slate-950")}>
+        <div className={clsx("flex h-11 w-11 items-center justify-center rounded-2xl shadow-glow", challenge.completed ? "bg-emerald-500" : "bg-gradient-to-br from-gold-300 to-gold-500 text-slate-950")}>
           {challenge.completed
-            ? (badgeEmoji ?? <CheckCircle2 size={22} className="text-white" />)
+            ? (CompletedTierIcon ? <CompletedTierIcon size={22} className="text-white" /> : <CheckCircle2 size={22} className="text-white" />)
             : <Trophy size={22} />}
         </div>
         <div className="flex items-center gap-2">
@@ -38,7 +39,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
               <CheckCircle2 size={12} /> Completed
             </span>
           ) : (
-            <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-bold text-sky-600 ring-1 ring-sky/20">+{challenge.xp} XP</span>
+            <span className="rounded-full bg-gold/10 px-3 py-1 text-xs font-bold text-amber-700 ring-1 ring-gold/30">+{challenge.xp} XP</span>
           )}
         </div>
       </div>
@@ -56,7 +57,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
                 key={i}
                 className={clsx("h-1 flex-1 rounded-full", {
                   "bg-emerald-400": isDone,
-                  "bg-sky": isActive,
+                  "bg-gold": isActive,
                   "bg-slate-200": !isDone && !isActive,
                 })}
               />
@@ -76,7 +77,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
           <div
-            className={clsx("h-full rounded-full transition-all", challenge.completed ? "bg-emerald-500" : "bg-gradient-to-r from-brand via-electric to-sky")}
+            className={clsx(challenge.completed ? "h-full rounded-full bg-emerald-500" : "game-bar-fill")}
             style={{ width: `${percent}%` }}
           />
         </div>

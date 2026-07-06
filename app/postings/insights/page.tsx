@@ -92,7 +92,7 @@ export default async function PostingInsightsPage({
     <>
       <Navbar />
       <main className="page-shell">
-        <Link href={returnTo} className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-brand">
+        <Link href={returnTo} className="inline-flex items-center text-sm font-bold text-slate-600 hover:text-amber-600">
           <ArrowLeft className="mr-2" size={16} /> Back to postings
         </Link>
 
@@ -108,7 +108,7 @@ export default async function PostingInsightsPage({
 
           <div className="card grid gap-3 p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky text-slate-950">
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gold text-slate-950">
                 <UsersRound size={24} />
               </span>
               <div>
@@ -122,7 +122,7 @@ export default async function PostingInsightsPage({
                 <p className="text-xs text-slate-500">Applied</p>
               </div>
               <div className="rounded-2xl bg-sky/10 p-3">
-                <p className="text-xl text-brand">{insight?.interviewedCount ?? interviewed.length}</p>
+                <p className="text-xl text-amber-600">{insight?.interviewedCount ?? interviewed.length}</p>
                 <p className="text-xs text-slate-500">Interviewed</p>
               </div>
               <div className="rounded-2xl bg-emerald-50 p-3">
@@ -156,7 +156,7 @@ export default async function PostingInsightsPage({
                     <Link
                       href={buildInsightHref({ roleKey, company, role, returnTo, year: "all", signal: selectedSignal })}
                       className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-                        selectedYear === "all" ? "bg-white text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand"
+                        selectedYear === "all" ? "bg-white text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-amber-600"
                       }`}
                     >
                       All years
@@ -166,7 +166,7 @@ export default async function PostingInsightsPage({
                         key={year}
                         href={buildInsightHref({ roleKey, company, role, returnTo, year, signal: selectedSignal })}
                         className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-                          selectedYear === year ? "bg-sky text-slate-950 shadow-lg shadow-sky/10" : "border border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand"
+                          selectedYear === year ? "bg-gold text-slate-950 shadow-lg shadow-gold/10" : "border border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-amber-600"
                         }`}
                       >
                         {year}
@@ -183,7 +183,7 @@ export default async function PostingInsightsPage({
                         key={tab.value}
                         href={buildInsightHref({ roleKey, company, role, returnTo, year: selectedYear, signal: tab.value })}
                         className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-bold transition ${
-                          selectedSignal === tab.value ? "border-brand bg-sky text-slate-950 shadow-lg shadow-sky/10" : "border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand"
+                          selectedSignal === tab.value ? "border-brand bg-gold text-slate-950 shadow-lg shadow-gold/10" : "border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-amber-600"
                         }`}
                       >
                         <span className="inline-flex items-center gap-2">

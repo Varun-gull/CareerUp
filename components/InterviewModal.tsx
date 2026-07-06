@@ -152,7 +152,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                     onClick={() => pickDate(key)}
                     className={clsx(
                       "mx-auto flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition",
-                      isSelected && "bg-sky font-bold text-slate-950",
+                      isSelected && "bg-gold font-bold text-slate-950",
                       !isSelected && isToday && "font-bold text-sky-600 ring-2 ring-sky",
                       !isSelected && !isToday && !isPast && "text-slate-700 hover:bg-sky/15 hover:text-slate-900",
                       isPast && "cursor-not-allowed text-slate-300"
@@ -191,7 +191,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                     className={clsx(
                       "rounded-xl py-2.5 text-sm font-bold transition",
                       selected
-                        ? "bg-sky text-slate-950 shadow-sm"
+                        ? "bg-gold text-slate-950 shadow-sm"
                         : "bg-slate-100 text-slate-700 hover:bg-sky/20 hover:text-slate-900"
                     )}
                   >
@@ -231,7 +231,7 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                     setSelectedTime(customTime);
                     setCustomTimeOpen(false);
                   }}
-                  className="rounded-xl bg-sky px-4 text-sm font-bold text-slate-950 transition hover:bg-brand"
+                  className="rounded-xl bg-gold px-4 text-sm font-bold text-slate-950 transition hover:bg-brand"
                 >
                   Use
                 </button>

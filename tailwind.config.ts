@@ -48,11 +48,15 @@ const config: Config = {
         ink: "#0f172a",
         navy: "#070b12",
         panel: "#101722",
-        brand: "#93c5fd",
-        electric: "#38bdf8",
+        brand: "#f59e0b",
+        electric: "#fbbf24",
+        gold: { ...colors.amber, DEFAULT: "#fbbf24" },
         sky: { ...colors.sky, DEFAULT: "#7dd3fc" },
         success: "#10b981",
         warning: "#f59e0b"
+      },
+      fontFamily: {
+        display: ["var(--font-display)", "var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"]
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -61,7 +65,7 @@ const config: Config = {
       },
       boxShadow: {
         soft: "0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 23, 42, 0.07)",
-        glow: "0 8px 24px rgba(56, 189, 248, 0.28)",
+        glow: "0 8px 24px rgba(245, 158, 11, 0.28)",
         strong: "0 4px 12px rgba(15, 23, 42, 0.08), 0 24px 64px rgba(15, 23, 42, 0.16)"
       }
     }

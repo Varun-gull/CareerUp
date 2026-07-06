@@ -11,7 +11,7 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
   if (sorted.length === 0) {
     return (
       <div className="card p-8 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/10 text-amber-600">
           <UserPlus size={22} />
         </div>
         <h2 className="mt-4 text-2xl font-bold text-ink">{emptyMode === "friends" ? "No friends on the board yet" : "No leaderboard data yet"}</h2>
@@ -49,7 +49,7 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
               {user.schoolLogoUrl ? (
                 <img src={user.schoolLogoUrl} alt="" className="h-full w-full object-contain p-1" />
               ) : (
-                <span className="text-sm font-bold text-brand">{user.school.charAt(0)}</span>
+                <span className="text-sm font-bold text-amber-700">{user.school.charAt(0)}</span>
               )}
             </div>
             <div className="min-w-0">

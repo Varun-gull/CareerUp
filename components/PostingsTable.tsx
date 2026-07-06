@@ -60,7 +60,7 @@ export function PostingsTable({
           return (
             <article key={posting.id} className="p-4">
               <div className="flex items-start gap-3">
-                <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-sky text-xs font-bold text-slate-950">{index + 1}</span>
+                <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-gold text-xs font-bold text-slate-950">{index + 1}</span>
                 <div className="min-w-0 flex-1">
                   <p className="font-bold leading-tight text-ink">{posting.title}</p>
                   <p className="mt-1 text-xs font-bold text-sky-600">{posting.company}</p>
@@ -95,7 +95,7 @@ export function PostingsTable({
                     className={
                       saved
                         ? "inline-flex min-h-10 w-full cursor-default items-center justify-center rounded-2xl bg-emerald-50 px-3 text-sm font-bold text-emerald-700 ring-1 ring-emerald-200"
-                        : "inline-flex min-h-10 w-full items-center justify-center rounded-2xl bg-sky px-3 text-sm font-bold text-slate-950 shadow-sm transition hover:bg-brand"
+                        : "inline-flex min-h-10 w-full items-center justify-center rounded-2xl bg-gold/15 px-3 text-sm font-bold text-amber-800 ring-1 ring-gold/40 transition hover:bg-gold/25"
                     }
                   >
                     {saved ? <CheckCircle2 className="mr-1.5" size={15} /> : <BookmarkPlus className="mr-1.5" size={15} />}
@@ -207,7 +207,7 @@ export function PostingsTable({
                       className={
                         saved
                           ? "inline-flex min-h-9 w-full cursor-default items-center justify-center rounded-2xl bg-emerald-50 px-2 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200"
-                          : "inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-sky px-2 text-xs font-bold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:bg-brand"
+                          : "inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-gold/15 px-2 text-xs font-bold text-amber-800 ring-1 ring-gold/40 transition hover:-translate-y-0.5 hover:bg-gold/25"
                       }
                     >
                       {saved ? <CheckCircle2 className="mr-1" size={14} /> : <BookmarkPlus className="mr-1" size={14} />}

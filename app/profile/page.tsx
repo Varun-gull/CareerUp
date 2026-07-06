@@ -103,7 +103,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
               <div className="rounded-3xl border border-slate-200 bg-white/85 p-4">
                 <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gold/10 text-amber-600">
                       {profile.resumeFileName ? <FileCheck2 size={21} /> : <FileText size={21} />}
                     </div>
                     <div className="min-w-0">

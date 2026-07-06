@@ -74,7 +74,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
               <article key={reward.id} className="card p-5">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-bold text-brand">{reward.category}</p>
+                    <p className="text-sm font-bold text-amber-700">{reward.category}</p>
                     <h2 className="mt-1 text-xl font-bold text-ink">{reward.title}</h2>
                     <p className="mt-2 text-sm leading-6 text-slate-600">{reward.description}</p>
                   </div>

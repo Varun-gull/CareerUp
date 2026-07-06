@@ -81,7 +81,7 @@ export function ProfileDropdown({
             <span className="inline-flex items-center gap-3">
               <Mail size={16} /> Messages
             </span>
-            {unreadMessages > 0 && <span className="rounded-full bg-sky px-2 py-0.5 text-xs font-bold text-slate-950">{unreadMessages}</span>}
+            {unreadMessages > 0 && <span className="rounded-full bg-gold px-2 py-0.5 text-xs font-bold text-slate-950">{unreadMessages}</span>}
           </Link>
           <Link
             href="/settings"

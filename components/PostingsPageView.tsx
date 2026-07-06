@@ -1,7 +1,6 @@
 import { ChevronLeft, ChevronRight, RotateCcw, Search } from "lucide-react";
 import Link from "next/link";
 import { EmptyState } from "@/components/EmptyState";
-import { Navbar } from "@/components/Navbar";
 import { PostingsSearchForm } from "@/components/PostingsSearchForm";
 import { PostingsTable } from "@/components/PostingsTable";
 import { RolePeerSetupNotice } from "@/components/RolePeerSetupNotice";
@@ -204,7 +203,6 @@ export async function PostingsPageView({
 
   return (
     <>
-      <Navbar />
       <main className="page-shell">
         <div className="page-hero flex flex-wrap items-start justify-between gap-5">
           <div>

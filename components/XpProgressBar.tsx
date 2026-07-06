@@ -74,7 +74,7 @@ export function XpProgressBar({ xp }: { xp: number }) {
         </p>
       </div>
       <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
-        <div className="h-full rounded-full bg-gradient-to-r from-sky via-electric to-brand" style={{ width: `${progress.percent}%` }} />
+        <div className="game-bar-fill" style={{ width: `${progress.percent}%` }} />
       </div>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-bold text-slate-600">{progress.current.name}</p>

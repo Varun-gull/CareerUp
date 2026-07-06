@@ -54,6 +54,9 @@ const config: Config = {
         success: "#10b981",
         warning: "#f59e0b"
       },
+      fontFamily: {
+        display: ["var(--font-display)", "var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"]
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

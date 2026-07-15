@@ -10,25 +10,25 @@
   --card-foreground: 222 47% 11%;
   --popover: 0 0% 100%;
   --popover-foreground: 222 47% 11%;
-  --primary: 28 39% 39%;
+  --primary: 16 7% 35%;
   --primary-foreground: 0 0% 100%;
   --secondary: 210 40% 96%;
   --secondary-foreground: 222 47% 11%;
   --muted: 215 20% 65%;
   --muted-foreground: 215 16% 47%;
-  --accent: 28 39% 39%;
+  --accent: 216 20% 51%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
   --border: 214 32% 91%;
   --input: 214 32% 91%;
-  --ring: 28 39% 39%;
+  --ring: 216 20% 51%;
   --radius: 0.75rem;
 }
 
 html {
   min-height: 100%;
-  background: #f3efea;
+  background: #e9e6e7;
 }
 
 * {
@@ -39,8 +39,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 18% 10%, rgba(215, 168, 110, 0.18), transparent 28rem),
-    linear-gradient(135deg, #f7f4ef 0%, #ece6dd 48%, #f5f1ec 100%);
+    radial-gradient(circle at 18% 10%, rgba(171, 151, 140, 0.24), transparent 28rem),
+    radial-gradient(circle at 86% 16%, rgba(107, 124, 152, 0.18), transparent 30rem),
+    linear-gradient(135deg, #f6f4f4 0%, #e9e6e7 45%, #dde1e8 100%);
   color: #0f172a;
   font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -71,17 +72,18 @@ textarea {
   }
 
   .card {
-    border-color: #e2d8cc;
+    border-color: rgba(123, 127, 138, 0.24);
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 252, 247, 0.94));
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(249, 248, 248, 0.94));
     box-shadow:
-      0 18px 46px rgba(79, 53, 36, 0.08),
+      0 18px 46px rgba(94, 86, 83, 0.08),
       0 1px 0 rgba(255, 255, 255, 0.92) inset;
     @apply rounded-2xl border;
   }
 
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-wider text-amber-800;
+    color: #5e5653;
+    @apply text-xs font-semibold uppercase tracking-wider;
   }
 
   .primary-button {
@@ -105,14 +107,14 @@ textarea {
     border-radius: 9999px;
     background-image:
       repeating-linear-gradient(90deg, rgba(255, 255, 255, 0) 0 10px, rgba(255, 255, 255, 0.4) 10px 12px),
-      linear-gradient(90deg, #7c4f2d, #b9824a, #d7a86e);
+      linear-gradient(90deg, #5e5653, #6b7c98, #ab978c);
     transition: width 0.5s ease-out;
   }
 
   .hero-3d {
     transform-origin: center top;
     box-shadow:
-      0 30px 80px rgba(79, 53, 36, 0.2),
+      0 30px 80px rgba(94, 86, 83, 0.18),
       0 1px 0 rgba(255, 255, 255, 0.18) inset;
     will-change: transform;
   }
@@ -120,8 +122,8 @@ textarea {
   .dashboard-overlap {
     position: relative;
     z-index: 10;
-    margin-top: -5rem;
-    padding-top: 5rem;
+    margin-top: -5.5rem;
+    padding-top: 3.75rem;
     perspective: 1200px;
   }
 
@@ -147,8 +149,34 @@ textarea {
   .dashboard-layer .card:hover {
     transform: translateY(-4px);
     box-shadow:
-      0 26px 64px rgba(79, 53, 36, 0.13),
+      0 26px 64px rgba(94, 86, 83, 0.13),
       0 1px 0 rgba(255, 255, 255, 0.95) inset;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .hero-3d {
+      animation: hero-recede linear both;
+      animation-timeline: scroll();
+      animation-range: 0 320px;
+    }
+    .dashboard-overlap {
+      animation: dashboard-float-over linear both;
+      animation-timeline: scroll();
+      animation-range: 0 360px;
+    }
+  }
+
+  @keyframes hero-recede {
+    to {
+      transform: perspective(1000px) rotateX(4deg) scale(0.94) translateY(-16px);
+      opacity: 0.74;
+    }
+  }
+
+  @keyframes dashboard-float-over {
+    to {
+      transform: perspective(1000px) translateY(-34px) translateZ(34px);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

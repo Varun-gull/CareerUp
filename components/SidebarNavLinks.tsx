@@ -45,13 +45,13 @@ function RailItem({ link, active }: { link: SidebarLink; active: boolean }) {
       className={clsx(
         "group relative flex h-11 w-11 items-center justify-center rounded-2xl transition",
         active
-          ? "bg-[#4f3524] text-white shadow-strong"
-          : "bg-white/75 text-slate-500 shadow-sm ring-1 ring-[#ded4c8]/80 hover:bg-white hover:text-[#4f3524]"
+          ? "bg-[#5E5653] text-white shadow-strong"
+          : "bg-white/75 text-[#7B7F8A] shadow-sm ring-1 ring-[#7B7F8A]/25 hover:bg-white hover:text-[#5E5653]"
       )}
     >
       <Icon size={19} />
       {link.badge !== undefined && link.badge > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-4.5 min-w-[1.125rem] items-center justify-center rounded-full bg-[#b9824a] px-1 text-[10px] font-bold text-white ring-2 ring-white">
+        <span className="absolute -right-1 -top-1 flex h-4.5 min-w-[1.125rem] items-center justify-center rounded-full bg-[#6B7C98] px-1 text-[10px] font-bold text-white ring-2 ring-white">
           {link.badge > 9 ? "9+" : link.badge}
         </span>
       )}

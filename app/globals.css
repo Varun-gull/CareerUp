@@ -73,7 +73,7 @@ textarea {
   }
 
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-wider text-teal-700;
+    @apply text-xs font-semibold uppercase tracking-wider text-blue-700;
   }
 
   .primary-button {
@@ -97,12 +97,21 @@ textarea {
     border-radius: 9999px;
     background-image:
       repeating-linear-gradient(90deg, rgba(255, 255, 255, 0) 0 10px, rgba(255, 255, 255, 0.4) 10px 12px),
-      linear-gradient(90deg, #34d399, #10b981, #059669);
+      linear-gradient(90deg, #60a5fa, #38bdf8, #0ea5e9);
     transition: width 0.5s ease-out;
   }
 
   .hero-3d {
     transform-origin: center top;
+    will-change: transform, opacity, filter;
+  }
+
+  .dashboard-overlap {
+    position: relative;
+    z-index: 10;
+    margin-top: -3.75rem;
+    padding-top: 3.75rem;
+    transform: translateZ(0);
   }
 
   @supports (animation-timeline: scroll()) {
@@ -111,18 +120,30 @@ textarea {
       animation-timeline: scroll();
       animation-range: 0 320px;
     }
+    .dashboard-overlap {
+      animation: dashboard-float-over linear both;
+      animation-timeline: scroll();
+      animation-range: 0 360px;
+    }
   }
 
   @keyframes hero-recede {
     to {
-      transform: perspective(900px) rotateX(4deg) scale(0.94) translateY(-14px);
-      opacity: 0.55;
-      filter: blur(1.5px);
+      transform: perspective(1000px) rotateX(5deg) scale(0.92) translateY(-18px);
+      opacity: 0.62;
+      filter: blur(1px);
+    }
+  }
+
+  @keyframes dashboard-float-over {
+    to {
+      transform: perspective(1000px) translateY(-34px) translateZ(34px);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-3d {
+    .hero-3d,
+    .dashboard-overlap {
       animation: none;
     }
   }

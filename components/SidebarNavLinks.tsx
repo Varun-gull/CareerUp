@@ -5,10 +5,9 @@ import {
   ClipboardList,
   Gift,
   LayoutGrid,
-  Mail,
   MessagesSquare,
   Search,
-  Trophy
+  Settings
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -26,8 +25,11 @@ const mainLinks: SidebarLink[] = [
 ];
 
 const progressLinks: SidebarLink[] = [
-  { href: "/rewards", label: "Rewards", icon: Gift },
-  { href: "/leaderboard", label: "Leaderboard", icon: Trophy }
+  { href: "/rewards", label: "Rewards", icon: Gift }
+];
+
+const utilityLinks: SidebarLink[] = [
+  { href: "/settings", label: "Settings", icon: Settings }
 ];
 
 function RailItem({ link, active }: { link: SidebarLink; active: boolean }) {
@@ -41,8 +43,8 @@ function RailItem({ link, active }: { link: SidebarLink; active: boolean }) {
       className={clsx(
         "group relative flex h-11 w-11 items-center justify-center rounded-2xl transition",
         active
-          ? "bg-slate-950 text-white shadow-strong"
-          : "bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70 hover:bg-white hover:text-slate-900"
+          ? "bg-[#0b2f64] text-white shadow-strong"
+          : "bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70 hover:bg-white hover:text-[#0b2f64]"
       )}
     >
       <Icon size={19} />
@@ -58,12 +60,8 @@ function RailItem({ link, active }: { link: SidebarLink; active: boolean }) {
   );
 }
 
-export function SidebarNavLinks({ unreadMessages }: { unreadMessages: number }) {
+export function SidebarNavLinks() {
   const pathname = usePathname();
-
-  const generalLinks: SidebarLink[] = [
-    { href: "/messages", label: "Messages", icon: Mail, badge: unreadMessages }
-  ];
 
   function isActive(href: string) {
     if (href === "/postings/internships") return pathname.startsWith("/postings");
@@ -71,21 +69,22 @@ export function SidebarNavLinks({ unreadMessages }: { unreadMessages: number }) 
   }
 
   return (
-    <div className="flex flex-col items-center gap-5">
-      <nav className="flex flex-col items-center gap-2">
-        {mainLinks.map((link) => (
-          <RailItem key={link.href} link={link} active={isActive(link.href)} />
-        ))}
-      </nav>
-      <span className="h-px w-8 bg-slate-200" />
-      <nav className="flex flex-col items-center gap-2">
-        {progressLinks.map((link) => (
-          <RailItem key={link.href} link={link} active={isActive(link.href)} />
-        ))}
-      </nav>
-      <span className="h-px w-8 bg-slate-200" />
-      <nav className="flex flex-col items-center gap-2">
-        {generalLinks.map((link) => (
+    <div className="flex h-full flex-col items-center">
+      <div className="flex flex-1 flex-col items-center justify-center gap-5">
+        <nav className="flex flex-col items-center gap-2">
+          {mainLinks.map((link) => (
+            <RailItem key={link.href} link={link} active={isActive(link.href)} />
+          ))}
+        </nav>
+        <span className="h-px w-8 bg-slate-200" />
+        <nav className="flex flex-col items-center gap-2">
+          {progressLinks.map((link) => (
+            <RailItem key={link.href} link={link} active={isActive(link.href)} />
+          ))}
+        </nav>
+      </div>
+      <nav className="flex flex-col items-center gap-2 pb-1">
+        {utilityLinks.map((link) => (
           <RailItem key={link.href} link={link} active={isActive(link.href)} />
         ))}
       </nav>

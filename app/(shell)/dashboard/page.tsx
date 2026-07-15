@@ -10,7 +10,7 @@ import { getApplications, getCalendarEvents, getChallenges, getCurrentProfile } 
 function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
     <section className="card flex min-h-40 flex-col justify-between gap-6 p-5 transition hover:-translate-y-0.5 hover:bg-white/95">
-      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-sm">
+      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm">
         <Icon size={20} />
       </span>
       <div>
@@ -39,17 +39,20 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
         title={`Welcome back, ${profile.name}`}
         description="Keep your search focused: review today's quests, move one role forward, and protect your recruiting momentum."
         tabs={[
-          { label: "Overview", href: "/dashboard", active: true },
+          { label: "Dashboard", href: "/dashboard", active: true },
           { label: "Applications", href: "/applications" },
+          { label: "Postings", href: "/postings/internships" },
+          { label: "Interview Prep", href: "/interview" },
           { label: "Calendar", href: "/calendar" },
-          { label: "Challenges", href: "/challenges" }
+          { label: "Rewards", href: "/rewards" },
+          { label: "Settings", href: "/settings" }
         ]}
       />
       {searchParams?.message && (
         <p className="rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>
       )}
 
-      <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px]">
+      <section className="dashboard-overlap grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="space-y-5">
           <div className="grid gap-5 sm:grid-cols-2">
             <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} />

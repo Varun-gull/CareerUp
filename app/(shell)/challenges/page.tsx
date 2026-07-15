@@ -1,4 +1,5 @@
 import { ChallengeCard } from "@/components/ChallengeCard";
+import { PageHero } from "@/components/PageHero";
 import { getChallenges } from "@/lib/data";
 
 export default async function ChallengesPage() {
@@ -7,13 +8,19 @@ export default async function ChallengesPage() {
   return (
     <>
       <main className="page-shell">
-        <div className="page-hero">
-          <p className="eyebrow">XP quests</p>
-          <h1 className="mt-2 text-4xl font-bold text-ink">Challenges</h1>
-          <p className="mt-2 max-w-2xl text-slate-600">Small missions turn the internship search into daily progress instead of a giant vague task.</p>
-        </div>
+        <PageHero
+          compact
+          eyebrow="XP quests"
+          title="Challenges"
+          description="Small missions turn the internship search into daily progress instead of a giant vague task."
+          tabs={[
+            { label: "Challenges", href: "/challenges", active: true },
+            { label: "Rewards", href: "/rewards" },
+            { label: "Leaderboard", href: "/leaderboard" }
+          ]}
+        />
 
-        <section className="mt-10">
+        <section className="mt-8">
           <div className="mb-4">
             <h2 className="text-xl font-bold text-ink">Core Challenges</h2>
             <p className="mt-1 text-sm text-slate-500">Each challenge has tiers — complete the current tier to unlock the next.</p>

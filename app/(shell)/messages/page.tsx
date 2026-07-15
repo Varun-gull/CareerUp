@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/PageHero";
 import { Check, CheckCheck, Inbox, Mail, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
@@ -94,29 +95,22 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
   return (
     <>
       <main className="page-shell">
-        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Peer network</p>
-            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Messages</h1>
-            <p className="mt-2 max-w-2xl text-slate-600">
-              Keep role questions, profile messages, and peer advice in clean conversation threads.
-            </p>
-          </div>
-          <div className="grid grid-cols-3 gap-2 rounded-3xl border border-slate-200 bg-white/90 p-2 text-center">
-            <div className="min-w-20 rounded-2xl bg-slate-50 px-3 py-2">
-              <p className="text-lg font-bold text-ink">{conversations.length}</p>
-              <p className="text-[11px] font-bold uppercase text-slate-500">Threads</p>
-            </div>
-            <div className="min-w-20 rounded-2xl bg-slate-50 px-3 py-2">
-              <p className="text-lg font-bold text-sky-600">{unreadCount}</p>
-              <p className="text-[11px] font-bold uppercase text-slate-500">Unread</p>
-            </div>
-            <div className="min-w-20 rounded-2xl bg-slate-50 px-3 py-2">
-              <p className="text-lg font-bold text-ink">{sentCount}</p>
-              <p className="text-[11px] font-bold uppercase text-slate-500">Sent</p>
-            </div>
-          </div>
-        </div>
+        <PageHero
+          compact
+          eyebrow="Peer network"
+          title="Messages"
+          description="Keep role questions, profile messages, and peer advice in clean conversation threads."
+          tabs={[
+            { label: "Messages", href: "/messages", active: true },
+            { label: "Friends", href: "/friends" },
+            { label: "Leaderboard", href: "/leaderboard" }
+          ]}
+          actions={
+            <span className="rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-bold text-sky-100 ring-1 ring-white/15">
+              {conversations.length} threads · {unreadCount} unread · {sentCount} sent
+            </span>
+          }
+        />
 
         {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />

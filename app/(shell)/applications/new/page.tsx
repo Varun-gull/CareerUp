@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/PageHero";
 import { Save } from "lucide-react";
 import { createApplication } from "@/lib/applications/actions";
 
@@ -5,11 +6,16 @@ export default function NewApplicationPage({ searchParams }: { searchParams?: { 
   return (
     <>
       <main className="page-shell max-w-4xl">
-        <div className="page-hero">
-          <p className="eyebrow">Add role</p>
-          <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Track a new role</h1>
-          <p className="mt-2 text-slate-600">Save the role now, then move it through your pipeline when you apply.</p>
-        </div>
+        <PageHero
+          compact
+          eyebrow="Add role"
+          title="Track a new role"
+          description="Save the role now, then move it through your pipeline when you apply."
+          tabs={[
+            { label: "Add role", href: "/applications/new", active: true },
+            { label: "Board", href: "/applications" }
+          ]}
+        />
         {searchParams?.message && <p className="mt-4 rounded-2xl bg-slate-100 p-3 text-sm font-bold text-slate-700">{searchParams.message}</p>}
         <form action={createApplication} className="card mt-8 grid gap-5 p-6">
           <label className="grid gap-2 text-sm font-bold text-slate-700">

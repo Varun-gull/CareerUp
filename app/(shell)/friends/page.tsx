@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/PageHero";
 import { Check, MailPlus, Share2, Trash2, UserPlus, UsersRound } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
@@ -23,13 +24,17 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
   return (
     <>
       <main className="page-shell">
-        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Squad</p>
-            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Friends</h1>
-            <p className="mt-2 max-w-2xl text-slate-600">Add classmates, compare progress, and build a leaderboard that feels personal.</p>
-          </div>
-        </div>
+        <PageHero
+          compact
+          eyebrow="Squad"
+          title="Friends"
+          description="Add classmates, compare progress, and build a leaderboard that feels personal."
+          tabs={[
+            { label: "Friends", href: "/friends", active: true },
+            { label: "Messages", href: "/messages" },
+            { label: "Leaderboard", href: "/leaderboard" }
+          ]}
+        />
 
         {searchParams?.message && <p className="mt-5 rounded-xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 

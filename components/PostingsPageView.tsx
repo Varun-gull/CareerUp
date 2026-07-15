@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, RotateCcw, Search } from "lucide-react";
 import Link from "next/link";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHero } from "@/components/PageHero";
 import { PostingsSearchForm } from "@/components/PostingsSearchForm";
 import { PostingsTable } from "@/components/PostingsTable";
 import { RolePeerSetupNotice } from "@/components/RolePeerSetupNotice";
@@ -81,10 +82,6 @@ function sortPostings(postings: InternshipPosting[], sort: PostingSort) {
 
     return aRecency - bRecency;
   });
-}
-
-function activeTabClass(active: boolean) {
-  return active ? "bg-slate-950 text-white shadow-sm" : "bg-white/70 text-slate-700 ring-1 ring-white/80 hover:bg-white hover:text-slate-950";
 }
 
 function buildPostingsHref(
@@ -204,21 +201,16 @@ export async function PostingsPageView({
   return (
     <>
       <main className="page-shell">
-        <div className="page-hero flex flex-wrap items-start justify-between gap-5">
-          <div>
-            <p className="eyebrow">Live search</p>
-            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">{pageTitle}</h1>
-            <p className="mt-2 max-w-3xl text-slate-600">{pageCopy}</p>
-          </div>
-          <div className="flex rounded-2xl bg-white/55 p-1 shadow-sm ring-1 ring-white/80 backdrop-blur-xl">
-            <Link href="/postings/internships" className={`rounded-xl px-4 py-2 text-sm font-bold transition ${activeTabClass(kind === "internship")}`}>
-              Internships
-            </Link>
-            <Link href="/postings/new-grad" className={`rounded-xl px-4 py-2 text-sm font-bold transition ${activeTabClass(kind === "new-grad")}`}>
-              New Grad
-            </Link>
-          </div>
-        </div>
+        <PageHero
+          compact
+          eyebrow="Live search"
+          title={pageTitle}
+          description={pageCopy}
+          tabs={[
+            { label: "Internships", href: "/postings/internships", active: kind === "internship" },
+            { label: "New Grad", href: "/postings/new-grad", active: kind === "new-grad" }
+          ]}
+        />
 
         {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />

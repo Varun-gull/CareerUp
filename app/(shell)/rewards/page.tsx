@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/PageHero";
 import { ArrowRight, Gift, LockKeyhole, Sparkles, Trophy, UnlockKeyhole } from "lucide-react";
 import Link from "next/link";
 import { ChallengeCard } from "@/components/ChallengeCard";
@@ -13,13 +14,17 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
   return (
     <>
       <main className="page-shell">
-        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Unlocks</p>
-            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Rewards</h1>
-            <p className="mt-2 max-w-2xl text-slate-600">Turn XP into interview prep tools you can use when recruiting gets serious.</p>
-          </div>
-        </div>
+        <PageHero
+          compact
+          eyebrow="Unlocks"
+          title="Rewards"
+          description="Turn XP into interview prep tools you can use when recruiting gets serious."
+          tabs={[
+            { label: "Rewards", href: "/rewards", active: true },
+            { label: "Challenges", href: "/challenges" },
+            { label: "Leaderboard", href: "/leaderboard" }
+          ]}
+        />
 
         {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 

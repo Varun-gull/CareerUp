@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/PageHero";
 import { CalendarView } from "@/components/CalendarView";
 import { getApplications, getCalendarEvents } from "@/lib/data";
 
@@ -9,11 +10,18 @@ export default async function CalendarPage() {
   return (
     <>
       <main className="page-shell">
-        <div className="page-hero mb-6">
-          <p className="eyebrow">Schedule</p>
-          <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Calendar</h1>
-          <p className="mt-2 text-slate-600">Drag applications onto dates to track deadlines and submissions.</p>
-        </div>
+        <PageHero
+          compact
+          eyebrow="Schedule"
+          title="Calendar"
+          description="Drag applications onto dates to track deadlines and submissions."
+          tabs={[
+            { label: "Calendar", href: "/calendar", active: true },
+            { label: "Applications", href: "/applications" },
+            { label: "Dashboard", href: "/dashboard" }
+          ]}
+        />
+        <div className="mb-6" />
         <CalendarView applications={applications} dbEvents={dbEvents} />
       </main>
     </>

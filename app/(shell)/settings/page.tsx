@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/PageHero";
 import { Lock, UsersRound } from "lucide-react";
 import { getCurrentProfile } from "@/lib/data";
 import { updatePrivacySettings } from "@/lib/profile/actions";
@@ -8,11 +9,17 @@ export default async function SettingsPage({ searchParams }: { searchParams?: { 
   return (
     <>
       <main className="page-shell">
-        <div className="page-hero">
-          <p className="eyebrow">Account controls</p>
-          <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Settings</h1>
-          <p className="mt-2 max-w-2xl text-slate-600">Control what friends can see and how your CareerUp profile behaves.</p>
-        </div>
+        <PageHero
+          compact
+          eyebrow="Account controls"
+          title="Settings"
+          description="Control what friends can see and how your CareerUp profile behaves."
+          tabs={[
+            { label: "Settings", href: "/settings", active: true },
+            { label: "Profile", href: "/profile" },
+            { label: "Privacy", href: "/privacy" }
+          ]}
+        />
 
         {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 

@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/PageHero";
 import { BriefcaseBusiness, CheckCircle2, Clock3, MessageSquareText, Plus, Trophy } from "lucide-react";
 import Link from "next/link";
 import { ApplicationPipelineBoard } from "@/components/ApplicationPipelineBoard";
@@ -75,16 +76,18 @@ export default async function ApplicationsPage({
   return (
     <>
       <main className="page-shell">
-        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Pipeline</p>
-            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Applications</h1>
-            <p className="mt-2 text-slate-600">Track every role from saved to offer without losing momentum.</p>
-          </div>
-          <Link href="/applications/new" className="primary-button">
-            <Plus className="mr-2" size={18} /> Add role
-          </Link>
-        </div>
+        <PageHero
+          compact
+          eyebrow="Pipeline"
+          title="Applications"
+          description="Track every role from saved to offer without losing momentum."
+          tabs={[
+            { label: "Board", href: "/applications", active: true },
+            { label: "Add role", href: "/applications/new" },
+            { label: "Calendar", href: "/calendar" },
+            { label: "Postings", href: "/postings/internships" }
+          ]}
+        />
         {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
         {applications.length > 0 ? (
           <>

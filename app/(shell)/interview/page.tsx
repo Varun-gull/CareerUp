@@ -1,4 +1,5 @@
-import { ArrowRight, LockKeyhole, MessageSquareText, Save, Sparkles, Trash2 } from "lucide-react";
+import { PageHero } from "@/components/PageHero";
+import { ArrowRight, LockKeyhole, MessageSquareText, Save, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { deleteInterviewAnswer, saveInterviewAnswer } from "@/lib/interview/actions";
 import { behavioralInterviewPrompts } from "@/lib/interview/prompts";
@@ -11,16 +12,17 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
   return (
     <>
       <main className="page-shell">
-        <div className="page-hero flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Prep tool</p>
-            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">Interview Prep</h1>
-            <p className="mt-2 max-w-2xl text-slate-600">Draft STAR answers for behavioral interviews and keep your best stories ready.</p>
-          </div>
-          <Link href="/rewards" className="secondary-button">
-            <Sparkles className="mr-2" size={18} /> Rewards
-          </Link>
-        </div>
+        <PageHero
+          compact
+          eyebrow="Prep tool"
+          title="Interview Prep"
+          description="Draft STAR answers for behavioral interviews and keep your best stories ready."
+          tabs={[
+            { label: "STAR builder", href: "/interview", active: true },
+            { label: "Rewards", href: "/rewards" },
+            { label: "Applications", href: "/applications" }
+          ]}
+        />
 
         {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 

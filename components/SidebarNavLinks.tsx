@@ -23,7 +23,8 @@ const mainLinks: SidebarLink[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutGrid },
   { href: "/applications", label: "Applications", icon: ClipboardList },
   { href: "/postings/internships", label: "Postings", icon: Search },
-  { href: "/interview", label: "Interview Prep", icon: MessagesSquare }
+  { href: "/interview", label: "Interview Prep", icon: MessagesSquare },
+  { href: "/calendar", label: "Calendar", icon: CalendarDays }
 ];
 
 const progressLinks: SidebarLink[] = [
@@ -32,24 +33,30 @@ const progressLinks: SidebarLink[] = [
   { href: "/friends", label: "Friends", icon: Users }
 ];
 
-function SidebarItem({ link, active }: { link: SidebarLink; active: boolean }) {
+function RailItem({ link, active }: { link: SidebarLink; active: boolean }) {
   const Icon = link.icon;
   return (
     <Link
       href={link.href}
+      title={link.label}
+      aria-label={link.label}
       aria-current={active ? "page" : undefined}
       className={clsx(
-        "flex items-center gap-3 rounded-[1.1rem] px-4 py-2.5 text-sm font-semibold transition",
-        active ? "bg-slate-950 text-white shadow-sm" : "text-slate-700 hover:bg-white/75 hover:text-slate-950"
+        "group relative flex h-11 w-11 items-center justify-center rounded-2xl transition",
+        active
+          ? "bg-slate-950 text-white shadow-strong"
+          : "bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70 hover:bg-white hover:text-slate-900"
       )}
     >
-      <Icon size={18} className={active ? "text-sky" : "text-slate-500"} />
-      <span className="flex-1">{link.label}</span>
+      <Icon size={19} />
       {link.badge !== undefined && link.badge > 0 && (
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-lime-200 px-1 text-[10px] font-bold text-slate-950">
+        <span className="absolute -right-1 -top-1 flex h-4.5 min-w-[1.125rem] items-center justify-center rounded-full bg-sky px-1 text-[10px] font-bold text-white ring-2 ring-white">
           {link.badge > 9 ? "9+" : link.badge}
         </span>
       )}
+      <span className="pointer-events-none absolute left-full z-50 ml-3 hidden whitespace-nowrap rounded-xl bg-slate-950 px-3 py-1.5 text-xs font-semibold text-white shadow-strong group-hover:block">
+        {link.label}
+      </span>
     </Link>
   );
 }
@@ -58,7 +65,6 @@ export function SidebarNavLinks({ unreadMessages }: { unreadMessages: number }) 
   const pathname = usePathname();
 
   const generalLinks: SidebarLink[] = [
-    { href: "/calendar", label: "Calendar", icon: CalendarDays },
     { href: "/messages", label: "Messages", icon: Mail, badge: unreadMessages },
     { href: "/settings", label: "Settings", icon: Settings }
   ];
@@ -69,28 +75,24 @@ export function SidebarNavLinks({ unreadMessages }: { unreadMessages: number }) 
   }
 
   return (
-    <div className="grid gap-5">
-      <nav className="grid gap-1">
+    <div className="flex flex-col items-center gap-5">
+      <nav className="flex flex-col items-center gap-2">
         {mainLinks.map((link) => (
-          <SidebarItem key={link.href} link={link} active={isActive(link.href)} />
+          <RailItem key={link.href} link={link} active={isActive(link.href)} />
         ))}
       </nav>
-      <div>
-        <p className="section-label px-4">Progress</p>
-        <nav className="mt-2 grid gap-1">
-          {progressLinks.map((link) => (
-            <SidebarItem key={link.href} link={link} active={isActive(link.href)} />
-          ))}
-        </nav>
-      </div>
-      <div>
-        <p className="section-label px-4">General</p>
-        <nav className="mt-2 grid gap-1">
-          {generalLinks.map((link) => (
-            <SidebarItem key={link.href} link={link} active={isActive(link.href)} />
-          ))}
-        </nav>
-      </div>
+      <span className="h-px w-8 bg-slate-200" />
+      <nav className="flex flex-col items-center gap-2">
+        {progressLinks.map((link) => (
+          <RailItem key={link.href} link={link} active={isActive(link.href)} />
+        ))}
+      </nav>
+      <span className="h-px w-8 bg-slate-200" />
+      <nav className="flex flex-col items-center gap-2">
+        {generalLinks.map((link) => (
+          <RailItem key={link.href} link={link} active={isActive(link.href)} />
+        ))}
+      </nav>
     </div>
   );
 }

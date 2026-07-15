@@ -22,12 +22,12 @@ export function PageHero({
   return (
     <section
       className={clsx(
-        "relative overflow-hidden rounded-[2rem] text-white shadow-strong",
+        "hero-3d relative overflow-hidden rounded-[2rem] text-white shadow-strong",
         compact ? "min-h-[13rem]" : "min-h-[17rem]"
       )}
     >
-      <div className="absolute inset-0 bg-[linear-gradient(140deg,#0f172a_0%,#1e293b_45%,#0c4a6e_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_10%,rgba(56,189,248,0.28),transparent_26rem),radial-gradient(circle_at_12%_92%,rgba(125,211,252,0.16),transparent_20rem)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(150deg,#28464b_0%,#3d6a6b_45%,#7ba6a4_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_8%,rgba(226,240,238,0.30),transparent_24rem),radial-gradient(circle_at_10%_95%,rgba(16,185,129,0.14),transparent_20rem)]" />
 
       <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[13rem]" : "min-h-[17rem]")}>
         {eyebrow && (

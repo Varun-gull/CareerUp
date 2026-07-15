@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import Link from "next/link";
 import { CalendarTile } from "@/components/CalendarTile";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
@@ -47,11 +47,8 @@ export async function Navbar() {
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-navy/95 shadow-lg shadow-black/25 backdrop-blur-xl">
       <nav className="grid w-full grid-cols-[auto_auto] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
-        <Link href="/dashboard" className="group flex shrink-0 items-center gap-3 justify-self-start font-bold text-white">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-sky text-white shadow-glow transition group-hover:-translate-y-0.5">
-            <BriefcaseBusiness size={22} />
-          </span>
-          <span className="text-lg">CareerUp</span>
+        <Link href="/dashboard" className="shrink-0 justify-self-start text-2xl font-black tracking-tight text-[#4aa8e0]">
+          CareerUp
         </Link>
         <NavLinks />
         <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-end gap-2 justify-self-end lg:col-start-3">

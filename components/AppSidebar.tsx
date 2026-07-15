@@ -1,4 +1,3 @@
-import { BriefcaseBusiness } from "lucide-react";
 import Link from "next/link";
 import { SidebarNavLinks } from "@/components/SidebarNavLinks";
 import { getCurrentProfile, getCurrentUser, getUnreadPeerMessageCount } from "@/lib/data";
@@ -20,16 +19,7 @@ export async function AppSidebar() {
   const name = profile?.name ?? user?.email ?? "CareerUp";
 
   return (
-    <aside className="hidden lg:sticky lg:top-0 lg:flex lg:h-[inherit] lg:max-h-screen lg:flex-col lg:items-center lg:gap-6 lg:overflow-y-auto lg:px-3 lg:py-5">
-      <Link
-        href="/dashboard"
-        title="CareerUp"
-        aria-label="CareerUp home"
-        className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky text-white shadow-glow transition hover:scale-105"
-      >
-        <BriefcaseBusiness size={20} />
-      </Link>
-
+    <aside className="hidden lg:sticky lg:top-[4.5rem] lg:flex lg:max-h-[calc(100vh-4.5rem)] lg:flex-col lg:items-center lg:gap-6 lg:overflow-y-auto lg:px-3 lg:py-5">
       <SidebarNavLinks unreadMessages={unreadMessages} />
 
       <div className="mt-auto flex flex-col items-center gap-2 pt-4">

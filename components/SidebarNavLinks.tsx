@@ -8,9 +8,7 @@ import {
   Mail,
   MessagesSquare,
   Search,
-  Settings,
-  Trophy,
-  Users
+  Trophy
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,8 +27,7 @@ const mainLinks: SidebarLink[] = [
 
 const progressLinks: SidebarLink[] = [
   { href: "/rewards", label: "Rewards", icon: Gift },
-  { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
-  { href: "/friends", label: "Friends", icon: Users }
+  { href: "/leaderboard", label: "Leaderboard", icon: Trophy }
 ];
 
 function RailItem({ link, active }: { link: SidebarLink; active: boolean }) {
@@ -65,8 +62,7 @@ export function SidebarNavLinks({ unreadMessages }: { unreadMessages: number }) 
   const pathname = usePathname();
 
   const generalLinks: SidebarLink[] = [
-    { href: "/messages", label: "Messages", icon: Mail, badge: unreadMessages },
-    { href: "/settings", label: "Settings", icon: Settings }
+    { href: "/messages", label: "Messages", icon: Mail, badge: unreadMessages }
   ];
 
   function isActive(href: string) {

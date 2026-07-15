@@ -23,7 +23,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
   return (
     <article className={clsx("card p-5 transition hover:-translate-y-1 hover:shadow-strong", challenge.completed && "ring-2 ring-emerald-400/60")}>
       <div className="flex items-start justify-between gap-4">
-        <div className={clsx("flex h-11 w-11 items-center justify-center rounded-2xl shadow-glow", challenge.completed ? "bg-emerald-500" : "bg-gradient-to-br from-sky to-electric text-white")}>
+        <div className={clsx("flex h-11 w-11 items-center justify-center rounded-2xl shadow-sm", challenge.completed ? "bg-emerald-500" : "bg-amber-300 text-slate-900")}>
           {challenge.completed
             ? (CompletedTierIcon ? <CompletedTierIcon size={22} className="text-white" /> : <CheckCircle2 size={22} className="text-white" />)
             : <Trophy size={22} />}
@@ -39,7 +39,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
               <CheckCircle2 size={12} /> Completed
             </span>
           ) : (
-            <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-bold text-sky-600 ring-1 ring-sky/20">+{challenge.xp} XP</span>
+            <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700 ring-1 ring-amber-200">+{challenge.xp} XP</span>
           )}
         </div>
       </div>

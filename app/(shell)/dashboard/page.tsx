@@ -3,7 +3,6 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { ChallengeCard } from "@/components/ChallengeCard";
-import { StreakCard } from "@/components/StreakCard";
 import { WeeklyCalendarSnapshot } from "@/components/WeeklyCalendarSnapshot";
 import { XpProgressBar } from "@/components/XpProgressBar";
 import { getApplications, getCalendarEvents, getChallenges, getCurrentProfile } from "@/lib/data";
@@ -11,7 +10,7 @@ import { getApplications, getCalendarEvents, getChallenges, getCurrentProfile } 
 function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
     <section className="card flex min-h-40 flex-col justify-between gap-6 p-5 transition hover:-translate-y-0.5 hover:bg-white/95">
-      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 text-sky shadow-sm">
+      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-sm">
         <Icon size={20} />
       </span>
       <div>
@@ -32,7 +31,6 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
 
   const appliedCount = applications.filter((application) => application.status !== "saved").length;
   const offerCount = applications.filter((application) => application.status === "offer").length;
-  const streakActive = profile.streak > 0;
 
   return (
     <main className="page-shell space-y-5">
@@ -46,17 +44,6 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
           { label: "Calendar", href: "/calendar" },
           { label: "Challenges", href: "/challenges" }
         ]}
-        actions={
-          <span
-            className={
-              streakActive
-                ? "rounded-full bg-lime-200 px-3 py-1.5 text-xs font-bold text-slate-950"
-                : "rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-slate-200 ring-1 ring-white/15"
-            }
-          >
-            {streakActive ? "Streak active" : "Streak paused"}
-          </span>
-        }
       />
       {searchParams?.message && (
         <p className="rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>
@@ -90,14 +77,6 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
               ))}
             </div>
           </section>
-          <StreakCard
-            streak={profile.streak}
-            xp={profile.xp}
-            streakBroken={profile.streakBroken}
-            freeReviveUsed={profile.streakFreeReviveUsed}
-            paidRevives={profile.streakPaidRevives}
-            reviveRequiredApplications={profile.streakReviveRequiredApplications}
-          />
         </aside>
       </section>
     </main>

@@ -31,8 +31,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
           description="Add classmates, compare progress, and build a leaderboard that feels personal."
           tabs={[
             { label: "Friends", href: "/friends", active: true },
-            { label: "Messages", href: "/messages" },
-            { label: "Leaderboard", href: "/leaderboard" }
+            { label: "Groups", href: "/friends#groups" }
           ]}
         />
 
@@ -91,7 +90,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
           <FriendSection title="Sent" helper="Requests waiting on them" friends={outgoingRequests} empty="No sent requests." action="remove" />
         </section>
 
-        <section className="mt-6 grid gap-4 lg:grid-cols-[360px_1fr]">
+        <section id="groups" className="mt-6 scroll-mt-28 grid gap-4 lg:grid-cols-[360px_1fr]">
           <form action={createGroup} className="card grid gap-4 p-5">
             <div className="flex items-center gap-3">
               <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky/10 text-brand">

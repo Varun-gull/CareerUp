@@ -17,7 +17,6 @@ export function MessageReplyForm({ recipientId, applicationId, roleKey, sourceMe
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
-  const subjectRef = useRef<HTMLInputElement>(null);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -39,14 +38,8 @@ export function MessageReplyForm({ recipientId, applicationId, roleKey, sourceMe
       <input type="hidden" name="roleKey" value={roleKey} />
       <input type="hidden" name="sourceMessageId" value={sourceMessageId} />
       <input type="hidden" name="returnTo" value={returnTo} />
+      <input type="hidden" name="subject" value={defaultSubject} />
       <div className="grid gap-3">
-        <input
-          ref={subjectRef}
-          name="subject"
-          defaultValue={defaultSubject}
-          className="field min-h-10 py-2 text-sm"
-          aria-label="Reply subject"
-        />
         {error && <p className="text-xs font-bold text-red-500">{error}</p>}
         <div className="flex flex-col gap-3 sm:flex-row">
           <textarea

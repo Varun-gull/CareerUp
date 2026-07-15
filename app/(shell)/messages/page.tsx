@@ -100,11 +100,6 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
           eyebrow="Peer network"
           title="Messages"
           description="Keep role questions, profile messages, and peer advice in clean conversation threads."
-          tabs={[
-            { label: "Messages", href: "/messages", active: true },
-            { label: "Friends", href: "/friends" },
-            { label: "Leaderboard", href: "/leaderboard" }
-          ]}
           actions={
             <span className="rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-bold text-sky-100 ring-1 ring-white/15">
               {conversations.length} threads · {unreadCount} unread · {sentCount} sent
@@ -211,7 +206,6 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                             <span className="rounded-full bg-sky px-2 py-0.5 text-[10px] font-bold text-white">Unread</span>
                           )}
                         </div>
-                        <p className="mt-2 text-sm font-bold text-ink">{message.subject}</p>
                         <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6 text-slate-700">{message.body}</p>
                         {outbound && (
                           <div className={`mt-2 flex items-center justify-end gap-1 text-xs font-bold ${isRead ? "text-sky-600" : "text-slate-400"}`}>
@@ -233,7 +227,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                 applicationId={selectedConversation.lastMessage.applicationId}
                 roleKey={selectedConversation.roleKey}
                 sourceMessageId={selectedConversation.lastMessage.id}
-                defaultSubject={selectedConversation.lastMessage.subject.startsWith("Re:") ? selectedConversation.lastMessage.subject : `Re: ${selectedConversation.lastMessage.subject}`}
+                defaultSubject={selectedConversation.lastMessage.subject.replace(/^Re:\s*/i, "") || "CareerUp message"}
                 returnTo={`/messages?thread=${encodeURIComponent(selectedConversation.id)}`}
               />
             </section>

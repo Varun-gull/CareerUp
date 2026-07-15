@@ -1,4 +1,4 @@
-import { Crown, Gem, List, Rocket, UserPlus } from "lucide-react";
+import { Crown, Gem, List, Rocket, Trophy, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { ProfileLink } from "./ProfileLink";
 import { TopBadge } from "./BadgeDisplay";
@@ -37,19 +37,21 @@ function Avatar({ user, size = "md" }: { user: LeaderboardUser; size?: "md" | "l
 
 function PodiumCard({ user, place }: { user: LeaderboardUser; place: number }) {
   const isFirst = place === 1;
-  const border = place === 1 ? "border-[#1B3C53]" : place === 2 ? "border-[#91B6AF]" : "border-[#5E7681]/55";
-  const badge = place === 1 ? "bg-[#91B6AF] text-[#13112D]" : place === 2 ? "bg-slate-300 text-slate-950" : "bg-amber-500 text-slate-950";
+  const border = place === 1 ? "border-amber-400" : place === 2 ? "border-slate-300" : "border-orange-400";
+  const badge = place === 1 ? "bg-white text-amber-950 ring-2 ring-amber-300" : place === 2 ? "bg-white text-slate-700 ring-2 ring-slate-300" : "bg-white text-orange-950 ring-2 ring-orange-300";
+  const trophyTone = place === 1 ? "text-amber-500" : place === 2 ? "text-slate-400" : "text-orange-500";
 
   return (
     <article className={`relative flex min-h-72 flex-col items-center justify-center rounded-3xl border bg-[#F8FBFA] p-6 text-center shadow-soft ${border} ${isFirst ? "md:-mt-8" : ""}`}>
       {isFirst && (
-        <span className="absolute right-5 top-5 rounded-full border border-[#91B6AF]/60 bg-[#E1EFEB] p-2 text-[#1B3C53]">
+        <span className="absolute right-5 top-5 rounded-full border border-amber-300 bg-amber-50 p-2 text-amber-500">
           <Crown size={18} />
         </span>
       )}
       <div className="relative">
         <Avatar user={user} size="lg" />
-        <span className={`absolute -bottom-3 left-1/2 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full text-lg font-black ${badge}`}>
+        <span className={`absolute -bottom-3 left-1/2 flex h-10 min-w-10 -translate-x-1/2 items-center justify-center gap-1 rounded-full px-2 text-sm font-black ${badge}`}>
+          <Trophy size={16} className={trophyTone} />
           {place}
         </span>
       </div>
@@ -150,7 +152,7 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
       </div>
 
       {currentUser && currentProgress && (
-        <div className="grid gap-4 border-t border-[#5E7681]/25 bg-[#E1EFEB]/65 px-6 py-5 md:grid-cols-[minmax(0,1fr)_minmax(240px,420px)_160px] md:items-center">
+        <div className="grid gap-5 border-t border-[#5E7681]/25 bg-[#E1EFEB]/65 px-6 py-5 xl:grid-cols-[minmax(360px,1fr)_minmax(420px,620px)_auto] xl:items-center">
           <div className="flex min-w-0 items-center gap-4">
             <span className="text-xl font-black text-[#1B3C53]">{currentIndex + 1}</span>
             <Avatar user={currentUser} />
@@ -159,7 +161,7 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
               <p className="text-xs font-black uppercase text-[#5E7681]">{leagueLabel(currentUser.xp)} · Top {Math.max(1, Math.round(((currentIndex + 1) / sorted.length) * 100))}%</p>
             </div>
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center justify-between gap-3 text-xs font-black text-[#5E7681]">
               <span>{nextUser ? `Next Rank: ${currentIndex} (${nextUser.name})` : "You are at the top"}</span>
               <span>{nextUser ? `${Math.max(0, nextUser.xp - currentUser.xp).toLocaleString()} XP to pass` : "Leader"}</span>
@@ -168,12 +170,12 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
               <div className="h-full rounded-full bg-[#1B3C53]" style={{ width: `${currentProgress.percent}%` }} />
             </div>
           </div>
-          <div className="flex items-center justify-between gap-4 md:justify-end">
-            <div className="text-right">
+          <div className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap xl:min-w-[260px] xl:justify-end">
+            <div className="shrink-0 text-left sm:text-right">
               <p className="text-xs font-black uppercase text-[#5E7681]">Current XP</p>
               <p className="text-xl font-black text-[#13112D]">{currentUser.xp.toLocaleString()}</p>
             </div>
-            <Link href="/rewards" className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-[#1B3C53]/20 bg-[#1B3C53] px-4 text-sm font-black text-white transition hover:bg-[#162D41]">
+            <Link href="/rewards" className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-2xl border border-[#1B3C53]/20 bg-[#1B3C53] px-5 text-sm font-black text-white transition hover:bg-[#162D41]">
               <Rocket size={16} /> Boost Rank
             </Link>
           </div>

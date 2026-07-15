@@ -39,14 +39,14 @@ function SidebarItem({ link, active }: { link: SidebarLink; active: boolean }) {
       href={link.href}
       aria-current={active ? "page" : undefined}
       className={clsx(
-        "flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-semibold transition",
-        active ? "bg-sky/20 text-slate-950" : "text-slate-700 hover:bg-slate-100 hover:text-slate-950"
+        "flex items-center gap-3 rounded-[1.1rem] px-4 py-2.5 text-sm font-semibold transition",
+        active ? "bg-slate-950 text-white shadow-sm" : "text-slate-700 hover:bg-white/75 hover:text-slate-950"
       )}
     >
-      <Icon size={18} className={active ? "text-sky-700" : "text-slate-500"} />
+      <Icon size={18} className={active ? "text-sky" : "text-slate-500"} />
       <span className="flex-1">{link.label}</span>
       {link.badge !== undefined && link.badge > 0 && (
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-bold text-slate-950">
+        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-lime-200 px-1 text-[10px] font-bold text-slate-950">
           {link.badge > 9 ? "9+" : link.badge}
         </span>
       )}

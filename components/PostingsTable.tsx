@@ -44,7 +44,7 @@ export function PostingsTable({
   peerInsights: Map<string, RolePeerInsight>;
 }) {
   return (
-    <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white/90 shadow-soft backdrop-blur-xl">
+    <div className="mt-6 overflow-hidden rounded-[1.75rem] border border-white/85 bg-white/70 shadow-soft backdrop-blur-2xl">
       <div className="divide-y divide-slate-200 md:hidden">
         {postings.map((posting, index) => {
           const saved = savedSourceUrls.has(posting.url);
@@ -118,7 +118,7 @@ export function PostingsTable({
 
       <div className="hidden overflow-hidden md:block">
         <table className="w-full table-fixed border-collapse text-left text-sm">
-          <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
+          <thead className="bg-white/55 text-xs font-bold uppercase text-slate-500">
             <tr>
               <th className="hidden w-10 px-2 py-4 lg:table-cell">#</th>
               <th className="w-[32%] px-3 py-4">Position</th>
@@ -145,7 +145,7 @@ export function PostingsTable({
               }).toString()}`;
 
               return (
-              <tr key={posting.id} className="align-middle transition hover:bg-slate-50">
+              <tr key={posting.id} className="align-middle transition hover:bg-white/70">
                 <td className="hidden px-2 py-3 text-center font-bold text-slate-500 lg:table-cell">{index + 1}</td>
                 <td className="px-3 py-3">
                   <p className="truncate font-bold text-ink" title={posting.title}>
@@ -161,7 +161,7 @@ export function PostingsTable({
                     href={posting.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex min-h-9 items-center justify-center rounded-2xl bg-emerald-600 px-3 text-xs font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700"
+                    className="inline-flex min-h-9 items-center justify-center rounded-2xl bg-slate-950 px-3 text-xs font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-800"
                   >
                     <ExternalLink className="mr-1" size={14} /> Apply
                   </a>
@@ -207,7 +207,7 @@ export function PostingsTable({
                       className={
                         saved
                           ? "inline-flex min-h-9 w-full cursor-default items-center justify-center rounded-2xl bg-emerald-50 px-2 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200"
-                          : "inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-sky px-2 text-xs font-bold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:bg-brand"
+                          : "inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-lime-200 px-2 text-xs font-bold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:bg-lime-100"
                       }
                     >
                       {saved ? <CheckCircle2 className="mr-1" size={14} /> : <BookmarkPlus className="mr-1" size={14} />}

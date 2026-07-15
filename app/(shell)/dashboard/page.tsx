@@ -9,8 +9,8 @@ import { getApplications, getCalendarEvents, getChallenges, getCurrentProfile } 
 
 function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
-    <section className="card flex flex-col justify-between gap-6 p-5">
-      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sky/15 text-sky-700">
+    <section className="card flex min-h-40 flex-col justify-between gap-6 p-5 transition hover:-translate-y-0.5 hover:bg-white/95">
+      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 text-sky shadow-sm">
         <Icon size={20} />
       </span>
       <div>
@@ -35,36 +35,63 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
 
   return (
     <main className="page-shell space-y-5">
-      <section className="page-hero flex flex-wrap items-center justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-4">
-          <span className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sky/15 text-sky-700 sm:flex">
-            <Sparkles size={22} />
-          </span>
-          <div className="min-w-0">
-            <h1 className="truncate text-2xl font-bold text-ink sm:text-3xl">Welcome back, {profile.name}</h1>
-            <p className="mt-1 text-sm text-slate-600">{profile.school || "CareerUp student"}</p>
+      <section className="relative overflow-hidden rounded-[2.25rem] border border-white/85 bg-white/70 p-5 shadow-soft backdrop-blur-2xl sm:p-7">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_84%_18%,rgba(125,211,252,0.34),transparent_24rem),linear-gradient(135deg,rgba(15,23,42,0.04),transparent_45%)]" />
+        <div className="relative grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-stretch">
+          <div className="flex min-h-[20rem] flex-col justify-between rounded-[1.75rem] bg-slate-950 p-6 text-white shadow-strong sm:p-8">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-sky ring-1 ring-white/15">
+                  <Sparkles size={22} />
+                </span>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-sky">Command center</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-300">{profile.school || "CareerUp student"}</p>
+                </div>
+              </div>
+              <span
+                className={
+                  streakActive
+                    ? "rounded-full bg-lime-200 px-3 py-1 text-xs font-bold text-slate-950"
+                    : "rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-slate-200 ring-1 ring-white/15"
+                }
+              >
+                {streakActive ? "Streak active" : "Streak paused"}
+              </span>
+            </div>
+            <div>
+              <h1 className="max-w-3xl text-4xl font-bold leading-tight sm:text-6xl">Welcome back, {profile.name}</h1>
+              <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-slate-300">
+                Keep your search focused: review today&apos;s quests, move one role forward, and protect your recruiting momentum.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/postings/internships" className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-sky px-5 font-bold text-slate-950 shadow-glow transition hover:-translate-y-0.5">
+                Find roles
+              </Link>
+              <Link href="/applications/new" className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-white/10 px-5 font-bold text-white ring-1 ring-white/15 transition hover:-translate-y-0.5 hover:bg-white/15">
+                Add role <ArrowRight className="ml-2" size={17} />
+              </Link>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-          <p className="flex items-center gap-2 text-sm font-semibold text-slate-600">
-            Streak
-            <span
-              className={
-                streakActive
-                  ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-600 ring-1 ring-emerald-200"
-                  : "rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 ring-1 ring-slate-300"
-              }
-            >
-              {streakActive ? "Active" : "Paused"}
-            </span>
-          </p>
-          <div className="flex gap-3">
-            <Link href="/postings/internships" className="secondary-button">
-              Find roles
-            </Link>
-            <Link href="/applications/new" className="primary-button">
-              Add role <ArrowRight className="ml-2" size={17} />
-            </Link>
+          <div className="rounded-[1.75rem] bg-lime-200/90 p-6 text-slate-950 shadow-soft ring-1 ring-lime-100">
+            <div className="flex items-center justify-between gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 text-lime-200">
+                <Sparkles size={20} />
+              </span>
+              <Link href="/rewards" className="rounded-full bg-white/65 px-3 py-1.5 text-xs font-bold text-slate-700">
+                Rewards
+              </Link>
+            </div>
+            <p className="mt-10 text-sm font-bold uppercase tracking-wider text-slate-600">Today&apos;s assistant</p>
+            <h2 className="mt-2 text-3xl font-bold leading-tight">Ready to complete your next challenge?</h2>
+            <p className="mt-4 text-sm font-semibold leading-6 text-slate-700">
+              Start with one high-quality application, then update your application board so XP and streak progress stay accurate.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-2">
+              <span className="rounded-full bg-white/65 px-3 py-1.5 text-xs font-bold text-slate-700">Daily sprint</span>
+              <span className="rounded-full bg-white/65 px-3 py-1.5 text-xs font-bold text-slate-700">+40 XP</span>
+            </div>
           </div>
         </div>
       </section>

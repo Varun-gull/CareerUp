@@ -84,7 +84,7 @@ function sortPostings(postings: InternshipPosting[], sort: PostingSort) {
 }
 
 function activeTabClass(active: boolean) {
-  return active ? "bg-sky text-slate-950 shadow-glow" : "bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:text-sky-600";
+  return active ? "bg-slate-950 text-white shadow-sm" : "bg-white/70 text-slate-700 ring-1 ring-white/80 hover:bg-white hover:text-slate-950";
 }
 
 function buildPostingsHref(
@@ -210,7 +210,7 @@ export async function PostingsPageView({
             <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">{pageTitle}</h1>
             <p className="mt-2 max-w-3xl text-slate-600">{pageCopy}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex rounded-2xl bg-white/55 p-1 shadow-sm ring-1 ring-white/80 backdrop-blur-xl">
             <Link href="/postings/internships" className={`rounded-xl px-4 py-2 text-sm font-bold transition ${activeTabClass(kind === "internship")}`}>
               Internships
             </Link>
@@ -233,8 +233,8 @@ export async function PostingsPageView({
           minFit={minFit}
         />
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm font-bold text-slate-600">
-          <Link href={resetHref} className="inline-flex items-center rounded-full bg-slate-50 px-3 py-1 text-xs text-slate-700 shadow-sm ring-1 ring-slate-200 hover:text-sky-600">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-[1.5rem] border border-white/80 bg-white/55 px-4 py-3 text-sm font-bold text-slate-600 shadow-sm backdrop-blur-xl">
+          <Link href={resetHref} className="inline-flex items-center rounded-full bg-white/75 px-3 py-1 text-xs text-slate-700 shadow-sm ring-1 ring-white/80 hover:text-slate-950">
             <RotateCcw className="mr-1" size={14} /> Reset
           </Link>
           <div className="flex flex-wrap items-center gap-3">
@@ -243,15 +243,15 @@ export async function PostingsPageView({
               {searchResult.cached ? " from cache" : ""}
             </span>
             {allPostings.length > 0 && (
-              <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
+              <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-bold text-slate-700 shadow-sm ring-1 ring-white/80">
                 Page {currentPage} of {totalPages}
               </span>
             )}
-            <span className="inline-flex overflow-hidden rounded-full bg-slate-50 text-xs font-bold shadow-sm ring-1 ring-slate-200">
-              <Link href={bestFitHref} className={sort === "fit" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky-600"}>
+            <span className="inline-flex overflow-hidden rounded-full bg-white/70 text-xs font-bold shadow-sm ring-1 ring-white/80">
+              <Link href={bestFitHref} className={sort === "fit" ? "bg-slate-950 px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-slate-950"}>
                 Best fit
               </Link>
-              <Link href={newestHref} className={sort === "newest" ? "bg-sky px-3 py-1 text-slate-950" : "px-3 py-1 text-slate-600 hover:text-sky-600"}>
+              <Link href={newestHref} className={sort === "newest" ? "bg-slate-950 px-3 py-1 text-white" : "px-3 py-1 text-slate-600 hover:text-slate-950"}>
                 Latest posted
               </Link>
             </span>

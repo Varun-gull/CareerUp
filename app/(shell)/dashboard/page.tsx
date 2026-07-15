@@ -66,7 +66,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Link href="/postings/internships" className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-sky px-5 font-bold text-slate-950 shadow-glow transition hover:-translate-y-0.5">
+              <Link href="/postings/internships" className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-sky px-5 font-bold text-white shadow-glow transition hover:-translate-y-0.5">
                 Find roles
               </Link>
               <Link href="/applications/new" className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-white/10 px-5 font-bold text-white ring-1 ring-white/15 transition hover:-translate-y-0.5 hover:bg-white/15">

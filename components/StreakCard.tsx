@@ -30,7 +30,7 @@ export function StreakCard({
       <div className="pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-r from-sky/10 to-transparent" />
 
       <div className="relative flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky text-slate-950 shadow-lg shadow-sky/10">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky text-white shadow-lg shadow-sky/10">
           <Zap size={32} fill="currentColor" />
         </div>
         <div>
@@ -65,7 +65,7 @@ export function StreakCard({
               <button
                 type="submit"
                 disabled={!canUnlockPaidRevive}
-                className="w-full rounded-xl bg-sky px-3 py-2 text-sm font-bold text-slate-950 transition hover:bg-brand disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500"
+                className="w-full rounded-xl bg-sky px-3 py-2 text-sm font-bold text-white transition hover:bg-brand disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500"
               >
                 Unlock revive - 250 XP
               </button>

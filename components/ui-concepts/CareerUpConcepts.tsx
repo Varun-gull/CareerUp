@@ -154,7 +154,7 @@ export function AuroraCommandConcept() {
             </div>
             <nav className="nav-scroll col-span-2 row-start-2 flex min-w-0 items-center gap-2.5 overflow-x-auto pb-1 lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:justify-center lg:overflow-visible lg:pb-0">
               {navItems.map((item, index) => (
-                <span key={item} className={`shrink-0 rounded-2xl px-4 py-2.5 text-sm font-bold transition ${index === 0 ? "bg-sky text-slate-950 shadow-glow" : "text-slate-300 hover:bg-white/10 hover:text-sky"}`}>
+                <span key={item} className={`shrink-0 rounded-2xl px-4 py-2.5 text-sm font-bold transition ${index === 0 ? "bg-sky text-white shadow-glow" : "text-slate-300 hover:bg-white/10 hover:text-sky"}`}>
                   {item}
                 </span>
               ))}
@@ -164,7 +164,7 @@ export function AuroraCommandConcept() {
                 <MessageSquare size={18} />
               </span>
               <span className="relative hidden h-11 w-11 flex-col items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-950 shadow-sm sm:flex">
-                <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-sky text-[8px] font-bold text-slate-950">JUL</span>
+                <span className="absolute left-0 right-0 top-0 flex h-[16px] items-center justify-center bg-sky text-[8px] font-bold text-white">JUL</span>
                 <span className="relative mt-3 text-[15px] font-bold leading-none">05</span>
               </span>
               <span className="rounded-2xl bg-white px-4 py-3 text-sm font-bold text-slate-950 shadow-sm">Varun</span>
@@ -202,7 +202,7 @@ export function AuroraCommandConcept() {
                     Keep the V2 momentum layout, but focus the center on streaks, challenges, and application progress.
                   </p>
                 </div>
-                <button className="rounded-2xl bg-sky px-5 py-3 font-black text-slate-950 shadow-glow">Add role</button>
+                <button className="rounded-2xl bg-sky px-5 py-3 font-black text-white shadow-glow">Add role</button>
               </div>
             </div>
 

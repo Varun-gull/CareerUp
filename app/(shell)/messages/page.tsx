@@ -149,7 +149,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                           <div className="flex items-center justify-between gap-2">
                             <p className="truncate text-sm font-bold text-ink">{conversation.otherName}</p>
                             {conversation.unreadCount > 0 && (
-                              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-bold text-slate-950">
+                              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-bold text-white">
                                 {conversation.unreadCount}
                               </span>
                             )}
@@ -214,7 +214,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                           <p className="text-sm font-bold">{outbound ? "You" : message.otherName}</p>
                           <span className="text-xs font-bold text-slate-500">{message.createdAt}</span>
                           {message.unread && !outbound && (
-                            <span className="rounded-full bg-sky px-2 py-0.5 text-[10px] font-bold text-slate-950">Unread</span>
+                            <span className="rounded-full bg-sky px-2 py-0.5 text-[10px] font-bold text-white">Unread</span>
                           )}
                         </div>
                         <p className="mt-2 text-sm font-bold text-ink">{message.subject}</p>

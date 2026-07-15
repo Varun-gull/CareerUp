@@ -14,7 +14,7 @@ function MessageButton({ unreadMessages }: { unreadMessages: number }) {
     >
       <Mail size={19} />
       {unreadMessages > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-bold text-slate-950 ring-2 ring-navy">
+        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-bold text-white ring-2 ring-navy">
           {unreadMessages > 9 ? "9+" : unreadMessages}
         </span>
       )}

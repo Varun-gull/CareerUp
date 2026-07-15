@@ -46,11 +46,11 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))"
         },
         ink: "#0f172a",
-        navy: "#070b12",
+        navy: "#0f172a",
         panel: "#101722",
-        brand: "#93c5fd",
-        electric: "#38bdf8",
-        sky: { ...colors.sky, DEFAULT: "#7dd3fc" },
+        brand: "#2563eb",
+        electric: "#3b82f6",
+        sky: { ...colors.sky, DEFAULT: "#0284c7" },
         success: "#10b981",
         warning: "#f59e0b"
       },
@@ -63,9 +63,9 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)"
       },
       boxShadow: {
-        soft: "0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 23, 42, 0.07)",
-        glow: "0 8px 24px rgba(56, 189, 248, 0.28)",
-        strong: "0 4px 12px rgba(15, 23, 42, 0.08), 0 24px 64px rgba(15, 23, 42, 0.16)"
+        soft: "0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.05)",
+        glow: "0 4px 14px rgba(37, 99, 235, 0.18)",
+        strong: "0 8px 30px rgba(15, 23, 42, 0.12)"
       }
     }
   },

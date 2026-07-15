@@ -18,7 +18,7 @@ export function DashboardCard({
           <p className="section-label">{title}</p>
           <p className="mt-2 text-3xl font-bold text-ink">{value}</p>
         </div>
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-sky-600 shadow-sm transition group-hover:bg-sky group-hover:text-slate-950 group-hover:shadow-glow">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-sky-600 shadow-sm transition group-hover:bg-sky group-hover:text-white group-hover:shadow-glow">
           <Icon size={23} />
         </div>
       </div>

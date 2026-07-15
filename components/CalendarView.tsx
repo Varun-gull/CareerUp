@@ -371,7 +371,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               }}
               className={clsx(
                 "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-colors",
-                view === "month" ? "bg-sky text-slate-950" : "text-slate-600 hover:text-brand"
+                view === "month" ? "bg-sky text-white" : "text-slate-600 hover:text-brand"
               )}
             >
               <CalendarDays size={14} /> Month
@@ -384,7 +384,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
               }}
               className={clsx(
                 "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-colors",
-                view === "week" ? "bg-sky text-slate-950" : "text-slate-600 hover:text-brand"
+                view === "week" ? "bg-sky text-white" : "text-slate-600 hover:text-brand"
               )}
             >
               <List size={14} /> Week
@@ -432,7 +432,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                   onClick={(e) => e.stopPropagation()}
                   className={clsx(
                   "inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold",
-                  isToday ? "bg-sky text-slate-950" : "text-slate-500"
+                  isToday ? "bg-sky text-white" : "text-slate-500"
                 )}>
                   {day.getDate()}
                 </span>

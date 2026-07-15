@@ -99,7 +99,7 @@ export default async function ApplicationsPage({
                     key={year}
                     href={getYearHref(year, query, statusFilter)}
                     className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-                      selectedYear === year ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky-600"
+                      selectedYear === year ? "bg-sky text-white shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky-600"
                     }`}
                     aria-current={selectedYear === year ? "page" : undefined}
                   >
@@ -109,7 +109,7 @@ export default async function ApplicationsPage({
                 <Link
                   href={getYearHref("all", query, statusFilter)}
                   className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-                    selectedYear === "all" ? "bg-sky text-slate-950 shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky-600"
+                    selectedYear === "all" ? "bg-sky text-white shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky-600"
                   }`}
                   aria-current={selectedYear === "all" ? "page" : undefined}
                 >

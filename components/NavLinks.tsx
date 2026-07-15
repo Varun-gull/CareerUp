@@ -26,7 +26,7 @@ export function NavLinks() {
             className={clsx(
               "shrink-0 rounded-2xl px-4 py-2.5 text-sm font-black transition sm:text-[15px]",
               active
-                ? "bg-sky text-slate-950 shadow-glow"
+                ? "bg-sky text-white shadow-glow"
                 : "text-slate-300 hover:bg-white/10 hover:text-sky"
             )}
             aria-current={active ? "page" : undefined}

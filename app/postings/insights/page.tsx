@@ -108,7 +108,7 @@ export default async function PostingInsightsPage({
 
           <div className="card grid gap-3 p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky text-slate-950">
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky text-white">
                 <UsersRound size={24} />
               </span>
               <div>
@@ -166,7 +166,7 @@ export default async function PostingInsightsPage({
                         key={year}
                         href={buildInsightHref({ roleKey, company, role, returnTo, year, signal: selectedSignal })}
                         className={`rounded-2xl px-4 py-2 text-sm font-black transition ${
-                          selectedYear === year ? "bg-sky text-slate-950 shadow-lg shadow-sky/10" : "border border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand"
+                          selectedYear === year ? "bg-sky text-white shadow-lg shadow-sky/10" : "border border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand"
                         }`}
                       >
                         {year}
@@ -183,7 +183,7 @@ export default async function PostingInsightsPage({
                         key={tab.value}
                         href={buildInsightHref({ roleKey, company, role, returnTo, year: selectedYear, signal: tab.value })}
                         className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-black transition ${
-                          selectedSignal === tab.value ? "border-brand bg-sky text-slate-950 shadow-lg shadow-sky/10" : "border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand"
+                          selectedSignal === tab.value ? "border-brand bg-sky text-white shadow-lg shadow-sky/10" : "border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand"
                         }`}
                       >
                         <span className="inline-flex items-center gap-2">

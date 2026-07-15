@@ -28,7 +28,7 @@ function eventLabel(type: CalendarEvent["eventType"]) {
 function eventTone(type: CalendarEvent["eventType"]) {
   if (type === "interview") return "border-sky/40 bg-sky/12 text-sky-600";
   if (type === "offer") return "border-emerald-400/40 bg-emerald-400/10 text-emerald-700";
-  if (type === "deadline") return "border-[#B8A99A]/40 bg-[#E2D2BF]/70 text-[#7A5438]";
+  if (type === "deadline") return "border-[#5E7681]/35 bg-[#E1EFEB]/80 text-[#1B3C53]";
   return "border-slate-600 bg-slate-100 text-slate-700";
 }
 
@@ -70,12 +70,12 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
             <div
               key={day.ymd}
               className={`min-h-32 rounded-2xl border p-3 ${
-                isToday ? "border-sky/50 bg-sky/10" : "border-[#B8A99A]/35 bg-[#F3EDE5]/65"
+                isToday ? "border-sky/50 bg-sky/10" : "border-[#5E7681]/30 bg-[#E1EFEB]/60"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-xs font-bold uppercase text-slate-600">{DAY_LABELS[day.date.getDay()]}</p>
-                <p className={isToday ? "text-sm font-bold text-sky-600" : "text-sm font-bold text-[#B8A99A]"}>{day.date.getDate()}</p>
+                <p className={isToday ? "text-sm font-bold text-sky-600" : "text-sm font-bold text-[#5E7681]"}>{day.date.getDate()}</p>
               </div>
               <div className="mt-3 space-y-2">
                 {day.events.length > 0 ? (
@@ -94,7 +94,7 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
         })}
       </div>
 
-      <div className="mt-5 rounded-2xl border border-[#B8A99A]/35 bg-[#F3EDE5]/65 p-4">
+      <div className="mt-5 rounded-2xl border border-[#5E7681]/30 bg-[#E1EFEB]/60 p-4">
         <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
           <CalendarDays size={17} className="text-sky-600" />
           Upcoming

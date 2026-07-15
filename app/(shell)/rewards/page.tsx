@@ -1,5 +1,5 @@
 import { PageHero } from "@/components/PageHero";
-import { ArrowRight, Gift, LockKeyhole, Sparkles, Trophy, UnlockKeyhole } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, Gift, LockKeyhole, Sparkles, Trophy, UnlockKeyhole } from "lucide-react";
 import Link from "next/link";
 import { ChallengeCard } from "@/components/ChallengeCard";
 import { RankBadge } from "@/components/RankBadge";
@@ -10,6 +10,7 @@ import { getChallenges, getCurrentProfile, getRewards } from "@/lib/data";
 export default async function RewardsPage({ searchParams }: { searchParams?: { message?: string } }) {
   const [profile, rewards, challenges] = await Promise.all([getCurrentProfile(), getRewards(), getChallenges()]);
   const unlockedCount = rewards.filter((reward) => reward.unlocked).length;
+  const allChallenges = [...challenges.tiered, ...challenges.oneOff];
 
   return (
     <>
@@ -18,7 +19,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
           compact
           eyebrow="Unlocks"
           title="Rewards"
-          description="Turn XP into interview prep tools you can use when recruiting gets serious."
+          description="Spend XP on practical job-search tools, then complete challenges to earn more."
           tabs={[
             { label: "Rewards", href: "/rewards", active: true },
             { label: "Challenges", href: "/challenges" },
@@ -36,17 +37,15 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
           </div>
           <div className="card p-5">
             <Gift size={22} className="text-brand" />
-            <p className="mt-4 text-sm font-bold text-slate-500">Unlocked</p>
+            <p className="mt-4 text-sm font-bold text-slate-500">Rewards unlocked</p>
             <p className="mt-1 text-3xl font-bold text-ink">
               {unlockedCount}/{rewards.length}
             </p>
           </div>
           <div className="card p-5">
             <Trophy size={22} className="text-brand" />
-            <p className="mt-4 text-sm font-bold text-slate-500">Current rank</p>
-            <div className="mt-2">
-              <RankBadge xp={profile.xp} />
-            </div>
+            <p className="mt-4 text-sm font-bold text-slate-500">Challenges</p>
+            <p className="mt-1 text-3xl font-bold text-ink">{allChallenges.length}</p>
           </div>
         </section>
 
@@ -54,72 +53,102 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
           <XpProgressBar xp={profile.xp} />
         </section>
 
-        <section className="mt-6">
+        <section className="mt-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="eyebrow">Earn more XP</p>
-              <h2 className="mt-2 text-2xl font-bold text-ink">Challenges</h2>
-              <p className="mt-2 text-slate-600">Complete quests to build enough XP for the next unlock.</p>
+              <p className="eyebrow">Spend XP</p>
+              <h2 className="mt-2 text-2xl font-bold text-ink">Job-search rewards</h2>
+              <p className="mt-2 max-w-2xl text-slate-600">
+                Unlock focused tools you can use while applying, networking, interviewing, and comparing offers.
+              </p>
+            </div>
+            <div className="rounded-2xl bg-[#E1EFEB] px-4 py-3 text-sm font-bold text-[#1B3C53] ring-1 ring-[#5E7681]/25">
+              <RankBadge xp={profile.xp} />
             </div>
           </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
-            {[...challenges.tiered, ...challenges.oneOff].map((challenge) => (
-              <ChallengeCard key={challenge.id} challenge={challenge} />
-            ))}
+
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            {rewards.map((reward) => {
+              const canUnlock = profile.xp >= reward.xpCost;
+              const rewardHref =
+                reward.id === "behavioral-interview-pack"
+                  ? "/interview"
+                  : reward.id === "resume-bullet-scorer"
+                    ? "/profile"
+                    : reward.id === "application-quality-audit"
+                      ? "/applications"
+                      : reward.id === "follow-up-calendar-system"
+                        ? "/calendar"
+                        : null;
+
+              return (
+                <article key={reward.id} className="card flex min-h-full flex-col p-5">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-bold text-brand">{reward.category}</p>
+                      <h2 className="mt-1 text-xl font-bold text-ink">{reward.title}</h2>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">{reward.description}</p>
+                    </div>
+                    <span className={reward.unlocked ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700" : "rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700"}>
+                      {reward.unlocked ? "Unlocked" : `${reward.xpCost} XP`}
+                    </span>
+                  </div>
+
+                  {reward.unlocked ? (
+                    <div className="mt-5 flex flex-1 flex-col rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4">
+                      <div className="mb-3 flex items-center gap-2 font-bold text-emerald-800">
+                        <UnlockKeyhole size={18} /> Unlocked tool
+                      </div>
+                      <ul className="grid gap-2 text-sm leading-6 text-slate-700">
+                        {reward.contents.map((item) => (
+                          <li key={item} className="rounded-2xl bg-white/90 px-3 py-2">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                      {rewardHref && (
+                        <Link href={rewardHref} className="primary-button mt-4 self-start">
+                          Open tool <ArrowRight className="ml-2" size={18} />
+                        </Link>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
+                      <p className="inline-flex items-center gap-2 text-sm font-bold text-slate-600">
+                        <LockKeyhole size={16} /> {canUnlock ? "Ready to unlock" : `${Math.max(0, reward.xpCost - profile.xp).toLocaleString()} XP needed`}
+                      </p>
+                      <form action={unlockReward}>
+                        <input type="hidden" name="rewardId" value={reward.id} />
+                        <button className="primary-button disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none" disabled={!canUnlock}>
+                          <UnlockKeyhole className="mr-2" size={18} /> Unlock
+                        </button>
+                      </form>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
           </div>
         </section>
 
-        <section className="mt-6 grid gap-4 lg:grid-cols-2">
-          {rewards.map((reward) => {
-            const canUnlock = profile.xp >= reward.xpCost;
-
-            return (
-              <article key={reward.id} className="card p-5">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-bold text-brand">{reward.category}</p>
-                    <h2 className="mt-1 text-xl font-bold text-ink">{reward.title}</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{reward.description}</p>
-                  </div>
-                  <span className={reward.unlocked ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700" : "rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700"}>
-                    {reward.unlocked ? "Unlocked" : `${reward.xpCost} XP`}
-                  </span>
-                </div>
-
-                {reward.unlocked ? (
-                  <div className="mt-5 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4">
-                    <div className="mb-3 flex items-center gap-2 font-bold text-emerald-800">
-                      <UnlockKeyhole size={18} /> Prep tool
-                    </div>
-                    <ul className="grid gap-2 text-sm leading-6 text-slate-700">
-                      {reward.contents.map((item) => (
-                        <li key={item} className="rounded-2xl bg-white/90 px-3 py-2">
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                    {reward.id === "behavioral-interview-pack" && (
-                      <Link href="/interview" className="primary-button mt-4">
-                        Open builder <ArrowRight className="ml-2" size={18} />
-                      </Link>
-                    )}
-                  </div>
-                ) : (
-                  <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
-                    <p className="inline-flex items-center gap-2 text-sm font-bold text-slate-600">
-                      <LockKeyhole size={16} /> {canUnlock ? "Ready to unlock" : `${Math.max(0, reward.xpCost - profile.xp).toLocaleString()} XP needed`}
-                    </p>
-                    <form action={unlockReward}>
-                      <input type="hidden" name="rewardId" value={reward.id} />
-                      <button className="primary-button disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none" disabled={!canUnlock}>
-                        <UnlockKeyhole className="mr-2" size={18} /> Unlock
-                      </button>
-                    </form>
-                  </div>
-                )}
-              </article>
-            );
-          })}
+        <section className="mt-8">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Earn XP</p>
+              <h2 className="mt-2 text-2xl font-bold text-ink">All challenges</h2>
+              <p className="mt-2 max-w-2xl text-slate-600">
+                Complete these challenges to build momentum and earn points for the rewards above.
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-2xl bg-white/90 px-4 py-3 text-sm font-bold text-[#1B3C53] shadow-sm ring-1 ring-[#5E7681]/25">
+              <BriefcaseBusiness size={17} /> {allChallenges.length} active challenges
+            </div>
+          </div>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            {allChallenges.map((challenge) => (
+              <ChallengeCard key={challenge.id} challenge={challenge} />
+            ))}
+          </div>
         </section>
       </main>
     </>

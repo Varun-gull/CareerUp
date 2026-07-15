@@ -3,120 +3,122 @@ import type { Reward } from "@/lib/types";
 export const rewardCatalog: Array<Omit<Reward, "unlocked">> = [
   {
     id: "behavioral-interview-pack",
-    title: "Behavioral Interview Builder",
-    description: "Unlock the STAR answer builder and a bank of high-frequency internship prompts.",
+    title: "Behavioral Interview Prep Kit",
+    description: "Unlock STAR prompts, answer structure, and story checkpoints for behavioral interviews.",
     category: "Interview prep",
-    xpCost: 100,
+    xpCost: 140,
     contents: [
-      "Tell me about a time you solved a difficult problem.",
-      "Describe a project where you had to learn something quickly.",
-      "Tell me about a time you worked through conflict on a team.",
-      "STAR frame: Situation, Task, Action, Result. Keep each answer under 90 seconds."
+      "Core prompts: conflict, leadership, failure, fast learning, teamwork, and technical problem solving.",
+      "STAR structure: 15 seconds for context, 15 for your task, 45 for action, 15 for result.",
+      "Story bank checklist: project story, team story, challenge story, and growth story.",
+      "Final pass: add one metric, one tradeoff, and one lesson to every answer."
     ]
   },
   {
     id: "recruiter-message-kit",
-    title: "Recruiter Message Kit",
-    description: "Copy-ready message templates for recruiters, alumni, and hiring managers.",
+    title: "Recruiter Outreach Pack",
+    description: "Message templates for recruiters, alumni, referrals, and follow-ups after applying.",
     category: "Networking",
-    xpCost: 120,
+    xpCost: 130,
     contents: [
-      "LinkedIn recruiter opener: role interest, one matching project, and a direct ask.",
-      "Alumni message: school connection, concise background, and 15-minute coffee chat ask.",
-      "Follow-up after applying: application link, resume attached, and one relevant proof point.",
-      "Referral thank-you note with next-step tracking."
+      "Recruiter opener: role interest, one matching project, and one clear next step.",
+      "Alumni message: shared school connection, concise background, and 15-minute call ask.",
+      "Referral ask: role link, two matching proof points, and a polished resume note.",
+      "Follow-up cadence: 4 business days after outreach, 7 to 10 business days after applying."
     ]
   },
   {
     id: "technical-screen-checklist",
-    title: "Technical Screen Checklist",
-    description: "A pre-interview checklist for coding, data, and technical internship screens.",
+    title: "Technical Screen Prep Plan",
+    description: "A focused prep plan for SWE, data, product, and technical internship interviews.",
     category: "Technical prep",
-    xpCost: 160,
+    xpCost: 175,
     contents: [
-      "Review arrays, hash maps, strings, sorting, recursion, and basic graph traversal.",
-      "Prepare one project deep dive: goal, stack, tradeoffs, bug, metric, and next improvement.",
-      "Practice explaining your approach out loud before writing code.",
-      "End every answer with complexity, tests, and edge cases."
+      "SWE track: arrays, hash maps, strings, sorting, recursion, graphs, complexity, and edge cases.",
+      "Data track: SQL joins, grouping, window functions, experiment metrics, and dashboard storytelling.",
+      "Project deep dive: goal, stack, tradeoffs, bug, metric, and next improvement.",
+      "Mock flow: clarify, outline approach, solve, test, discuss complexity, and summarize."
     ]
   },
   {
     id: "application-quality-audit",
-    title: "Application Quality Audit",
-    description: "A final checklist before submitting high-priority applications.",
+    title: "High-Priority Application Checklist",
+    description: "A submission checklist for roles you care about most, before you hit apply.",
     category: "Applications",
-    xpCost: 90,
+    xpCost: 80,
     contents: [
-      "Resume filename is professional and company-specific.",
-      "Top third of resume matches at least three posting keywords truthfully.",
-      "Portfolio, GitHub, and LinkedIn links open correctly.",
-      "Application answers include role-specific details instead of generic text.",
-      "Deadline and follow-up reminder are added to the calendar."
+      "Match the resume headline or top project to the role's core skill.",
+      "Add three truthful keywords from the posting into the resume or short answers.",
+      "Check that LinkedIn, GitHub, portfolio, and resume links open correctly.",
+      "Use a company-specific sentence instead of a generic interest statement.",
+      "Save the role, deadline, and follow-up reminder in CareerUp."
     ]
   },
   {
     id: "company-research-template",
-    title: "Company Research Template",
-    description: "Turn a job posting into a focused interview prep brief.",
+    title: "Company Research Brief",
+    description: "Turn any job posting into a short company brief before applying or interviewing.",
     category: "Research",
-    xpCost: 80,
+    xpCost: 90,
     contents: [
-      "Company mission in one sentence.",
-      "Product or team you are most excited about.",
-      "Three details from the internship posting that match your experience.",
-      "Two thoughtful questions for the interviewer."
+      "Company snapshot: mission, product, customer, and recent company news.",
+      "Role match: three posting details that connect to your projects or coursework.",
+      "Team questions: ask about intern ownership, mentorship, metrics, and return offers.",
+      "Interview angle: one reason the company fits your goals beyond brand name."
     ]
   },
   {
     id: "resume-bullet-scorer",
-    title: "Resume Bullet Scorer",
-    description: "A simple rubric for making resume bullets stronger before applying.",
+    title: "Resume Keyword Tailor Kit",
+    description: "A practical way to tailor your resume without changing the original upload.",
     category: "Resume",
-    xpCost: 130,
+    xpCost: 150,
     contents: [
-      "Score 1 point for a strong action verb.",
-      "Score 1 point for a clear technical skill or tool.",
-      "Score 1 point for measurable impact.",
-      "Score 1 point for business/user context.",
-      "Rewrite any bullet under 3 points before sending an application."
+      "Pull 5 to 8 important keywords from the posting: tools, skills, responsibilities, and domain words.",
+      "Map each keyword to an honest resume proof point: project, class, job, or club work.",
+      "Rewrite bullets with action verb, tool, task, result, and measurable impact.",
+      "Keep the master resume untouched; create a role-specific copy for that application.",
+      "Remove filler before adding keywords so the resume stays readable."
     ]
   },
   {
     id: "follow-up-calendar-system",
     title: "Follow-up Calendar System",
-    description: "A timing system for follow-ups after applications, interviews, and recruiter messages.",
+    description: "A timing system for application follow-ups, interview thank-yous, and recruiter nudges.",
     category: "Organization",
-    xpCost: 110,
+    xpCost: 100,
     contents: [
       "Application follow-up: 7 to 10 business days after applying.",
       "Recruiter message follow-up: 4 business days after no response.",
       "Interview thank-you: same day, ideally within 6 hours.",
-      "Final status check: one week after the promised decision window."
+      "Final status check: one week after the promised decision window.",
+      "Close the loop politely when you accept another offer."
     ]
   },
   {
     id: "cold-email-outline",
-    title: "Cold Email Outline",
-    description: "A proven structure for cold emails to recruiters and hiring managers you haven't met.",
+    title: "Networking Tracker Template",
+    description: "A simple system for tracking who you contacted, what you asked, and when to follow up.",
     category: "Networking",
     xpCost: 95,
     contents: [
-      "Subject line: specific role + school + one proof point (e.g. 'CS junior at Penn — interest in SWE internship').",
-      "Opening: one sentence on why this company specifically, not a generic compliment.",
-      "Middle: two to three sentences on a relevant project, skill, or experience that matches the team.",
-      "Ask: one clear, low-friction ask — a 15-minute call or a resume review, not a job offer.",
-      "Sign-off: full name, LinkedIn URL, and portfolio or GitHub if relevant."
+      "Track contact name, company, source, relationship, message date, and follow-up date.",
+      "Log the ask: referral, coffee chat, resume review, recruiter screen, or hiring manager intro.",
+      "Add one personal detail from the conversation so follow-ups feel human.",
+      "Use statuses: queued, sent, replied, call booked, referred, closed.",
+      "Review the tracker twice a week to avoid missed follow-ups."
     ]
   },
   {
     id: "offer-negotiation-primer",
-    title: "Offer Negotiation Primer",
-    description: "A prep sheet for comparing internship offers and asking smart questions.",
+    title: "Offer Decision Kit",
+    description: "Compare offers clearly and prepare professional questions before making a decision.",
     category: "Offers",
     xpCost: 240,
     contents: [
       "Compare hourly pay, housing, relocation, return offer rate, team quality, and project scope.",
-      "Ask about mentor assignment, intern conversion process, and performance expectations.",
+      "Ask about mentor assignment, intern conversion process, performance expectations, and project ownership.",
+      "Score each offer by learning value, resume value, network value, compensation, and location fit.",
       "Use a polite negotiation frame: appreciation, competing context, specific ask, flexibility.",
       "Never invent competing offers or deadlines."
     ]

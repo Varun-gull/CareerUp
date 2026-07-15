@@ -52,7 +52,7 @@ export default async function PublicProfilePage({
             <div className="bg-navy px-6 py-10 text-white">
               <div className="flex flex-wrap items-center justify-between gap-5">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-electric text-2xl font-bold shadow-glow">
+                  <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-white text-2xl font-bold text-[#5C7E8F] shadow-glow">
                     {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                   </div>
                   <div>

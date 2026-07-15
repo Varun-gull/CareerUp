@@ -26,27 +26,25 @@ export function StreakCard({
       : "Your free revive has been used. Unlock another for 250 XP when you want a backup.";
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-5 text-white shadow-soft">
-      <div className="pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-r from-sky/10 to-transparent" />
-
+    <section className="relative overflow-hidden rounded-3xl border border-[#A2A2A2]/35 bg-[#5C7E8F] p-5 text-white shadow-soft">
       <div className="relative flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky text-white shadow-lg shadow-sky/10">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-[#5C7E8F] shadow-lg shadow-sky/10">
           <Zap size={32} fill="currentColor" />
         </div>
         <div>
-          <p className="text-sm font-bold uppercase text-sky">Current streak</p>
+          <p className="text-sm font-bold uppercase text-[#D4DDE2]">Current streak</p>
           <p className="text-4xl font-bold leading-none">{streak} days</p>
         </div>
       </div>
 
-      <div className="relative mt-5 rounded-2xl border border-slate-200 bg-slate-50/90 p-3">
+      <div className="relative mt-5 rounded-2xl border border-white/20 bg-white p-3">
         <p className="text-sm font-bold leading-6 text-slate-700">
           {streak > 0 ? "You are charged up. Apply to one role today to keep the streak alive." : "Start the streak by applying to one role today."}
         </p>
       </div>
 
       {showReviveInfo && (
-        <div className="relative mt-4 rounded-2xl border border-slate-200 bg-slate-50/90 p-3">
+        <div className="relative mt-4 rounded-2xl border border-white/20 bg-white p-3">
           <div className="flex items-center gap-2 text-sm font-bold text-sky-600">
             <ShieldCheck size={16} /> Streak revive
           </div>

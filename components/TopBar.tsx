@@ -31,20 +31,20 @@ export async function TopBar() {
   const nextXp = progress.next?.minXp ?? currentXp;
 
   return (
-    <header className="sticky top-0 z-40 hidden items-center justify-between gap-4 border-b border-[#7B7F8A]/20 bg-[#E9E6E7]/90 px-7 py-3 backdrop-blur-xl lg:flex">
+    <header className="sticky top-0 z-40 hidden items-center justify-between gap-4 border-b border-[#A2A2A2]/35 bg-white/92 px-7 py-3 backdrop-blur-xl lg:flex">
       <Link href="/dashboard" className="group leading-none">
-        <span className="block text-4xl font-black tracking-tight text-[#5E5653] transition group-hover:text-[#6B7C98]">CareerUp</span>
+        <span className="block text-4xl font-black tracking-tight text-[#5C7E8F] transition group-hover:text-[#456473]">CareerUp</span>
       </Link>
 
       <div className="flex items-center gap-3">
-        <span className="inline-flex h-11 items-center gap-2 rounded-2xl bg-white/85 px-4 text-sm font-black text-[#5E5653] shadow-sm ring-1 ring-[#7B7F8A]/25">
-          <Flame size={16} className={profile && profile.streak > 0 ? "fill-[#6B7C98] text-[#6B7C98]" : "text-[#7B7F8A]"} />
+        <span className="inline-flex h-11 items-center gap-2 rounded-2xl bg-[#D4DDE2] px-4 text-sm font-black text-[#5C7E8F] shadow-sm ring-1 ring-[#A2A2A2]/35">
+          <Flame size={16} className={profile && profile.streak > 0 ? "fill-[#5C7E8F] text-[#5C7E8F]" : "text-[#A2A2A2]"} />
           {profile?.streak ?? 0} day streak
         </span>
-        <div className="hidden min-w-[17rem] rounded-2xl bg-white/85 px-4 py-2 shadow-sm ring-1 ring-[#7B7F8A]/25 xl:block">
+        <div className="hidden min-w-[17rem] rounded-2xl bg-white px-4 py-2 shadow-sm ring-1 ring-[#A2A2A2]/35 xl:block">
           <div className="flex items-center justify-between gap-3 text-xs font-black text-slate-700">
             <span className="inline-flex items-center gap-1">
-              <TrendingUp size={13} className="text-[#6B7C98]" />
+              <TrendingUp size={13} className="text-[#5C7E8F]" />
               {rank.name}
             </span>
             <span>
@@ -52,8 +52,8 @@ export async function TopBar() {
               {progress.next ? `/${nextXp.toLocaleString()}` : ""}
             </span>
           </div>
-          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-[#E9E6E7] ring-1 ring-[#7B7F8A]/25">
-            <div className="h-full rounded-full bg-gradient-to-r from-[#5E5653] via-[#6B7C98] to-[#AB978C]" style={{ width: `${progress.percent}%` }} />
+          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-[#D4DDE2] ring-1 ring-[#A2A2A2]/35">
+            <div className="h-full rounded-full bg-[#5C7E8F]" style={{ width: `${progress.percent}%` }} />
           </div>
         </div>
         <ProfileDropdown

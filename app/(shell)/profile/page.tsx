@@ -52,7 +52,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
     <>
       <main className="page-shell">
         <section className="card overflow-hidden">
-          <div className="border-b border-white/10 bg-gradient-to-r from-navy via-slate-950 to-slate-900 px-6 py-10 text-white">
+          <div className="border-b border-white/10 bg-[#5C7E8F] px-6 py-10 text-white">
             <div className="flex flex-wrap items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white text-2xl font-bold text-navy shadow-glow">
@@ -99,7 +99,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
               <XpProgressBar xp={profile.xp} />
               <BadgeShelf applicationsApplied={profile.applicationsApplied} />
               <div className="rounded-3xl border border-slate-200 bg-white/85 p-4">
-                <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4">
+                <div className="rounded-2xl border border-[#A2A2A2]/35 bg-white p-4">
                   <div className="flex items-start gap-3">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
                       {profile.resumeFileName ? <FileCheck2 size={21} /> : <FileText size={21} />}

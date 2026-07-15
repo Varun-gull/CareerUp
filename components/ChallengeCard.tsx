@@ -6,7 +6,7 @@ import type { Challenge } from "@/lib/types";
 const TIER_LABELS = ["", "Bronze", "Silver", "Gold", "Platinum", "Diamond"];
 const TIER_COLORS = [
   "",
-  "text-[#5E5653] bg-[#E9E6E7] ring-[#7B7F8A]/20",
+  "text-[#5C7E8F] bg-[#D4DDE2] ring-[#A2A2A2]/35",
   "text-slate-500 bg-slate-100 ring-slate-300",
   "text-yellow-600 bg-yellow-50 ring-yellow-200",
   "text-sky-600 bg-sky-50 ring-sky-200",
@@ -23,7 +23,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
   return (
     <article className={clsx("card p-5 transition hover:-translate-y-1 hover:shadow-strong", challenge.completed && "ring-2 ring-emerald-400/60")}>
       <div className="flex items-start justify-between gap-4">
-        <div className={clsx("flex h-11 w-11 items-center justify-center rounded-2xl shadow-sm", challenge.completed ? "bg-emerald-500" : "bg-[#AB978C] text-white")}>
+        <div className={clsx("flex h-11 w-11 items-center justify-center rounded-2xl shadow-sm", challenge.completed ? "bg-emerald-500" : "bg-[#5C7E8F] text-white")}>
           {challenge.completed
             ? (CompletedTierIcon ? <CompletedTierIcon size={22} className="text-white" /> : <CheckCircle2 size={22} className="text-white" />)
             : <Trophy size={22} />}
@@ -39,7 +39,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
               <CheckCircle2 size={12} /> Completed
             </span>
           ) : (
-            <span className="rounded-full bg-[#E9E6E7] px-3 py-1 text-xs font-bold text-[#5E5653] ring-1 ring-[#7B7F8A]/20">+{challenge.xp} XP</span>
+            <span className="rounded-full bg-[#D4DDE2] px-3 py-1 text-xs font-bold text-[#5C7E8F] ring-1 ring-[#A2A2A2]/35">+{challenge.xp} XP</span>
           )}
         </div>
       </div>

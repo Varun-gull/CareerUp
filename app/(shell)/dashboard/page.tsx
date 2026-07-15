@@ -8,7 +8,7 @@ import { getApplications, getCalendarEvents, getChallenges, getCurrentProfile } 
 function StatCard({ icon: Icon, label, value, tone }: { icon: LucideIcon; label: string; value: string; tone: string }) {
   return (
     <section className="card flex min-h-40 flex-col justify-between gap-6 p-5 transition hover:-translate-y-0.5 hover:bg-white/95">
-      <span className={`flex h-11 w-11 items-center justify-center rounded-2xl text-white shadow-sm ${tone}`}>
+      <span className={`flex h-11 w-11 items-center justify-center rounded-2xl shadow-sm ${tone}`}>
         <Icon size={20} />
       </span>
       <div>
@@ -44,16 +44,16 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
         ]}
       />
       {searchParams?.message && (
-        <p className="rounded-2xl border border-[#6B7C98]/25 bg-white/70 p-3 text-sm font-bold text-[#5E5653]">{searchParams.message}</p>
+        <p className="rounded-2xl border border-[#A2A2A2]/35 bg-white p-3 text-sm font-bold text-[#5C7E8F]">{searchParams.message}</p>
       )}
 
       <section className="dashboard-overlap space-y-5">
         <div className="dashboard-layer">
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} tone="bg-[#5E5653]" />
-            <StatCard icon={Flame} label="Day streak" value={profile.streak.toLocaleString()} tone="bg-[#6B7C98]" />
-            <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} tone="bg-[#7B7F8A]" />
-            <StatCard icon={Trophy} label="Offers" value={offerCount.toLocaleString()} tone="bg-[#AB978C]" />
+            <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} tone="bg-[#5C7E8F] text-white" />
+            <StatCard icon={Flame} label="Day streak" value={profile.streak.toLocaleString()} tone="bg-[#A2A2A2] text-white" />
+            <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} tone="bg-[#D4DDE2] text-[#5C7E8F]" />
+            <StatCard icon={Trophy} label="Offers" value={offerCount.toLocaleString()} tone="bg-white text-[#5C7E8F] ring-1 ring-[#A2A2A2]/45" />
           </div>
         </div>
 
@@ -65,7 +65,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
                 <p className="eyebrow">XP quests</p>
                 <h2 className="mt-1 text-2xl font-bold text-ink">Daily challenges</h2>
               </div>
-              <span className="rounded-full bg-[#E9E6E7] px-3 py-1 text-xs font-bold text-[#5E5653] ring-1 ring-[#7B7F8A]/20">3 today</span>
+              <span className="rounded-full bg-[#D4DDE2] px-3 py-1 text-xs font-bold text-[#5C7E8F] ring-1 ring-[#A2A2A2]/35">3 today</span>
             </div>
             <div className="mt-4 grid flex-1 content-start gap-4">
               {[...challenges.tiered, ...challenges.oneOff].slice(0, 3).map((challenge) => (

@@ -26,13 +26,13 @@ export function StreakCard({
       : "Your free revive has been used. Unlock another for 250 XP when you want a backup.";
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-[#A2A2A2]/35 bg-[#5C7E8F] p-5 text-white shadow-soft">
+    <section className="relative overflow-hidden rounded-3xl border border-[#B8A99A]/35 bg-[#7A5438] p-5 text-white shadow-soft">
       <div className="relative flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-[#5C7E8F] shadow-lg shadow-sky/10">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-[#7A5438] shadow-lg shadow-sky/10">
           <Zap size={32} fill="currentColor" />
         </div>
         <div>
-          <p className="text-sm font-bold uppercase text-[#D4DDE2]">Current streak</p>
+          <p className="text-sm font-bold uppercase text-[#E2D2BF]">Current streak</p>
           <p className="text-4xl font-bold leading-none">{streak} days</p>
         </div>
       </div>

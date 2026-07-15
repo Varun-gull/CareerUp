@@ -48,21 +48,21 @@ const config: Config = {
         ink: "#0f172a",
         navy: "#0f172a",
         panel: "#101722",
-        brand: "#5C7E8F",
-        electric: "#A2A2A2",
+        brand: "#7A5438",
+        electric: "#C7A47B",
         sky: {
-          50: "#f7f9fa",
-          100: "#edf2f4",
-          200: "#D4DDE2",
-          300: "#b8c8d0",
-          400: "#89a3b0",
-          500: "#5C7E8F",
-          600: "#516f7e",
-          700: "#465f6c",
-          800: "#3c505a",
-          900: "#34444d",
-          950: "#202a30",
-          DEFAULT: "#5C7E8F"
+          50: "#fbf8f3",
+          100: "#f3ede5",
+          200: "#e2d2bf",
+          300: "#d2b995",
+          400: "#c7a47b",
+          500: "#9a714f",
+          600: "#7A5438",
+          700: "#68472f",
+          800: "#5A3F2C",
+          900: "#3e2d22",
+          950: "#251a13",
+          DEFAULT: "#7A5438"
         },
         success: "#10b981",
         warning: "#f59e0b"
@@ -77,7 +77,7 @@ const config: Config = {
       },
       boxShadow: {
         soft: "0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.05)",
-        glow: "0 4px 18px rgba(92, 126, 143, 0.22)",
+        glow: "0 4px 18px rgba(122, 84, 56, 0.24)",
         strong: "0 8px 30px rgba(15, 23, 42, 0.12)"
       }
     }

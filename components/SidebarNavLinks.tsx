@@ -45,13 +45,13 @@ function RailItem({ link, active }: { link: SidebarLink; active: boolean }) {
       className={clsx(
         "group relative flex h-11 w-11 items-center justify-center rounded-2xl transition",
         active
-          ? "bg-[#0b2f64] text-white shadow-strong"
-          : "bg-white/70 text-slate-500 shadow-sm ring-1 ring-slate-200/70 hover:bg-white hover:text-[#0b2f64]"
+          ? "bg-[#4f3524] text-white shadow-strong"
+          : "bg-white/75 text-slate-500 shadow-sm ring-1 ring-[#ded4c8]/80 hover:bg-white hover:text-[#4f3524]"
       )}
     >
       <Icon size={19} />
       {link.badge !== undefined && link.badge > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-4.5 min-w-[1.125rem] items-center justify-center rounded-full bg-sky px-1 text-[10px] font-bold text-white ring-2 ring-white">
+        <span className="absolute -right-1 -top-1 flex h-4.5 min-w-[1.125rem] items-center justify-center rounded-full bg-[#b9824a] px-1 text-[10px] font-bold text-white ring-2 ring-white">
           {link.badge > 9 ? "9+" : link.badge}
         </span>
       )}
@@ -73,13 +73,11 @@ export function SidebarNavLinks({ unreadMessages }: { unreadMessages: number }) 
 
   return (
     <div className="flex h-full flex-col items-center">
-      <div className="flex flex-1 flex-col items-center justify-center gap-5">
+      <div className="flex flex-1 flex-col items-center justify-center gap-2">
         <nav className="flex flex-col items-center gap-2">
           {links.map((link) => (
             <RailItem key={link.href} link={link} active={isActive(link.href)} />
           ))}
-        </nav>
-        <nav className="flex flex-col items-center gap-2">
           {progressLinks.map((link) => (
             <RailItem key={link.href} link={link} active={isActive(link.href)} />
           ))}

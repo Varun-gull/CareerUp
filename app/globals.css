@@ -10,25 +10,25 @@
   --card-foreground: 222 47% 11%;
   --popover: 0 0% 100%;
   --popover-foreground: 222 47% 11%;
-  --primary: 217 91% 60%;
+  --primary: 28 39% 39%;
   --primary-foreground: 0 0% 100%;
   --secondary: 210 40% 96%;
   --secondary-foreground: 222 47% 11%;
   --muted: 215 20% 65%;
   --muted-foreground: 215 16% 47%;
-  --accent: 217 91% 60%;
+  --accent: 28 39% 39%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
   --border: 214 32% 91%;
   --input: 214 32% 91%;
-  --ring: 217 91% 60%;
+  --ring: 28 39% 39%;
   --radius: 0.75rem;
 }
 
 html {
   min-height: 100%;
-  background: #f4f6f6;
+  background: #f3efea;
 }
 
 * {
@@ -38,7 +38,9 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: #f4f6f6;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(215, 168, 110, 0.18), transparent 28rem),
+    linear-gradient(135deg, #f7f4ef 0%, #ece6dd 48%, #f5f1ec 100%);
   color: #0f172a;
   font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -69,11 +71,17 @@ textarea {
   }
 
   .card {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-soft;
+    border-color: #e2d8cc;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 252, 247, 0.94));
+    box-shadow:
+      0 18px 46px rgba(79, 53, 36, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.92) inset;
+    @apply rounded-2xl border;
   }
 
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-wider text-blue-700;
+    @apply text-xs font-semibold uppercase tracking-wider text-amber-800;
   }
 
   .primary-button {
@@ -97,13 +105,16 @@ textarea {
     border-radius: 9999px;
     background-image:
       repeating-linear-gradient(90deg, rgba(255, 255, 255, 0) 0 10px, rgba(255, 255, 255, 0.4) 10px 12px),
-      linear-gradient(90deg, #60a5fa, #38bdf8, #0ea5e9);
+      linear-gradient(90deg, #7c4f2d, #b9824a, #d7a86e);
     transition: width 0.5s ease-out;
   }
 
   .hero-3d {
     transform-origin: center top;
-    will-change: transform, opacity, filter;
+    box-shadow:
+      0 30px 80px rgba(79, 53, 36, 0.2),
+      0 1px 0 rgba(255, 255, 255, 0.18) inset;
+    will-change: transform;
   }
 
   .dashboard-overlap {
@@ -111,14 +122,13 @@ textarea {
     z-index: 10;
     margin-top: -5rem;
     padding-top: 5rem;
-    transform: translateZ(0);
     perspective: 1200px;
   }
 
   .dashboard-layer {
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 220ms ease, filter 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .dashboard-layer:nth-child(1) {
@@ -127,54 +137,18 @@ textarea {
 
   .dashboard-layer:nth-child(2) {
     z-index: 12;
-    margin-top: -1.5rem;
   }
 
   .dashboard-layer .card {
-    transform: translateZ(0);
-    transition: transform 220ms ease, box-shadow 220ms ease;
+    backface-visibility: hidden;
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
   }
 
   .dashboard-layer .card:hover {
-    transform: translateY(-4px) translateZ(24px);
-  }
-
-  @supports (animation-timeline: scroll()) {
-    .hero-3d {
-      animation: hero-recede linear both;
-      animation-timeline: scroll();
-      animation-range: 0 320px;
-    }
-    .dashboard-overlap {
-      animation: dashboard-float-over linear both;
-      animation-timeline: scroll();
-      animation-range: 0 360px;
-    }
-    .dashboard-layer:nth-child(2) {
-      animation: dashboard-layer-lift linear both;
-      animation-timeline: scroll();
-      animation-range: 80px 520px;
-    }
-  }
-
-  @keyframes hero-recede {
-    to {
-      transform: perspective(1000px) rotateX(5deg) scale(0.92) translateY(-18px);
-      opacity: 0.62;
-      filter: blur(1px);
-    }
-  }
-
-  @keyframes dashboard-float-over {
-    to {
-      transform: perspective(1000px) translateY(-34px) translateZ(34px);
-    }
-  }
-
-  @keyframes dashboard-layer-lift {
-    to {
-      transform: perspective(1200px) translateY(-48px) translateZ(56px);
-    }
+    transform: translateY(-4px);
+    box-shadow:
+      0 26px 64px rgba(79, 53, 36, 0.13),
+      0 1px 0 rgba(255, 255, 255, 0.95) inset;
   }
 
   @media (prefers-reduced-motion: reduce) {

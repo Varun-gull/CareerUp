@@ -48,9 +48,9 @@ const config: Config = {
         ink: "#0f172a",
         navy: "#0f172a",
         panel: "#101722",
-        brand: "#2563eb",
-        electric: "#38bdf8",
-        sky: { ...colors.sky, DEFAULT: "#38bdf8" },
+        brand: "#8b5e3c",
+        electric: "#d7a86e",
+        sky: { ...colors.sky, DEFAULT: "#b9824a" },
         success: "#10b981",
         warning: "#f59e0b"
       },
@@ -64,7 +64,7 @@ const config: Config = {
       },
       boxShadow: {
         soft: "0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.05)",
-        glow: "0 4px 18px rgba(37, 99, 235, 0.24)",
+        glow: "0 4px 18px rgba(139, 94, 60, 0.22)",
         strong: "0 8px 30px rgba(15, 23, 42, 0.12)"
       }
     }

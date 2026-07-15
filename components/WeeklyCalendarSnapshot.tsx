@@ -27,8 +27,8 @@ function eventLabel(type: CalendarEvent["eventType"]) {
 
 function eventTone(type: CalendarEvent["eventType"]) {
   if (type === "interview") return "border-sky/40 bg-sky/12 text-sky-600";
-  if (type === "offer") return "border-emerald-400/40 bg-emerald-400/10 text-emerald-200";
-  if (type === "deadline") return "border-amber-300/40 bg-amber-300/10 text-amber-200";
+  if (type === "offer") return "border-emerald-400/40 bg-emerald-400/10 text-emerald-700";
+  if (type === "deadline") return "border-[#AB978C]/40 bg-[#AB978C]/15 text-[#5E5653]";
   return "border-slate-600 bg-slate-100 text-slate-700";
 }
 
@@ -70,12 +70,12 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
             <div
               key={day.ymd}
               className={`min-h-32 rounded-2xl border p-3 ${
-                isToday ? "border-sky/50 bg-sky/10" : "border-slate-200 bg-slate-50/90"
+                isToday ? "border-sky/50 bg-sky/10" : "border-[#7B7F8A]/20 bg-[#E9E6E7]/55"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-xs font-bold uppercase text-slate-600">{DAY_LABELS[day.date.getDay()]}</p>
-                <p className={isToday ? "text-sm font-bold text-sky-600" : "text-sm font-bold text-slate-200"}>{day.date.getDate()}</p>
+                <p className={isToday ? "text-sm font-bold text-sky-600" : "text-sm font-bold text-[#AB978C]"}>{day.date.getDate()}</p>
               </div>
               <div className="mt-3 space-y-2">
                 {day.events.length > 0 ? (
@@ -94,7 +94,7 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
         })}
       </div>
 
-      <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50/90 p-4">
+      <div className="mt-5 rounded-2xl border border-[#7B7F8A]/20 bg-[#E9E6E7]/55 p-4">
         <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
           <CalendarDays size={17} className="text-sky-600" />
           Upcoming

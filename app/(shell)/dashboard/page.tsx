@@ -5,10 +5,10 @@ import { ChallengeCard } from "@/components/ChallengeCard";
 import { WeeklyCalendarSnapshot } from "@/components/WeeklyCalendarSnapshot";
 import { getApplications, getCalendarEvents, getChallenges, getCurrentProfile } from "@/lib/data";
 
-function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
+function StatCard({ icon: Icon, label, value, tone }: { icon: LucideIcon; label: string; value: string; tone: string }) {
   return (
     <section className="card flex min-h-40 flex-col justify-between gap-6 p-5 transition hover:-translate-y-0.5 hover:bg-white/95">
-      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#5E5653] text-white shadow-sm">
+      <span className={`flex h-11 w-11 items-center justify-center rounded-2xl text-white shadow-sm ${tone}`}>
         <Icon size={20} />
       </span>
       <div>
@@ -50,10 +50,10 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
       <section className="dashboard-overlap space-y-5">
         <div className="dashboard-layer">
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} />
-            <StatCard icon={Flame} label="Day streak" value={profile.streak.toLocaleString()} />
-            <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} />
-            <StatCard icon={Trophy} label="Offers" value={offerCount.toLocaleString()} />
+            <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} tone="bg-[#5E5653]" />
+            <StatCard icon={Flame} label="Day streak" value={profile.streak.toLocaleString()} tone="bg-[#6B7C98]" />
+            <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} tone="bg-[#7B7F8A]" />
+            <StatCard icon={Trophy} label="Offers" value={offerCount.toLocaleString()} tone="bg-[#AB978C]" />
           </div>
         </div>
 

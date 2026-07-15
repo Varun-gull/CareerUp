@@ -26,8 +26,10 @@ export function PageHero({
         compact ? "min-h-[13rem]" : "min-h-[30rem]"
       )}
     >
-      <div className="absolute inset-0 bg-[linear-gradient(145deg,#5E5653_0%,#7B7F8A_48%,#6B7C98_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_8%,rgba(233,230,231,0.42),transparent_24rem),radial-gradient(circle_at_8%_92%,rgba(171,151,140,0.34),transparent_22rem)]" />
+      <div className="absolute inset-0 bg-[#5E5653]" />
+      <div className="pointer-events-none absolute right-0 top-0 h-full w-[38%] bg-[#6B7C98]/45" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-28 w-full bg-[#AB978C]/24" />
+      <div className="pointer-events-none absolute left-8 top-8 h-24 w-24 rounded-[2rem] border border-white/10 bg-[#E9E6E7]/10" />
 
       <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[13rem]" : "min-h-[30rem]")}>
         {eyebrow && (
@@ -45,7 +47,7 @@ export function PageHero({
             <p className="mt-4 max-w-3xl text-sm font-medium leading-6 text-[#f6f4f4]/90 sm:text-base">{description}</p>
           )}
           {tabs && tabs.length > 0 && (
-            <nav className="mt-7 flex flex-wrap items-center justify-center gap-1.5 rounded-2xl bg-white/12 p-1.5 ring-1 ring-white/15 backdrop-blur">
+            <nav className="mt-7 flex flex-wrap items-center justify-center gap-1.5 rounded-2xl bg-[#7B7F8A]/35 p-1.5 ring-1 ring-white/15 backdrop-blur">
               {tabs.map((tab) => (
                 <Link
                   key={tab.href + tab.label}

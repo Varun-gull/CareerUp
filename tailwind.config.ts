@@ -50,7 +50,20 @@ const config: Config = {
         panel: "#101722",
         brand: "#5E5653",
         electric: "#AB978C",
-        sky: { ...colors.sky, DEFAULT: "#6B7C98" },
+        sky: {
+          50: "#f4f6f8",
+          100: "#e5e9ef",
+          200: "#cdd5df",
+          300: "#aebbc9",
+          400: "#8798ae",
+          500: "#6B7C98",
+          600: "#5e6d86",
+          700: "#505d73",
+          800: "#444f61",
+          900: "#3a4352",
+          950: "#252b35",
+          DEFAULT: "#6B7C98"
+        },
         success: "#10b981",
         warning: "#f59e0b"
       },

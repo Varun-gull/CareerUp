@@ -5,6 +5,7 @@ import {
   ClipboardList,
   Gift,
   LayoutGrid,
+  Mail,
   MessagesSquare,
   Search,
   Settings
@@ -20,6 +21,7 @@ const mainLinks: SidebarLink[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutGrid },
   { href: "/applications", label: "Applications", icon: ClipboardList },
   { href: "/postings/internships", label: "Postings", icon: Search },
+  { href: "/messages", label: "Messages", icon: Mail },
   { href: "/interview", label: "Interview Prep", icon: MessagesSquare },
   { href: "/calendar", label: "Calendar", icon: CalendarDays }
 ];
@@ -60,8 +62,9 @@ function RailItem({ link, active }: { link: SidebarLink; active: boolean }) {
   );
 }
 
-export function SidebarNavLinks() {
+export function SidebarNavLinks({ unreadMessages }: { unreadMessages: number }) {
   const pathname = usePathname();
+  const links = mainLinks.map((link) => (link.href === "/messages" ? { ...link, badge: unreadMessages } : link));
 
   function isActive(href: string) {
     if (href === "/postings/internships") return pathname.startsWith("/postings");
@@ -72,11 +75,10 @@ export function SidebarNavLinks() {
     <div className="flex h-full flex-col items-center">
       <div className="flex flex-1 flex-col items-center justify-center gap-5">
         <nav className="flex flex-col items-center gap-2">
-          {mainLinks.map((link) => (
+          {links.map((link) => (
             <RailItem key={link.href} link={link} active={isActive(link.href)} />
           ))}
         </nav>
-        <span className="h-px w-8 bg-slate-200" />
         <nav className="flex flex-col items-center gap-2">
           {progressLinks.map((link) => (
             <RailItem key={link.href} link={link} active={isActive(link.href)} />

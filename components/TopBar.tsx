@@ -1,4 +1,4 @@
-import { Mail, Star, TrendingUp } from "lucide-react";
+import { Flame, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { getCurrentProfile, getCurrentUser, getUnreadPeerMessageCount } from "@/lib/data";
@@ -19,23 +19,6 @@ function getFirstName(name: string) {
   return name.split(/\s+/).filter(Boolean)[0] ?? "";
 }
 
-function MessageButton({ unreadMessages }: { unreadMessages: number }) {
-  return (
-    <Link
-      href="/messages"
-      className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:text-blue-700"
-      aria-label={unreadMessages > 0 ? `Messages, ${unreadMessages} unread` : "Messages"}
-    >
-      <Mail size={19} />
-      {unreadMessages > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold text-white ring-2 ring-[#f4f6f6]">
-          {unreadMessages > 9 ? "9+" : unreadMessages}
-        </span>
-      )}
-    </Link>
-  );
-}
-
 export async function TopBar() {
   const user = await getCurrentUser();
   const [profile, unreadMessages] = user ? await Promise.all([getCurrentProfile(), getUnreadPeerMessageCount()]) : [null, 0];
@@ -50,19 +33,19 @@ export async function TopBar() {
   return (
     <header className="sticky top-0 z-40 hidden items-center justify-between gap-4 border-b border-slate-200/70 bg-[#f4f6f6]/90 px-7 py-3 backdrop-blur-xl lg:flex">
       <Link href="/dashboard" className="group leading-none">
-        <span className="block text-5xl font-black tracking-tight text-[#0b2f64] transition group-hover:text-blue-700">CareerUp</span>
-        <span className="mt-0.5 flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-slate-500">
-          <Star size={10} className="fill-blue-600 text-blue-600" /> {rank.name}
-        </span>
+        <span className="block text-4xl font-black tracking-tight text-[#0b2f64] transition group-hover:text-blue-700">CareerUp</span>
       </Link>
 
       <div className="flex items-center gap-3">
-        {user && <MessageButton unreadMessages={unreadMessages} />}
+        <span className="inline-flex h-11 items-center gap-2 rounded-2xl bg-white px-4 text-sm font-black text-slate-800 shadow-sm ring-1 ring-slate-200">
+          <Flame size={16} className={profile && profile.streak > 0 ? "fill-blue-500 text-blue-500" : "text-slate-400"} />
+          {profile?.streak ?? 0} day streak
+        </span>
         <div className="hidden min-w-[17rem] rounded-2xl bg-white px-4 py-2 shadow-sm ring-1 ring-slate-200 xl:block">
           <div className="flex items-center justify-between gap-3 text-xs font-black text-slate-700">
             <span className="inline-flex items-center gap-1">
               <TrendingUp size={13} className="text-blue-600" />
-              XP
+              {rank.name}
             </span>
             <span>
               {currentXp.toLocaleString()}

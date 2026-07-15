@@ -23,13 +23,13 @@ export function PageHero({
     <section
       className={clsx(
         "hero-3d relative overflow-hidden rounded-[2rem] text-white shadow-strong",
-        compact ? "min-h-[13rem]" : "min-h-[25rem]"
+        compact ? "min-h-[13rem]" : "min-h-[30rem]"
       )}
     >
       <div className="absolute inset-0 bg-[linear-gradient(145deg,#08275b_0%,#0f4e9a_42%,#62c4ff_100%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_8%,rgba(191,219,254,0.42),transparent_24rem),radial-gradient(circle_at_8%_92%,rgba(125,211,252,0.22),transparent_22rem)]" />
 
-      <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[13rem]" : "min-h-[25rem]")}>
+      <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[13rem]" : "min-h-[30rem]")}>
         {eyebrow && (
           <div className="flex items-center justify-between px-6 pt-5">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/12 px-3.5 py-1.5 text-xs font-semibold text-blue-50 ring-1 ring-white/15 backdrop-blur">

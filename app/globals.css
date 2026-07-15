@@ -109,9 +109,34 @@ textarea {
   .dashboard-overlap {
     position: relative;
     z-index: 10;
-    margin-top: -3.75rem;
-    padding-top: 3.75rem;
+    margin-top: -5rem;
+    padding-top: 5rem;
     transform: translateZ(0);
+    perspective: 1200px;
+  }
+
+  .dashboard-layer {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 220ms ease, filter 220ms ease;
+  }
+
+  .dashboard-layer:nth-child(1) {
+    z-index: 11;
+  }
+
+  .dashboard-layer:nth-child(2) {
+    z-index: 12;
+    margin-top: -1.5rem;
+  }
+
+  .dashboard-layer .card {
+    transform: translateZ(0);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+  }
+
+  .dashboard-layer .card:hover {
+    transform: translateY(-4px) translateZ(24px);
   }
 
   @supports (animation-timeline: scroll()) {
@@ -124,6 +149,11 @@ textarea {
       animation: dashboard-float-over linear both;
       animation-timeline: scroll();
       animation-range: 0 360px;
+    }
+    .dashboard-layer:nth-child(2) {
+      animation: dashboard-layer-lift linear both;
+      animation-timeline: scroll();
+      animation-range: 80px 520px;
     }
   }
 
@@ -138,6 +168,12 @@ textarea {
   @keyframes dashboard-float-over {
     to {
       transform: perspective(1000px) translateY(-34px) translateZ(34px);
+    }
+  }
+
+  @keyframes dashboard-layer-lift {
+    to {
+      transform: perspective(1200px) translateY(-48px) translateZ(56px);
     }
   }
 

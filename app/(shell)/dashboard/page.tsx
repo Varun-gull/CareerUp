@@ -1,10 +1,8 @@
 import { CheckCircle2, Flame, Sparkles, Trophy } from "lucide-react";
-import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { ChallengeCard } from "@/components/ChallengeCard";
 import { WeeklyCalendarSnapshot } from "@/components/WeeklyCalendarSnapshot";
-import { XpProgressBar } from "@/components/XpProgressBar";
 import { getApplications, getCalendarEvents, getChallenges, getCurrentProfile } from "@/lib/data";
 
 function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
@@ -42,45 +40,40 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
           { label: "Dashboard", href: "/dashboard", active: true },
           { label: "Applications", href: "/applications" },
           { label: "Postings", href: "/postings/internships" },
-          { label: "Interview Prep", href: "/interview" },
-          { label: "Calendar", href: "/calendar" },
-          { label: "Rewards", href: "/rewards" },
-          { label: "Settings", href: "/settings" }
+          { label: "Messages", href: "/messages" }
         ]}
       />
       {searchParams?.message && (
         <p className="rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>
       )}
 
-      <section className="dashboard-overlap grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px]">
-        <div className="space-y-5">
-          <div className="grid gap-5 sm:grid-cols-2">
+      <section className="dashboard-overlap space-y-5">
+        <div className="dashboard-layer">
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} />
             <StatCard icon={Flame} label="Day streak" value={profile.streak.toLocaleString()} />
             <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} />
             <StatCard icon={Trophy} label="Offers" value={offerCount.toLocaleString()} />
           </div>
-          <WeeklyCalendarSnapshot events={calendarEvents} />
-          <XpProgressBar xp={profile.xp} />
         </div>
-        <aside className="space-y-5">
-          <section className="card p-5">
+
+        <div className="dashboard-layer grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-stretch">
+          <WeeklyCalendarSnapshot events={calendarEvents} />
+          <section className="card flex h-full flex-col p-5">
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="eyebrow">XP quests</p>
-                <h2 className="mt-1 text-2xl font-bold text-ink">Challenges</h2>
+                <h2 className="mt-1 text-2xl font-bold text-ink">Daily challenges</h2>
               </div>
-              <Link href="/rewards" className="text-sm font-bold text-sky-600">
-                Rewards
-              </Link>
+              <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 ring-1 ring-blue-100">3 today</span>
             </div>
-            <div className="mt-4 grid gap-4">
-              {[...challenges.tiered, ...challenges.oneOff].slice(0, 4).map((challenge) => (
+            <div className="mt-4 grid flex-1 content-start gap-4">
+              {[...challenges.tiered, ...challenges.oneOff].slice(0, 3).map((challenge) => (
                 <ChallengeCard key={challenge.id} challenge={challenge} />
               ))}
             </div>
           </section>
-        </aside>
+        </div>
       </section>
     </main>
   );

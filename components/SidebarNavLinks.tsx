@@ -55,7 +55,7 @@ function RailItem({ link, active }: { link: SidebarLink; active: boolean }) {
           {link.badge > 9 ? "9+" : link.badge}
         </span>
       )}
-      <span className="pointer-events-none absolute left-full z-50 ml-3 hidden whitespace-nowrap rounded-xl bg-slate-950 px-3 py-1.5 text-xs font-semibold text-white shadow-strong group-hover:block">
+      <span className="pointer-events-none absolute left-full top-1/2 z-[120] ml-3 hidden -translate-y-1/2 whitespace-nowrap rounded-xl bg-[#13112D] px-3 py-1.5 text-xs font-semibold text-white shadow-strong ring-1 ring-white/10 group-hover:block">
         {link.label}
       </span>
     </Link>

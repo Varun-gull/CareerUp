@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { CalendarEvent } from "@/lib/types";
 
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function toYMD(date: Date) {
   const y = date.getFullYear();
@@ -11,8 +12,9 @@ function toYMD(date: Date) {
   return `${y}-${m}-${d}`;
 }
 
-function startOfWeek(date: Date) {
+function startOfMonthGrid(date: Date) {
   const d = new Date(date);
+  d.setDate(1);
   d.setDate(d.getDate() - d.getDay());
   return d;
 }
@@ -34,15 +36,19 @@ function eventTone(type: CalendarEvent["eventType"]) {
 
 export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) {
   const today = new Date();
-  const weekStart = startOfWeek(today);
-  const days = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date(weekStart);
-    date.setDate(weekStart.getDate() + i);
+  const monthStart = startOfMonthGrid(today);
+  const currentMonth = today.getMonth();
+  const days = Array.from({ length: 42 }, (_, i) => {
+    const date = new Date(monthStart);
+    date.setDate(monthStart.getDate() + i);
     const ymd = toYMD(date);
+    const dayEvents = events.filter((event) => event.date === ymd);
     return {
       date,
       ymd,
-      events: events.filter((event) => event.date === ymd).slice(0, 3),
+      inMonth: date.getMonth() === currentMonth,
+      eventCount: dayEvents.length,
+      events: dayEvents.slice(0, 2),
     };
   });
 
@@ -55,38 +61,54 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
     <section className="card p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="eyebrow">This week</p>
-          <h2 className="mt-1 text-2xl font-bold text-ink">Weekly calendar</h2>
+          <p className="eyebrow">This month</p>
+          <h2 className="mt-1 text-2xl font-bold text-ink">{MONTH_LABELS[today.getMonth()]} {today.getFullYear()}</h2>
         </div>
         <Link href="/calendar" className="secondary-button min-h-10 px-4 text-sm">
           Open calendar
         </Link>
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
+      <div className="mt-5 grid grid-cols-7 gap-2 text-center text-[11px] font-bold uppercase text-slate-500">
+        {DAY_LABELS.map((label) => (
+          <span key={label}>{label}</span>
+        ))}
+      </div>
+
+      <div className="mt-2 grid grid-cols-7 gap-2">
         {days.map((day) => {
           const isToday = day.ymd === toYMD(today);
+          const title = day.events.length > 0
+            ? day.events.map((event) => `${eventLabel(event.eventType)}: ${event.role} at ${event.company}`).join("\n")
+            : "No events";
           return (
             <div
               key={day.ymd}
-              className={`min-h-32 rounded-2xl border p-3 ${
-                isToday ? "border-sky/50 bg-sky/10" : "border-[#5E7681]/30 bg-[#E1EFEB]/60"
+              title={title}
+              className={`group relative min-h-24 rounded-2xl border p-2 text-left transition ${
+                isToday
+                  ? "border-sky/50 bg-sky/10 shadow-sm"
+                  : day.inMonth
+                    ? "border-[#5E7681]/30 bg-[#E1EFEB]/60 hover:border-[#1B3C53]/40 hover:bg-white/80"
+                    : "border-slate-200/70 bg-white/35 text-slate-400"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <p className="text-xs font-bold uppercase text-slate-600">{DAY_LABELS[day.date.getDay()]}</p>
-                <p className={isToday ? "text-sm font-bold text-sky-600" : "text-sm font-bold text-[#5E7681]"}>{day.date.getDate()}</p>
+                <p className={isToday ? "text-sm font-black text-sky-600" : day.inMonth ? "text-sm font-bold text-[#1B3C53]" : "text-sm font-bold text-slate-400"}>
+                  {day.date.getDate()}
+                </p>
+                {day.eventCount > 2 && <span className="text-[10px] font-bold text-slate-500">+{day.eventCount - 2}</span>}
               </div>
               <div className="mt-3 space-y-2">
                 {day.events.length > 0 ? (
                   day.events.map((event) => (
-                    <div key={event.id} className={`rounded-xl border px-2 py-1.5 text-[11px] font-bold ${eventTone(event.eventType)}`}>
+                    <div key={event.id} className={`rounded-xl border px-2 py-1.5 text-[11px] font-bold ${eventTone(event.eventType)}`} title={`${event.role} at ${event.company}`}>
                       <p className="truncate">{eventLabel(event.eventType)}</p>
                       <p className="truncate font-bold opacity-80">{event.company}</p>
                     </div>
                   ))
                 ) : (
-                  <p className="rounded-xl border border-dashed border-slate-200 px-2 py-2 text-xs font-bold text-slate-500">Open</p>
+                  <p className="rounded-xl border border-dashed border-slate-200 px-2 py-2 text-xs font-bold text-slate-400">Open</p>
                 )}
               </div>
             </div>

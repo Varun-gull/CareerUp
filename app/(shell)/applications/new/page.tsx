@@ -41,7 +41,7 @@ export default function NewApplicationPage({ searchParams }: { searchParams?: { 
             <input name="sourceUrl" className="field" placeholder="https://..." />
           </label>
           <button type="submit" className="primary-button w-full sm:w-auto">
-            <Save className="mr-2" size={18} /> Save and earn 5 XP + RP
+            <Save className="mr-2" size={18} /> Save and earn 5 XP + 1 RP
           </button>
         </form>
       </main>

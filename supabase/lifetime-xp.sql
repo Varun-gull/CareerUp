@@ -29,16 +29,16 @@ with reward_spend as (
 update public.profiles
 set total_xp = greatest(
     profiles.total_xp,
-    profiles.xp + coalesce(reward_spend.spent_xp, 0) + (coalesce(profiles.streak_paid_revives, 0) * 250)
+    profiles.xp + coalesce(reward_spend.spent_xp, 0) + (coalesce(profiles.streak_paid_revives, 0) * 50)
   ),
   updated_at = now()
 from reward_spend
 where profiles.id = reward_spend.user_id;
 
 update public.profiles
-set total_xp = greatest(total_xp, xp + (coalesce(streak_paid_revives, 0) * 250)),
+set total_xp = greatest(total_xp, xp + (coalesce(streak_paid_revives, 0) * 50)),
   updated_at = now()
-where total_xp < xp + (coalesce(streak_paid_revives, 0) * 250);
+where total_xp < xp + (coalesce(streak_paid_revives, 0) * 50);
 
 create or replace function public.award_xp(amount integer)
 returns void
@@ -49,7 +49,10 @@ as $$
   update public.profiles
   set xp = xp + greatest(amount, 0),
       total_xp = total_xp + greatest(amount, 0),
-      reward_points = reward_points + greatest(amount, 0),
+      reward_points = reward_points + case
+        when greatest(amount, 0) = 0 then 0
+        else greatest(1, round(greatest(amount, 0)::numeric * 0.2)::integer)
+      end,
       updated_at = now()
   where id = auth.uid();
 $$;

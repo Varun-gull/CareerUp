@@ -24,7 +24,7 @@ function getSafePostingsReturnTo(value: FormDataEntryValue | null) {
 }
 
 const validStatuses: ApplicationStatus[] = ["saved", "applied", "interviewing", "offer", "rejected"];
-const PAID_STREAK_REVIVE_COST = 250;
+const PAID_STREAK_REVIVE_COST = 50;
 const DAILY_APPLY_CHALLENGE_TITLE = "Daily Apply Sprint";
 
 async function countApplicationsAppliedToday(supabase: NonNullable<ReturnType<typeof getSupabaseServerClient>>, userId: string) {
@@ -433,7 +433,7 @@ export async function savePostingApplication(formData: FormData) {
   revalidatePath("/postings");
   revalidatePath("/postings/internships");
   revalidatePath("/postings/new-grad");
-  redirectWithMessage(returnTo, status === "applied" ? "Nice. That role was added as applied." : "Posting saved to your tracker. You earned 5 XP and 5 Reward Points.");
+  redirectWithMessage(returnTo, status === "applied" ? "Nice. That role was added as applied." : "Posting saved to your tracker. You earned 5 XP and 1 Reward Point.");
 }
 
 export async function updateApplicationStatus(formData: FormData) {
@@ -600,7 +600,7 @@ export async function unlockStreakRevive() {
   const currentRewardPoints = profile.reward_points ?? profile.xp ?? 0;
 
   if (currentRewardPoints < PAID_STREAK_REVIVE_COST) {
-    redirectWithMessage("/dashboard", "You need 250 Reward Points to unlock another streak revive.");
+    redirectWithMessage("/dashboard", `You need ${PAID_STREAK_REVIVE_COST} Reward Points to unlock another streak revive.`);
   }
 
   const { error } = await supabase

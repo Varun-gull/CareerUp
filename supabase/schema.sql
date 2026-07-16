@@ -251,7 +251,10 @@ as $$
   update public.profiles
   set xp = xp + greatest(amount, 0),
       total_xp = total_xp + greatest(amount, 0),
-      reward_points = reward_points + greatest(amount, 0),
+      reward_points = reward_points + case
+        when greatest(amount, 0) = 0 then 0
+        else greatest(1, round(greatest(amount, 0)::numeric * 0.2)::integer)
+      end,
       updated_at = now()
   where id = auth.uid();
 $$;

@@ -18,6 +18,11 @@ export const pointValues = {
   sendMessage: 10,
 } as const;
 
+export function getRewardPointsForXp(amount: number) {
+  const safeAmount = Math.max(0, Math.round(amount));
+  return safeAmount === 0 ? 0 : Math.max(1, Math.round(safeAmount * 0.2));
+}
+
 export const rankBonuses = [
   { rankName: "Silver Strategist", xp: 50 },
   { rankName: "Gold Climber", xp: 100 },
@@ -47,12 +52,15 @@ export async function awardXp({
   supabase,
   userId,
   amount,
+  rewardPoints,
 }: {
   supabase: SupabaseServer;
   userId: string;
   amount: number;
+  rewardPoints?: number;
 }) {
   const safeAmount = Math.max(0, Math.round(amount));
+  const safeRewardPoints = Math.max(0, Math.round(rewardPoints ?? getRewardPointsForXp(safeAmount)));
 
   if (safeAmount === 0) {
     return { awarded: 0, rankBonus: 0, reachedRanks: [] as string[] };
@@ -74,13 +82,14 @@ export async function awardXp({
   const rankBonusAwarded = profile.rank_bonus_awarded ?? [];
   const reachedRanks = getNewlyReachedRankNames(previousPermanentXp, previousPermanentXp + safeAmount, rankBonusAwarded);
   const rankBonus = reachedRanks.reduce((sum, rankName) => sum + (rankBonuses.find((bonus) => bonus.rankName === rankName)?.xp ?? 0), 0);
+  const rankBonusRewardPoints = getRewardPointsForXp(rankBonus);
 
   const { error: updateError } = await supabase
     .from("profiles")
     .update({
       xp: previousPermanentXp + safeAmount + rankBonus,
       total_xp: previousPermanentXp + safeAmount + rankBonus,
-      reward_points: previousRewardPoints + safeAmount + rankBonus,
+      reward_points: previousRewardPoints + safeRewardPoints + rankBonusRewardPoints,
       rank_bonus_awarded: Array.from(new Set([...rankBonusAwarded, ...reachedRanks])),
     })
     .eq("id", userId);

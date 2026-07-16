@@ -3,6 +3,7 @@
 import { CheckCircle2, Clock3, ExternalLink, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { savePostingApplication } from "@/lib/applications/actions";
 
 const STORAGE_KEY = "careerup-pending-apply";
@@ -62,6 +63,7 @@ export function PostingApplyLink({
 }
 
 export function PostingApplyFollowUpPrompt() {
+  const [mounted, setMounted] = useState(false);
   const [pending, setPending] = useState<PendingApply | null>(null);
   const roleLabel = useMemo(() => {
     if (!pending) return "";
@@ -69,6 +71,8 @@ export function PostingApplyFollowUpPrompt() {
   }, [pending]);
 
   useEffect(() => {
+    setMounted(true);
+
     let sawAway = false;
 
     function maybeShowPrompt() {
@@ -100,13 +104,13 @@ export function PostingApplyFollowUpPrompt() {
     };
   }, []);
 
-  if (!pending) {
+  if (!mounted || !pending) {
     return null;
   }
 
-  return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-slate-950/35 px-4 py-6 backdrop-blur-sm sm:items-center">
-      <div className="w-full max-w-xl rounded-[1.75rem] border border-white/80 bg-white p-5 shadow-strong">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-end justify-center bg-slate-950/45 px-4 py-6 backdrop-blur-sm sm:items-center">
+      <div className="w-full max-w-xl rounded-[1.75rem] border border-white/80 bg-white p-5 shadow-strong ring-1 ring-slate-950/10">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-black uppercase tracking-wider text-sky-600">Application check-in</p>
@@ -170,7 +174,8 @@ export function PostingApplyFollowUpPrompt() {
           <ExternalLink className="mr-1.5" size={16} /> Reopen posting
         </a>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

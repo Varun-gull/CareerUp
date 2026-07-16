@@ -26,7 +26,7 @@ export function PageHero({
         compact ? "min-h-[20rem]" : "min-h-[30rem]"
       )}
     >
-      <div className="absolute inset-0 bg-[#2A6384]" />
+      <div className="absolute inset-0 bg-[#1F4E6A]" />
 
       <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[20rem]" : "min-h-[30rem]")}>
         {eyebrow && (
@@ -39,7 +39,7 @@ export function PageHero({
         )}
 
         <div className="flex flex-1 flex-col items-center justify-center px-6 py-10 text-center">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">{title}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
           {description && (
             <p className="mt-4 max-w-3xl text-sm font-medium leading-6 text-white/90 sm:text-base">{description}</p>
           )}
@@ -52,7 +52,7 @@ export function PageHero({
                   aria-current={tab.active ? "page" : undefined}
                   className={clsx(
                     "rounded-xl px-4 py-2 text-sm font-semibold transition",
-                    tab.active ? "bg-white text-[#2A6384] shadow-sm" : "text-white hover:bg-white/10 hover:text-white"
+                    tab.active ? "bg-white text-[#1F4E6A] shadow-sm" : "text-white hover:bg-white/10 hover:text-white"
                   )}
                 >
                   {tab.label}

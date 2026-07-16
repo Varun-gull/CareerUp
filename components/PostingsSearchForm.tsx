@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, Search } from "lucide-react";
+import Link from "next/link";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { SelectDropdown } from "@/components/SelectDropdown";
@@ -99,6 +100,7 @@ function SuggestionInput({
 }
 
 export function PostingsSearchForm({
+  kind,
   roleSuggestions,
   locationSuggestions,
   defaultQuery,
@@ -107,6 +109,7 @@ export function PostingsSearchForm({
   remoteFilter,
   minFit,
 }: {
+  kind: "internship" | "new-grad";
   roleSuggestions: string[];
   locationSuggestions: string[];
   defaultQuery: string;
@@ -129,7 +132,24 @@ export function PostingsSearchForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card mt-8 grid gap-4 p-5 lg:grid-cols-[1.15fr_1fr_0.75fr_0.75fr_auto]">
+    <form onSubmit={handleSubmit} className="card mt-8 p-5">
+      <div className="mb-4 inline-flex items-center gap-1 rounded-xl bg-slate-100 p-1">
+        <Link
+          href="/postings/internships"
+          aria-current={kind === "internship" ? "page" : undefined}
+          className={`rounded-lg px-4 py-1.5 text-sm font-bold transition ${kind === "internship" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}
+        >
+          Internships
+        </Link>
+        <Link
+          href="/postings/new-grad"
+          aria-current={kind === "new-grad" ? "page" : undefined}
+          className={`rounded-lg px-4 py-1.5 text-sm font-bold transition ${kind === "new-grad" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}
+        >
+          New Grad
+        </Link>
+      </div>
+      <div className="grid gap-4 lg:grid-cols-[1.15fr_1fr_0.75fr_0.75fr_auto]">
       <input type="hidden" name="sort" value="newest" />
       <SuggestionInput label="Role or keyword" name="q" value={query} onChange={setQuery} placeholder="Data science intern" suggestions={roleSuggestions} />
       <SuggestionInput label="Location" name="location" value={location} onChange={setLocation} placeholder={locationPlaceholder} suggestions={locationSuggestions} />
@@ -161,6 +181,7 @@ export function PostingsSearchForm({
         {loading ? <Loader2 className="mr-2 animate-spin" size={18} /> : <Search className="mr-2" size={18} />}
         {loading ? "Searching…" : "Search"}
       </button>
+      </div>
     </form>
   );
 }

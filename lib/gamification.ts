@@ -24,10 +24,10 @@ export function getRewardPointsForXp(amount: number) {
 }
 
 export const rankBonuses = [
-  { rankName: "Active Applicant", legacyNames: ["Silver Strategist"], xp: 50 },
-  { rankName: "Qualified Candidate", legacyNames: ["Gold Climber"], xp: 100 },
-  { rankName: "Interview Ready", legacyNames: ["Platinum Candidate"], xp: 175 },
-  { rankName: "Offer Ready", legacyNames: ["Elite Intern"], xp: 300 },
+  { rankName: "Manager", legacyNames: ["Active Applicant", "Silver Strategist"], xp: 50 },
+  { rankName: "Director", legacyNames: ["Qualified Candidate", "Gold Climber"], xp: 100 },
+  { rankName: "Vice President", legacyNames: ["Interview Ready", "Platinum Candidate"], xp: 175 },
+  { rankName: "CEO", legacyNames: ["Offer Ready", "Elite Intern"], xp: 300 },
 ] as const;
 
 type DbChallenge = {

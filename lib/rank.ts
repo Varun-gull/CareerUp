@@ -1,9 +1,9 @@
 export const ranks = [
-  { name: "Applicant", minXp: 0, color: "bg-slate-200 text-slate-800" },
-  { name: "Active Applicant", minXp: 250, color: "bg-slate-300 text-slate-900" },
-  { name: "Qualified Candidate", minXp: 750, color: "bg-amber-100 text-amber-900" },
-  { name: "Interview Ready", minXp: 1500, color: "bg-blue-100 text-blue-900" },
-  { name: "Offer Ready", minXp: 3000, color: "bg-ink text-white" }
+  { name: "Associate", minXp: 0, color: "bg-slate-200 text-slate-800" },
+  { name: "Manager", minXp: 250, color: "bg-slate-300 text-slate-900" },
+  { name: "Director", minXp: 750, color: "bg-amber-100 text-amber-900" },
+  { name: "Vice President", minXp: 1500, color: "bg-blue-100 text-blue-900" },
+  { name: "CEO", minXp: 3000, color: "bg-ink text-white" }
 ] as const;
 
 export function getRank(xp: number) {

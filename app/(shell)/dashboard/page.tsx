@@ -24,42 +24,33 @@ function StatCard({ icon: Icon, label, value, tone }: { icon: LucideIcon; label:
 
 function TopFitPostings({ postings }: { postings: InternshipPosting[] }) {
   return (
-    <section className="card p-5">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+    <section className="card flex h-full flex-col p-5">
+      <div className="flex items-end justify-between gap-3">
         <div>
           <p className="eyebrow">Best matches</p>
-          <h2 className="mt-1 text-2xl font-bold text-ink">Top matches for you</h2>
-          <p className="mt-1 text-sm font-semibold text-slate-500">Personalized from your resume, profile, and current live postings.</p>
+          <h2 className="mt-1 text-2xl font-bold text-ink">Top postings for you</h2>
         </div>
-        <Link href="/postings/internships?sort=fit" className="inline-flex items-center gap-1 rounded-2xl border border-[#2A6384]/20 bg-white px-4 py-2 text-sm font-bold text-[#2A6384] transition hover:bg-[#EAF2F8]">
-          View all best fit <ArrowRight size={15} />
+        <Link href="/postings/internships?sort=fit" className="text-sm font-bold text-[#2A6384]">
+          View all
         </Link>
       </div>
 
-      <div className="mt-5 grid gap-3 lg:grid-cols-2">
+      <div className="mt-4 grid flex-1 content-start gap-3">
         {postings.length > 0 ? (
           postings.map((posting, index) => (
-            <article key={posting.id} className="rounded-3xl border border-slate-200 bg-white/90 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-              <div className="flex min-w-0 items-start justify-between gap-4">
+            <article key={posting.id} className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <p className="text-xs font-bold uppercase tracking-wide text-[#2A6384]">#{index + 1} match</p>
-                  <h3 className="mt-1 truncate text-lg font-bold text-ink">{posting.title}</h3>
-                  <p className="mt-1 truncate text-sm font-semibold text-slate-600">{posting.company}</p>
+                  <h3 className="mt-1 truncate text-base font-bold text-ink">{posting.title}</h3>
+                  <p className="mt-1 truncate text-sm font-semibold text-slate-600">{posting.company} · {posting.location}</p>
                 </div>
                 <span className="shrink-0 rounded-full bg-[#EAF2F8] px-3 py-1 text-xs font-bold text-[#2A6384] ring-1 ring-[#5E7681]/25">
                   {posting.fitScore}% fit
                 </span>
               </div>
-              <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-600">{posting.description || "Open the posting to review role details and application requirements."}</p>
-              <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-bold text-slate-500">
-                <span className="rounded-full bg-slate-100 px-2.5 py-1">{posting.location}</span>
-                <span className="rounded-full bg-slate-100 px-2.5 py-1">{posting.postedAt}</span>
-                <span className="rounded-full bg-slate-100 px-2.5 py-1">{posting.source}</span>
-              </div>
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-3">
-                <Link href={`/postings/internships?sort=fit&q=${encodeURIComponent(posting.title)}&location=${encodeURIComponent(posting.location)}`} className="text-sm font-bold text-slate-600 transition hover:text-[#2A6384]">
-                  Find similar
-                </Link>
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs font-semibold text-slate-500">{posting.source} · {posting.postedAt}</p>
                 <a href={posting.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm font-bold text-[#2A6384]">
                   Open <ArrowRight size={14} />
                 </a>
@@ -68,7 +59,7 @@ function TopFitPostings({ postings }: { postings: InternshipPosting[] }) {
           ))
         ) : (
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white/70 p-5 text-sm font-semibold text-slate-600">
-            Upload a resume or update your profile to surface your strongest matches here.
+            Upload a resume and sync postings to surface your strongest matches here.
           </div>
         )}
       </div>
@@ -120,7 +111,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
   ]);
   const topFitPostings = [...internshipMatches, ...newGradMatches]
     .sort((a, b) => b.fitScore - a.fitScore)
-    .slice(0, 6);
+    .slice(0, 5);
 
   const appliedCount = applications.filter((application) => application.status !== "saved").length;
 
@@ -143,10 +134,6 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
 
       <section className="dashboard-overlap space-y-5">
         <div className="dashboard-layer">
-          <TopFitPostings postings={topFitPostings} />
-        </div>
-
-        <div className="dashboard-layer">
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard icon={Sparkles} label="Lifetime XP" value={profile.xp.toLocaleString()} tone="bg-[#2A6384] text-white" />
             <StatCard icon={Star} label="Reward Points" value={profile.rewardPoints.toLocaleString()} tone="bg-[#EAF2F8] text-[#2A6384]" />
@@ -155,8 +142,9 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
           </div>
         </div>
 
-        <div className="dashboard-layer">
-          <section className="card p-5">
+        <div className="dashboard-layer grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-stretch">
+          <TopFitPostings postings={topFitPostings} />
+          <section className="card flex h-full flex-col p-5">
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="eyebrow">XP quests</p>

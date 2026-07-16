@@ -26,7 +26,8 @@ export function PageHero({
         compact ? "min-h-[20rem]" : "min-h-[30rem]"
       )}
     >
-      <div className="absolute inset-0 bg-[#13112D]" />
+      <div className="absolute inset-0 bg-[linear-gradient(150deg,#231942_0%,#5E548E_58%,#9F86C0_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_10%,rgba(224,177,203,0.34),transparent_24rem),radial-gradient(circle_at_8%_92%,rgba(190,149,196,0.22),transparent_20rem)]" />
 
       <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[20rem]" : "min-h-[30rem]")}>
         {eyebrow && (

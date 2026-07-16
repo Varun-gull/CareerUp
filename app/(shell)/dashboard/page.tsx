@@ -4,7 +4,8 @@ import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { ChallengeCard } from "@/components/ChallengeCard";
 import { getApplications, getChallenges, getCurrentProfile } from "@/lib/data";
-import { searchCachedPostings } from "@/lib/postings";
+import { searchCachedPostings, searchInternshipPostings } from "@/lib/postings";
+import type { PostingKind } from "@/lib/postings";
 import type { InternshipPosting } from "@/lib/types";
 
 function StatCard({ icon: Icon, label, value, tone }: { icon: LucideIcon; label: string; value: string; tone: string }) {
@@ -66,6 +67,38 @@ function TopFitPostings({ postings }: { postings: InternshipPosting[] }) {
   );
 }
 
+async function getDashboardMatches(profile: Awaited<ReturnType<typeof getCurrentProfile>>, kind: PostingKind) {
+  const targetedCached = await searchCachedPostings({ profile, kind, sort: "fit", limit: 8 });
+
+  if (targetedCached?.postings.length) {
+    return targetedCached.postings;
+  }
+
+  const broadCached = await searchCachedPostings({
+    profile,
+    kind,
+    query: "",
+    location: "",
+    sort: "fit",
+    limit: 8
+  });
+
+  if (broadCached?.postings.length) {
+    return broadCached.postings;
+  }
+
+  const liveMatches = await searchInternshipPostings({
+    profile,
+    kind,
+    query: "",
+    location: ""
+  });
+
+  return liveMatches.postings
+    .sort((a, b) => b.fitScore - a.fitScore)
+    .slice(0, 8);
+}
+
 export default async function DashboardPage({ searchParams }: { searchParams?: { message?: string } }) {
   const [profile, challenges, applications] = await Promise.all([
     getCurrentProfile(),
@@ -73,10 +106,10 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
     getApplications()
   ]);
   const [internshipMatches, newGradMatches] = await Promise.all([
-    searchCachedPostings({ profile, kind: "internship", sort: "fit", limit: 6 }),
-    searchCachedPostings({ profile, kind: "new-grad", sort: "fit", limit: 6 })
+    getDashboardMatches(profile, "internship"),
+    getDashboardMatches(profile, "new-grad")
   ]);
-  const topFitPostings = [...(internshipMatches?.postings ?? []), ...(newGradMatches?.postings ?? [])]
+  const topFitPostings = [...internshipMatches, ...newGradMatches]
     .sort((a, b) => b.fitScore - a.fitScore)
     .slice(0, 3);
 

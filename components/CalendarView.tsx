@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import type { DragEvent } from "react";
 import clsx from "clsx";
 import { ApplicationStatusBadge } from "@/components/ApplicationStatusBadge";
 import { CalendarCreateModal } from "@/components/CalendarCreateModal";
@@ -73,12 +74,6 @@ function startOfWeek(date: Date) {
   const copy = new Date(date);
   copy.setDate(copy.getDate() - copy.getDay());
   copy.setHours(0, 0, 0, 0);
-  return copy;
-}
-
-function addDays(date: Date, amount: number) {
-  const copy = new Date(date);
-  copy.setDate(copy.getDate() + amount);
   return copy;
 }
 
@@ -149,40 +144,46 @@ function sortEvents(events: CalendarEvent[]) {
 
 function EventPill({
   event,
+  compact = false,
   draggable,
   onDragStart,
   onDelete,
   onClick,
 }: {
   event: CalendarEvent;
+  compact?: boolean;
   draggable?: boolean;
-  onDragStart?: () => void;
+  onDragStart?: (dragEvent: DragEvent<HTMLDivElement>) => void;
   onDelete?: () => void;
   onClick?: () => void;
 }) {
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       draggable={draggable}
       onDragStart={(dragEvent) => {
         dragEvent.dataTransfer.effectAllowed = "move";
-        onDragStart?.();
+        dragEvent.dataTransfer.setData("application/x-careerup-calendar-event", event.id);
+        dragEvent.dataTransfer.setData("text/plain", event.id);
+        onDragStart?.(dragEvent);
       }}
       onClick={(clickEvent) => {
         clickEvent.stopPropagation();
         onClick?.();
       }}
       className={clsx(
-        "group flex w-full items-start gap-2 rounded-xl border px-2.5 py-2 text-left transition hover:-translate-y-0.5 hover:shadow-sm",
+        "group flex w-full cursor-grab items-start gap-2 rounded-xl border text-left transition hover:-translate-y-0.5 hover:shadow-sm active:cursor-grabbing",
+        compact ? "px-2 py-1.5" : "px-2.5 py-2",
         EVENT_STYLE[event.eventType]
       )}
     >
       <span className={clsx("mt-1 h-2 w-2 shrink-0 rounded-full", EVENT_DOT[event.eventType])} />
       <span className="min-w-0 flex-1">
         <span className="block truncate text-xs font-bold">{event.company}</span>
-        <span className="mt-0.5 block truncate text-[11px] font-semibold opacity-75">{event.role}</span>
-        <span className="mt-1 block text-[11px] font-bold opacity-70">
-          {EVENT_LABEL[event.eventType]}{event.time ? ` · ${event.time}` : ""}
+        {!compact && <span className="mt-0.5 block truncate text-[11px] font-semibold opacity-75">{event.role}</span>}
+        <span className={clsx("block truncate text-[11px] font-bold opacity-70", compact ? "mt-0" : "mt-1")}>
+          {compact ? EVENT_LABEL[event.eventType] : `${EVENT_LABEL[event.eventType]}${event.time ? ` · ${event.time}` : ""}`}
         </span>
       </span>
       {onDelete && !event.id.startsWith("derived-") && (
@@ -199,7 +200,7 @@ function EventPill({
           <Trash2 size={12} />
         </span>
       )}
-    </button>
+    </div>
   );
 }
 
@@ -347,16 +348,22 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
     });
   }
 
-  function handleDrop(date: string) {
+  function handleDrop(date: string, dropEvent: DragEvent<HTMLDivElement>) {
+    const droppedApplicationId = dropEvent.dataTransfer.getData("application/x-careerup-application");
+    const droppedEventId = dropEvent.dataTransfer.getData("application/x-careerup-calendar-event");
+    const droppedApplication = dragApp ?? applications.find((application) => application.id === droppedApplicationId) ?? null;
+    const droppedEvent = dragEvent ?? events.find((event) => event.id === droppedEventId) ?? null;
+
     setActiveDate(null);
 
-    if (dragApp) {
-      addApplicationEvent(dragApp, date);
+    if (droppedApplication) {
+      addApplicationEvent(droppedApplication, date);
       setDragApp(null);
+      return;
     }
 
-    if (dragEvent) {
-      moveEvent(dragEvent, date);
+    if (droppedEvent) {
+      moveEvent(droppedEvent, date);
       setDragEvent(null);
     }
   }
@@ -423,23 +430,25 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
         </section>
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[340px_minmax(0,1fr)]">
-        <aside className="card p-5 xl:sticky xl:top-24 xl:self-start">
+      <div className="grid gap-5 xl:grid-cols-[420px_minmax(0,1fr)]">
+        <aside className="card overflow-hidden p-5 xl:sticky xl:top-24 xl:self-start">
           <p className="eyebrow">Schedule interviews</p>
           <h2 className="mt-1 text-xl font-bold text-ink">Drag roles onto the calendar</h2>
           <p className="mt-2 text-sm font-semibold text-slate-500">Drop a role on any date, or pick an interview time directly.</p>
-          <div className="mt-4 grid max-h-[42rem] gap-3 overflow-y-auto pr-1">
+          <div className="mt-4 grid max-h-[42rem] gap-3 overflow-y-auto overflow-x-hidden pr-1">
             {[...unscheduledInterviews, ...applications.filter((application) => application.status !== "interviewing" && application.status !== "offer").slice(0, 8)].map((application) => (
               <div
                 key={application.id}
                 draggable
                 onDragStart={(event) => {
                   event.dataTransfer.effectAllowed = "move";
+                  event.dataTransfer.setData("application/x-careerup-application", application.id);
+                  event.dataTransfer.setData("text/plain", application.id);
                   setDragApp(application);
                 }}
                 onDragEnd={() => setDragApp(null)}
                 className={clsx(
-                  "cursor-grab rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition active:cursor-grabbing",
+                  "w-full max-w-full cursor-grab overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition active:cursor-grabbing",
                   dragApp?.id === application.id && "opacity-45"
                 )}
               >
@@ -448,7 +457,9 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                     <p className="truncate text-sm font-bold text-[#2A6384]">{application.company}</p>
                     <p className="truncate text-sm font-bold text-ink">{application.role}</p>
                   </div>
-                  <ApplicationStatusBadge status={application.status} />
+                  <span className="shrink-0">
+                    <ApplicationStatusBadge status={application.status} />
+                  </span>
                 </div>
                 {application.status === "interviewing" || application.status === "offer" ? (
                   <button
@@ -513,19 +524,19 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
             {monthDays.map((day) => {
               const date = toYMD(day);
               const dayEvents = eventsByDate.get(date) ?? [];
-              const visibleEvents = dayEvents.slice(0, 3);
+              const visibleEvents = dayEvents.slice(0, 2);
               const hiddenCount = Math.max(0, dayEvents.length - visibleEvents.length);
               const isToday = date === todayStr;
               const isSelected = date === selectedDate;
               const isCurrentMonth = day.getMonth() === anchor.getMonth();
 
               return (
-                <button
+                <div
                   key={date}
-                  type="button"
                   onClick={() => setSelectedDate(date)}
                   onDragOver={(event) => {
                     event.preventDefault();
+                    event.dataTransfer.dropEffect = "move";
                     setActiveDate(date);
                   }}
                   onDragLeave={(event) => {
@@ -535,10 +546,10 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                   }}
                   onDrop={(event) => {
                     event.preventDefault();
-                    handleDrop(date);
+                    handleDrop(date, event);
                   }}
                   className={clsx(
-                    "min-h-36 border-b border-r border-slate-200 p-2 text-left transition",
+                    "min-h-32 border-b border-r border-slate-200 p-2 text-left transition",
                     "hover:bg-[#F8FBFA]",
                     isSelected && "bg-[#EAF2F8]",
                     activeDate === date && "bg-[#DDEAF2] ring-2 ring-inset ring-[#2A6384]",
@@ -558,6 +569,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                       <EventPill
                         key={event.id}
                         event={event}
+                        compact
                         draggable
                         onDragStart={() => setDragEvent(event)}
                         onDelete={() => handleDelete(event.id)}
@@ -575,7 +587,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                       </span>
                     )}
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>

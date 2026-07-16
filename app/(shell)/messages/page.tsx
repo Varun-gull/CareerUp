@@ -2,6 +2,7 @@ import { Archive, Check, CheckCheck, Edit3, Mail, MoreVertical, Search } from "l
 import Link from "next/link";
 import { AutoMarkRead } from "@/components/AutoMarkRead";
 import { MessageReplyForm } from "@/components/MessageReplyForm";
+import { PageHero } from "@/components/PageHero";
 import { ProfileLink } from "@/components/ProfileLink";
 import { RolePeerSetupNotice } from "@/components/RolePeerSetupNotice";
 import { getPeerMessages, getRolePeerFeatureStatus } from "@/lib/data";
@@ -92,11 +93,22 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
   return (
     <>
       <main className="page-shell">
+        <PageHero
+          compact
+          eyebrow="Peer network"
+          title="Messages"
+          description="Keep role questions, profile messages, and peer advice in clean conversation threads."
+          actions={
+            <span className="rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-bold text-white ring-1 ring-white/20">
+              {conversations.length} threads · {unreadCount} unread
+            </span>
+          }
+        />
         {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
         {selectedConversation ? (
-          <section className="grid min-h-[calc(100vh-8.5rem)] overflow-hidden rounded-[2rem] border border-white/80 bg-white/85 shadow-strong backdrop-blur-xl lg:grid-cols-[360px_minmax(0,1fr)]">
+          <section className="mt-8 grid min-h-[calc(100vh-8.5rem)] overflow-hidden rounded-[2rem] border border-white/80 bg-white/85 shadow-strong backdrop-blur-xl lg:grid-cols-[360px_minmax(0,1fr)]">
             <aside className="border-b border-slate-200/80 bg-white/90 lg:border-b-0 lg:border-r">
               <div className="space-y-6 p-5">
                 <label className="flex min-h-12 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 text-slate-500 shadow-sm">

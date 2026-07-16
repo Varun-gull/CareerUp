@@ -26,7 +26,7 @@ export function PageHero({
         compact ? "min-h-[20rem]" : "min-h-[30rem]"
       )}
     >
-      <div className="absolute inset-0 bg-[#13112D]" />
+      <div className="absolute inset-0 bg-[#2A6384]" />
 
       <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[20rem]" : "min-h-[30rem]")}>
         {eyebrow && (
@@ -39,7 +39,7 @@ export function PageHero({
         )}
 
         <div className="flex flex-1 flex-col items-center justify-center px-6 py-10 text-center">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">{title}</h1>
+          <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">{title}</h1>
           {description && (
             <p className="mt-4 max-w-3xl text-sm font-medium leading-6 text-white/90 sm:text-base">{description}</p>
           )}

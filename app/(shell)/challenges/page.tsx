@@ -15,8 +15,7 @@ export default async function ChallengesPage() {
           description="Small missions turn the internship search into daily progress instead of a giant vague task."
           tabs={[
             { label: "Challenges", href: "/challenges", active: true },
-            { label: "Rewards", href: "/rewards" },
-            { label: "Leaderboard", href: "/leaderboard" }
+            { label: "Rewards", href: "/rewards" }
           ]}
         />
 

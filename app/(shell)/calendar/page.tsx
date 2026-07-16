@@ -15,11 +15,6 @@ export default async function CalendarPage() {
           eyebrow="Schedule"
           title="Calendar"
           description="Drag applications onto dates to track deadlines and submissions."
-          tabs={[
-            { label: "Calendar", href: "/calendar", active: true },
-            { label: "Applications", href: "/applications" },
-            { label: "Dashboard", href: "/dashboard" }
-          ]}
         />
         <div className="mb-6" />
         <CalendarView applications={applications} dbEvents={dbEvents} />

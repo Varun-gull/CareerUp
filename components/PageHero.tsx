@@ -23,12 +23,12 @@ export function PageHero({
     <section
       className={clsx(
         "hero-3d relative overflow-hidden rounded-[2rem] text-white shadow-strong",
-        compact ? "min-h-[13rem]" : "min-h-[30rem]"
+        compact ? "min-h-[20rem]" : "min-h-[30rem]"
       )}
     >
       <div className="absolute inset-0 bg-[#13112D]" />
 
-      <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[13rem]" : "min-h-[30rem]")}>
+      <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[20rem]" : "min-h-[30rem]")}>
         {eyebrow && (
           <div className="flex items-center justify-between px-6 pt-5">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-semibold text-white ring-1 ring-white/25 backdrop-blur">

@@ -4,12 +4,14 @@ export function DashboardCard({
   title,
   value,
   helper,
-  icon: Icon
+  icon: Icon,
+  tone = "bg-emerald-500 text-white"
 }: {
   title: string;
   value: string;
   helper: string;
   icon: LucideIcon;
+  tone?: string;
 }) {
   return (
     <section className="group card p-5 transition hover:-translate-y-1 hover:shadow-strong">
@@ -18,7 +20,7 @@ export function DashboardCard({
           <p className="section-label">{title}</p>
           <p className="mt-2 text-3xl font-bold text-ink">{value}</p>
         </div>
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-sm">
+        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm ${tone}`}>
           <Icon size={23} />
         </div>
       </div>

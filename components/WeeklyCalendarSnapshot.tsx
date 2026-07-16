@@ -1,5 +1,6 @@
 import { CalendarDays, Clock3 } from "lucide-react";
 import Link from "next/link";
+import { getTodayKey } from "@/lib/streak";
 import type { CalendarEvent } from "@/lib/types";
 
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -35,7 +36,8 @@ function eventTone(type: CalendarEvent["eventType"]) {
 }
 
 export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) {
-  const today = new Date();
+  const todayKey = getTodayKey();
+  const today = new Date(`${todayKey}T12:00:00`);
   const monthStart = startOfMonthGrid(today);
   const currentMonth = today.getMonth();
   const days = Array.from({ length: 42 }, (_, i) => {
@@ -53,7 +55,7 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
   });
 
   const upcoming = events
-    .filter((event) => event.date >= toYMD(today))
+    .filter((event) => event.date >= todayKey)
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(0, 3);
 
@@ -77,7 +79,7 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
 
       <div className="mt-2 grid grid-cols-7 gap-2">
         {days.map((day) => {
-          const isToday = day.ymd === toYMD(today);
+          const isToday = day.ymd === todayKey;
           const title = day.events.length > 0
             ? day.events.map((event) => `${eventLabel(event.eventType)}: ${event.role} at ${event.company}`).join("\n")
             : "No events";

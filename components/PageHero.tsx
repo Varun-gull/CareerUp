@@ -10,7 +10,6 @@ export function PageHero({
   description,
   tabs,
   actions,
-  compact = false,
 }: {
   eyebrow?: string;
   title: string;
@@ -23,12 +22,12 @@ export function PageHero({
     <section
       className={clsx(
         "hero-3d relative overflow-hidden rounded-[2rem] text-white shadow-strong",
-        compact ? "min-h-[20rem]" : "min-h-[30rem]"
+        "min-h-[17rem]"
       )}
     >
-      <div className="absolute inset-0 bg-[#1F4E6A]" />
+      <div className="absolute inset-0 bg-[#173B55]" />
 
-      <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[20rem]" : "min-h-[30rem]")}>
+      <div className="relative flex h-full min-h-[17rem] flex-col">
         {eyebrow && (
           <div className="flex items-center justify-between px-6 pt-5">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-semibold text-white ring-1 ring-white/25 backdrop-blur">
@@ -39,7 +38,7 @@ export function PageHero({
         )}
 
         <div className="flex flex-1 flex-col items-center justify-center px-6 py-10 text-center">
-          <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">{title}</h1>
           {description && (
             <p className="mt-4 max-w-3xl text-sm font-medium leading-6 text-white/90 sm:text-base">{description}</p>
           )}
@@ -52,7 +51,7 @@ export function PageHero({
                   aria-current={tab.active ? "page" : undefined}
                   className={clsx(
                     "rounded-xl px-4 py-2 text-sm font-semibold transition",
-                    tab.active ? "bg-white text-[#1F4E6A] shadow-sm" : "text-white hover:bg-white/10 hover:text-white"
+                    tab.active ? "bg-white text-[#173B55] shadow-sm" : "text-white hover:bg-white/10 hover:text-white"
                   )}
                 >
                   {tab.label}

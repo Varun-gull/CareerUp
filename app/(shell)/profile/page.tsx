@@ -59,7 +59,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
                   {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#91B6AF]">Student profile</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8FB8D4]">Student profile</p>
                   <h1 className="mt-1 text-4xl font-bold">{profile.name}</h1>
                   {profileDetails.length > 0 ? (
                     <div className="mt-3 flex flex-wrap gap-2">

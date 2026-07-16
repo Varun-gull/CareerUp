@@ -49,12 +49,12 @@ const config: Config = {
         navy: "#0f172a",
         panel: "#101722",
         brand: "#2A6384",
-        electric: "#91B6AF",
+        electric: "#8FB8D4",
         sky: {
           50: "#f4faf8",
-          100: "#E1EFEB",
+          100: "#EAF2F8",
           200: "#c6ddd8",
-          300: "#91B6AF",
+          300: "#8FB8D4",
           400: "#789ca3",
           500: "#5E7681",
           600: "#36556F",
@@ -64,7 +64,7 @@ const config: Config = {
           950: "#0b0a1b",
           DEFAULT: "#2A6384"
         },
-        success: "#10b981",
+        success: "#2563eb",
         warning: "#f59e0b"
       },
       fontFamily: {

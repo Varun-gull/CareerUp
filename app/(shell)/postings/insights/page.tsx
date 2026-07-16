@@ -123,8 +123,8 @@ export default async function PostingInsightsPage({
                 <p className="text-xl text-brand">{insight?.interviewedCount ?? interviewed.length}</p>
                 <p className="text-xs text-slate-500">Interviewed</p>
               </div>
-              <div className="rounded-2xl bg-emerald-50 p-3">
-                <p className="text-xl text-emerald-700">{insight?.offerCount ?? applicants.filter((a) => a.status === "offer").length}</p>
+              <div className="rounded-2xl bg-sky-50 p-3">
+                <p className="text-xl text-sky-700">{insight?.offerCount ?? applicants.filter((a) => a.status === "offer").length}</p>
                 <p className="text-xs text-slate-500">Offers</p>
               </div>
             </div>

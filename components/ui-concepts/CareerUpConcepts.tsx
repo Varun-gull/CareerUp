@@ -36,19 +36,19 @@ const roles = [
 const pipeline = [
   { label: "Saved", count: 12, color: "bg-slate-200 text-slate-700" },
   { label: "Applied", count: 8, color: "bg-blue-100 text-blue-700" },
-  { label: "Interviewing", count: 3, color: "bg-emerald-100 text-emerald-700" },
+  { label: "Interviewing", count: 3, color: "bg-sky-100 text-sky-700" },
   { label: "Offer", count: 1, color: "bg-amber-100 text-amber-700" }
 ];
 
 const events = [
   { time: "10:30", title: "Meta screen", tone: "bg-cyan-400" },
-  { time: "1:00", title: "Resume review", tone: "bg-emerald-400" },
+  { time: "1:00", title: "Resume review", tone: "bg-sky-400" },
   { time: "3:30", title: "Apply sprint", tone: "bg-amber-400" }
 ];
 
 const challenges = [
   { title: "Daily Apply Sprint", reward: "+40 XP", progress: "1/1", description: "Submit one high-quality application today.", color: "bg-sky-500" },
-  { title: "Resume Ready", reward: "+40 XP", progress: "1/1", description: "Keep a readable resume attached for matching.", color: "bg-emerald-500" },
+  { title: "Resume Ready", reward: "+40 XP", progress: "1/1", description: "Keep a readable resume attached for matching.", color: "bg-sky-500" },
   { title: "Interview Momentum", reward: "+55 XP", progress: "2/3", description: "Move three roles into interviewing this month.", color: "bg-violet-500" },
   { title: "Network Signal", reward: "+25 XP", progress: "3/5", description: "Message peers tracking similar roles.", color: "bg-amber-500" }
 ];
@@ -108,7 +108,7 @@ export function ConceptIndex() {
     { href: "/ui/v2", name: "V2 Aurora Command", copy: "Light V1-inspired command center with challenges, streaks, and pipeline focus.", color: "from-sky-50 to-slate-200" },
     { href: "/ui/v3", name: "V3 Campus Ledger", copy: "Bright editorial dashboard with structured tables and academic signals.", color: "from-white to-amber-100" },
     { href: "/ui/v4", name: "V4 Signal Console", copy: "Dense pro console for fast scanning, rankings, and pipeline control.", color: "from-slate-950 to-stone-900" },
-    { href: "/ui/v5", name: "V5 Lift OS", copy: "Soft modern workspace with friendly cards and clear next actions.", color: "from-sky-50 to-emerald-50" }
+    { href: "/ui/v5", name: "V5 Lift OS", copy: "Soft modern workspace with friendly cards and clear next actions.", color: "from-sky-50 to-sky-50" }
   ];
 
   return (
@@ -308,7 +308,7 @@ export function CampusLedgerConcept() {
                     </div>
                     <span className="font-bold text-stone-600">{role.city}</span>
                     <span className="rounded-full bg-stone-100 px-3 py-1 text-center text-sm font-black text-stone-700">{role.mode}</span>
-                    <span className="text-right font-black text-emerald-700">{role.fit}%</span>
+                    <span className="text-right font-black text-sky-700">{role.fit}%</span>
                   </div>
                 ))}
               </div>
@@ -398,7 +398,7 @@ export function SignalConsoleConcept() {
                       <h3 className="text-xl font-black text-white">{role.title}</h3>
                       <p className="text-sm font-semibold text-stone-400">{role.city} · Posted {role.age}</p>
                     </div>
-                    <span className="font-black text-emerald-400">{role.fit}% fit</span>
+                    <span className="font-black text-sky-400">{role.fit}% fit</span>
                     <span className="rounded-full border border-stone-600 px-3 py-1 text-center text-sm font-black">{role.mode}</span>
                     <button className="rounded-xl bg-[#f97316] px-3 py-2 font-black text-black">Save</button>
                   </div>
@@ -419,7 +419,7 @@ export function SignalConsoleConcept() {
               </div>
               <div className="rounded-3xl border border-stone-700 bg-[#22201d] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-[#f97316]">Security</p>
-                <div className="mt-4 flex items-center gap-3 rounded-2xl bg-emerald-500/10 p-4 text-emerald-300">
+                <div className="mt-4 flex items-center gap-3 rounded-2xl bg-sky-500/10 p-4 text-sky-300">
                   <ShieldCheck size={22} />
                   <p className="font-black">Private board enabled</p>
                 </div>
@@ -450,7 +450,7 @@ export function LiftOsConcept() {
           </nav>
           <div className="flex items-center gap-2">
             <span className="rounded-2xl bg-slate-100 p-3"><Bell size={18} /></span>
-            <span className="rounded-2xl bg-[#10b981] px-4 py-3 font-black text-white">Varun</span>
+            <span className="rounded-2xl bg-[#2563eb] px-4 py-3 font-black text-white">Varun</span>
           </div>
         </header>
 
@@ -459,7 +459,7 @@ export function LiftOsConcept() {
             <div className="rounded-[2rem] bg-[#0f172a] p-7 text-white">
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-300">Today’s climb</p>
+                  <p className="text-xs font-black uppercase tracking-[0.2em] text-sky-300">Today’s climb</p>
                   <h1 className="mt-3 max-w-2xl text-5xl font-black leading-tight">Move one role forward, keep the streak alive.</h1>
                 </div>
                 <button className="rounded-2xl bg-white px-5 py-3 font-black text-slate-950">Find roles</button>
@@ -479,7 +479,7 @@ export function LiftOsConcept() {
                       <p className="text-sm font-black text-[#2563eb]">{role.company}</p>
                       <h3 className="mt-1 text-2xl font-black text-slate-950">{role.title}</h3>
                     </div>
-                    <span className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-black text-emerald-700">{role.fit}%</span>
+                    <span className="rounded-full bg-sky-100 px-3 py-1 text-sm font-black text-sky-700">{role.fit}%</span>
                   </div>
                   <p className="mt-4 font-semibold text-slate-500">{role.city} · {role.mode}</p>
                   <div className="mt-5 flex gap-2">
@@ -498,7 +498,7 @@ export function LiftOsConcept() {
                   <p className="text-xs font-black uppercase tracking-[0.18em] text-[#2563eb]">Board</p>
                   <h2 className="text-2xl font-black">Application flow</h2>
                 </div>
-                <LineChart className="text-[#10b981]" />
+                <LineChart className="text-[#2563eb]" />
               </div>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 {pipeline.map((stage) => (
@@ -515,7 +515,7 @@ export function LiftOsConcept() {
                 {["Interview question pack", "Resume bullet scorer", "Referral message kit"].map((reward, index) => (
                   <div key={reward} className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
                     <div className="flex items-center gap-3">
-                      {index === 0 ? <Star className="text-amber-500" /> : index === 1 ? <Sparkles className="text-blue-500" /> : <LockKeyhole className="text-emerald-500" />}
+                      {index === 0 ? <Star className="text-amber-500" /> : index === 1 ? <Sparkles className="text-blue-500" /> : <LockKeyhole className="text-sky-500" />}
                       <span className="font-black">{reward}</span>
                     </div>
                     <span className="text-sm font-black text-slate-500">{120 + index * 60} XP</span>

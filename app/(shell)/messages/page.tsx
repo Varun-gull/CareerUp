@@ -72,7 +72,7 @@ function EmptyMessages() {
   return (
     <div className="flex min-h-[34rem] items-center justify-center rounded-[2rem] border border-white/80 bg-white/75 p-8 text-center shadow-soft">
       <div>
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E1EFEB] text-[#2A6384]">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EAF2F8] text-[#2A6384]">
           <Mail size={26} />
         </div>
         <h2 className="mt-4 text-2xl font-bold text-ink">No conversations yet</h2>
@@ -119,7 +119,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                 <div>
                   <div className="flex items-center justify-between gap-3">
                     <h2 className="text-xl font-black text-ink">Active</h2>
-                    <span className="rounded-full bg-[#E1EFEB] px-3 py-1 text-xs font-black text-[#2A6384]">{conversations.length}</span>
+                    <span className="rounded-full bg-[#EAF2F8] px-3 py-1 text-xs font-black text-[#2A6384]">{conversations.length}</span>
                   </div>
                   <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
                     {conversations.slice(0, 6).map((conversation) => (
@@ -130,7 +130,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                         className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-black text-[#2A6384] ring-1 ring-slate-200"
                       >
                         <Avatar conversation={conversation} />
-                        <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-500" />
+                        <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-sky-500" />
                       </Link>
                     ))}
                   </div>
@@ -160,7 +160,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                       <div className="flex items-start gap-3">
                         <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-base font-bold text-[#2A6384]">
                           <Avatar conversation={conversation} />
-                          <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-500" />
+                          <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-sky-500" />
                         </span>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-2">
@@ -187,12 +187,12 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                   <div className="flex min-w-0 items-center gap-4">
                     <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-lg font-black text-[#2A6384]">
                       <Avatar conversation={selectedConversation} />
-                      <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white bg-emerald-500" />
+                      <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white bg-sky-500" />
                     </span>
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <ProfileLink profileId={selectedConversation.otherProfileId} name={selectedConversation.otherName} />
-                        <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-black text-emerald-700 ring-1 ring-emerald-200">Online</span>
+                        <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-black text-sky-700 ring-1 ring-sky-200">Online</span>
                       </div>
                       <p className="mt-1 truncate text-sm font-bold text-slate-600">
                         {selectedConversation.applicationRole} at {selectedConversation.applicationCompany}

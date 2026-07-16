@@ -61,7 +61,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                 Unlock focused tools you can use while applying, networking, interviewing, and comparing offers.
               </p>
             </div>
-            <div className="rounded-2xl bg-[#E1EFEB] px-4 py-3 text-sm font-bold text-[#2A6384] ring-1 ring-[#5E7681]/25">
+            <div className="rounded-2xl bg-[#EAF2F8] px-4 py-3 text-sm font-bold text-[#2A6384] ring-1 ring-[#5E7681]/25">
               <RankBadge xp={profile.xp} />
             </div>
           </div>
@@ -88,14 +88,14 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                       <h2 className="mt-1 text-xl font-bold text-ink">{reward.title}</h2>
                       <p className="mt-2 text-sm leading-6 text-slate-600">{reward.description}</p>
                     </div>
-                    <span className={reward.unlocked ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700" : "rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700"}>
+                    <span className={reward.unlocked ? "rounded-full bg-sky-50 px-3 py-1 text-xs font-bold text-sky-700" : "rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700"}>
                       {reward.unlocked ? "Unlocked" : `${reward.xpCost} XP`}
                     </span>
                   </div>
 
                   {reward.unlocked ? (
-                    <div className="mt-5 flex flex-1 flex-col rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4">
-                      <div className="mb-3 flex items-center gap-2 font-bold text-emerald-800">
+                    <div className="mt-5 flex flex-1 flex-col rounded-2xl border border-sky-100 bg-sky-50/60 p-4">
+                      <div className="mb-3 flex items-center gap-2 font-bold text-sky-800">
                         <UnlockKeyhole size={18} /> Unlocked tool
                       </div>
                       <ul className="grid gap-2 text-sm leading-6 text-slate-700">

@@ -52,7 +52,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} tone="bg-[#2A6384] text-white" />
             <StatCard icon={Flame} label="Day streak" value={profile.streak.toLocaleString()} tone="bg-[#5E7681] text-white" />
-            <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} tone="bg-[#E1EFEB] text-[#2A6384]" />
+            <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} tone="bg-[#EAF2F8] text-[#2A6384]" />
             <StatCard icon={Trophy} label="Offers" value={offerCount.toLocaleString()} tone="bg-[#F8FBFA] text-[#2A6384] ring-1 ring-[#5E7681]/35" />
           </div>
         </div>
@@ -65,7 +65,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
                 <p className="eyebrow">XP quests</p>
                 <h2 className="mt-1 text-2xl font-bold text-ink">Daily challenges</h2>
               </div>
-              <span className="rounded-full bg-[#E1EFEB] px-3 py-1 text-xs font-bold text-[#2A6384] ring-1 ring-[#5E7681]/30">3 today</span>
+              <span className="rounded-full bg-[#EAF2F8] px-3 py-1 text-xs font-bold text-[#2A6384] ring-1 ring-[#5E7681]/30">3 today</span>
             </div>
             <div className="mt-4 grid flex-1 content-start gap-4">
               {[...challenges.tiered, ...challenges.oneOff].slice(0, 3).map((challenge) => (

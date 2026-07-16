@@ -127,10 +127,16 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                         key={conversation.id}
                         href={`/messages?thread=${encodeURIComponent(conversation.id)}`}
                         title={conversation.otherName}
-                        className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-black text-[#2A6384] ring-1 ring-slate-200"
+                        aria-label={conversation.otherName}
+                        className="group relative flex h-12 w-12 shrink-0 items-center justify-center"
                       >
-                        <Avatar conversation={conversation} />
+                        <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-black text-[#2A6384] ring-1 ring-slate-200">
+                          <Avatar conversation={conversation} />
+                        </span>
                         <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-sky-500" />
+                        <span className="pointer-events-none absolute -top-9 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-xl bg-[#173B55] px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100">
+                          {conversation.otherName}
+                        </span>
                       </Link>
                     ))}
                   </div>
@@ -250,7 +256,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                           <span>{outbound ? "You" : message.otherName}</span>
                           <span>{message.createdAt}</span>
                         </div>
-                        <div className={`rounded-2xl px-4 py-3 text-sm font-semibold leading-6 shadow-sm ${
+                        <div className={`inline-block max-w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold leading-6 shadow-sm ${
                           outbound
                             ? "rounded-br-md bg-blue-600 text-white"
                             : "rounded-bl-md bg-slate-50 text-slate-900 ring-1 ring-slate-100"

@@ -84,6 +84,23 @@ function sortPostings(postings: InternshipPosting[], sort: PostingSort) {
   });
 }
 
+function mergePostings(postings: InternshipPosting[]) {
+  const collected = new Map<string, InternshipPosting>();
+
+  postings.forEach((posting) => {
+    const urlKey = posting.url.replace(/[?#].*$/, "").toLowerCase();
+    const fallbackKey = `${posting.company}-${posting.title}-${posting.location}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const key = urlKey || fallbackKey;
+    const existing = collected.get(key);
+
+    if (!existing || posting.fitScore > existing.fitScore) {
+      collected.set(key, posting);
+    }
+  });
+
+  return Array.from(collected.values());
+}
+
 function buildPostingsHref(
   kind: PostingKind,
   searchParams?: { q?: string; location?: string; remote?: RemoteFilter; minFit?: string; sort?: PostingSort },
@@ -135,6 +152,64 @@ function getPaginationItems(currentPage: number, totalPages: number): Array<numb
   return items;
 }
 
+async function searchPostingsWithFallback({
+  query,
+  location,
+  profile,
+  kind,
+  remote,
+  minFit,
+  sort,
+}: {
+  query: string;
+  location: string;
+  profile: Awaited<ReturnType<typeof getCurrentProfile>>;
+  kind: PostingKind;
+  remote: RemoteFilter;
+  minFit: number;
+  sort: PostingSort;
+}) {
+  const hasSubmittedSearch = Boolean(query || location);
+  const cachedSearchResult = await searchCachedPostings({
+    query,
+    location,
+    profile,
+    kind,
+    remote,
+    minFit,
+    sort,
+    limit: POSTINGS_FETCH_LIMIT
+  });
+
+  if (hasSubmittedSearch) {
+    const liveSearchResult = await searchInternshipPostings({
+      query,
+      location,
+      profile,
+      kind
+    });
+    const livePostings = liveSearchResult.usingFallback ? [] : liveSearchResult.postings;
+    const mergedPostings = mergePostings([...(cachedSearchResult?.postings ?? []), ...livePostings]);
+
+    return {
+      ...liveSearchResult,
+      usingFallback: false,
+      postings: mergedPostings
+    };
+  }
+
+  if (cachedSearchResult?.postings.length) {
+    return cachedSearchResult;
+  }
+
+  return searchInternshipPostings({
+    query,
+    location,
+    profile,
+    kind
+  });
+}
+
 export async function PostingsPageView({
   kind,
   searchParams,
@@ -160,21 +235,14 @@ export async function PostingsPageView({
   const roleExamples = kind === "new-grad" ? newGradRoleExamples : internshipRoleExamples;
   const roleSuggestions = uniqueExamples([...profile.targetRoles, ...profile.resumeKeywords, ...roleExamples]);
   const locationSuggestions = uniqueExamples([...profile.targetLocations, ...locationExamples]);
-  const cachedSearchResult = await searchCachedPostings({
+  const searchResult = await searchPostingsWithFallback({
     query: submittedQuery,
     location: submittedLocation,
     profile,
     kind,
     remote: remoteFilter,
     minFit,
-    sort,
-    limit: POSTINGS_FETCH_LIMIT
-  });
-  const searchResult = cachedSearchResult ?? await searchInternshipPostings({
-    query: submittedQuery,
-    location: submittedLocation,
-    profile,
-    kind
+    sort
   });
   const applications = await getApplications();
   const savedSourceUrls = new Set(applications.map((application) => application.source).filter((source) => source.startsWith("http")));

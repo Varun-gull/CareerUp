@@ -8,6 +8,8 @@ import { searchCachedPostings, searchInternshipPostings } from "@/lib/postings";
 import type { PostingKind } from "@/lib/postings";
 import type { InternshipPosting } from "@/lib/types";
 
+const DASHBOARD_MATCH_LIMIT = 5;
+
 function StatCard({ icon: Icon, label, value, tone }: { icon: LucideIcon; label: string; value: string; tone: string }) {
   return (
     <section className="card flex min-h-40 flex-col justify-between gap-6 p-5 transition hover:-translate-y-0.5 hover:bg-white/95">
@@ -68,7 +70,7 @@ function TopFitPostings({ postings }: { postings: InternshipPosting[] }) {
 }
 
 async function getDashboardMatches(profile: Awaited<ReturnType<typeof getCurrentProfile>>, kind: PostingKind) {
-  const targetedCached = await searchCachedPostings({ profile, kind, sort: "fit", limit: 8 });
+  const targetedCached = await searchCachedPostings({ profile, kind, sort: "fit", limit: DASHBOARD_MATCH_LIMIT });
 
   if (targetedCached?.postings.length) {
     return targetedCached.postings;
@@ -80,7 +82,7 @@ async function getDashboardMatches(profile: Awaited<ReturnType<typeof getCurrent
     query: "",
     location: "",
     sort: "fit",
-    limit: 8
+    limit: DASHBOARD_MATCH_LIMIT
   });
 
   if (broadCached?.postings.length) {
@@ -96,7 +98,7 @@ async function getDashboardMatches(profile: Awaited<ReturnType<typeof getCurrent
 
   return liveMatches.postings
     .sort((a, b) => b.fitScore - a.fitScore)
-    .slice(0, 8);
+    .slice(0, DASHBOARD_MATCH_LIMIT);
 }
 
 export default async function DashboardPage({ searchParams }: { searchParams?: { message?: string } }) {
@@ -111,7 +113,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
   ]);
   const topFitPostings = [...internshipMatches, ...newGradMatches]
     .sort((a, b) => b.fitScore - a.fitScore)
-    .slice(0, 5);
+    .slice(0, DASHBOARD_MATCH_LIMIT);
 
   const appliedCount = applications.filter((application) => application.status !== "saved").length;
 

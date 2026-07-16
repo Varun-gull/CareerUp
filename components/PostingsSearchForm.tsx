@@ -133,21 +133,23 @@ export function PostingsSearchForm({
 
   return (
     <form onSubmit={handleSubmit} className="card mt-8 p-5">
-      <div className="mb-4 inline-flex items-center gap-1 rounded-xl bg-slate-100 p-1">
-        <Link
-          href="/postings/internships"
-          aria-current={kind === "internship" ? "page" : undefined}
-          className={`rounded-lg px-4 py-1.5 text-sm font-bold transition ${kind === "internship" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}
-        >
-          Internships
-        </Link>
-        <Link
-          href="/postings/new-grad"
-          aria-current={kind === "new-grad" ? "page" : undefined}
-          className={`rounded-lg px-4 py-1.5 text-sm font-bold transition ${kind === "new-grad" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}
-        >
-          New Grad
-        </Link>
+      <div className="mb-3 flex justify-end">
+        <div className="inline-flex items-center gap-0.5 rounded-lg bg-slate-100 p-0.5">
+          <Link
+            href="/postings/internships"
+            aria-current={kind === "internship" ? "page" : undefined}
+            className={`rounded-md px-3 py-1 text-xs font-bold transition ${kind === "internship" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}
+          >
+            Internships
+          </Link>
+          <Link
+            href="/postings/new-grad"
+            aria-current={kind === "new-grad" ? "page" : undefined}
+            className={`rounded-md px-3 py-1 text-xs font-bold transition ${kind === "new-grad" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}
+          >
+            New Grad
+          </Link>
+        </div>
       </div>
       <div className="grid gap-4 lg:grid-cols-[1.15fr_1fr_0.75fr_0.75fr_auto]">
       <input type="hidden" name="sort" value="newest" />

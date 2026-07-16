@@ -82,7 +82,7 @@ export default async function ApplicationsPage({
           title="Applications"
           description="Track every role from saved to offer without losing momentum."
           actions={
-            <Link href="/applications/new" className="inline-flex min-h-10 items-center gap-2 rounded-2xl bg-white px-4 text-sm font-black text-[#1B3C53] shadow-sm transition hover:bg-[#E1EFEB]">
+            <Link href="/applications/new" className="inline-flex min-h-10 items-center gap-2 rounded-2xl bg-white px-4 text-sm font-black text-[#231942] shadow-sm transition hover:bg-[#EFE9F4]">
               <Plus size={16} /> Add role
             </Link>
           }
@@ -121,7 +121,7 @@ export default async function ApplicationsPage({
             </section>
 
             <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-              <DashboardCard title="Tracked" value={yearApplications.length.toString()} helper="Total roles in this cycle." icon={BriefcaseBusiness} tone="bg-[#1B3C53] text-white" />
+              <DashboardCard title="Tracked" value={yearApplications.length.toString()} helper="Total roles in this cycle." icon={BriefcaseBusiness} tone="bg-[#231942] text-white" />
               <DashboardCard title="Saved" value={savedCount.toString()} helper="Review and apply when ready." icon={Clock3} tone="bg-amber-100 text-amber-700 ring-1 ring-amber-200" />
               <DashboardCard title="Applied" value={appliedCount.toString()} helper="Roles moved beyond saved." icon={CheckCircle2} tone="bg-sky/15 text-sky-700 ring-1 ring-sky/30" />
               <DashboardCard title="Interviewing" value={interviewingCount.toString()} helper="Active interview loops." icon={MessageSquareText} tone="bg-violet-100 text-violet-700 ring-1 ring-violet-200" />

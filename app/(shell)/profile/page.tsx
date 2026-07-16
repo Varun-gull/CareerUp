@@ -55,11 +55,11 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
           <div className="border-b border-white/10 bg-[#13112D] px-6 py-10 text-white">
             <div className="flex flex-wrap items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white text-2xl font-bold text-[#1B3C53] shadow-glow">
+                <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white text-2xl font-bold text-[#231942] shadow-glow">
                   {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#91B6AF]">Student profile</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#9F86C0]">Student profile</p>
                   <h1 className="mt-1 text-4xl font-bold">{profile.name}</h1>
                   {profileDetails.length > 0 ? (
                     <div className="mt-3 flex flex-wrap gap-2">
@@ -99,7 +99,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
               <XpProgressBar xp={profile.xp} />
               <BadgeShelf applicationsApplied={profile.applicationsApplied} />
               <div className="rounded-3xl border border-slate-200 bg-white/85 p-4">
-                <div className="rounded-2xl border border-[#5E7681]/30 bg-white p-4">
+                <div className="rounded-2xl border border-[#7E739F]/30 bg-white p-4">
                   <div className="flex items-start gap-3">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
                       {profile.resumeFileName ? <FileCheck2 size={21} /> : <FileText size={21} />}

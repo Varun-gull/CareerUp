@@ -26,7 +26,8 @@ export function PageHero({
         compact ? "min-h-[20rem]" : "min-h-[30rem]"
       )}
     >
-      <div className="absolute inset-0 bg-[#13112D]" />
+      <div className="absolute inset-0 bg-[linear-gradient(150deg,#231942_0%,#5E548E_55%,#9F86C0_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_10%,rgba(224,177,203,0.35),transparent_24rem),radial-gradient(circle_at_8%_92%,rgba(190,149,196,0.25),transparent_20rem)]" />
 
       <div className={clsx("relative flex h-full flex-col", compact ? "min-h-[20rem]" : "min-h-[30rem]")}>
         {eyebrow && (
@@ -52,7 +53,7 @@ export function PageHero({
                   aria-current={tab.active ? "page" : undefined}
                   className={clsx(
                     "rounded-xl px-4 py-2 text-sm font-semibold transition",
-                    tab.active ? "bg-white text-[#1B3C53] shadow-sm" : "text-white hover:bg-white/10 hover:text-white"
+                    tab.active ? "bg-white text-[#231942] shadow-sm" : "text-white hover:bg-white/10 hover:text-white"
                   )}
                 >
                   {tab.label}

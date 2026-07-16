@@ -5,7 +5,7 @@ export function DashboardCard({
   value,
   helper,
   icon: Icon,
-  tone = "bg-emerald-500 text-white"
+  tone = "bg-[#5E548E] text-white"
 }: {
   title: string;
   value: string;

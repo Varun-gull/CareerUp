@@ -62,9 +62,19 @@ export async function unlockReward(formData: FormData) {
     .from("profiles")
     .update({ reward_points: currentRewardPoints - reward.xpCost })
     .eq("id", user.id);
+  let usedLegacySpend = false;
 
   if (spendError) {
-    redirectWithMessage("/rewards", `Reward Points are not set up yet. Run supabase/reward-points.sql, then try again.`);
+    const { error: fallbackSpendError } = await supabase
+      .from("profiles")
+      .update({ xp: Math.max(0, (profile.xp ?? 0) - reward.xpCost) })
+      .eq("id", user.id);
+
+    if (fallbackSpendError) {
+      redirectWithMessage("/rewards", spendError.message);
+    }
+
+    usedLegacySpend = true;
   }
 
   const { error } = await supabase.from("user_rewards").insert({
@@ -73,10 +83,17 @@ export async function unlockReward(formData: FormData) {
   });
 
   if (error) {
-    await supabase
-      .from("profiles")
-      .update({ reward_points: currentRewardPoints })
-      .eq("id", user.id);
+    if (usedLegacySpend) {
+      await supabase
+        .from("profiles")
+        .update({ xp: profile.xp ?? 0 })
+        .eq("id", user.id);
+    } else {
+      await supabase
+        .from("profiles")
+        .update({ reward_points: currentRewardPoints })
+        .eq("id", user.id);
+    }
     redirectWithMessage("/rewards", error.message);
   }
 

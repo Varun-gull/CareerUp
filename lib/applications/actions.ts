@@ -612,7 +612,17 @@ export async function unlockStreakRevive() {
     .eq("id", user.id);
 
   if (error) {
-    redirectWithMessage("/dashboard", "Reward Points are not set up yet. Run supabase/reward-points.sql, then try again.");
+    const { error: fallbackError } = await supabase
+      .from("profiles")
+      .update({
+        xp: Math.max(0, (profile.xp ?? 0) - PAID_STREAK_REVIVE_COST),
+        streak_paid_revives: (profile.streak_paid_revives ?? 0) + 1,
+      })
+      .eq("id", user.id);
+
+    if (fallbackError) {
+      redirectWithMessage("/dashboard", error.message);
+    }
   }
 
   revalidatePath("/dashboard");

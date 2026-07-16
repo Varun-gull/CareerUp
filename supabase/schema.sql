@@ -27,6 +27,7 @@ create table public.profiles (
   rank_bonus_awarded text[] not null default '{}',
   xp integer not null default 25,
   total_xp integer not null default 25,
+  reward_points integer not null default 25,
   streak_count integer not null default 0,
   applications_applied integer not null default 0,
   last_applied_on date,
@@ -250,6 +251,7 @@ as $$
   update public.profiles
   set xp = xp + greatest(amount, 0),
       total_xp = total_xp + greatest(amount, 0),
+      reward_points = reward_points + greatest(amount, 0),
       updated_at = now()
   where id = auth.uid();
 $$;
@@ -267,7 +269,7 @@ alter table public.career_group_members enable row level security;
 alter table public.peer_messages enable row level security;
 
 grant usage on schema public to anon, authenticated;
-grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, total_xp, streak_count, applications_applied, share_application_board) on public.profiles to anon;
+grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, total_xp, reward_points, streak_count, applications_applied, share_application_board) on public.profiles to anon;
 grant select on public.profiles to authenticated;
 grant update on public.profiles to authenticated;
 grant select, insert, update, delete on public.applications to authenticated;

@@ -104,7 +104,7 @@ export async function POST(request: Request) {
     message: fileReadFailed || !normalizedText
       ? "Resume file saved, but CareerUp could not read the text for matching."
       : shouldAwardResumeXp
-        ? "Resume saved. You earned 40 XP."
+        ? "Resume saved. You earned 40 XP and 40 Reward Points."
         : "Resume saved.",
   });
 }

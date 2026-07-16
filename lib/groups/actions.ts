@@ -66,7 +66,7 @@ export async function createGroup(formData: FormData) {
   revalidatePath("/friends");
   revalidatePath("/leaderboard");
   revalidatePath("/dashboard");
-  redirectWithMessage("/friends", "Group created. You earned 25 XP.");
+  redirectWithMessage("/friends", "Group created. You earned 25 XP and 25 Reward Points.");
 }
 
 export async function addGroupMember(formData: FormData) {

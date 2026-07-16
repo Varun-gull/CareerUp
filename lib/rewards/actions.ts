@@ -31,14 +31,20 @@ export async function unlockReward(formData: FormData) {
     redirectWithMessage("/rewards", "Reward not found.");
   }
 
-  const { data: profile, error: profileError } = await supabase.from("profiles").select("xp").eq("id", user.id).single<{ xp: number | null }>();
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single<{ xp: number | null; reward_points?: number | null }>();
 
   if (profileError || !profile) {
     redirectWithMessage("/rewards", "Profile not found.");
   }
 
-  if ((profile.xp ?? 0) < reward.xpCost) {
-    redirectWithMessage("/rewards", `You need ${reward.xpCost.toLocaleString()} XP to unlock ${reward.title}.`);
+  const currentRewardPoints = profile.reward_points ?? profile.xp ?? 0;
+
+  if (currentRewardPoints < reward.xpCost) {
+    redirectWithMessage("/rewards", `You need ${reward.xpCost.toLocaleString()} Reward Points to unlock ${reward.title}.`);
   }
 
   const { data: existing } = await supabase
@@ -54,11 +60,11 @@ export async function unlockReward(formData: FormData) {
 
   const { error: spendError } = await supabase
     .from("profiles")
-    .update({ xp: (profile.xp ?? 0) - reward.xpCost })
+    .update({ reward_points: currentRewardPoints - reward.xpCost })
     .eq("id", user.id);
 
   if (spendError) {
-    redirectWithMessage("/rewards", spendError.message);
+    redirectWithMessage("/rewards", `Reward Points are not set up yet. Run supabase/reward-points.sql, then try again.`);
   }
 
   const { error } = await supabase.from("user_rewards").insert({
@@ -69,7 +75,7 @@ export async function unlockReward(formData: FormData) {
   if (error) {
     await supabase
       .from("profiles")
-      .update({ xp: profile.xp ?? 0 })
+      .update({ reward_points: currentRewardPoints })
       .eq("id", user.id);
     redirectWithMessage("/rewards", error.message);
   }
@@ -78,5 +84,5 @@ export async function unlockReward(formData: FormData) {
   revalidatePath("/dashboard");
   revalidatePath("/leaderboard");
   revalidatePath("/profile");
-  redirectWithMessage("/rewards", `${reward.title} unlocked for ${reward.xpCost.toLocaleString()} XP.`);
+  redirectWithMessage("/rewards", `${reward.title} unlocked for ${reward.xpCost.toLocaleString()} Reward Points.`);
 }

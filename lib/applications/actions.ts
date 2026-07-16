@@ -433,7 +433,7 @@ export async function savePostingApplication(formData: FormData) {
   revalidatePath("/postings");
   revalidatePath("/postings/internships");
   revalidatePath("/postings/new-grad");
-  redirectWithMessage(returnTo, status === "applied" ? "Nice. That role was added as applied." : "Posting saved to your tracker. You earned 5 XP.");
+  redirectWithMessage(returnTo, status === "applied" ? "Nice. That role was added as applied." : "Posting saved to your tracker. You earned 5 XP and 5 Reward Points.");
 }
 
 export async function updateApplicationStatus(formData: FormData) {
@@ -589,28 +589,30 @@ export async function unlockStreakRevive() {
 
   const { data: profile, error: loadError } = await supabase
     .from("profiles")
-    .select("xp, streak_paid_revives")
+    .select("*")
     .eq("id", user.id)
-    .single<{ xp: number | null; streak_paid_revives: number | null }>();
+    .single<{ xp: number | null; reward_points?: number | null; streak_paid_revives: number | null }>();
 
   if (loadError || !profile) {
     redirectWithMessage("/dashboard", "Profile not found.");
   }
 
-  if ((profile.xp ?? 0) < PAID_STREAK_REVIVE_COST) {
-    redirectWithMessage("/dashboard", "You need 250 XP to unlock another streak revive.");
+  const currentRewardPoints = profile.reward_points ?? profile.xp ?? 0;
+
+  if (currentRewardPoints < PAID_STREAK_REVIVE_COST) {
+    redirectWithMessage("/dashboard", "You need 250 Reward Points to unlock another streak revive.");
   }
 
   const { error } = await supabase
     .from("profiles")
     .update({
-      xp: (profile.xp ?? 0) - PAID_STREAK_REVIVE_COST,
+      reward_points: currentRewardPoints - PAID_STREAK_REVIVE_COST,
       streak_paid_revives: (profile.streak_paid_revives ?? 0) + 1,
     })
     .eq("id", user.id);
 
   if (error) {
-    redirectWithMessage("/dashboard", error.message);
+    redirectWithMessage("/dashboard", "Reward Points are not set up yet. Run supabase/reward-points.sql, then try again.");
   }
 
   revalidatePath("/dashboard");

@@ -3,6 +3,7 @@ import { unlockStreakRevive } from "@/lib/applications/actions";
 
 export function StreakCard({
   streak,
+  rewardPoints,
   xp,
   streakBroken,
   freeReviveUsed,
@@ -10,20 +11,22 @@ export function StreakCard({
   reviveRequiredApplications,
 }: {
   streak: number;
-  xp: number;
+  rewardPoints?: number;
+  xp?: number;
   streakBroken: boolean;
   freeReviveUsed: boolean;
   paidRevives: number;
   reviveRequiredApplications: number;
 }) {
+  const spendablePoints = rewardPoints ?? xp ?? 0;
   const hasFreeRevive = !freeReviveUsed;
-  const canUnlockPaidRevive = freeReviveUsed && xp >= 250;
+  const canUnlockPaidRevive = freeReviveUsed && spendablePoints >= 250;
   const showReviveInfo = streakBroken || reviveRequiredApplications > 0;
   const reviveHelper = hasFreeRevive
     ? "Your first streak revive is free. If you miss a day, apply to 1 role that day to restore it."
     : paidRevives > 0
       ? "Paid revive ready. Apply to 2 roles in one day after a miss to restore your streak."
-      : "Your free revive has been used. Unlock another for 250 XP when you want a backup.";
+      : "Your free revive has been used. Unlock another for 250 Reward Points when you want a backup.";
 
   return (
     <section className="relative overflow-hidden rounded-3xl border border-[#91B6AF]/30 bg-[#13112D] p-5 text-white shadow-soft">
@@ -65,7 +68,7 @@ export function StreakCard({
                 disabled={!canUnlockPaidRevive}
                 className="w-full rounded-xl bg-sky px-3 py-2 text-sm font-bold text-white transition hover:bg-brand disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500"
               >
-                Unlock revive - 250 XP
+                Unlock revive - 250 RP
               </button>
             </form>
           )}

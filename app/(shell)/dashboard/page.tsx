@@ -1,9 +1,11 @@
-import { CheckCircle2, Flame, Sparkles, Trophy } from "lucide-react";
+import { ArrowRight, CheckCircle2, Flame, Sparkles, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { ChallengeCard } from "@/components/ChallengeCard";
-import { WeeklyCalendarSnapshot } from "@/components/WeeklyCalendarSnapshot";
-import { getApplications, getCalendarEvents, getChallenges, getCurrentProfile } from "@/lib/data";
+import { getApplications, getChallenges, getCurrentProfile } from "@/lib/data";
+import { searchCachedPostings } from "@/lib/postings";
+import type { InternshipPosting } from "@/lib/types";
 
 function StatCard({ icon: Icon, label, value, tone }: { icon: LucideIcon; label: string; value: string; tone: string }) {
   return (
@@ -19,16 +21,66 @@ function StatCard({ icon: Icon, label, value, tone }: { icon: LucideIcon; label:
   );
 }
 
+function TopFitPostings({ postings }: { postings: InternshipPosting[] }) {
+  return (
+    <section className="card flex h-full flex-col p-5">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <p className="eyebrow">Best matches</p>
+          <h2 className="mt-1 text-2xl font-bold text-ink">Top postings for you</h2>
+        </div>
+        <Link href="/postings/internships?sort=fit" className="text-sm font-bold text-[#2A6384]">
+          View all
+        </Link>
+      </div>
+
+      <div className="mt-4 grid flex-1 content-start gap-3">
+        {postings.length > 0 ? (
+          postings.map((posting, index) => (
+            <article key={posting.id} className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-xs font-bold uppercase tracking-wide text-[#2A6384]">#{index + 1} match</p>
+                  <h3 className="mt-1 truncate text-base font-bold text-ink">{posting.title}</h3>
+                  <p className="mt-1 truncate text-sm font-semibold text-slate-600">{posting.company} · {posting.location}</p>
+                </div>
+                <span className="shrink-0 rounded-full bg-[#EAF2F8] px-3 py-1 text-xs font-bold text-[#2A6384] ring-1 ring-[#5E7681]/25">
+                  {posting.fitScore}% fit
+                </span>
+              </div>
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs font-semibold text-slate-500">{posting.source} · {posting.postedAt}</p>
+                <a href={posting.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm font-bold text-[#2A6384]">
+                  Open <ArrowRight size={14} />
+                </a>
+              </div>
+            </article>
+          ))
+        ) : (
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-white/70 p-5 text-sm font-semibold text-slate-600">
+            Upload a resume and sync postings to surface your strongest matches here.
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 export default async function DashboardPage({ searchParams }: { searchParams?: { message?: string } }) {
-  const [profile, challenges, calendarEvents, applications] = await Promise.all([
+  const [profile, challenges, applications] = await Promise.all([
     getCurrentProfile(),
     getChallenges(),
-    getCalendarEvents(),
     getApplications()
   ]);
+  const [internshipMatches, newGradMatches] = await Promise.all([
+    searchCachedPostings({ profile, kind: "internship", sort: "fit", limit: 6 }),
+    searchCachedPostings({ profile, kind: "new-grad", sort: "fit", limit: 6 })
+  ]);
+  const topFitPostings = [...(internshipMatches?.postings ?? []), ...(newGradMatches?.postings ?? [])]
+    .sort((a, b) => b.fitScore - a.fitScore)
+    .slice(0, 3);
 
   const appliedCount = applications.filter((application) => application.status !== "saved").length;
-  const offerCount = applications.filter((application) => application.status === "offer").length;
 
   return (
     <main className="page-shell space-y-5">
@@ -50,15 +102,15 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
       <section className="dashboard-overlap space-y-5">
         <div className="dashboard-layer">
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} tone="bg-[#2A6384] text-white" />
+            <StatCard icon={Sparkles} label="Lifetime XP" value={profile.xp.toLocaleString()} tone="bg-[#2A6384] text-white" />
+            <StatCard icon={Star} label="Reward Points" value={profile.rewardPoints.toLocaleString()} tone="bg-[#EAF2F8] text-[#2A6384]" />
             <StatCard icon={Flame} label="Day streak" value={profile.streak.toLocaleString()} tone="bg-[#5E7681] text-white" />
-            <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} tone="bg-[#EAF2F8] text-[#2A6384]" />
-            <StatCard icon={Trophy} label="Offers" value={offerCount.toLocaleString()} tone="bg-[#F8FBFA] text-[#2A6384] ring-1 ring-[#5E7681]/35" />
+            <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} tone="bg-[#F8FBFA] text-[#2A6384] ring-1 ring-[#5E7681]/35" />
           </div>
         </div>
 
         <div className="dashboard-layer grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-stretch">
-          <WeeklyCalendarSnapshot events={calendarEvents} />
+          <TopFitPostings postings={topFitPostings} />
           <section className="card flex h-full flex-col p-5">
             <div className="flex items-end justify-between gap-3">
               <div>

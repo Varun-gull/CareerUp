@@ -210,6 +210,8 @@ export type Profile = {
   shareApplicationBoard: boolean;
   privacyPromptAnswered: boolean;
   xp: number;
+  totalXp: number;
+  rewardPoints: number;
   streak: number;
   streakBroken: boolean;
   streakFreeReviveUsed: boolean;

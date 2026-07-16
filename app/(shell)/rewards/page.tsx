@@ -19,7 +19,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
           compact
           eyebrow="Unlocks"
           title="Rewards"
-          description="Spend XP on practical job-search tools, then complete challenges to earn more."
+          description="Spend Reward Points on practical job-search tools. Your lifetime XP still powers ranks and leaderboards."
           tabs={[
             { label: "Rewards", href: "/rewards", active: true },
             { label: "Challenges", href: "/challenges" }
@@ -31,8 +31,8 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
         <section className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="card p-5">
             <Sparkles size={22} className="text-brand" />
-            <p className="mt-4 text-sm font-bold text-slate-500">Available XP</p>
-            <p className="mt-1 text-3xl font-bold text-ink">{profile.xp.toLocaleString()}</p>
+            <p className="mt-4 text-sm font-bold text-slate-500">Reward Points</p>
+            <p className="mt-1 text-3xl font-bold text-ink">{profile.rewardPoints.toLocaleString()}</p>
           </div>
           <div className="card p-5">
             <Gift size={22} className="text-brand" />
@@ -55,7 +55,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
         <section className="mt-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="eyebrow">Spend XP</p>
+              <p className="eyebrow">Spend Reward Points</p>
               <h2 className="mt-2 text-2xl font-bold text-ink">Job-search rewards</h2>
               <p className="mt-2 max-w-2xl text-slate-600">
                 Unlock focused tools you can use while applying, networking, interviewing, and comparing offers.
@@ -68,7 +68,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
 
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             {rewards.map((reward) => {
-              const canUnlock = profile.xp >= reward.xpCost;
+              const canUnlock = profile.rewardPoints >= reward.xpCost;
               const rewardHref =
                 reward.id === "behavioral-interview-pack"
                   ? "/interview"
@@ -89,7 +89,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                       <p className="mt-2 text-sm leading-6 text-slate-600">{reward.description}</p>
                     </div>
                     <span className={reward.unlocked ? "rounded-full bg-sky-50 px-3 py-1 text-xs font-bold text-sky-700" : "rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700"}>
-                      {reward.unlocked ? "Unlocked" : `${reward.xpCost} XP`}
+                      {reward.unlocked ? "Unlocked" : `${reward.xpCost} RP`}
                     </span>
                   </div>
 
@@ -114,7 +114,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                   ) : (
                     <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
                       <p className="inline-flex items-center gap-2 text-sm font-bold text-slate-600">
-                        <LockKeyhole size={16} /> {canUnlock ? "Ready to unlock" : `${Math.max(0, reward.xpCost - profile.xp).toLocaleString()} XP needed`}
+                        <LockKeyhole size={16} /> {canUnlock ? "Ready to unlock" : `${Math.max(0, reward.xpCost - profile.rewardPoints).toLocaleString()} RP needed`}
                       </p>
                       <form action={unlockReward}>
                         <input type="hidden" name="rewardId" value={reward.id} />
@@ -133,7 +133,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
         <section className="mt-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="eyebrow">Earn XP</p>
+              <p className="eyebrow">Earn XP and Reward Points</p>
               <h2 className="mt-2 text-2xl font-bold text-ink">All challenges</h2>
               <p className="mt-2 max-w-2xl text-slate-600">
                 Complete these challenges to build momentum and earn points for the rewards above.

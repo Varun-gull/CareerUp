@@ -4,6 +4,9 @@
 alter table public.profiles
   add column if not exists total_xp integer not null default 25;
 
+alter table public.profiles
+  add column if not exists reward_points integer not null default 25;
+
 with reward_spend as (
   select
     user_id,
@@ -46,11 +49,12 @@ as $$
   update public.profiles
   set xp = xp + greatest(amount, 0),
       total_xp = total_xp + greatest(amount, 0),
+      reward_points = reward_points + greatest(amount, 0),
       updated_at = now()
   where id = auth.uid();
 $$;
 
-grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, total_xp, streak_count, applications_applied, share_application_board)
+grant select (id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, total_xp, reward_points, streak_count, applications_applied, share_application_board)
 on public.profiles to anon;
 
 grant execute on function public.award_xp(integer) to authenticated;

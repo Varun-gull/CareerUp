@@ -79,6 +79,6 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     ok: true,
-    message: shouldAwardProfileXp ? "Profile saved. You earned 30 XP for completing it." : "Profile saved.",
+    message: shouldAwardProfileXp ? "Profile saved. You earned 30 XP and 30 Reward Points for completing it." : "Profile saved.",
   });
 }

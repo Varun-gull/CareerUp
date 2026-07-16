@@ -60,32 +60,40 @@ export async function awardXp({
 
   const { data: profile, error } = await supabase
     .from("profiles")
-    .select("xp, total_xp, rank_bonus_awarded")
+    .select("*")
     .eq("id", userId)
-    .single<{ xp: number | null; total_xp: number | null; rank_bonus_awarded: string[] | null }>();
+    .single<{ xp: number | null; total_xp?: number | null; reward_points?: number | null; rank_bonus_awarded?: string[] | null }>();
 
   if (error || !profile) {
     await supabase.rpc("award_xp", { amount: safeAmount });
     return { awarded: safeAmount, rankBonus: 0, reachedRanks: [] as string[] };
   }
 
-  const previousSpendableXp = profile.xp ?? 0;
-  const previousTotalXp = profile.total_xp ?? previousSpendableXp;
+  const previousPermanentXp = Math.max(profile.xp ?? 0, profile.total_xp ?? profile.xp ?? 0);
+  const previousRewardPoints = profile.reward_points ?? profile.xp ?? 0;
   const rankBonusAwarded = profile.rank_bonus_awarded ?? [];
-  const reachedRanks = getNewlyReachedRankNames(previousTotalXp, previousTotalXp + safeAmount, rankBonusAwarded);
+  const reachedRanks = getNewlyReachedRankNames(previousPermanentXp, previousPermanentXp + safeAmount, rankBonusAwarded);
   const rankBonus = reachedRanks.reduce((sum, rankName) => sum + (rankBonuses.find((bonus) => bonus.rankName === rankName)?.xp ?? 0), 0);
 
   const { error: updateError } = await supabase
     .from("profiles")
     .update({
-      xp: previousSpendableXp + safeAmount + rankBonus,
-      total_xp: previousTotalXp + safeAmount + rankBonus,
+      xp: previousPermanentXp + safeAmount + rankBonus,
+      total_xp: previousPermanentXp + safeAmount + rankBonus,
+      reward_points: previousRewardPoints + safeAmount + rankBonus,
       rank_bonus_awarded: Array.from(new Set([...rankBonusAwarded, ...reachedRanks])),
     })
     .eq("id", userId);
 
   if (updateError) {
-    await supabase.rpc("award_xp", { amount: safeAmount + rankBonus });
+    await supabase
+      .from("profiles")
+      .update({
+        xp: previousPermanentXp + safeAmount + rankBonus,
+        total_xp: previousPermanentXp + safeAmount + rankBonus,
+        rank_bonus_awarded: Array.from(new Set([...rankBonusAwarded, ...reachedRanks])),
+      })
+      .eq("id", userId);
   }
 
   return { awarded: safeAmount, rankBonus, reachedRanks };

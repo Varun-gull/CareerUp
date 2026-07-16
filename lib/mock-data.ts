@@ -15,6 +15,8 @@ export const profile: Profile = {
   shareApplicationBoard: false,
   privacyPromptAnswered: true,
   xp: 430,
+  totalXp: 430,
+  rewardPoints: 430,
   streak: 6,
   streakBroken: false,
   streakFreeReviveUsed: false,

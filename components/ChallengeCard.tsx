@@ -39,7 +39,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
               <CheckCircle2 size={12} /> Completed
             </span>
           ) : (
-            <span className="rounded-full bg-[#E1EFEB] px-3 py-1 text-xs font-bold text-[#2A6384] ring-1 ring-[#5E7681]/30">+{challenge.xp} XP</span>
+            <span className="rounded-full bg-[#E1EFEB] px-3 py-1 text-xs font-bold text-[#2A6384] ring-1 ring-[#5E7681]/30">+{challenge.xp} XP + RP</span>
           )}
         </div>
       </div>

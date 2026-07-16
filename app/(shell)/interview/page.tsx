@@ -33,7 +33,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-ink">Unlock the Behavioral Interview Pack first</h2>
-                <p className="mt-2 text-slate-600">Spend XP on the rewards page to open this builder and start saving interview stories.</p>
+                <p className="mt-2 text-slate-600">Spend Reward Points on the rewards page to open this builder and start saving interview stories.</p>
               </div>
               <Link href="/rewards" className="primary-button w-fit">
                 Go unlock it <ArrowRight className="ml-2" size={18} />

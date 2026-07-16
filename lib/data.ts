@@ -40,6 +40,7 @@ type DbProfile = {
   privacy_prompt_answered: boolean | null;
   xp: number | null;
   total_xp: number | null;
+  reward_points?: number | null;
   streak_count: number | null;
   last_applied_on: string | null;
   streak_free_revive_used: boolean | null;
@@ -200,6 +201,9 @@ export async function getCurrentProfile(): Promise<Profile> {
     return mockProfile;
   }
 
+  const permanentXp = Math.max(data.xp ?? 0, data.total_xp ?? data.xp ?? 0);
+  const rewardPoints = data.reward_points ?? data.xp ?? 0;
+
   return {
     name: data.full_name ?? user.email ?? "Student",
     school: data.school ?? "CareerUp Student",
@@ -213,7 +217,9 @@ export async function getCurrentProfile(): Promise<Profile> {
     resumeUpdatedAt: data.resume_updated_at ? new Date(data.resume_updated_at).toLocaleDateString() : "",
     shareApplicationBoard: data.share_application_board ?? false,
     privacyPromptAnswered: data.privacy_prompt_answered ?? false,
-    xp: data.xp ?? 0,
+    xp: permanentXp,
+    totalXp: permanentXp,
+    rewardPoints,
     streak: getVisibleStreak(data.last_applied_on ?? null, data.streak_count ?? 0),
     streakBroken: isBrokenStreak(data.last_applied_on ?? null, data.streak_count ?? 0),
     streakFreeReviveUsed: data.streak_free_revive_used ?? false,
@@ -559,9 +565,9 @@ export async function getFriends(): Promise<Friend[]> {
 
   const { data: profiles, error: profilesError } = await supabase
     .from("profiles")
-    .select("id, full_name, email, school, school_logo_url, xp, streak_count, last_applied_on")
+    .select("id, full_name, email, school, school_logo_url, xp, total_xp, streak_count, last_applied_on")
     .in("id", profileIds)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "email" | "school" | "school_logo_url" | "xp" | "streak_count" | "last_applied_on">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "email" | "school" | "school_logo_url" | "xp" | "total_xp" | "streak_count" | "last_applied_on">>>();
 
   if (profilesError || !profiles) {
     return [];
@@ -585,7 +591,7 @@ export async function getFriends(): Promise<Friend[]> {
         email: profile.email ?? "",
         school: profile.school ?? "Student",
         schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
-        xp: profile.xp ?? 0,
+        xp: getLeaderboardXp({ xp: profile.xp, total_xp: getOptionalTotalXp(profile) }),
         streak: getVisibleStreak(profile.last_applied_on ?? null, profile.streak_count ?? 0),
         status: friendship.status,
         direction: friendship.requester_id === user.id ? "outgoing" : "incoming"
@@ -758,9 +764,9 @@ export async function getPublicProfile(profileId: string): Promise<PublicProfile
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, streak_count, last_applied_on, applications_applied")
+    .select("id, full_name, school, school_logo_url, major, graduation_year, target_roles, target_locations, xp, total_xp, streak_count, last_applied_on, applications_applied")
     .eq("id", profileId)
-    .maybeSingle<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "major" | "graduation_year" | "target_roles" | "target_locations" | "xp" | "streak_count" | "last_applied_on" | "applications_applied">>();
+    .maybeSingle<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "major" | "graduation_year" | "target_roles" | "target_locations" | "xp" | "total_xp" | "streak_count" | "last_applied_on" | "applications_applied">>();
 
   if (error || !data) {
     return null;
@@ -775,7 +781,7 @@ export async function getPublicProfile(profileId: string): Promise<PublicProfile
     graduationYear: data.graduation_year ?? "",
     targetRoles: data.target_roles ?? [],
     targetLocations: data.target_locations ?? [],
-    xp: data.xp ?? 0,
+    xp: getLeaderboardXp({ xp: data.xp, total_xp: getOptionalTotalXp(data) }),
     streak: getVisibleStreak(data.last_applied_on ?? null, data.streak_count ?? 0),
     applicationsApplied: data.applications_applied ?? 0
   };
@@ -887,9 +893,9 @@ export async function getMutualFriends(profileId: string): Promise<MutualFriend[
 
   const { data: profiles, error } = await supabase
     .from("profiles")
-    .select("id, full_name, school, school_logo_url, xp")
+    .select("id, full_name, school, school_logo_url, xp, total_xp")
     .in("id", mutualIds)
-    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp">>>();
+    .returns<Array<Pick<DbProfile, "id" | "full_name" | "school" | "school_logo_url" | "xp" | "total_xp">>>();
 
   if (error || !profiles) {
     return [];
@@ -900,7 +906,7 @@ export async function getMutualFriends(profileId: string): Promise<MutualFriend[
     name: profile.full_name ?? "CareerUp Student",
     school: profile.school ?? "Student",
     schoolLogoUrl: resolveSchoolLogoUrl(profile.school, profile.school_logo_url),
-    xp: profile.xp ?? 0
+    xp: getLeaderboardXp({ xp: profile.xp, total_xp: getOptionalTotalXp(profile) })
   }));
 }
 

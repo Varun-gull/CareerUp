@@ -22,8 +22,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
           description="Spend XP on practical job-search tools, then complete challenges to earn more."
           tabs={[
             { label: "Rewards", href: "/rewards", active: true },
-            { label: "Challenges", href: "/challenges" },
-            { label: "Leaderboard", href: "/leaderboard" }
+            { label: "Challenges", href: "/challenges" }
           ]}
         />
 

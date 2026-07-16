@@ -3,10 +3,8 @@
 import {
   BriefcaseBusiness,
   CalendarClock,
-  CalendarDays,
   ChevronLeft,
   ChevronRight,
-  Clock3,
   ListChecks,
   Plus,
   Trash2,
@@ -250,10 +248,6 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
     });
     return grouped;
   }, [events]);
-  const selectedEvents = eventsByDate.get(selectedDate) ?? [];
-  const upcomingEvents = sortEvents(events)
-    .filter((event) => event.date >= todayStr)
-    .slice(0, 6);
   const nextInterview = sortEvents(events).find((event) => event.eventType === "interview" && event.date >= todayStr);
   const upcomingDeadlineCount = events.filter((event) => event.eventType === "deadline" && getDaysUntil(event.date, todayStr) >= 0 && getDaysUntil(event.date, todayStr) <= 14).length;
   const unscheduledInterviews = applications.filter((application) => {
@@ -429,7 +423,54 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
         </section>
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid gap-5 xl:grid-cols-[340px_minmax(0,1fr)]">
+        <aside className="card p-5 xl:sticky xl:top-24 xl:self-start">
+          <p className="eyebrow">Schedule interviews</p>
+          <h2 className="mt-1 text-xl font-bold text-ink">Drag roles onto the calendar</h2>
+          <p className="mt-2 text-sm font-semibold text-slate-500">Drop a role on any date, or pick an interview time directly.</p>
+          <div className="mt-4 grid max-h-[42rem] gap-3 overflow-y-auto pr-1">
+            {[...unscheduledInterviews, ...applications.filter((application) => application.status !== "interviewing" && application.status !== "offer").slice(0, 8)].map((application) => (
+              <div
+                key={application.id}
+                draggable
+                onDragStart={(event) => {
+                  event.dataTransfer.effectAllowed = "move";
+                  setDragApp(application);
+                }}
+                onDragEnd={() => setDragApp(null)}
+                className={clsx(
+                  "cursor-grab rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition active:cursor-grabbing",
+                  dragApp?.id === application.id && "opacity-45"
+                )}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold text-[#2A6384]">{application.company}</p>
+                    <p className="truncate text-sm font-bold text-ink">{application.role}</p>
+                  </div>
+                  <ApplicationStatusBadge status={application.status} />
+                </div>
+                {application.status === "interviewing" || application.status === "offer" ? (
+                  <button
+                    type="button"
+                    onClick={() => setScheduleApp(application)}
+                    className="mt-3 rounded-xl bg-[#EAF2F8] px-3 py-2 text-xs font-bold text-[#2A6384]"
+                  >
+                    Pick interview time
+                  </button>
+                ) : application.deadline && application.deadline !== "No deadline" ? (
+                  <p className="mt-2 text-xs font-bold text-slate-500">Due {application.deadline}</p>
+                ) : null}
+              </div>
+            ))}
+            {applications.length === 0 && (
+              <p className="rounded-2xl border border-dashed border-slate-300 bg-white/70 p-4 text-sm font-semibold text-slate-500">
+                Save a role from postings to start building your calendar.
+              </p>
+            )}
+          </div>
+        </aside>
+
         <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white/85 shadow-soft backdrop-blur-xl">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
             <div className="flex items-center gap-2">
@@ -539,125 +580,6 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
             })}
           </div>
         </section>
-
-        <aside className="grid content-start gap-4">
-          <section className="card p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="eyebrow">Selected day</p>
-                <h2 className="mt-1 text-xl font-bold text-ink">{formatLongDate(selectedDate)}</h2>
-              </div>
-              <button
-                onClick={() => setCreateDate(selectedDate)}
-                className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#EAF2F8] text-[#2A6384] ring-1 ring-[#2A6384]/15"
-                aria-label="Add event to selected day"
-              >
-                <Plus size={18} />
-              </button>
-            </div>
-            <div className="mt-4 grid gap-2">
-              {selectedEvents.length > 0 ? selectedEvents.map((event) => (
-                <EventPill
-                  key={event.id}
-                  event={event}
-                  draggable
-                  onDragStart={() => setDragEvent(event)}
-                  onDelete={() => handleDelete(event.id)}
-                  onClick={() => {
-                    if (event.eventType === "interview") {
-                      const application = applications.find((item) => item.id === event.applicationId);
-                      if (application) setScheduleApp(application);
-                    }
-                  }}
-                />
-              )) : (
-                <div className="rounded-2xl border border-dashed border-slate-300 bg-white/70 p-4 text-sm font-semibold text-slate-500">
-                  No recruiting events on this day.
-                </div>
-              )}
-            </div>
-          </section>
-
-          <section className="card p-5">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="eyebrow">Upcoming</p>
-                <h2 className="mt-1 text-xl font-bold text-ink">Recruiting agenda</h2>
-              </div>
-              <Clock3 className="text-[#2A6384]" size={20} />
-            </div>
-            <div className="mt-4 grid gap-3">
-              {upcomingEvents.length > 0 ? upcomingEvents.map((event) => (
-                <button
-                  key={event.id}
-                  type="button"
-                  onClick={() => {
-                    setSelectedDate(event.date);
-                    setAnchor(new Date(fromYMD(event.date).getFullYear(), fromYMD(event.date).getMonth(), 1));
-                  }}
-                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/90 p-3 text-left transition hover:border-[#2A6384]/30 hover:shadow-sm"
-                >
-                  <span className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-2xl bg-[#EAF2F8] text-[#173B55]">
-                    <span className="text-[10px] font-bold uppercase">{fromYMD(event.date).toLocaleDateString("en-US", { month: "short" })}</span>
-                    <span className="text-lg font-bold leading-none">{fromYMD(event.date).getDate()}</span>
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-sm font-bold text-ink">{event.company}</span>
-                    <span className="mt-0.5 block truncate text-xs font-semibold text-slate-500">{EVENT_LABEL[event.eventType]} · {event.role}</span>
-                  </span>
-                </button>
-              )) : (
-                <p className="rounded-2xl bg-slate-50 p-4 text-sm font-semibold text-slate-500">No upcoming events yet.</p>
-              )}
-            </div>
-          </section>
-
-          <section className="card p-5">
-            <p className="eyebrow">Schedule interviews</p>
-            <h2 className="mt-1 text-xl font-bold text-ink">Drag roles onto the calendar</h2>
-            <div className="mt-4 grid max-h-96 gap-3 overflow-y-auto pr-1">
-              {[...unscheduledInterviews, ...applications.filter((application) => application.status !== "interviewing" && application.status !== "offer").slice(0, 5)].map((application) => (
-                <div
-                  key={application.id}
-                  draggable
-                  onDragStart={(event) => {
-                    event.dataTransfer.effectAllowed = "move";
-                    setDragApp(application);
-                  }}
-                  onDragEnd={() => setDragApp(null)}
-                  className={clsx(
-                    "cursor-grab rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition active:cursor-grabbing",
-                    dragApp?.id === application.id && "opacity-45"
-                  )}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-bold text-[#2A6384]">{application.company}</p>
-                      <p className="truncate text-sm font-bold text-ink">{application.role}</p>
-                    </div>
-                    <ApplicationStatusBadge status={application.status} />
-                  </div>
-                  {application.status === "interviewing" || application.status === "offer" ? (
-                    <button
-                      type="button"
-                      onClick={() => setScheduleApp(application)}
-                      className="mt-3 rounded-xl bg-[#EAF2F8] px-3 py-2 text-xs font-bold text-[#2A6384]"
-                    >
-                      Pick interview time
-                    </button>
-                  ) : application.deadline && application.deadline !== "No deadline" ? (
-                    <p className="mt-2 text-xs font-bold text-slate-500">Due {application.deadline}</p>
-                  ) : null}
-                </div>
-              ))}
-              {applications.length === 0 && (
-                <p className="rounded-2xl border border-dashed border-slate-300 bg-white/70 p-4 text-sm font-semibold text-slate-500">
-                  Save a role from postings to start building your calendar.
-                </p>
-              )}
-            </div>
-          </section>
-        </aside>
       </div>
     </section>
   );

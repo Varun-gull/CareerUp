@@ -35,33 +35,79 @@ function Avatar({ user, size = "md" }: { user: LeaderboardUser; size?: "md" | "l
   );
 }
 
-function PodiumCard({ user, place }: { user: LeaderboardUser; place: number }) {
+const podiumStyles = {
+  1: {
+    order: "md:order-2",
+    pedestalHeight: "md:h-32",
+    pedestalBg: "bg-gradient-to-b from-[#2C5464] to-[#1B3C53]",
+    ring: "border-amber-300",
+    badge: "bg-amber-300 text-[#1B3C53]",
+    nameColor: "text-[#1B3C53]",
+    avatarSize: "h-24 w-24",
+    number: "1st"
+  },
+  2: {
+    order: "md:order-1",
+    pedestalHeight: "md:h-20",
+    pedestalBg: "bg-gradient-to-b from-[#7C97A0] to-[#5E7681]",
+    ring: "border-[#91B6AF]",
+    badge: "bg-[#91B6AF] text-[#13112D]",
+    nameColor: "text-slate-800",
+    avatarSize: "h-18 w-18",
+    number: "2nd"
+  },
+  3: {
+    order: "md:order-3",
+    pedestalHeight: "md:h-12",
+    pedestalBg: "bg-gradient-to-b from-[#A9C2BB] to-[#8FB0A8]",
+    ring: "border-[#5E7681]/55",
+    badge: "bg-[#5E7681] text-white",
+    nameColor: "text-slate-800",
+    avatarSize: "h-16 w-16",
+    number: "3rd"
+  }
+} as const;
+
+function PodiumCard({ user, place }: { user: LeaderboardUser; place: 1 | 2 | 3 }) {
+  const style = podiumStyles[place];
   const isFirst = place === 1;
-  const border = place === 1 ? "border-[#1B3C53]" : place === 2 ? "border-[#91B6AF]" : "border-[#5E7681]/55";
-  const badge = place === 1 ? "bg-[#91B6AF] text-[#13112D]" : place === 2 ? "bg-slate-300 text-slate-950" : "bg-[#5E7681] text-white";
 
   return (
-    <article className={`relative flex min-h-72 flex-col items-center justify-center rounded-3xl border bg-[#F8FBFA] p-6 text-center shadow-soft ${border} ${isFirst ? "md:-mt-8" : ""}`}>
+    <div className={`flex flex-col items-center ${style.order}`}>
       {isFirst && (
-        <span className="absolute right-5 top-5 rounded-full border border-amber-300 bg-amber-50 p-2 text-amber-500">
+        <span className="mb-1 rounded-full border border-amber-300 bg-amber-50 p-2 text-amber-500">
           <Crown size={18} />
         </span>
       )}
       <div className="relative">
-        <Avatar user={user} size="lg" />
-        <span className={`absolute -bottom-3 left-1/2 flex h-10 min-w-10 -translate-x-1/2 items-center justify-center gap-1 rounded-full px-2 text-sm font-black shadow-sm ${badge}`}>
-          <Trophy size={16} />
+        <div
+          className={`flex items-center justify-center overflow-hidden rounded-full border-4 bg-[#E1EFEB] shadow-glow ${style.avatarSize} ${style.ring}`}
+        >
+          {user.schoolLogoUrl ? (
+            <img src={user.schoolLogoUrl} alt="" className="h-full w-full object-contain p-1.5" />
+          ) : (
+            <span className={isFirst ? "text-2xl font-black text-[#1B3C53]" : "text-xl font-black text-[#1B3C53]"}>{getInitial(user.name)}</span>
+          )}
+        </div>
+        <span className={`absolute -bottom-3 left-1/2 flex h-9 min-w-9 -translate-x-1/2 items-center justify-center gap-1 rounded-full px-2 text-sm font-black shadow-sm ${style.badge}`}>
+          <Trophy size={14} />
           {place}
         </span>
       </div>
-      <ProfileLink profileId={user.id} name={user.name} className={`mt-7 block truncate text-2xl font-black ${isFirst ? "text-[#1B3C53]" : "text-slate-800"}`}>
+      <ProfileLink profileId={user.id} name={user.name} className={`mt-6 block max-w-[9rem] truncate text-center text-lg font-black sm:text-xl ${style.nameColor}`}>
         {user.name}
       </ProfileLink>
-      <p className="mt-1 text-xs font-black uppercase tracking-wider text-[#5E7681]">{leagueLabel(user.xp)}</p>
-      <div className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-[#E1EFEB] px-4 py-2 text-lg font-black text-[#1B3C53] ring-1 ring-[#5E7681]/25">
-        <Gem size={18} /> {user.xp.toLocaleString()} XP
+      <p className="mt-1 text-[10px] font-black uppercase tracking-wider text-[#5E7681] sm:text-xs">{leagueLabel(user.xp)}</p>
+      <div className="mt-3 inline-flex items-center gap-1.5 rounded-2xl bg-[#E1EFEB] px-3 py-1.5 text-sm font-black text-[#1B3C53] ring-1 ring-[#5E7681]/25 sm:px-4 sm:py-2 sm:text-lg">
+        <Gem size={16} /> {user.xp.toLocaleString()} XP
       </div>
-    </article>
+
+      <div
+        className={`relative mt-5 flex w-full items-start justify-center rounded-t-2xl pt-3 shadow-inner ${style.pedestalBg} ${style.pedestalHeight}`}
+      >
+        <span className="text-3xl font-black text-white/90 sm:text-4xl">{style.number}</span>
+      </div>
+    </div>
   );
 }
 
@@ -97,9 +143,9 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
   return (
     <section className="overflow-hidden rounded-3xl border border-[#5E7681]/30 bg-[#F8FBFA] text-slate-900 shadow-soft">
       {podium.length > 0 && (
-        <div className="grid gap-6 p-6 md:grid-cols-3 md:items-end md:p-8">
+        <div className="flex flex-col items-center gap-8 bg-gradient-to-b from-[#E1EFEB]/50 to-transparent p-6 md:flex-row md:items-end md:justify-center md:gap-4 md:p-8">
           {podium.map((user) => {
-            const place = sorted.findIndex((candidate) => candidate.id === user.id) + 1;
+            const place = (sorted.findIndex((candidate) => candidate.id === user.id) + 1) as 1 | 2 | 3;
             return <PodiumCard key={user.id} user={user} place={place} />;
           })}
         </div>

@@ -206,18 +206,6 @@ export async function PostingsPageView({
           eyebrow="Live search"
           title={pageTitle}
           description={pageCopy}
-          tabs={[
-            {
-              label: "Internships",
-              href: "/postings/internships",
-              active: kind === "internship",
-            },
-            {
-              label: "New Grad",
-              href: "/postings/new-grad",
-              active: kind === "new-grad",
-            },
-          ]}
         />
 
         {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}

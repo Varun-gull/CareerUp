@@ -122,5 +122,77 @@ export const rewardCatalog: Array<Omit<Reward, "unlocked">> = [
       "Use a polite negotiation frame: appreciation, competing context, specific ask, flexibility.",
       "Never invent competing offers or deadlines."
     ]
+  },
+  {
+    id: "rejection-recovery-plan",
+    title: "Rejection Recovery Plan",
+    description: "Turn a rejection into feedback, a future contact, and a better next application.",
+    category: "Applications",
+    xpCost: 60,
+    contents: [
+      "Reply within 24 hours: thank them, and ask one specific question about what would have made you a stronger candidate.",
+      "Connect with the recruiter on LinkedIn with a short, positive note — teams remember gracious candidates.",
+      "Log the rejection stage (resume screen, phone screen, final round) to spot patterns across applications.",
+      "If you reached interviews, ask whether they encourage re-applying next cycle and note the date.",
+      "Do one concrete improvement before your next application: one resume bullet, one practice problem, or one mock answer."
+    ]
+  },
+  {
+    id: "referral-ask-playbook",
+    title: "Referral Ask Playbook",
+    description: "Scripts for asking employees and alumni for referrals without being awkward.",
+    category: "Networking",
+    xpCost: 110,
+    contents: [
+      "Target people with a real connection: same school, same club, mutual friend, or someone whose work you can genuinely reference.",
+      "Warm contact script: remind them how you know each other, name the exact role + link, attach resume, and make saying no easy.",
+      "Cold alumni script: school connection, one-line background, the role, and a 15-minute chat ask before any referral ask.",
+      "Never ask a stranger for a referral in the first message — ask for a conversation first.",
+      "Follow up once after 5 business days, then let it go. Always send a thank-you whether or not the referral happens."
+    ]
+  },
+  {
+    id: "phone-screen-survival-kit",
+    title: "Phone Screen Survival Kit",
+    description: "Everything to have ready for the first-round recruiter or phone screen call.",
+    category: "Interview prep",
+    xpCost: 140,
+    contents: [
+      "Prepare a 60-second 'tell me about yourself': year + school, one strong project, why this company, what you want to do.",
+      "Have answers ready for: availability dates, work authorization, location preference, and expected graduation.",
+      "Keep your resume, the job posting, and your project notes open on screen during the call.",
+      "Prepare two questions for the recruiter: one about the team, one about the process timeline.",
+      "End by asking about next steps and the decision timeline, then send a same-day thank-you email."
+    ]
+  },
+  {
+    id: "linkedin-profile-audit",
+    title: "LinkedIn Profile Audit",
+    description: "A section-by-section rubric to make your LinkedIn recruiter-ready.",
+    category: "Profile",
+    xpCost: 130,
+    contents: [
+      "Headline: role you want + strongest proof point, not just 'Student at X' (e.g. 'CS @ GMU · SWE Intern @ Startup · Building ML side projects').",
+      "About: 3-4 sentences — what you're studying, what you've built, what role you're seeking, how to reach you.",
+      "Experience: copy your best resume bullets with metrics; add media links to projects where possible.",
+      "Skills: pin the top 3 that match your target roles; remove filler skills.",
+      "Set 'Open to Work' for internships visible to recruiters only, and add target locations.",
+      "Photo and banner: clear headshot, and a banner related to your field beats the default."
+    ]
+  },
+  {
+    id: "career-fair-game-plan",
+    title: "Career Fair Game Plan",
+    description: "A before/during/after checklist to turn career fairs into interviews.",
+    category: "Networking",
+    xpCost: 90,
+    contents: [
+      "Before: pick 5 target companies, read what each is hiring for, and prepare one specific question per company.",
+      "Prepare a 30-second pitch: name, year + major, strongest project or experience, and what role you're looking for.",
+      "Print 10+ resumes on quality paper; bring a folder so they stay flat.",
+      "During: visit a non-target company first as warm-up, take notes on every conversation immediately after.",
+      "Ask every recruiter for their name and how to follow up — a business card or LinkedIn.",
+      "After: connect on LinkedIn within 24 hours referencing your exact conversation, and apply online the same day."
+    ]
   }
 ];

@@ -71,7 +71,7 @@ function EmptyMessages() {
   return (
     <div className="flex min-h-[34rem] items-center justify-center rounded-[2rem] border border-white/80 bg-white/75 p-8 text-center shadow-soft">
       <div>
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E1EFEB] text-[#1B3C53]">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E1EFEB] text-[#2A6384]">
           <Mail size={26} />
         </div>
         <h2 className="mt-4 text-2xl font-bold text-ink">No conversations yet</h2>
@@ -107,7 +107,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                 <div>
                   <div className="flex items-center justify-between gap-3">
                     <h2 className="text-xl font-black text-ink">Active</h2>
-                    <span className="rounded-full bg-[#E1EFEB] px-3 py-1 text-xs font-black text-[#1B3C53]">{conversations.length}</span>
+                    <span className="rounded-full bg-[#E1EFEB] px-3 py-1 text-xs font-black text-[#2A6384]">{conversations.length}</span>
                   </div>
                   <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
                     {conversations.slice(0, 6).map((conversation) => (
@@ -115,7 +115,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                         key={conversation.id}
                         href={`/messages?thread=${encodeURIComponent(conversation.id)}`}
                         title={conversation.otherName}
-                        className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-black text-[#1B3C53] ring-1 ring-slate-200"
+                        className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-black text-[#2A6384] ring-1 ring-slate-200"
                       >
                         <Avatar conversation={conversation} />
                         <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-500" />
@@ -146,7 +146,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-base font-bold text-[#1B3C53]">
+                        <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-base font-bold text-[#2A6384]">
                           <Avatar conversation={conversation} />
                           <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-500" />
                         </span>
@@ -173,7 +173,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
               <div className="border-b border-slate-200/80 p-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-4">
-                    <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-lg font-black text-[#1B3C53]">
+                    <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-lg font-black text-[#2A6384]">
                       <Avatar conversation={selectedConversation} />
                       <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white bg-emerald-500" />
                     </span>
@@ -188,7 +188,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Link href={`/u/${selectedConversation.otherProfileId}`} className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#1B3C53] px-4 text-sm font-black text-white shadow-sm">
+                    <Link href={`/u/${selectedConversation.otherProfileId}`} className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#2A6384] px-4 text-sm font-black text-white shadow-sm">
                       View profile
                     </Link>
                     {selectedConversation.unreadCount > 0 ? (
@@ -229,12 +229,12 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                   return (
                     <article key={message.id} className={`flex gap-3 ${outbound ? "justify-end" : "justify-start"}`}>
                       {!outbound && (
-                        <span className="mt-7 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-black text-[#1B3C53]">
+                        <span className="mt-7 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-black text-[#2A6384]">
                           <Avatar conversation={selectedConversation} />
                         </span>
                       )}
                       <div className={`max-w-[74%] ${outbound ? "text-right" : "text-left"}`}>
-                        <div className={`mb-1 flex items-center gap-2 text-xs font-black text-[#1B3C53] ${outbound ? "justify-end" : "justify-start"}`}>
+                        <div className={`mb-1 flex items-center gap-2 text-xs font-black text-[#2A6384] ${outbound ? "justify-end" : "justify-start"}`}>
                           <span>{outbound ? "You" : message.otherName}</span>
                           <span>{message.createdAt}</span>
                         </div>

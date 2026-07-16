@@ -48,7 +48,7 @@ const config: Config = {
         ink: "#0f172a",
         navy: "#0f172a",
         panel: "#101722",
-        brand: "#1B3C53",
+        brand: "#2A6384",
         electric: "#91B6AF",
         sky: {
           50: "#f4faf8",
@@ -58,11 +58,11 @@ const config: Config = {
           400: "#789ca3",
           500: "#5E7681",
           600: "#36556F",
-          700: "#1B3C53",
-          800: "#162D41",
+          700: "#2A6384",
+          800: "#214E69",
           900: "#13112D",
           950: "#0b0a1b",
-          DEFAULT: "#1B3C53"
+          DEFAULT: "#2A6384"
         },
         success: "#10b981",
         warning: "#f59e0b"

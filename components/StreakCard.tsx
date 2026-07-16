@@ -28,7 +28,7 @@ export function StreakCard({
   return (
     <section className="relative overflow-hidden rounded-3xl border border-[#91B6AF]/30 bg-[#13112D] p-5 text-white shadow-soft">
       <div className="relative flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-[#1B3C53] shadow-lg shadow-sky/10">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-[#2A6384] shadow-lg shadow-sky/10">
           <Zap size={32} fill="currentColor" />
         </div>
         <div>

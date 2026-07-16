@@ -31,7 +31,7 @@ function eventLabel(type: CalendarEvent["eventType"]) {
 function eventTone(type: CalendarEvent["eventType"]) {
   if (type === "interview") return "border-sky/40 bg-sky/12 text-sky-600";
   if (type === "offer") return "border-emerald-400/40 bg-emerald-400/10 text-emerald-700";
-  if (type === "deadline") return "border-[#5E7681]/35 bg-[#E1EFEB]/80 text-[#1B3C53]";
+  if (type === "deadline") return "border-[#5E7681]/35 bg-[#E1EFEB]/80 text-[#2A6384]";
   return "border-slate-600 bg-slate-100 text-slate-700";
 }
 
@@ -91,12 +91,12 @@ export function WeeklyCalendarSnapshot({ events }: { events: CalendarEvent[] }) 
                 isToday
                   ? "border-sky/50 bg-sky/10 shadow-sm"
                   : day.inMonth
-                    ? "border-[#5E7681]/30 bg-[#E1EFEB]/60 hover:border-[#1B3C53]/40 hover:bg-white/80"
+                    ? "border-[#5E7681]/30 bg-[#E1EFEB]/60 hover:border-[#2A6384]/40 hover:bg-white/80"
                     : "border-slate-200/70 bg-white/35 text-slate-400"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <p className={isToday ? "text-sm font-black text-sky-600" : day.inMonth ? "text-sm font-bold text-[#1B3C53]" : "text-sm font-bold text-slate-400"}>
+                <p className={isToday ? "text-sm font-black text-sky-600" : day.inMonth ? "text-sm font-bold text-[#2A6384]" : "text-sm font-bold text-slate-400"}>
                   {day.date.getDate()}
                 </p>
                 {day.eventCount > 2 && <span className="text-[10px] font-bold text-slate-500">+{day.eventCount - 2}</span>}

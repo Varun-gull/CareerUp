@@ -52,7 +52,7 @@ export function PageHero({
                   aria-current={tab.active ? "page" : undefined}
                   className={clsx(
                     "rounded-xl px-4 py-2 text-sm font-semibold transition",
-                    tab.active ? "bg-white text-[#1B3C53] shadow-sm" : "text-white hover:bg-white/10 hover:text-white"
+                    tab.active ? "bg-white text-[#2A6384] shadow-sm" : "text-white hover:bg-white/10 hover:text-white"
                   )}
                 >
                   {tab.label}

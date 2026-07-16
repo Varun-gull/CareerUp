@@ -29,7 +29,7 @@ function Avatar({ user, size = "md" }: { user: LeaderboardUser; size?: "md" | "l
       {user.schoolLogoUrl ? (
         <img src={user.schoolLogoUrl} alt="" className="h-full w-full object-contain p-1.5" />
       ) : (
-        <span className={size === "lg" ? "text-2xl font-black text-[#1B3C53]" : "text-sm font-black text-[#1B3C53]"}>{getInitial(user.name)}</span>
+        <span className={size === "lg" ? "text-2xl font-black text-[#2A6384]" : "text-sm font-black text-[#2A6384]"}>{getInitial(user.name)}</span>
       )}
     </div>
   );
@@ -40,8 +40,8 @@ const podiumStyles = {
     order: "md:order-2",
     minHeight: "min-h-[18rem] md:min-h-[26rem]",
     border: "border-amber-300",
-    badge: "bg-amber-300 text-[#1B3C53]",
-    nameColor: "text-[#1B3C53]"
+    badge: "bg-amber-300 text-[#2A6384]",
+    nameColor: "text-[#2A6384]"
   },
   2: {
     order: "md:order-1",
@@ -83,7 +83,7 @@ function PodiumCard({ user, place }: { user: LeaderboardUser; place: 1 | 2 | 3 }
         {user.name}
       </ProfileLink>
       <p className="mt-1 text-xs font-black uppercase tracking-wider text-[#5E7681]">{leagueLabel(user.xp)}</p>
-      <div className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-[#E1EFEB] px-4 py-2 text-lg font-black text-[#1B3C53] ring-1 ring-[#5E7681]/25">
+      <div className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-[#E1EFEB] px-4 py-2 text-lg font-black text-[#2A6384] ring-1 ring-[#5E7681]/25">
         <Gem size={18} /> {user.xp.toLocaleString()} XP
       </div>
     </article>
@@ -133,10 +133,10 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
       <div className="border-t border-[#5E7681]/20">
         <div className="flex items-center justify-between gap-3 px-6 py-5">
           <div className="flex items-center gap-3">
-            <List size={20} className="text-[#1B3C53]" />
+            <List size={20} className="text-[#2A6384]" />
             <h2 className="text-lg font-black text-[#13112D]">Top contributors</h2>
           </div>
-          <span className="rounded-xl bg-[#E1EFEB] px-4 py-2 text-xs font-black text-[#1B3C53] ring-1 ring-[#5E7681]/25">Monthly</span>
+          <span className="rounded-xl bg-[#E1EFEB] px-4 py-2 text-xs font-black text-[#2A6384] ring-1 ring-[#5E7681]/25">Monthly</span>
         </div>
 
         <div className="grid grid-cols-[64px_minmax(0,1fr)_86px_120px] gap-4 border-y border-[#5E7681]/20 bg-[#E1EFEB]/55 px-6 py-4 text-[11px] font-black uppercase tracking-wider text-[#5E7681] md:grid-cols-[80px_minmax(0,1fr)_140px_160px_140px]">
@@ -162,10 +162,10 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
                     {user.name}
                   </ProfileLink>
                   <p className="truncate text-[11px] font-black uppercase text-slate-500">{leagueLabel(user.xp)}</p>
-                  {currentUserId === user.id && <span className="mt-1 inline-flex rounded-full bg-[#E1EFEB] px-2 py-0.5 text-[10px] font-black text-[#1B3C53] ring-1 ring-[#5E7681]/25">You</span>}
+                  {currentUserId === user.id && <span className="mt-1 inline-flex rounded-full bg-[#E1EFEB] px-2 py-0.5 text-[10px] font-black text-[#2A6384] ring-1 ring-[#5E7681]/25">You</span>}
                 </div>
               </div>
-              <span className="flex items-center text-base font-black text-[#1B3C53]">LVL {getLevel(user.xp)}</span>
+              <span className="flex items-center text-base font-black text-[#2A6384]">LVL {getLevel(user.xp)}</span>
               <span className="flex items-center font-black text-slate-800">{user.xp.toLocaleString()} XP</span>
               <div className="hidden items-center justify-end md:flex">
                 <TopBadge applicationsApplied={user.applicationsApplied} />
@@ -178,10 +178,10 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
       {currentUser && currentProgress && (
         <div className="grid gap-5 border-t border-[#5E7681]/25 bg-[#E1EFEB]/65 px-6 py-5 xl:grid-cols-[minmax(360px,1fr)_minmax(420px,620px)_auto] xl:items-center">
           <div className="flex min-w-0 items-center gap-4">
-            <span className="text-xl font-black text-[#1B3C53]">{currentIndex + 1}</span>
+            <span className="text-xl font-black text-[#2A6384]">{currentIndex + 1}</span>
             <Avatar user={currentUser} />
             <div className="min-w-0">
-              <p className="truncate text-base font-black text-[#1B3C53]">{currentUser.name} <span className="text-slate-500">(You)</span></p>
+              <p className="truncate text-base font-black text-[#2A6384]">{currentUser.name} <span className="text-slate-500">(You)</span></p>
               <p className="text-xs font-black uppercase text-[#5E7681]">{leagueLabel(currentUser.xp)} · Top {Math.max(1, Math.round(((currentIndex + 1) / sorted.length) * 100))}%</p>
             </div>
           </div>
@@ -191,7 +191,7 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
               <span>{nextUser ? `${Math.max(0, nextUser.xp - currentUser.xp).toLocaleString()} XP to pass` : "Leader"}</span>
             </div>
             <div className="mt-2 h-2 overflow-hidden rounded-full bg-white ring-1 ring-[#5E7681]/20">
-              <div className="h-full rounded-full bg-[#1B3C53]" style={{ width: `${currentProgress.percent}%` }} />
+              <div className="h-full rounded-full bg-[#2A6384]" style={{ width: `${currentProgress.percent}%` }} />
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap xl:min-w-[260px] xl:justify-end">
@@ -199,7 +199,7 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
               <p className="text-xs font-black uppercase text-[#5E7681]">Current XP</p>
               <p className="text-xl font-black text-[#13112D]">{currentUser.xp.toLocaleString()}</p>
             </div>
-            <Link href="/rewards" className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-2xl border border-[#1B3C53]/20 bg-[#1B3C53] px-5 text-sm font-black text-white transition hover:bg-[#162D41]">
+            <Link href="/rewards" className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-2xl border border-[#2A6384]/20 bg-[#2A6384] px-5 text-sm font-black text-white transition hover:bg-[#214E69]">
               <Rocket size={16} /> Boost Rank
             </Link>
           </div>

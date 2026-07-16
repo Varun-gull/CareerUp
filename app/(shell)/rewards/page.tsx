@@ -61,7 +61,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                 Unlock focused tools you can use while applying, networking, interviewing, and comparing offers.
               </p>
             </div>
-            <div className="rounded-2xl bg-[#E1EFEB] px-4 py-3 text-sm font-bold text-[#1B3C53] ring-1 ring-[#5E7681]/25">
+            <div className="rounded-2xl bg-[#E1EFEB] px-4 py-3 text-sm font-bold text-[#2A6384] ring-1 ring-[#5E7681]/25">
               <RankBadge xp={profile.xp} />
             </div>
           </div>
@@ -139,7 +139,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                 Complete these challenges to build momentum and earn points for the rewards above.
               </p>
             </div>
-            <div className="inline-flex items-center gap-2 rounded-2xl bg-white/90 px-4 py-3 text-sm font-bold text-[#1B3C53] shadow-sm ring-1 ring-[#5E7681]/25">
+            <div className="inline-flex items-center gap-2 rounded-2xl bg-white/90 px-4 py-3 text-sm font-bold text-[#2A6384] shadow-sm ring-1 ring-[#5E7681]/25">
               <BriefcaseBusiness size={17} /> {allChallenges.length} active challenges
             </div>
           </div>

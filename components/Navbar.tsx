@@ -47,7 +47,7 @@ export async function Navbar() {
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-navy/95 shadow-lg shadow-black/25 backdrop-blur-xl">
       <nav className="grid w-full grid-cols-[auto_auto] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
-        <Link href="/dashboard" className="shrink-0 justify-self-start text-2xl font-black tracking-tight text-[#5E548E]">
+        <Link href="/dashboard" className="shrink-0 justify-self-start text-2xl font-black tracking-tight text-[#4aa8e0]">
           CareerUp
         </Link>
         <NavLinks />

@@ -201,29 +201,19 @@ export async function PostingsPageView({
   return (
     <>
       <main className="page-shell">
-        <PageHero compact eyebrow="Live search" title={pageTitle} description={pageCopy} />
+        <PageHero
+          compact
+          eyebrow="Live search"
+          title={pageTitle}
+          description={pageCopy}
+          tabs={[
+            { label: "Internships", href: "/postings/internships", active: kind === "internship" },
+            { label: "New Grad", href: "/postings/new-grad", active: kind === "new-grad" }
+          ]}
+        />
 
         {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
-
-        <div className="mt-6 flex justify-center">
-          <nav className="inline-flex items-center gap-1 rounded-2xl bg-white p-1.5 shadow-sm ring-1 ring-slate-200">
-            <Link
-              href="/postings/internships"
-              aria-current={kind === "internship" ? "page" : undefined}
-              className={`rounded-xl px-5 py-2 text-sm font-bold transition ${kind === "internship" ? "bg-[#231942] text-white shadow-sm" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
-            >
-              Internships
-            </Link>
-            <Link
-              href="/postings/new-grad"
-              aria-current={kind === "new-grad" ? "page" : undefined}
-              className={`rounded-xl px-5 py-2 text-sm font-bold transition ${kind === "new-grad" ? "bg-[#231942] text-white shadow-sm" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
-            >
-              New Grad
-            </Link>
-          </nav>
-        </div>
 
         <PostingsSearchForm
           roleSuggestions={roleSuggestions}

@@ -44,16 +44,16 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
         ]}
       />
       {searchParams?.message && (
-        <p className="rounded-2xl border border-[#7E739F]/30 bg-[#FBFAFD] p-3 text-sm font-bold text-[#231942]">{searchParams.message}</p>
+        <p className="rounded-2xl border border-[#5E7681]/30 bg-[#F8FBFA] p-3 text-sm font-bold text-[#1B3C53]">{searchParams.message}</p>
       )}
 
       <section className="dashboard-overlap space-y-5">
         <div className="dashboard-layer">
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} tone="bg-[#231942] text-white" />
-            <StatCard icon={Flame} label="Day streak" value={profile.streak.toLocaleString()} tone="bg-[#7E739F] text-white" />
-            <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} tone="bg-[#EFE9F4] text-[#231942]" />
-            <StatCard icon={Trophy} label="Offers" value={offerCount.toLocaleString()} tone="bg-[#FBFAFD] text-[#231942] ring-1 ring-[#7E739F]/35" />
+            <StatCard icon={Sparkles} label="Total XP" value={profile.xp.toLocaleString()} tone="bg-[#1B3C53] text-white" />
+            <StatCard icon={Flame} label="Day streak" value={profile.streak.toLocaleString()} tone="bg-[#5E7681] text-white" />
+            <StatCard icon={CheckCircle2} label="Applications sent" value={appliedCount.toLocaleString()} tone="bg-[#E1EFEB] text-[#1B3C53]" />
+            <StatCard icon={Trophy} label="Offers" value={offerCount.toLocaleString()} tone="bg-[#F8FBFA] text-[#1B3C53] ring-1 ring-[#5E7681]/35" />
           </div>
         </div>
 
@@ -65,7 +65,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
                 <p className="eyebrow">XP quests</p>
                 <h2 className="mt-1 text-2xl font-bold text-ink">Daily challenges</h2>
               </div>
-              <span className="rounded-full bg-[#EFE9F4] px-3 py-1 text-xs font-bold text-[#231942] ring-1 ring-[#7E739F]/30">3 today</span>
+              <span className="rounded-full bg-[#E1EFEB] px-3 py-1 text-xs font-bold text-[#1B3C53] ring-1 ring-[#5E7681]/30">3 today</span>
             </div>
             <div className="mt-4 grid flex-1 content-start gap-4">
               {[...challenges.tiered, ...challenges.oneOff].slice(0, 3).map((challenge) => (

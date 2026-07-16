@@ -84,11 +84,30 @@ function EmptyMessages() {
   );
 }
 
-export default async function MessagesPage({ searchParams }: { searchParams?: { message?: string; thread?: string } }) {
+export default async function MessagesPage({ searchParams }: { searchParams?: { message?: string; thread?: string; q?: string; archived?: string } }) {
   const [messages, peerFeatureStatus] = await Promise.all([getPeerMessages(), getRolePeerFeatureStatus()]);
   const conversations = buildConversations(messages);
-  const selectedConversation = conversations.find((conversation) => conversation.id === searchParams?.thread) ?? conversations[0];
-  const unreadCount = conversations.reduce((sum, conversation) => sum + conversation.unreadCount, 0);
+  const searchQuery = typeof searchParams?.q === "string" ? searchParams.q.trim() : "";
+  const archivedConversationId = typeof searchParams?.archived === "string" ? searchParams.archived : "";
+  const visibleConversations = conversations
+    .filter((conversation) => conversation.id !== archivedConversationId)
+    .filter((conversation) => {
+      if (!searchQuery) {
+        return true;
+      }
+
+      const haystack = [
+        conversation.otherName,
+        conversation.otherSchool,
+        conversation.applicationCompany,
+        conversation.applicationRole,
+        conversation.lastMessage.body,
+      ].join(" ").toLowerCase();
+
+      return haystack.includes(searchQuery.toLowerCase());
+    });
+  const selectedConversation = visibleConversations.find((conversation) => conversation.id === searchParams?.thread) ?? visibleConversations[0];
+  const unreadCount = visibleConversations.reduce((sum, conversation) => sum + conversation.unreadCount, 0);
 
   return (
     <>
@@ -100,7 +119,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
           description="Keep role questions, profile messages, and peer advice in clean conversation threads."
           actions={
             <span className="rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-bold text-white ring-1 ring-white/20">
-              {conversations.length} threads · {unreadCount} unread
+              {visibleConversations.length} threads · {unreadCount} unread
             </span>
           }
         />
@@ -111,18 +130,23 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
           <section className="mt-8 grid min-h-[calc(100vh-8.5rem)] overflow-hidden rounded-[2rem] border border-white/80 bg-white/85 shadow-strong backdrop-blur-xl lg:grid-cols-[360px_minmax(0,1fr)]">
             <aside className="border-b border-slate-200/80 bg-white/90 lg:border-b-0 lg:border-r">
               <div className="space-y-6 p-5">
-                <label className="flex min-h-12 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 text-slate-500 shadow-sm">
+                <form action="/messages" className="flex min-h-12 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 text-slate-500 shadow-sm">
                   <Search size={18} />
-                  <span className="text-sm font-semibold">Search</span>
-                </label>
+                  <input
+                    name="q"
+                    defaultValue={searchQuery}
+                    placeholder="Search"
+                    className="min-w-0 flex-1 bg-transparent text-sm font-semibold text-ink outline-none placeholder:text-slate-500"
+                  />
+                </form>
 
                 <div>
                   <div className="flex items-center justify-between gap-3">
                     <h2 className="text-xl font-black text-ink">Active</h2>
-                    <span className="rounded-full bg-[#EAF2F8] px-3 py-1 text-xs font-black text-[#2A6384]">{conversations.length}</span>
+                    <span className="rounded-full bg-[#EAF2F8] px-3 py-1 text-xs font-black text-[#2A6384]">{visibleConversations.length}</span>
                   </div>
-                  <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
-                    {conversations.slice(0, 6).map((conversation) => (
+                  <div className="mt-4 flex gap-3 overflow-visible pb-1">
+                    {visibleConversations.slice(0, 6).map((conversation) => (
                       <Link
                         key={conversation.id}
                         href={`/messages?thread=${encodeURIComponent(conversation.id)}`}
@@ -134,7 +158,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                           <Avatar conversation={conversation} />
                         </span>
                         <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-sky-500" />
-                        <span className="pointer-events-none absolute -top-9 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-xl bg-[#173B55] px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100">
+                        <span className="pointer-events-none absolute -top-10 left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-xl bg-[#173B55] px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100">
                           {conversation.otherName}
                         </span>
                       </Link>
@@ -146,14 +170,14 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
               <div className="border-t border-slate-200/80 px-5 py-4">
                 <div className="flex items-center justify-between gap-3">
                   <h1 className="text-2xl font-black text-ink">Messages <span className="align-middle text-sm text-slate-500">({messages.length})</span></h1>
-                  <button className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm" aria-label="New message">
+                  <Link href="/friends" className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm" aria-label="New message">
                     <Edit3 size={18} />
-                  </button>
+                  </Link>
                 </div>
               </div>
 
               <div className="max-h-[calc(100vh-25rem)] overflow-y-auto px-3 pb-4">
-                {conversations.map((conversation) => {
+                {visibleConversations.map((conversation) => {
                   const active = conversation.id === selectedConversation.id;
                   return (
                     <Link
@@ -218,13 +242,29 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                         </button>
                       </form>
                     ) : (
-                      <button className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-sm font-black text-slate-700 shadow-sm">
+                      <Link
+                        href={`/messages?archived=${encodeURIComponent(selectedConversation.id)}&message=${encodeURIComponent("Conversation archived.")}`}
+                        className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-sm font-black text-slate-700 shadow-sm"
+                      >
                         <Archive className="mr-2" size={16} /> Archive
-                      </button>
+                      </Link>
                     )}
-                    <button className="flex h-11 w-11 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-50" aria-label="More options">
+                    <Link
+                      href={
+                        selectedConversation.roleKey.startsWith("profile::")
+                          ? `/u/${selectedConversation.otherProfileId}`
+                          : `/postings/insights?${new URLSearchParams({
+                              roleKey: selectedConversation.roleKey,
+                              company: selectedConversation.applicationCompany,
+                              role: selectedConversation.applicationRole,
+                              returnTo: "/messages"
+                            }).toString()}`
+                      }
+                      className="flex h-11 w-11 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-50"
+                      aria-label="Open conversation context"
+                    >
                       <MoreVertical size={18} />
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -256,7 +296,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                           <span>{outbound ? "You" : message.otherName}</span>
                           <span>{message.createdAt}</span>
                         </div>
-                        <div className={`inline-block max-w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold leading-6 shadow-sm ${
+                        <div className={`inline-block max-w-full rounded-2xl px-3 py-2 text-left text-sm font-semibold leading-5 shadow-sm ${
                           outbound
                             ? "rounded-br-md bg-blue-600 text-white"
                             : "rounded-bl-md bg-slate-50 text-slate-900 ring-1 ring-slate-100"

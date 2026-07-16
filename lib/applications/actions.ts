@@ -318,6 +318,8 @@ export async function savePostingApplication(formData: FormData) {
   const location = String(formData.get("location") ?? "").trim();
   const sourceUrl = String(formData.get("sourceUrl") ?? "").trim();
   const fitScore = Number(formData.get("fitScore") ?? 75);
+  const requestedStatus = String(formData.get("status") ?? "saved");
+  const status: ApplicationStatus = requestedStatus === "applied" ? "applied" : "saved";
   const returnTo = getSafePostingsReturnTo(formData.get("returnTo"));
 
   if (!company || !role || !sourceUrl) {
@@ -326,14 +328,47 @@ export async function savePostingApplication(formData: FormData) {
 
   const { data: existing } = await supabase
     .from("applications")
-    .select("id")
+    .select("id, status, xp_awarded")
     .eq("user_id", user.id)
     .eq("source_url", sourceUrl)
-    .maybeSingle<{ id: string }>();
+    .maybeSingle<{ id: string; status: ApplicationStatus; xp_awarded: number | null }>();
 
   if (existing) {
+    if (status === "applied" && existing.status === "saved") {
+      const updatedXpAwarded = (existing.xp_awarded ?? pointValues.saveRole) + pointValues.applyRole;
+      const { error: updateError } = await supabase
+        .from("applications")
+        .update({ status: "applied", xp_awarded: updatedXpAwarded })
+        .eq("id", existing.id)
+        .eq("user_id", user.id);
+
+      if (updateError) {
+        redirectWithMessage(returnTo, updateError.message);
+      }
+
+      const profileError = await updateAppliedStreakAndStats({ supabase, userId: user.id });
+      if (profileError) {
+        redirectWithMessage(returnTo, profileError.message);
+      }
+
+      await awardXp({ supabase, userId: user.id, amount: pointValues.applyRole });
+      await awardEligibleChallenges(supabase, user.id);
+
+      revalidatePath("/applications");
+      revalidatePath("/dashboard");
+      revalidatePath("/leaderboard");
+      revalidatePath("/profile");
+      revalidatePath("/calendar");
+      revalidatePath("/postings");
+      revalidatePath("/postings/internships");
+      revalidatePath("/postings/new-grad");
+      redirectWithMessage(returnTo, "Nice. That role is now marked as applied.");
+    }
+
     redirectWithMessage(returnTo, "That posting is already in your tracker.");
   }
+
+  const xpAwarded = pointValues.saveRole + (status === "applied" ? pointValues.applyRole : 0);
 
   const insertPayload = {
     user_id: user.id,
@@ -344,8 +379,8 @@ export async function savePostingApplication(formData: FormData) {
     location: location || null,
     source_url: sourceUrl,
     fit_score: Number.isFinite(fitScore) ? Math.min(100, Math.max(0, fitScore)) : 75,
-    status: "saved",
-    xp_awarded: pointValues.saveRole
+    status,
+    xp_awarded: xpAwarded
   };
 
   let { error } = await supabase.from("applications").insert(insertPayload);
@@ -360,7 +395,14 @@ export async function savePostingApplication(formData: FormData) {
     redirectWithMessage(returnTo, error.message);
   }
 
-  await awardXp({ supabase, userId: user.id, amount: pointValues.saveRole });
+  if (status === "applied") {
+    const profileError = await updateAppliedStreakAndStats({ supabase, userId: user.id });
+    if (profileError) {
+      redirectWithMessage(returnTo, profileError.message);
+    }
+  }
+
+  await awardXp({ supabase, userId: user.id, amount: xpAwarded });
   await awardEligibleChallenges(supabase, user.id);
 
   const { data: newApp } = await supabase
@@ -377,7 +419,7 @@ export async function savePostingApplication(formData: FormData) {
       application_id: newApp.id,
       company,
       role,
-      status: "saved",
+      status,
       event_type: "submitted",
       date: today,
     });
@@ -391,7 +433,7 @@ export async function savePostingApplication(formData: FormData) {
   revalidatePath("/postings");
   revalidatePath("/postings/internships");
   revalidatePath("/postings/new-grad");
-  redirectWithMessage(returnTo, "Posting saved to your tracker. You earned 5 XP.");
+  redirectWithMessage(returnTo, status === "applied" ? "Nice. That role was added as applied." : "Posting saved to your tracker. You earned 5 XP.");
 }
 
 export async function updateApplicationStatus(formData: FormData) {

@@ -37,9 +37,8 @@ function Avatar({ user, size = "md" }: { user: LeaderboardUser; size?: "md" | "l
 
 function PodiumCard({ user, place }: { user: LeaderboardUser; place: number }) {
   const isFirst = place === 1;
-  const border = place === 1 ? "border-amber-400" : place === 2 ? "border-slate-300" : "border-orange-400";
-  const badge = place === 1 ? "bg-white text-amber-950 ring-2 ring-amber-300" : place === 2 ? "bg-white text-slate-700 ring-2 ring-slate-300" : "bg-white text-orange-950 ring-2 ring-orange-300";
-  const trophyTone = place === 1 ? "text-amber-500" : place === 2 ? "text-slate-400" : "text-orange-500";
+  const border = place === 1 ? "border-[#1B3C53]" : place === 2 ? "border-[#91B6AF]" : "border-[#5E7681]/55";
+  const badge = place === 1 ? "bg-[#91B6AF] text-[#13112D]" : place === 2 ? "bg-slate-300 text-slate-950" : "bg-[#5E7681] text-white";
 
   return (
     <article className={`relative flex min-h-72 flex-col items-center justify-center rounded-3xl border bg-[#F8FBFA] p-6 text-center shadow-soft ${border} ${isFirst ? "md:-mt-8" : ""}`}>
@@ -50,8 +49,8 @@ function PodiumCard({ user, place }: { user: LeaderboardUser; place: number }) {
       )}
       <div className="relative">
         <Avatar user={user} size="lg" />
-        <span className={`absolute -bottom-3 left-1/2 flex h-10 min-w-10 -translate-x-1/2 items-center justify-center gap-1 rounded-full px-2 text-sm font-black ${badge}`}>
-          <Trophy size={16} className={trophyTone} />
+        <span className={`absolute -bottom-3 left-1/2 flex h-10 min-w-10 -translate-x-1/2 items-center justify-center gap-1 rounded-full px-2 text-sm font-black shadow-sm ${badge}`}>
+          <Trophy size={16} />
           {place}
         </span>
       </div>

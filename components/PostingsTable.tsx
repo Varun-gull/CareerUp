@@ -1,6 +1,7 @@
 import { BookmarkPlus, CheckCircle2, ExternalLink, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { savePostingApplication } from "@/lib/applications/actions";
+import { PostingApplyFollowUpPrompt, PostingApplyLink } from "@/components/PostingApplyFollowUp";
 import { buildRoleKey } from "@/lib/role-key";
 import type { InternshipPosting, RolePeerInsight } from "@/lib/types";
 
@@ -45,6 +46,7 @@ export function PostingsTable({
 }) {
   return (
     <div className="mt-6 overflow-hidden rounded-[1.75rem] border border-white/85 bg-white/70 shadow-soft backdrop-blur-2xl">
+      <PostingApplyFollowUpPrompt />
       <div className="divide-y divide-slate-200 md:hidden">
         {postings.map((posting, index) => {
           const saved = savedSourceUrls.has(posting.url);
@@ -74,14 +76,19 @@ export function PostingsTable({
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-2">
-                <a
-                  href={posting.url}
-                  target="_blank"
-                  rel="noreferrer"
+                <PostingApplyLink
+                  posting={{
+                    company: posting.company,
+                    role: posting.title,
+                    location: posting.location,
+                    sourceUrl: posting.url,
+                    fitScore: posting.fitScore
+                  }}
+                  returnTo={returnTo}
                   className="inline-flex min-h-10 items-center justify-center rounded-2xl bg-emerald-600 px-3 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700"
                 >
                   <ExternalLink className="mr-1.5" size={15} /> Apply
-                </a>
+                </PostingApplyLink>
                 <form action={savePostingApplication}>
                   <input type="hidden" name="company" value={posting.company} />
                   <input type="hidden" name="role" value={posting.title} />
@@ -89,6 +96,7 @@ export function PostingsTable({
                   <input type="hidden" name="sourceUrl" value={posting.url} />
                   <input type="hidden" name="fitScore" value={posting.fitScore} />
                   <input type="hidden" name="returnTo" value={returnTo} />
+                  <input type="hidden" name="status" value="saved" />
                   <button
                     type="submit"
                     disabled={saved}
@@ -157,14 +165,19 @@ export function PostingsTable({
                 </td>
                 <td className="hidden whitespace-nowrap px-2 py-3 font-bold text-slate-600 xl:table-cell">{posting.postedAt}</td>
                 <td className="px-2 py-3">
-                  <a
-                    href={posting.url}
-                    target="_blank"
-                    rel="noreferrer"
+                  <PostingApplyLink
+                    posting={{
+                      company: posting.company,
+                      role: posting.title,
+                      location: posting.location,
+                      sourceUrl: posting.url,
+                      fitScore: posting.fitScore
+                    }}
+                    returnTo={returnTo}
                     className="inline-flex min-h-9 items-center justify-center rounded-2xl bg-slate-950 px-3 text-xs font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-800"
                   >
                     <ExternalLink className="mr-1" size={14} /> Apply
-                  </a>
+                  </PostingApplyLink>
                 </td>
                 <td className="hidden whitespace-nowrap px-2 py-3 md:table-cell">
                   <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
@@ -201,6 +214,7 @@ export function PostingsTable({
                     <input type="hidden" name="sourceUrl" value={posting.url} />
                     <input type="hidden" name="fitScore" value={posting.fitScore} />
                     <input type="hidden" name="returnTo" value={returnTo} />
+                    <input type="hidden" name="status" value="saved" />
                     <button
                       type="submit"
                       disabled={saved}

@@ -24,10 +24,10 @@ export function getRewardPointsForXp(amount: number) {
 }
 
 export const rankBonuses = [
-  { rankName: "Silver Strategist", xp: 50 },
-  { rankName: "Gold Climber", xp: 100 },
-  { rankName: "Platinum Candidate", xp: 175 },
-  { rankName: "Elite Intern", xp: 300 },
+  { rankName: "Active Applicant", legacyNames: ["Silver Strategist"], xp: 50 },
+  { rankName: "Qualified Candidate", legacyNames: ["Gold Climber"], xp: 100 },
+  { rankName: "Interview Ready", legacyNames: ["Platinum Candidate"], xp: 175 },
+  { rankName: "Offer Ready", legacyNames: ["Elite Intern"], xp: 300 },
 ] as const;
 
 type DbChallenge = {
@@ -44,7 +44,12 @@ function isDailyChallenge(title: string) {
 function getNewlyReachedRankNames(previousXp: number, nextXp: number, alreadyAwarded: string[]) {
   const alreadyAwardedSet = new Set(alreadyAwarded);
   return ranks
-    .filter((rank) => rank.minXp > 0 && previousXp < rank.minXp && nextXp >= rank.minXp && !alreadyAwardedSet.has(rank.name))
+    .filter((rank) => {
+      const bonus = rankBonuses.find((item) => item.rankName === rank.name);
+      const bonusAlreadyAwarded = Boolean(bonus && [bonus.rankName, ...bonus.legacyNames].some((name) => alreadyAwardedSet.has(name)));
+
+      return rank.minXp > 0 && previousXp < rank.minXp && nextXp >= rank.minXp && !bonusAlreadyAwarded;
+    })
     .map((rank) => rank.name);
 }
 
@@ -220,11 +225,15 @@ export function getRankBonusForDisplay(rankName: string) {
   return rankBonuses.find((bonus) => bonus.rankName === rankName)?.xp ?? 0;
 }
 
+function isRankBonusAwarded(bonus: (typeof rankBonuses)[number], awarded: string[]) {
+  return [bonus.rankName, ...bonus.legacyNames].some((name) => awarded.includes(name));
+}
+
 export function getCurrentRankBonusStatus(xp: number, awarded: string[]) {
   const currentRank = getRank(xp);
   return rankBonuses.map((bonus) => ({
     ...bonus,
     reached: currentRank.name === bonus.rankName || ranks.find((rank) => rank.name === currentRank.name)!.minXp >= ranks.find((rank) => rank.name === bonus.rankName)!.minXp,
-    awarded: awarded.includes(bonus.rankName),
+    awarded: isRankBonusAwarded(bonus, awarded),
   }));
 }

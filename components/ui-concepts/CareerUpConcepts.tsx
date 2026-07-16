@@ -180,7 +180,7 @@ export function AuroraCommandConcept() {
               <div className="mt-4 h-2 rounded-full bg-white/20">
                 <div className="h-2 w-7/12 rounded-full bg-white" />
               </div>
-              <p className="mt-3 text-sm font-bold text-cyan-50">105 XP to Silver Strategist</p>
+              <p className="mt-3 text-sm font-bold text-cyan-50">105 XP to Active Applicant</p>
             </div>
             <div className="mt-4 grid gap-3">
               {pipeline.map((stage) => (

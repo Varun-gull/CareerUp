@@ -1,16 +1,14 @@
 import { PageHero } from "@/components/PageHero";
-import { ArrowRight, BriefcaseBusiness, Gift, LockKeyhole, Sparkles, Trophy, UnlockKeyhole } from "lucide-react";
+import { ArrowRight, Gift, LockKeyhole, Sparkles, UnlockKeyhole } from "lucide-react";
 import Link from "next/link";
-import { ChallengeCard } from "@/components/ChallengeCard";
 import { RankBadge } from "@/components/RankBadge";
 import { XpProgressBar } from "@/components/XpProgressBar";
 import { unlockReward } from "@/lib/rewards/actions";
-import { getChallenges, getCurrentProfile, getRewards } from "@/lib/data";
+import { getCurrentProfile, getRewards } from "@/lib/data";
 
 export default async function RewardsPage({ searchParams }: { searchParams?: { message?: string } }) {
-  const [profile, rewards, challenges] = await Promise.all([getCurrentProfile(), getRewards(), getChallenges()]);
+  const [profile, rewards] = await Promise.all([getCurrentProfile(), getRewards()]);
   const unlockedCount = rewards.filter((reward) => reward.unlocked).length;
-  const allChallenges = [...challenges.tiered, ...challenges.oneOff];
 
   return (
     <>
@@ -28,7 +26,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
 
         {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
 
-        <section className="mt-8 grid gap-4 md:grid-cols-3">
+        <section className="mt-8 grid gap-4 md:grid-cols-2">
           <div className="card p-5">
             <Sparkles size={22} className="text-brand" />
             <p className="mt-4 text-sm font-bold text-slate-500">Reward Points</p>
@@ -40,11 +38,6 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
             <p className="mt-1 text-3xl font-bold text-ink">
               {unlockedCount}/{rewards.length}
             </p>
-          </div>
-          <div className="card p-5">
-            <Trophy size={22} className="text-brand" />
-            <p className="mt-4 text-sm font-bold text-slate-500">Challenges</p>
-            <p className="mt-1 text-3xl font-bold text-ink">{allChallenges.length}</p>
           </div>
         </section>
 
@@ -127,26 +120,6 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                 </article>
               );
             })}
-          </div>
-        </section>
-
-        <section className="mt-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">Earn XP and Reward Points</p>
-              <h2 className="mt-2 text-2xl font-bold text-ink">All challenges</h2>
-              <p className="mt-2 max-w-2xl text-slate-600">
-                Complete these challenges to build momentum and earn points for the rewards above.
-              </p>
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-2xl bg-white/90 px-4 py-3 text-sm font-bold text-[#2A6384] shadow-sm ring-1 ring-[#5E7681]/25">
-              <BriefcaseBusiness size={17} /> {allChallenges.length} active challenges
-            </div>
-          </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
-            {allChallenges.map((challenge) => (
-              <ChallengeCard key={challenge.id} challenge={challenge} />
-            ))}
           </div>
         </section>
       </main>

@@ -38,21 +38,21 @@ function Avatar({ user, size = "md" }: { user: LeaderboardUser; size?: "md" | "l
 const podiumStyles = {
   1: {
     order: "md:order-2",
-    minHeight: "md:min-h-[22rem]",
+    minHeight: "min-h-[18rem] md:min-h-[26rem]",
     border: "border-amber-300",
     badge: "bg-amber-300 text-[#1B3C53]",
     nameColor: "text-[#1B3C53]"
   },
   2: {
     order: "md:order-1",
-    minHeight: "md:min-h-[19rem]",
+    minHeight: "min-h-[18rem] md:min-h-[22rem]",
     border: "border-[#91B6AF]",
     badge: "bg-[#91B6AF] text-[#13112D]",
     nameColor: "text-slate-800"
   },
   3: {
     order: "md:order-3",
-    minHeight: "md:min-h-[16rem]",
+    minHeight: "min-h-[18rem] md:min-h-[19rem]",
     border: "border-[#5E7681]/55",
     badge: "bg-[#5E7681] text-white",
     nameColor: "text-slate-800"
@@ -65,7 +65,7 @@ function PodiumCard({ user, place }: { user: LeaderboardUser; place: 1 | 2 | 3 }
 
   return (
     <article
-      className={`relative flex min-h-72 flex-col items-center justify-center self-end rounded-3xl border bg-[#F8FBFA] p-6 text-center shadow-soft ${style.border} ${style.order} ${style.minHeight}`}
+      className={`relative flex w-full flex-col items-center justify-center self-end rounded-3xl border bg-[#F8FBFA] p-6 text-center shadow-soft md:flex-1 ${style.border} ${style.order} ${style.minHeight}`}
     >
       {isFirst && (
         <span className="absolute right-5 top-5 rounded-full border border-amber-300 bg-amber-50 p-2 text-amber-500">

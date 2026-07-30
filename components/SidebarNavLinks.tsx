@@ -38,18 +38,18 @@ function RailItem({ link, active }: { link: SidebarLink; active: boolean }) {
       aria-label={link.label}
       aria-current={active ? "page" : undefined}
       className={clsx(
-        "group relative flex h-11 w-11 items-center overflow-hidden rounded-2xl px-3 transition-all duration-200 hover:w-40 hover:justify-start hover:gap-3 focus-visible:w-40 focus-visible:justify-start focus-visible:gap-3 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2A6384]/15",
+        "group relative flex h-11 w-11 items-center overflow-hidden rounded-2xl px-3 hover:w-40 hover:justify-start hover:gap-3 focus-visible:w-40 focus-visible:justify-start focus-visible:gap-3 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2A6384]/20 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out",
         active
           ? "bg-[#2A6384] text-white shadow-strong"
-          : "bg-[#F8FBFA]/85 text-[#5E7681] shadow-sm ring-1 ring-[#5E7681]/30 hover:bg-white hover:text-[#2A6384]"
+          : "bg-[#F8FBFA]/85 text-[#5E7681] shadow-sm ring-1 ring-[#5E7681]/30 hover:bg-white hover:text-[#2A6384] hover:ring-[#2A6384]/35"
       )}
     >
-      <Icon size={19} className="shrink-0" />
-      <span className="whitespace-nowrap text-sm font-bold opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100">
+      <Icon size={19} className="shrink-0 transition-transform duration-200 group-hover:scale-110" />
+      <span className="whitespace-nowrap text-sm font-semibold opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100">
         {link.label}
       </span>
       {link.badge !== undefined && link.badge > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-4.5 min-w-[1.125rem] items-center justify-center rounded-full bg-[#2A6384] px-1 text-[10px] font-bold text-white ring-2 ring-white">
+        <span className="metric absolute -right-1 -top-1 flex h-4.5 min-w-[1.125rem] items-center justify-center rounded-full bg-[#2A6384] px-1 text-[10px] font-semibold text-white ring-2 ring-white">
           {link.badge > 9 ? "9+" : link.badge}
         </span>
       )}

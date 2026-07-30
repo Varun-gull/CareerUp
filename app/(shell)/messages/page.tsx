@@ -70,14 +70,14 @@ function buildConversations(messages: PeerMessage[]) {
 
 function EmptyMessages() {
   return (
-    <div className="flex min-h-[34rem] items-center justify-center rounded-[2rem] border border-white/80 bg-white/75 p-8 text-center shadow-soft">
+    <div className="rise flex min-h-[20rem] items-center justify-center rounded-[2rem] border border-white/80 bg-white/75 p-8 text-center shadow-soft">
       <div>
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EAF2F8] text-[#2A6384]">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EAF2F8] text-[#2A6384] ring-1 ring-inset ring-[#2A6384]/15">
           <Mail size={26} />
         </div>
-        <h2 className="mt-4 text-2xl font-bold text-ink">No conversations yet</h2>
-        <p className="mt-2 max-w-sm text-sm font-semibold leading-6 text-slate-600">
-          Messages from role insights and public profiles will show up here as focused conversations.
+        <h2 className="font-display mt-4 text-2xl font-bold tracking-tight text-ink">No conversations yet</h2>
+        <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-600">
+          Ask a question on a role insight page or message a public profile, and the thread lands here.
         </p>
       </div>
     </div>
@@ -142,8 +142,8 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
 
                 <div>
                   <div className="flex items-center justify-between gap-3">
-                    <h2 className="text-xl font-black text-ink">Active</h2>
-                    <span className="rounded-full bg-[#EAF2F8] px-3 py-1 text-xs font-black text-[#2A6384]">{visibleConversations.length}</span>
+                    <h2 className="text-xl font-bold text-ink">Active</h2>
+                    <span className="rounded-full bg-[#EAF2F8] px-3 py-1 text-xs font-semibold text-[#2A6384]">{visibleConversations.length}</span>
                   </div>
                   <div className="mt-4 flex gap-3 overflow-visible pb-1">
                     {visibleConversations.slice(0, 6).map((conversation) => (
@@ -154,7 +154,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                         aria-label={conversation.otherName}
                         className="group relative flex h-12 w-12 shrink-0 items-center justify-center"
                       >
-                        <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-black text-[#2A6384] ring-1 ring-slate-200">
+                        <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-semibold text-[#2A6384] ring-1 ring-slate-200">
                           <Avatar conversation={conversation} />
                         </span>
                         <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-sky-500" />
@@ -169,7 +169,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
 
               <div className="border-t border-slate-200/80 px-5 py-4">
                 <div className="flex items-center justify-between gap-3">
-                  <h1 className="text-2xl font-black text-ink">Messages <span className="align-middle text-sm text-slate-500">({messages.length})</span></h1>
+                  <h1 className="text-2xl font-bold text-ink">Messages <span className="align-middle text-sm text-slate-500">({messages.length})</span></h1>
                   <Link href="/friends" className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm" aria-label="New message">
                     <Edit3 size={18} />
                   </Link>
@@ -215,14 +215,14 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
               <div className="border-b border-slate-200/80 p-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-4">
-                    <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-lg font-black text-[#2A6384]">
+                    <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-lg font-bold text-[#2A6384]">
                       <Avatar conversation={selectedConversation} />
                       <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white bg-sky-500" />
                     </span>
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <ProfileLink profileId={selectedConversation.otherProfileId} name={selectedConversation.otherName} />
-                        <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-black text-sky-700 ring-1 ring-sky-200">Online</span>
+                        <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-200">Online</span>
                       </div>
                       <p className="mt-1 truncate text-sm font-bold text-slate-600">
                         {selectedConversation.applicationRole} at {selectedConversation.applicationCompany}
@@ -230,21 +230,21 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Link href={`/u/${selectedConversation.otherProfileId}`} className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#2A6384] px-4 text-sm font-black text-white shadow-sm">
+                    <Link href={`/u/${selectedConversation.otherProfileId}`} className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#2A6384] px-4 text-sm font-semibold text-white shadow-sm">
                       View profile
                     </Link>
                     {selectedConversation.unreadCount > 0 ? (
                       <form action={markPeerMessageRead}>
                         <input type="hidden" name="messageId" value={selectedConversation.messages.find((message) => message.unread)?.id ?? ""} />
                         <input type="hidden" name="returnTo" value={`/messages?thread=${encodeURIComponent(selectedConversation.id)}`} />
-                        <button type="submit" className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-sm font-black text-slate-700 shadow-sm">
+                        <button type="submit" className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 shadow-sm">
                           <CheckCheck className="mr-2" size={16} /> Read
                         </button>
                       </form>
                     ) : (
                       <Link
                         href={`/messages?archived=${encodeURIComponent(selectedConversation.id)}&message=${encodeURIComponent("Conversation archived.")}`}
-                        className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-sm font-black text-slate-700 shadow-sm"
+                        className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 shadow-sm"
                       >
                         <Archive className="mr-2" size={16} /> Archive
                       </Link>
@@ -287,12 +287,12 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                   return (
                     <article key={message.id} className={`flex gap-3 ${outbound ? "justify-end" : "justify-start"}`}>
                       {!outbound && (
-                        <span className="mt-7 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-black text-[#2A6384]">
+                        <span className="mt-7 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-semibold text-[#2A6384]">
                           <Avatar conversation={selectedConversation} />
                         </span>
                       )}
                       <div className={`max-w-[74%] ${outbound ? "text-right" : "text-left"}`}>
-                        <div className={`mb-1 flex items-center gap-2 text-xs font-black text-[#2A6384] ${outbound ? "justify-end" : "justify-start"}`}>
+                        <div className={`mb-1 flex items-center gap-2 text-xs font-semibold text-[#2A6384] ${outbound ? "justify-end" : "justify-start"}`}>
                           <span>{outbound ? "You" : message.otherName}</span>
                           <span>{message.createdAt}</span>
                         </div>

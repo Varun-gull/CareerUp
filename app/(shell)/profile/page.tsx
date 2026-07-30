@@ -52,29 +52,34 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
     <>
       <main className="page-shell">
         <section className="card overflow-hidden">
-          <div className="border-b border-white/10 bg-[#13112D] px-6 py-10 text-white">
-            <div className="flex flex-wrap items-center justify-between gap-6">
+          <div className="relative isolate overflow-hidden border-b border-white/10 bg-[#173B55] px-6 py-10 text-white">
+            <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden />
+            <div className="hero-grid pointer-events-none absolute inset-0" aria-hidden />
+            <div className="relative flex flex-wrap items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white text-2xl font-bold text-[#2A6384] shadow-glow">
+                <div className="font-display flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white text-2xl font-bold text-[#2A6384] shadow-glow">
                   {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8FB8D4]">Student profile</p>
-                  <h1 className="mt-1 text-4xl font-bold">{profile.name}</h1>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/65">Student profile</p>
+                  <h1 className="font-display mt-1 text-4xl font-bold tracking-tight">{profile.name}</h1>
                   {profileDetails.length > 0 ? (
                     <div className="mt-3 flex flex-wrap gap-2">
                       {profileDetails.map((detail) => (
-                        <span key={detail} className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm font-bold text-white shadow-sm">
+                        <span key={detail} className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white ring-1 ring-inset ring-white/20">
                           {detail}
                         </span>
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-2 text-sm font-bold text-slate-300">Add your school, major, and graduation year.</p>
+                    <p className="mt-2 text-sm text-white/70">Add your school, major, and graduation year.</p>
                   )}
                 </div>
               </div>
-              <Link href="/friends" className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold transition hover:-translate-y-0.5 hover:border-sky/40 hover:bg-white/10">
+              <Link
+                href="/friends"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/20 px-5 font-semibold transition duration-200 ease-out hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
+              >
                 <Share2 className="mr-2" size={18} /> Share profile
               </Link>
             </div>

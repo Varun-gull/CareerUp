@@ -9,12 +9,12 @@ function MessageButton({ unreadMessages }: { unreadMessages: number }) {
   return (
     <Link
       href="/messages"
-      className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-sky/50 hover:text-sky-600 hover:shadow-md"
+      className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm transition duration-200 ease-out hover:-translate-y-0.5 hover:border-[#2A6384]/50 hover:text-[#2A6384] hover:shadow-md"
       aria-label={unreadMessages > 0 ? `Messages, ${unreadMessages} unread` : "Messages"}
     >
       <Mail size={19} />
       {unreadMessages > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-bold text-white ring-2 ring-navy">
+        <span className="metric absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#2A6384] px-1 text-[10px] font-semibold text-white ring-2 ring-white">
           {unreadMessages > 9 ? "9+" : unreadMessages}
         </span>
       )}
@@ -45,9 +45,9 @@ export async function Navbar() {
   const firstName = user ? getFirstName(profile?.name ?? "") : "";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-navy/95 shadow-lg shadow-black/25 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 border-b border-[#5E7681]/30 bg-[#F8FBFA]/92 shadow-sm backdrop-blur-xl">
       <nav className="grid w-full grid-cols-[auto_auto] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
-        <Link href="/dashboard" className="shrink-0 justify-self-start text-2xl font-black tracking-tight text-[#4aa8e0]">
+        <Link href="/dashboard" className="font-display shrink-0 justify-self-start rounded-lg text-2xl font-bold tracking-tight text-[#2A6384] transition duration-150 hover:text-[#214E69]">
           CareerUp
         </Link>
         <NavLinks />

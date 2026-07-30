@@ -19,39 +19,45 @@ export function PageHero({
   compact?: boolean;
 }) {
   return (
-    <section
-      className={clsx(
-        "hero-3d relative overflow-hidden rounded-[2rem] text-white shadow-strong",
-        "min-h-[17rem]"
-      )}
-    >
-      <div className="absolute inset-0 bg-[#173B55]" />
+    <section className="hero-3d relative isolate overflow-hidden rounded-[1.75rem] bg-[#173B55] text-white">
+      <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden />
+      <div className="hero-grid pointer-events-none absolute inset-0" aria-hidden />
 
-      <div className="relative flex h-full min-h-[17rem] flex-col">
-        {eyebrow && (
-          <div className="flex items-center justify-between px-6 pt-5">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-semibold text-white ring-1 ring-white/25 backdrop-blur">
+      <div className="relative flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+        <div className="min-w-0">
+          {eyebrow && (
+            <span className="rise inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80 ring-1 ring-inset ring-white/20 backdrop-blur">
               {eyebrow}
             </span>
-            {actions && <div className="flex items-center gap-2">{actions}</div>}
-          </div>
-        )}
-
-        <div className="flex flex-1 flex-col items-center justify-center px-6 py-10 text-center">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">{title}</h1>
-          {description && (
-            <p className="mt-4 max-w-3xl text-sm font-medium leading-6 text-white/90 sm:text-base">{description}</p>
           )}
+
+          <h1
+            className={clsx(
+              "rise rise-1 font-display text-3xl font-bold leading-[1.05] tracking-tight sm:text-4xl lg:text-5xl",
+              eyebrow && "mt-4"
+            )}
+          >
+            {title}
+          </h1>
+
+          {description && (
+            <p className="rise rise-2 mt-3 max-w-2xl text-sm leading-6 text-white/70 sm:text-base sm:leading-7">
+              {description}
+            </p>
+          )}
+
           {tabs && tabs.length > 0 && (
-            <nav className="mt-7 flex flex-wrap items-center justify-center gap-1.5 rounded-2xl bg-white/15 p-1.5 ring-1 ring-white/20 backdrop-blur">
+            <nav className="rise rise-3 nav-scroll mt-6 flex items-center gap-1 overflow-x-auto rounded-2xl bg-black/20 p-1 ring-1 ring-inset ring-white/10 lg:w-fit">
               {tabs.map((tab) => (
                 <Link
                   key={tab.href + tab.label}
                   href={tab.href}
                   aria-current={tab.active ? "page" : undefined}
                   className={clsx(
-                    "rounded-xl px-4 py-2 text-sm font-semibold transition",
-                    tab.active ? "bg-white text-[#173B55] shadow-sm" : "text-white hover:bg-white/10 hover:text-white"
+                    "hero-tab shrink-0",
+                    tab.active
+                      ? "bg-white text-[#173B55] shadow-sm"
+                      : "text-white/70 hover:bg-white/10 hover:text-white"
                   )}
                 >
                   {tab.label}
@@ -60,6 +66,8 @@ export function PageHero({
             </nav>
           )}
         </div>
+
+        {actions && <div className="rise rise-2 flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
       </div>
     </section>
   );

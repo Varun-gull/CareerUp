@@ -24,10 +24,10 @@ export function NavLinks() {
             key={item.href}
             href={item.href}
             className={clsx(
-              "shrink-0 rounded-2xl px-4 py-2.5 text-sm font-bold transition sm:text-[15px]",
+              "shrink-0 rounded-xl px-4 py-2.5 text-sm font-semibold transition duration-150 sm:text-[15px]",
               active
-                ? "bg-sky text-white shadow-glow"
-                : "text-slate-300 hover:bg-white/10 hover:text-sky"
+                ? "bg-[#2A6384] text-white shadow-glow"
+                : "text-slate-600 hover:bg-[#EAF2F8] hover:text-[#2A6384]"
             )}
             aria-current={active ? "page" : undefined}
           >

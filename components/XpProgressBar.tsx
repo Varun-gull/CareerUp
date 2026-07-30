@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import clsx from "clsx";
 import { rankBonuses } from "@/lib/gamification";
 import { getRankProgress, ranks } from "@/lib/rank";
 
@@ -45,18 +46,27 @@ export function XpProgressBar({ xp }: { xp: number }) {
       }}
       className="rounded-3xl border border-slate-200 bg-white/95 p-3 shadow-strong backdrop-blur-xl"
     >
-      <div className="grid gap-2">
-        {ranks.map((rank) => (
-          <div key={rank.name} className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2">
-            <span className="text-sm font-bold text-ink">{rank.name}</span>
-            <span className="text-right text-xs font-bold text-slate-600">
-              {rank.minXp.toLocaleString()} XP
-              {rankBonuses.some((b) => b.rankName === rank.name) && (
-                <span className="block text-brand">+{rankBonuses.find((b) => b.rankName === rank.name)?.xp} bonus</span>
+      <div className="grid gap-1.5">
+        {ranks.map((rank) => {
+          const isCurrent = rank.name === progress.current.name;
+          return (
+            <div
+              key={rank.name}
+              className={clsx(
+                "flex items-center justify-between gap-3 rounded-xl px-3 py-2 transition",
+                isCurrent ? "bg-[#EAF2F8] ring-1 ring-inset ring-[#2A6384]/25" : "bg-slate-50"
               )}
-            </span>
-          </div>
-        ))}
+            >
+              <span className={clsx("text-sm", isCurrent ? "font-bold text-[#2A6384]" : "font-semibold text-ink")}>{rank.name}</span>
+              <span className="metric text-right text-xs font-semibold text-slate-600">
+                {rank.minXp.toLocaleString()} XP
+                {rankBonuses.some((b) => b.rankName === rank.name) && (
+                  <span className="block text-brand">+{rankBonuses.find((b) => b.rankName === rank.name)?.xp} bonus</span>
+                )}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>,
     document.body
@@ -66,25 +76,26 @@ export function XpProgressBar({ xp }: { xp: number }) {
     <section className="card p-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-sm font-bold text-slate-500">Rank progress</p>
-          <h2 className="mt-1 text-2xl font-bold text-ink">{xp.toLocaleString()} XP</h2>
+          <p className="eyebrow">Rank progress</p>
+          <h2 className="metric mt-1 font-display text-2xl font-bold tracking-tight text-ink">{xp.toLocaleString()} XP</h2>
         </div>
-        <p className="rounded-full bg-sky/10 px-3 py-1 text-sm font-bold text-sky-600 ring-1 ring-sky/20">
+        <p className="metric rounded-full bg-[#EAF2F8] px-3 py-1 text-sm font-semibold text-[#2A6384] ring-1 ring-inset ring-[#2A6384]/20">
           {progress.next ? `${progress.remaining} XP to ${progress.next.name}` : "Max rank unlocked"}
         </p>
       </div>
-      <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
+      <div className="meter-track meter-segments mt-5 h-3">
         <div className="game-bar-fill" style={{ width: `${progress.percent}%` }} />
       </div>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm font-bold text-slate-600">{progress.current.name}</p>
+        <p className="text-sm font-semibold text-slate-600">{progress.current.name}</p>
         <button
           ref={btnRef}
           type="button"
           onClick={toggle}
-          className="cursor-pointer rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-sky-600 transition hover:border-sky/40 hover:bg-slate-100"
+          aria-expanded={open}
+          className="cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-[#2A6384] transition duration-150 hover:border-[#2A6384]/40 hover:bg-[#EAF2F8] active:translate-y-px"
         >
-          Show all ranks
+          {open ? "Hide all ranks" : "Show all ranks"}
         </button>
         {dropdown}
       </div>

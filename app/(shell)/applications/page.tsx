@@ -82,26 +82,31 @@ export default async function ApplicationsPage({
           title="Applications"
           description="Track every role from saved to offer without losing momentum."
           actions={
-            <Link href="/applications/new" className="inline-flex min-h-10 items-center gap-2 rounded-2xl bg-white px-4 text-sm font-black text-[#2A6384] shadow-sm transition hover:bg-[#EAF2F8]">
-              <Plus size={16} /> Add role
+            <Link
+              href="/applications/new"
+              className="group inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-[#2A6384] shadow-sm transition duration-150 hover:bg-[#EAF2F8] active:translate-y-px"
+            >
+              <Plus size={16} className="transition-transform duration-200 group-hover:rotate-90" /> Add role
             </Link>
           }
         />
-        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
+        {searchParams?.message && <p className="rise mt-5 rounded-2xl border border-[#2A6384]/20 bg-[#EAF2F8] p-3 text-sm font-semibold text-[#2A6384]">{searchParams.message}</p>}
         {applications.length > 0 ? (
           <>
             <section className="mt-6 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-lg font-bold text-slate-950">Application history</h2>
-                <p className="text-sm font-bold text-slate-600">Switch between recruiting cycles without losing your older boards.</p>
+                <h2 className="font-display text-lg font-bold tracking-tight text-slate-950">Application history</h2>
+                <p className="text-sm text-slate-600">Switch between recruiting cycles without losing your older boards.</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 {years.map((year) => (
                   <Link
                     key={year}
                     href={getYearHref(year, query, statusFilter)}
-                    className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-                      selectedYear === year ? "bg-sky text-white shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky-600"
+                    className={`metric rounded-xl px-4 py-2 text-sm font-semibold transition duration-150 ${
+                      selectedYear === year
+                        ? "bg-[#2A6384] text-white shadow-glow"
+                        : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-[#2A6384]/40 hover:bg-[#EAF2F8] hover:text-[#2A6384]"
                     }`}
                     aria-current={selectedYear === year ? "page" : undefined}
                   >
@@ -110,8 +115,10 @@ export default async function ApplicationsPage({
                 ))}
                 <Link
                   href={getYearHref("all", query, statusFilter)}
-                  className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-                    selectedYear === "all" ? "bg-sky text-white shadow-glow" : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-sky/40 hover:text-sky-600"
+                  className={`rounded-xl px-4 py-2 text-sm font-semibold transition duration-150 ${
+                    selectedYear === "all"
+                      ? "bg-[#2A6384] text-white shadow-glow"
+                      : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-[#2A6384]/40 hover:bg-[#EAF2F8] hover:text-[#2A6384]"
                   }`}
                   aria-current={selectedYear === "all" ? "page" : undefined}
                 >
@@ -120,12 +127,14 @@ export default async function ApplicationsPage({
               </div>
             </section>
 
+            {/* Tones track the pipeline stages: neutral while saved, brand blue
+                once live, emerald at an offer. */}
             <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-              <DashboardCard title="Tracked" value={yearApplications.length.toString()} helper="Total roles in this cycle." icon={BriefcaseBusiness} tone="bg-[#2A6384] text-white" />
-              <DashboardCard title="Saved" value={savedCount.toString()} helper="Review and apply when ready." icon={Clock3} tone="bg-amber-100 text-amber-700 ring-1 ring-amber-200" />
-              <DashboardCard title="Applied" value={appliedCount.toString()} helper="Roles moved beyond saved." icon={CheckCircle2} tone="bg-sky/15 text-sky-700 ring-1 ring-sky/30" />
-              <DashboardCard title="Interviewing" value={interviewingCount.toString()} helper="Active interview loops." icon={MessageSquareText} tone="bg-violet-100 text-violet-700 ring-1 ring-violet-200" />
-              <DashboardCard title="Offers" value={offerCount.toString()} helper="Unlocked wins." icon={Trophy} tone="bg-sky-100 text-sky-700 ring-1 ring-sky-200" />
+              <DashboardCard title="Tracked" value={yearApplications.length.toString()} helper="Total roles in this cycle." icon={BriefcaseBusiness} tone="bg-[#2A6384] text-white" step={0} />
+              <DashboardCard title="Saved" value={savedCount.toString()} helper="Review and apply when ready." icon={Clock3} tone="bg-slate-100 text-slate-600 ring-1 ring-slate-200" step={1} />
+              <DashboardCard title="Applied" value={appliedCount.toString()} helper="Roles moved beyond saved." icon={CheckCircle2} tone="bg-[#EAF2F8] text-[#2A6384] ring-1 ring-[#2A6384]/25" step={2} />
+              <DashboardCard title="Interviewing" value={interviewingCount.toString()} helper="Active interview loops." icon={MessageSquareText} tone="bg-[#8FB8D4]/35 text-[#214E69] ring-1 ring-[#2A6384]/30" step={3} />
+              <DashboardCard title="Offers" value={offerCount.toString()} helper="Unlocked wins." icon={Trophy} tone="bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200" step={4} />
             </section>
 
             <ApplicationsFilterForm

@@ -113,10 +113,10 @@ export function PostingApplyFollowUpPrompt() {
       <div className="w-full max-w-xl rounded-[1.75rem] border border-white/80 bg-white p-5 shadow-strong ring-1 ring-slate-950/10">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-black uppercase tracking-wider text-sky-600">Application check-in</p>
-            <h2 className="mt-2 text-2xl font-black text-ink">Did you apply?</h2>
+            <p className="text-xs font-semibold uppercase tracking-wider text-sky-600">Application check-in</p>
+            <h2 className="mt-2 text-2xl font-bold text-ink">Did you apply?</h2>
             <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-              You opened <span className="font-black text-slate-900">{roleLabel}</span>. Tell CareerUp what happened so your tracker stays accurate.
+              You opened <span className="font-semibold text-slate-900">{roleLabel}</span>. Tell CareerUp what happened so your tracker stays accurate.
             </p>
           </div>
           <button
@@ -138,7 +138,7 @@ export function PostingApplyFollowUpPrompt() {
             <button
               type="submit"
               onClick={clearPendingApply}
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-emerald-600 px-4 text-sm font-black text-white shadow-sm transition hover:bg-emerald-700"
+              className="inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-emerald-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
             >
               <CheckCircle2 className="mr-2" size={18} /> Yes, applied
             </button>
@@ -148,7 +148,7 @@ export function PostingApplyFollowUpPrompt() {
             <button
               type="submit"
               onClick={clearPendingApply}
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-sky px-4 text-sm font-black text-white shadow-sm transition hover:bg-brand"
+              className="inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-sky px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-brand"
             >
               <Clock3 className="mr-2" size={18} /> Save for later
             </button>
@@ -159,7 +159,7 @@ export function PostingApplyFollowUpPrompt() {
               clearPendingApply();
               setPending(null);
             }}
-            className="inline-flex min-h-12 w-full items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 text-sm font-black text-slate-700 transition hover:bg-slate-50"
+            className="inline-flex min-h-12 w-full items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
           >
             No
           </button>

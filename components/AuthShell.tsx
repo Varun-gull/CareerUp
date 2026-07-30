@@ -35,23 +35,29 @@ export function AuthShell({
         </header>
 
         <section className="grid flex-1 items-center gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_27rem]">
-          <div className="rounded-[2rem] bg-[#173B55] p-6 text-white shadow-strong sm:p-8 lg:min-h-[32rem]">
-            <div className="flex h-full flex-col justify-between gap-10">
+          <div className="hero-3d relative isolate overflow-hidden rounded-[2rem] bg-[#173B55] p-6 text-white sm:p-8 lg:min-h-[32rem]">
+            <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden />
+            <div className="hero-grid pointer-events-none absolute inset-0" aria-hidden />
+            <div className="relative flex h-full flex-col justify-between gap-10">
               <div>
-                <span className="inline-flex rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-semibold ring-1 ring-white/20">
+                <span className="rise inline-flex rounded-full bg-white/10 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80 ring-1 ring-inset ring-white/20">
                   Internship operating system
                 </span>
-                <h1 className="font-display mt-10 max-w-2xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+                <h1 className="rise rise-1 font-display mt-10 max-w-2xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
                   Find roles, track progress, and keep recruiting simple.
                 </h1>
-                <p className="mt-5 max-w-xl text-base font-medium leading-7 text-white/80">
+                <p className="rise rise-2 mt-5 max-w-xl text-base leading-7 text-white/75">
                   Search live roles, save applications, compare progress with friends, and keep your next move clear.
                 </p>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-3">
-                {highlights.map(({ label, icon: Icon }) => (
-                  <div key={label} className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/15">
+                {highlights.map(({ label, icon: Icon }, index) => (
+                  <div
+                    key={label}
+                    className="rise rounded-2xl bg-white/10 p-4 ring-1 ring-inset ring-white/15 transition duration-200 ease-out hover:bg-white/[0.16]"
+                    style={{ ["--rise-delay" as string]: `${240 + index * 70}ms` }}
+                  >
                     <Icon size={18} />
                     <p className="mt-3 text-sm font-semibold text-white/90">{label}</p>
                   </div>
@@ -60,10 +66,10 @@ export function AuthShell({
             </div>
           </div>
 
-          <section className="card bg-white p-6 shadow-strong sm:p-8">
+          <section className="card rise rise-2 bg-white p-6 shadow-strong sm:p-8">
             <p className="eyebrow">{eyebrow}</p>
             <h2 className="font-display mt-2 text-3xl font-bold tracking-tight text-ink">{title}</h2>
-            <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">{description}</p>
+            <p className="mt-3 text-sm leading-6 text-slate-600">{description}</p>
             {children}
           </section>
         </section>

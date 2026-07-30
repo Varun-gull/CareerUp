@@ -2,8 +2,18 @@ import { BookmarkPlus, CheckCircle2, ExternalLink, UsersRound } from "lucide-rea
 import Link from "next/link";
 import { savePostingApplication } from "@/lib/applications/actions";
 import { PostingApplyFollowUpPrompt, PostingApplyLink } from "@/components/PostingApplyFollowUp";
+import { SubmitButton } from "@/components/SubmitButton";
 import { buildRoleKey } from "@/lib/role-key";
 import type { InternshipPosting, RolePeerInsight } from "@/lib/types";
+
+const APPLY_BUTTON =
+  "inline-flex min-h-9 w-full items-center justify-center rounded-xl bg-[#2A6384] px-3 text-xs font-semibold text-white shadow-sm transition duration-150 hover:bg-[#214E69] active:translate-y-px";
+
+const SAVE_BUTTON =
+  "inline-flex min-h-9 w-full items-center justify-center rounded-xl border border-[#5E7681]/35 bg-white px-2 text-xs font-semibold text-[#2A6384] transition duration-150 hover:border-[#2A6384]/45 hover:bg-[#EAF2F8] active:translate-y-px disabled:cursor-progress";
+
+const SAVED_BUTTON =
+  "inline-flex min-h-9 w-full cursor-default items-center justify-center rounded-xl bg-emerald-50 px-2 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200";
 
 function workModeTone(workMode: InternshipPosting["workMode"]) {
   if (workMode === "remote") {
@@ -19,14 +29,41 @@ function workModeTone(workMode: InternshipPosting["workMode"]) {
 
 function fitTone(fitScore: number) {
   if (fitScore >= 80) {
-    return "bg-emerald-50 text-emerald-700";
+    return "text-emerald-700";
   }
 
   if (fitScore >= 70) {
-    return "bg-sky/15 text-sky-700";
+    return "text-[#2A6384]";
   }
 
-  return "bg-slate-100 text-slate-700";
+  return "text-slate-500";
+}
+
+function fitBarTone(fitScore: number) {
+  if (fitScore >= 80) {
+    return "bg-emerald-500";
+  }
+
+  if (fitScore >= 70) {
+    return "bg-[#2A6384]";
+  }
+
+  return "bg-slate-400";
+}
+
+/** Fit is a measurement, so it gets the same readout treatment everywhere. */
+function FitMeter({ fitScore }: { fitScore: number }) {
+  return (
+    <div className="w-full">
+      <p className={`metric text-xs font-semibold ${fitTone(fitScore)}`}>{fitScore}%</p>
+      <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-slate-200/80">
+        <div
+          className={`h-full rounded-full ${fitBarTone(fitScore)}`}
+          style={{ width: `${fitScore}%` }}
+        />
+      </div>
+    </div>
+  );
 }
 
 function workModeLabel(workMode: InternshipPosting["workMode"]) {
@@ -60,18 +97,20 @@ export function PostingsTable({
           }).toString()}`;
 
           return (
-            <article key={posting.id} className="p-4">
+            <article key={posting.id} className="data-row p-4">
               <div className="flex items-start gap-3">
-                <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-sky text-xs font-bold text-white">{index + 1}</span>
+                <span className="metric mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-[#EAF2F8] text-xs font-semibold text-[#2A6384]">
+                  {index + 1}
+                </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-bold leading-tight text-ink">{posting.title}</p>
-                  <p className="mt-1 text-xs font-bold text-sky-600">{posting.company}</p>
-                  <div className="mt-3 flex flex-wrap gap-2 text-xs font-bold text-slate-600">
-                    <span className={`rounded-full px-2.5 py-1 font-bold ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
-                    <span className={`rounded-full px-2.5 py-1 font-bold ${fitTone(posting.fitScore)}`}>{posting.fitScore}% fit</span>
+                  <p className="font-semibold leading-tight text-ink">{posting.title}</p>
+                  <p className="mt-1 text-xs font-semibold text-[#2A6384]">{posting.company}</p>
+                  <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                    <span className={`rounded-full px-2.5 py-1 font-semibold ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
+                    <span className={`metric rounded-full bg-slate-100 px-2.5 py-1 font-semibold ${fitTone(posting.fitScore)}`}>{posting.fitScore}% fit</span>
                     <span className="rounded-full bg-slate-100 px-2.5 py-1">{posting.postedAt}</span>
                   </div>
-                  <p className="mt-3 line-clamp-2 text-sm font-semibold text-slate-600">{posting.location}</p>
+                  <p className="mt-3 line-clamp-2 text-sm text-slate-600">{posting.location}</p>
                 </div>
               </div>
 
@@ -85,7 +124,7 @@ export function PostingsTable({
                     fitScore: posting.fitScore
                   }}
                   returnTo={returnTo}
-                  className="inline-flex min-h-10 items-center justify-center rounded-2xl bg-emerald-600 px-3 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700"
+                  className="inline-flex min-h-10 items-center justify-center rounded-xl bg-[#2A6384] px-3 text-sm font-semibold text-white shadow-sm transition duration-150 hover:bg-[#214E69] active:translate-y-px"
                 >
                   <ExternalLink className="mr-1.5" size={15} /> Apply
                 </PostingApplyLink>
@@ -97,24 +136,26 @@ export function PostingsTable({
                   <input type="hidden" name="fitScore" value={posting.fitScore} />
                   <input type="hidden" name="returnTo" value={returnTo} />
                   <input type="hidden" name="status" value="saved" />
-                  <button
-                    type="submit"
+                  <SubmitButton
                     disabled={saved}
+                    pendingLabel="Saving"
                     className={
                       saved
-                        ? "inline-flex min-h-10 w-full cursor-default items-center justify-center rounded-2xl bg-emerald-50 px-3 text-sm font-bold text-emerald-700 ring-1 ring-emerald-200"
-                        : "inline-flex min-h-10 w-full items-center justify-center rounded-2xl bg-sky px-3 text-sm font-bold text-white shadow-sm transition hover:bg-brand"
+                        ? "inline-flex min-h-10 w-full cursor-default items-center justify-center rounded-xl bg-emerald-50 px-3 text-sm font-semibold text-emerald-700 ring-1 ring-emerald-200"
+                        : "inline-flex min-h-10 w-full items-center justify-center rounded-xl border border-[#5E7681]/35 bg-white px-3 text-sm font-semibold text-[#2A6384] transition duration-150 hover:border-[#2A6384]/45 hover:bg-[#EAF2F8] active:translate-y-px disabled:cursor-progress"
                     }
                   >
-                    {saved ? <CheckCircle2 className="mr-1.5" size={15} /> : <BookmarkPlus className="mr-1.5" size={15} />}
-                    {saved ? "Saved" : "Save"}
-                  </button>
+                    <>
+                      {saved ? <CheckCircle2 className="mr-1.5" size={15} /> : <BookmarkPlus className="mr-1.5" size={15} />}
+                      {saved ? "Saved" : "Save"}
+                    </>
+                  </SubmitButton>
                 </form>
               </div>
 
               <Link
                 href={insightHref}
-                className="mt-2 inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-sky/10 px-3 text-xs font-bold text-sky-600 ring-1 ring-sky/25"
+                className="mt-2 inline-flex min-h-9 w-full items-center justify-center rounded-xl bg-[#EAF2F8] px-3 text-xs font-semibold text-[#2A6384] ring-1 ring-inset ring-[#5E7681]/25 transition hover:bg-[#dfeaf3]"
               >
                 <UsersRound className="mr-1.5" size={14} />
                 {peerInsight?.trackedCount ?? 0} tracked · {peerInsight?.interviewedCount ?? 0} interviewing
@@ -126,7 +167,7 @@ export function PostingsTable({
 
       <div className="hidden overflow-hidden md:block">
         <table className="w-full table-fixed border-collapse text-left text-sm">
-          <thead className="bg-white/55 text-xs font-bold uppercase text-slate-500">
+          <thead className="bg-white/55 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             <tr>
               <th className="hidden w-10 px-2 py-4 lg:table-cell">#</th>
               <th className="w-[32%] px-3 py-4">Position</th>
@@ -153,17 +194,17 @@ export function PostingsTable({
               }).toString()}`;
 
               return (
-              <tr key={posting.id} className="align-middle transition hover:bg-white/70">
-                <td className="hidden px-2 py-3 text-center font-bold text-slate-500 lg:table-cell">{index + 1}</td>
+              <tr key={posting.id} className="data-row-tr align-middle">
+                <td className="metric hidden px-2 py-3 text-center font-medium text-slate-400 lg:table-cell">{index + 1}</td>
                 <td className="px-3 py-3">
-                  <p className="truncate font-bold text-ink" title={posting.title}>
+                  <p className="truncate font-semibold text-ink" title={posting.title}>
                     {posting.title}
                   </p>
-                  <p className="mt-1 truncate text-xs font-bold text-slate-500" title={`${posting.company} · ${posting.source}`}>
+                  <p className="mt-1 truncate text-xs text-slate-500" title={`${posting.company} · ${posting.source}`}>
                     {posting.company} · {posting.source}
                   </p>
                 </td>
-                <td className="hidden whitespace-nowrap px-2 py-3 font-bold text-slate-600 xl:table-cell">{posting.postedAt}</td>
+                <td className="metric hidden whitespace-nowrap px-2 py-3 text-slate-500 xl:table-cell">{posting.postedAt}</td>
                 <td className="px-2 py-3">
                   <PostingApplyLink
                     posting={{
@@ -174,37 +215,37 @@ export function PostingsTable({
                       fitScore: posting.fitScore
                     }}
                     returnTo={returnTo}
-                    className="inline-flex min-h-9 items-center justify-center rounded-2xl bg-slate-950 px-3 text-xs font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-800"
+                    className={APPLY_BUTTON}
                   >
                     <ExternalLink className="mr-1" size={14} /> Apply
                   </PostingApplyLink>
                 </td>
                 <td className="hidden whitespace-nowrap px-2 py-3 md:table-cell">
-                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
+                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
                 </td>
                 <td className="px-3 py-3">
-                  <p className="truncate font-bold text-slate-600" title={posting.location}>
+                  <p className="truncate text-slate-600" title={posting.location}>
                     {posting.location}
                   </p>
                 </td>
                 <td className="hidden px-3 py-3 lg:table-cell">
-                  <p className="truncate font-bold text-sky-600" title={posting.company}>
+                  <p className="truncate font-semibold text-[#2A6384]" title={posting.company}>
                     {posting.company}
                   </p>
                 </td>
                 <td className="hidden px-2 py-3 xl:table-cell">
                   <Link
                     href={insightHref}
-                    className="inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-sky/10 px-2 text-xs font-bold text-sky-600 ring-1 ring-sky/25 transition hover:bg-sky/15"
+                    className="metric inline-flex min-h-9 w-full items-center justify-center rounded-xl bg-[#EAF2F8] px-2 text-xs font-semibold text-[#2A6384] ring-1 ring-inset ring-[#5E7681]/25 transition hover:bg-[#dfeaf3]"
                     title="See who else tracked this role"
                   >
                     <UsersRound className="mr-1" size={14} />
                     {peerInsight?.trackedCount ?? 0}
-                    <span className="ml-1 text-[10px] text-brand">/{peerInsight?.interviewedCount ?? 0} int</span>
+                    <span className="ml-1 text-[10px] text-[#5E7681]">/{peerInsight?.interviewedCount ?? 0} int</span>
                   </Link>
                 </td>
                 <td className="whitespace-nowrap px-2 py-3">
-                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${fitTone(posting.fitScore)}`}>{posting.fitScore}%</span>
+                  <FitMeter fitScore={posting.fitScore} />
                 </td>
                 <td className="px-2 py-3">
                   <form action={savePostingApplication}>
@@ -215,18 +256,12 @@ export function PostingsTable({
                     <input type="hidden" name="fitScore" value={posting.fitScore} />
                     <input type="hidden" name="returnTo" value={returnTo} />
                     <input type="hidden" name="status" value="saved" />
-                    <button
-                      type="submit"
-                      disabled={saved}
-                      className={
-                        saved
-                          ? "inline-flex min-h-9 w-full cursor-default items-center justify-center rounded-2xl bg-emerald-50 px-2 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200"
-                          : "inline-flex min-h-9 w-full items-center justify-center rounded-2xl bg-lime-200 px-2 text-xs font-bold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:bg-lime-100"
-                      }
-                    >
-                      {saved ? <CheckCircle2 className="mr-1" size={14} /> : <BookmarkPlus className="mr-1" size={14} />}
-                      {saved ? "Saved" : "Save"}
-                    </button>
+                    <SubmitButton disabled={saved} pendingLabel="Saving" className={saved ? SAVED_BUTTON : SAVE_BUTTON}>
+                      <>
+                        {saved ? <CheckCircle2 className="mr-1" size={14} /> : <BookmarkPlus className="mr-1" size={14} />}
+                        {saved ? "Saved" : "Save"}
+                      </>
+                    </SubmitButton>
                   </form>
                 </td>
               </tr>

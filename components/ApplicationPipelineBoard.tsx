@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { ApplicationCard } from "@/components/ApplicationCard";
+import { statusAccents } from "@/components/ApplicationStatusBadge";
 import { InterviewModal } from "@/components/InterviewModal";
 import { addInterviewEvent } from "@/lib/calendar/actions";
 import { updateApplicationStatus } from "@/lib/applications/actions";
@@ -111,6 +112,7 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
         {columns.map((column) => {
           const columnApplications = groupedApplications[column.status];
           const isActive = activeStatus === column.status;
+          const isDragging = draggedId !== null;
 
           return (
             <div
@@ -131,17 +133,27 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
                 }
               }}
               className={clsx(
-                "min-w-0 rounded-3xl border border-slate-200 bg-white/80 p-3 shadow-sm backdrop-blur-xl transition",
-                isActive && "border-sky/40 bg-sky/10 shadow-glow",
+                "min-w-0 rounded-3xl p-3 shadow-sm ring-inset backdrop-blur-xl transition duration-200 ease-out",
+                isDragging ? "ring-2" : "ring-1",
+                // The active ring must not compete with the resting stage ring:
+                // emitting both leaves the winner up to stylesheet order.
+                isActive
+                  ? "-translate-y-1 bg-[#EAF2F8] shadow-glow ring-[#2A6384]/60"
+                  : clsx("bg-white/80", statusAccents[column.status].column),
                 isPending && "opacity-90"
               )}
             >
               <div className="mb-3 flex items-center justify-between gap-3">
-                <div>
-                  <h2 className="text-sm font-bold text-ink">{column.title}</h2>
-                  <p className="text-xs font-bold text-slate-500">{column.helper}</p>
+                <div className="flex min-w-0 items-center gap-2">
+                  <span className={clsx("h-2 w-2 shrink-0 rounded-full", statusAccents[column.status].dot)} aria-hidden />
+                  <div className="min-w-0">
+                    <h2 className="truncate text-sm font-semibold text-ink">{column.title}</h2>
+                    <p className="truncate text-xs text-slate-500">{column.helper}</p>
+                  </div>
                 </div>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 ring-1 ring-slate-200">{columnApplications.length}</span>
+                <span className="metric rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                  {columnApplications.length}
+                </span>
               </div>
 
               {columnApplications.length > 0 ? (
@@ -159,14 +171,26 @@ export function ApplicationPipelineBoard({ applications, columns }: { applicatio
                         setDraggedId(null);
                         setActiveStatus(null);
                       }}
-                      className={clsx("min-w-0 cursor-grab active:cursor-grabbing", draggedId === application.id && "opacity-50")}
+                      className={clsx(
+                        "min-w-0 cursor-grab transition duration-150 ease-out active:cursor-grabbing",
+                        draggedId === application.id && "scale-[0.97] opacity-40"
+                      )}
                     >
                       <ApplicationCard application={application} compact />
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 p-4 text-sm font-bold text-slate-500">Drop roles here.</div>
+                <div
+                  className={clsx(
+                    "rounded-2xl border border-dashed p-4 text-sm transition duration-200 ease-out",
+                    isActive
+                      ? "border-[#2A6384]/60 bg-white text-[#2A6384]"
+                      : "border-slate-200 bg-slate-50/80 text-slate-500"
+                  )}
+                >
+                  {isDragging ? `Release to mark ${column.title.toLowerCase()}.` : "Drop roles here."}
+                </div>
               )}
             </div>
           );

@@ -40,7 +40,7 @@ export default async function PublicProfilePage({
           <ArrowLeft className="mr-2" size={16} /> Friends
         </Link>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-[#2A6384] shadow-sm ring-1 ring-[#2A6384]/20">{searchParams.message}</p>}
 
         {!profile ? (
           <section className="card mt-6 p-8 text-center">
@@ -49,25 +49,33 @@ export default async function PublicProfilePage({
           </section>
         ) : (
           <section className="card mt-6 overflow-hidden">
-            <div className="bg-navy px-6 py-10 text-white">
-              <div className="flex flex-wrap items-center justify-between gap-5">
+            <div className="relative isolate overflow-hidden bg-[#173B55] px-6 py-10 text-white">
+              <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden />
+              <div className="hero-grid pointer-events-none absolute inset-0" aria-hidden />
+              <div className="relative flex flex-wrap items-center justify-between gap-5">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-white text-2xl font-bold text-[#2A6384] shadow-glow">
+                  <div className="font-display flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-white text-2xl font-bold text-[#2A6384] shadow-glow">
                     {profile.schoolLogoUrl ? <img src={profile.schoolLogoUrl} alt="" className="h-full w-full bg-white object-contain p-2" /> : profile.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase text-sky-600">CareerUp profile</p>
-                    <h1 className="mt-1 text-3xl font-bold">{profile.name}</h1>
-                    <p className="text-slate-700">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "CareerUp Student"}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/65">CareerUp profile</p>
+                    <h1 className="font-display mt-1 text-3xl font-bold tracking-tight">{profile.name}</h1>
+                    <p className="text-white/75">{[profile.school, profile.major, profile.graduationYear].filter(Boolean).join(" · ") || "CareerUp Student"}</p>
                   </div>
                 </div>
 
                 {isOwnProfile ? (
-                  <Link href="/profile" className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold transition hover:-translate-y-0.5 hover:border-sky/40 hover:bg-white/10">
+                  <Link href="/profile" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/20 px-5 font-semibold transition duration-200 ease-out hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10">
                     Edit profile
                   </Link>
                 ) : friendship ? (
-                  <span className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/20 px-5 font-bold text-sky-600">
+                  <span
+                    className={
+                      friendship.status === "accepted"
+                        ? "inline-flex min-h-11 items-center justify-center rounded-xl bg-emerald-400/15 px-5 font-semibold text-emerald-200 ring-1 ring-inset ring-emerald-300/40"
+                        : "inline-flex min-h-11 items-center justify-center rounded-xl bg-white/10 px-5 font-semibold text-white/85 ring-1 ring-inset ring-white/25"
+                    }
+                  >
                     {friendship.status === "accepted" ? "Friends" : friendship.direction === "incoming" ? "Request received" : "Request sent"}
                   </span>
                 ) : user ? (
@@ -100,7 +108,7 @@ export default async function PublicProfilePage({
                 <XpProgressBar xp={profile.xp} />
                 <BadgeShelf applicationsApplied={profile.applicationsApplied} />
                 {!isOwnProfile && user && (
-                  <form action={sendPeerMessage} className="rounded-3xl border border-sky/20 bg-sky/10 p-4">
+                  <form action={sendPeerMessage} className="rounded-3xl border border-sky/20 bg-[#EAF2F8] p-4">
                     <div className="flex items-center gap-2">
                       <Mail size={18} className="text-brand" />
                       <h2 className="font-bold text-ink">Message {profile.name.split(" ")[0]}</h2>
@@ -146,7 +154,7 @@ export default async function PublicProfilePage({
                       mutualFriends.length > 0 ? (
                         <div className="mt-4 grid gap-3">
                           {mutualFriends.map((friend) => (
-                            <div key={friend.id} className="rounded-2xl border border-slate-200 p-3 transition hover:border-sky/25 hover:bg-sky/10">
+                            <div key={friend.id} className="rounded-2xl border border-slate-200 p-3 transition hover:border-sky/25 hover:bg-[#EAF2F8]">
                               <ProfileLink profileId={friend.id} name={friend.name} />
                               <p className="mt-1 text-xs font-bold text-slate-500">{friend.school}</p>
                             </div>
@@ -212,7 +220,7 @@ export default async function PublicProfilePage({
                 ) : isAcceptedFriend ? (
                   <div className="rounded-3xl border border-slate-200 bg-white/90 p-6">
                     <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#EAF2F8] text-brand">
                         <Lock size={18} />
                       </span>
                       <div>
@@ -224,7 +232,7 @@ export default async function PublicProfilePage({
                 ) : (
                   <div className="rounded-3xl border border-slate-200 bg-white/90 p-6">
                     <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#EAF2F8] text-brand">
                         <Lock size={18} />
                       </span>
                       <div>

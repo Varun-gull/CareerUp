@@ -288,7 +288,7 @@ export async function PostingsPageView({
           ]}
         />
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-[#EAF2F8] p-3 text-sm font-bold text-[#2A6384]">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
         <PostingsSearchForm
@@ -334,7 +334,7 @@ export async function PostingsPageView({
               <nav className="mt-5 flex flex-wrap items-center justify-end gap-1 text-sm font-bold" aria-label="Posting pages">
                 <Link
                   href={buildPostingsHref(kind, searchParams, { page: Math.max(1, currentPage - 1) })}
-                  className={`flex items-center gap-1 rounded-xl px-3 py-2 transition ${currentPage === 1 ? "pointer-events-none text-slate-300" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600"}`}
+                  className={`flex items-center gap-1 rounded-xl px-3 py-2 transition ${currentPage === 1 ? "pointer-events-none text-slate-300" : "text-slate-600 hover:bg-slate-100 hover:text-[#2A6384]"}`}
                   aria-disabled={currentPage === 1}
                 >
                   <ChevronLeft size={16} /> Previous
@@ -350,7 +350,7 @@ export async function PostingsPageView({
                       className={`min-w-[2.25rem] rounded-xl px-3 py-2 text-center transition ${
                         item === currentPage
                           ? "bg-slate-900 text-white shadow-sm ring-1 ring-slate-700"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-sky-600"
+                          : "text-slate-600 hover:bg-slate-100 hover:text-[#2A6384]"
                       }`}
                       aria-current={item === currentPage ? "page" : undefined}
                     >
@@ -361,7 +361,7 @@ export async function PostingsPageView({
 
                 <Link
                   href={buildPostingsHref(kind, searchParams, { page: Math.min(totalPages, currentPage + 1) })}
-                  className={`flex items-center gap-1 rounded-xl px-3 py-2 transition ${currentPage === totalPages ? "pointer-events-none text-slate-300" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600"}`}
+                  className={`flex items-center gap-1 rounded-xl px-3 py-2 transition ${currentPage === totalPages ? "pointer-events-none text-slate-300" : "text-slate-600 hover:bg-slate-100 hover:text-[#2A6384]"}`}
                   aria-disabled={currentPage === totalPages}
                 >
                   Next <ChevronRight size={16} />

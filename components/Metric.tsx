@@ -29,11 +29,17 @@ export function Metric({
     const from = isFirstRun.current ? 0 : fromRef.current;
     isFirstRun.current = false;
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReducedMotion || from === target || duration <= 0) {
+    function settle() {
       fromRef.current = target;
       setDisplay(target);
+    }
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // A hidden tab never runs animation frames, so counting up there would leave
+    // a stale number on screen — show the real value instead.
+    if (prefersReducedMotion || document.hidden || from === target || duration <= 0) {
+      settle();
       return;
     }
 
@@ -58,8 +64,13 @@ export function Metric({
       frame = requestAnimationFrame(step);
     }, delay);
 
+    // Whatever happens to the frame loop — backgrounded tab, throttled renderer —
+    // the readout must end up on the true value.
+    const safety = window.setTimeout(settle, delay + duration + 250);
+
     return () => {
       window.clearTimeout(timer);
+      window.clearTimeout(safety);
       cancelAnimationFrame(frame);
     };
   }, [value, duration, delay]);

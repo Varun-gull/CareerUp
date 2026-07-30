@@ -23,7 +23,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
           ]}
         />
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-[#2A6384] shadow-sm ring-1 ring-[#2A6384]/20">{searchParams.message}</p>}
 
         {!isUnlocked ? (
           <section className="card mt-8 p-6">
@@ -45,7 +45,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
             <section className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
               <form action={saveInterviewAnswer} className="card min-w-0 p-5">
                 <div className="mb-5 flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#EAF2F8] text-brand">
                     <MessageSquareText size={22} />
                   </div>
                   <div>
@@ -132,7 +132,7 @@ export default async function InterviewPage({ searchParams }: { searchParams?: {
                         <AnswerSection title="Action" body={answer.action} />
                         <AnswerSection title="Result" body={answer.result} />
                       </div>
-                      {answer.notes && <p className="mt-4 rounded-2xl bg-sky/10 p-3 text-sm leading-6 text-slate-700">{answer.notes}</p>}
+                      {answer.notes && <p className="mt-4 rounded-2xl bg-[#EAF2F8] p-3 text-sm leading-6 text-slate-700">{answer.notes}</p>}
                     </article>
                   ))}
                 </div>
@@ -165,7 +165,7 @@ function StarTextarea({ name, label, placeholder }: { name: string; label: strin
 function AnswerSection({ title, body }: { title: string; body: string }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-      <p className="text-sm font-bold text-slate-500">{title}</p>
+      <p className="text-sm font-medium text-slate-500">{title}</p>
       <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-700">{body}</p>
     </div>
   );

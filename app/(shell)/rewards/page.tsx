@@ -24,7 +24,7 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
           ]}
         />
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-[#2A6384] shadow-sm ring-1 ring-[#2A6384]/20">{searchParams.message}</p>}
 
         <section className="mt-8 grid gap-4 md:grid-cols-2">
           <div className="card p-5">
@@ -81,14 +81,24 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                       <h2 className="mt-1 text-xl font-bold text-ink">{reward.title}</h2>
                       <p className="mt-2 text-sm leading-6 text-slate-600">{reward.description}</p>
                     </div>
-                    <span className={reward.unlocked ? "rounded-full bg-sky-50 px-3 py-1 text-xs font-bold text-sky-700" : "rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700"}>
+                    {/* The cost chip answers "can I afford this?" before you read
+                        the button: green when you can, amber when you cannot. */}
+                    <span
+                      className={
+                        reward.unlocked
+                          ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 ring-1 ring-inset ring-emerald-200"
+                          : canUnlock
+                            ? "metric rounded-full bg-[#EAF2F8] px-3 py-1 text-xs font-bold text-[#214E69] ring-1 ring-inset ring-[#2A6384]/25"
+                            : "metric rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800 ring-1 ring-inset ring-amber-200"
+                      }
+                    >
                       {reward.unlocked ? "Unlocked" : `${reward.xpCost} RP`}
                     </span>
                   </div>
 
                   {reward.unlocked ? (
-                    <div className="mt-5 flex flex-1 flex-col rounded-2xl border border-sky-100 bg-sky-50/60 p-4">
-                      <div className="mb-3 flex items-center gap-2 font-bold text-sky-800">
+                    <div className="mt-5 flex flex-1 flex-col rounded-2xl border border-[#2A6384]/20 bg-[#EAF2F8]/70 p-4">
+                      <div className="mb-3 flex items-center gap-2 font-bold text-[#214E69]">
                         <UnlockKeyhole size={18} /> Unlocked tool
                       </div>
                       <ul className="grid gap-2 text-sm leading-6 text-slate-700">
@@ -106,8 +116,11 @@ export default async function RewardsPage({ searchParams }: { searchParams?: { m
                     </div>
                   ) : (
                     <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
-                      <p className="inline-flex items-center gap-2 text-sm font-bold text-slate-600">
-                        <LockKeyhole size={16} /> {canUnlock ? "Ready to unlock" : `${Math.max(0, reward.xpCost - profile.rewardPoints).toLocaleString()} RP needed`}
+                      <p className={`metric inline-flex items-center gap-2 text-sm font-bold ${canUnlock ? "text-emerald-700" : "text-amber-800"}`}>
+                        {canUnlock ? <UnlockKeyhole size={16} /> : <LockKeyhole size={16} />}
+                        {canUnlock
+                          ? "Ready to unlock"
+                          : `${Math.max(0, reward.xpCost - profile.rewardPoints).toLocaleString()} RP to go`}
                       </p>
                       <form action={unlockReward}>
                         <input type="hidden" name="rewardId" value={reward.id} />

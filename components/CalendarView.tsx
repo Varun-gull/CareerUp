@@ -19,26 +19,64 @@ import { CalendarCreateModal } from "@/components/CalendarCreateModal";
 import { InterviewModal } from "@/components/InterviewModal";
 import { addCalendarEvent, addInterviewEvent, deleteCalendarEvent, moveCalendarEvent, promoteAndMoveCalendarEvent } from "@/lib/calendar/actions";
 import { INTERVIEW_SCHEDULED_EVENT, clearStoredInterview, dispatchInterviewScheduled, getStoredInterviewDate } from "@/lib/interviewEvents";
+import { deadlinePrefix, deadlineStyle, deadlineUrgency } from "@/lib/signal";
+import type { DeadlineUrgency } from "@/lib/signal";
 import type { Application, CalendarEvent } from "@/lib/types";
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+/* A month grid is only useful if the chips are told apart at a glance, so event
+   types follow the same pipeline progression used on the board: pale blue when
+   applied, brand blue for an interview, emerald for an offer, slate for a note.
+   Deadlines are the one type with a direction, so they take the urgency ramp. */
 const EVENT_STYLE: Record<CalendarEvent["eventType"], string> = {
   deadline: "border-slate-300 bg-slate-100 text-slate-700",
-  submitted: "border-[#8BB4CB]/45 bg-[#EDF5FA] text-[#173B55]",
-  interview: "border-[#2A6384]/45 bg-[#EAF2F8] text-[#173B55]",
-  offer: "border-[#173B55]/35 bg-[#DDEAF2] text-[#173B55]",
-  custom: "border-[#8BB4CB]/45 bg-white text-[#173B55]",
+  submitted: "border-[#8FB8D4]/60 bg-[#EDF5FA] text-[#173B55]",
+  interview: "border-[#2A6384]/50 bg-[#EAF2F8] text-[#214E69]",
+  offer: "border-emerald-300 bg-emerald-50 text-emerald-800",
+  custom: "border-slate-300 bg-white text-slate-700",
 };
 
 const EVENT_DOT: Record<CalendarEvent["eventType"], string> = {
   deadline: "bg-slate-400",
-  submitted: "bg-[#8BB4CB]",
+  submitted: "bg-[#8FB8D4]",
   interview: "bg-[#2A6384]",
-  offer: "bg-[#173B55]",
-  custom: "bg-[#5E7681]",
+  offer: "bg-emerald-600",
+  custom: "bg-slate-500",
 };
+
+const DEADLINE_CHIP: Record<DeadlineUrgency, string> = {
+  overdue: "border-rose-300 bg-rose-50 text-rose-800",
+  today: "border-rose-300 bg-rose-50 text-rose-800",
+  soon: "border-amber-300 bg-amber-50 text-amber-900",
+  later: "border-slate-300 bg-slate-100 text-slate-700",
+  none: "border-slate-300 bg-slate-100 text-slate-700",
+};
+
+const DEADLINE_DOT: Record<DeadlineUrgency, string> = {
+  overdue: "bg-rose-600",
+  today: "bg-rose-600",
+  soon: "bg-amber-600",
+  later: "bg-slate-500",
+  none: "bg-slate-500",
+};
+
+function eventChipStyle(event: CalendarEvent) {
+  if (event.eventType !== "deadline") {
+    return EVENT_STYLE[event.eventType];
+  }
+
+  return DEADLINE_CHIP[deadlineUrgency(event.date)];
+}
+
+function eventDotStyle(event: CalendarEvent) {
+  if (event.eventType !== "deadline") {
+    return EVENT_DOT[event.eventType];
+  }
+
+  return DEADLINE_DOT[deadlineUrgency(event.date)];
+}
 
 const EVENT_LABEL: Record<CalendarEvent["eventType"], string> = {
   deadline: "Deadline",
@@ -175,10 +213,10 @@ function EventPill({
       className={clsx(
         "group flex w-full cursor-grab items-start gap-2 rounded-xl border text-left transition hover:-translate-y-0.5 hover:shadow-sm active:cursor-grabbing",
         compact ? "px-2 py-1.5" : "px-2.5 py-2",
-        EVENT_STYLE[event.eventType]
+        eventChipStyle(event)
       )}
     >
-      <span className={clsx("mt-1 h-2 w-2 shrink-0 rounded-full", EVENT_DOT[event.eventType])} />
+      <span className={clsx("mt-1 h-2 w-2 shrink-0 rounded-full", eventDotStyle(event))} />
       <span className="min-w-0 flex-1">
         <span className="block truncate text-xs font-bold">{event.company}</span>
         {!compact && <span className="mt-0.5 block truncate text-[11px] font-semibold opacity-75">{event.role}</span>}
@@ -470,7 +508,9 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                     Pick interview time
                   </button>
                 ) : application.deadline && application.deadline !== "No deadline" ? (
-                  <p className="mt-2 text-xs font-bold text-slate-500">Due {application.deadline}</p>
+                  <p className={clsx("metric mt-2 text-xs font-semibold", deadlineStyle(deadlineUrgency(application.deadline)))}>
+                    {deadlinePrefix(deadlineUrgency(application.deadline))} {application.deadline}
+                  </p>
                 ) : null}
               </div>
             ))}

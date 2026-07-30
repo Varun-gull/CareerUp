@@ -35,12 +35,12 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
           ]}
         />
 
-        {searchParams?.message && <p className="mt-5 rounded-xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-xl bg-white/90 p-3 text-sm font-bold text-[#2A6384] shadow-sm ring-1 ring-[#2A6384]/20">{searchParams.message}</p>}
 
         {inviteId && (
           <form action={sendFriendRequestById} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-white/90 p-4 shadow-soft backdrop-blur">
             <div>
-              <p className="font-bold text-sky-600">Friend invite opened</p>
+              <p className="font-bold text-[#2A6384]">Friend invite opened</p>
               <p className="text-sm font-bold text-brand">Send a request to add this CareerUp profile.</p>
             </div>
             <input type="hidden" name="profileId" value={inviteId} />
@@ -53,7 +53,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
         <section className="mt-8 grid gap-4 lg:grid-cols-[1fr_360px]">
           <form action={sendFriendRequest} className="card grid gap-4 p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#EAF2F8] text-brand">
                 <UserPlus size={20} />
               </span>
               <div>
@@ -93,7 +93,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
         <section id="groups" className="mt-6 scroll-mt-28 grid gap-4 lg:grid-cols-[360px_1fr]">
           <form action={createGroup} className="card grid gap-4 p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#EAF2F8] text-brand">
                 <UsersRound size={20} />
               </span>
               <div>
@@ -167,7 +167,7 @@ export default async function FriendsPage({ searchParams }: { searchParams?: { m
                 ))}
               </div>
             ) : (
-              <div className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-white/85 p-5 text-sm font-bold text-slate-500">
+              <div className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-white/85 p-5 text-sm font-medium text-slate-500">
                 No groups yet. Create one, then add accepted friends.
               </div>
             )}
@@ -211,7 +211,7 @@ function FriendSection({
                 <div>
                   <ProfileLink profileId={friend.userId} name={friend.name} />
                   <p className="text-sm text-slate-500">{friend.school}</p>
-                  <p className="mt-1 text-xs font-bold text-slate-600">{friend.email}</p>
+                  <p className="mt-1 text-xs font-medium text-slate-600">{friend.email}</p>
                 </div>
                 <UsersRound size={18} className="text-brand" />
               </div>
@@ -241,7 +241,7 @@ function FriendSection({
           ))}
         </div>
       ) : (
-        <div className="rounded-xl border border-dashed border-slate-200 bg-white/85 p-4 text-sm font-bold text-slate-500">{empty}</div>
+        <div className="rounded-xl border border-dashed border-slate-200 bg-white/85 p-4 text-sm font-medium text-slate-500">{empty}</div>
       )}
     </div>
   );

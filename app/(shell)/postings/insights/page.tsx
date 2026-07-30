@@ -97,8 +97,8 @@ export default async function PostingInsightsPage({
         <section className="page-hero mt-6 grid gap-5 lg:grid-cols-[1fr_340px]">
           <div>
             <p className="eyebrow">Peer insights</p>
-            <h1 className="mt-2 text-4xl font-bold text-ink sm:text-5xl">{role}</h1>
-            <p className="mt-2 text-lg font-bold text-slate-600">{company}</p>
+            <h1 className="font-display mt-2 text-4xl font-bold tracking-tight text-ink sm:text-5xl">{role}</h1>
+            <p className="mt-2 text-lg font-semibold text-slate-600">{company}</p>
             <p className="mt-3 max-w-3xl text-slate-600">
               See CareerUp users who have tracked this role, whether they reached interviews or offers, and reach out for advice when their profile is visible.
             </p>
@@ -106,39 +106,41 @@ export default async function PostingInsightsPage({
 
           <div className="card grid gap-3 p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky text-white">
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2A6384] text-white">
                 <UsersRound size={24} />
               </span>
               <div>
-                <p className="text-sm font-bold uppercase text-slate-500">CareerUp signal</p>
-                <p className="text-2xl font-bold text-ink">{insight?.trackedCount ?? applicants.length} tracked</p>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">CareerUp signal</p>
+                <p className="metric font-display text-2xl font-bold tracking-tight text-ink">{insight?.trackedCount ?? applicants.length} tracked</p>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-2 text-center text-sm font-bold">
-              <div className="rounded-2xl bg-slate-50 p-3">
-                <p className="text-xl text-ink">{insight?.appliedCount ?? applied.length}</p>
-                <p className="text-xs text-slate-500">Applied</p>
+            {/* A funnel should look like one: the three tiles deepen along the
+                pipeline so the drop-off from applied to offer is visible. */}
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div className="rounded-2xl bg-slate-100 p-3 ring-1 ring-inset ring-slate-200">
+                <p className="metric text-xl font-bold text-slate-600">{insight?.appliedCount ?? applied.length}</p>
+                <p className="mt-0.5 text-xs font-semibold text-slate-500">Applied</p>
               </div>
-              <div className="rounded-2xl bg-sky/10 p-3">
-                <p className="text-xl text-brand">{insight?.interviewedCount ?? interviewed.length}</p>
-                <p className="text-xs text-slate-500">Interviewed</p>
+              <div className="rounded-2xl bg-[#EAF2F8] p-3 ring-1 ring-inset ring-[#2A6384]/25">
+                <p className="metric text-xl font-bold text-[#214E69]">{insight?.interviewedCount ?? interviewed.length}</p>
+                <p className="mt-0.5 text-xs font-semibold text-[#2A6384]">Interviewed</p>
               </div>
-              <div className="rounded-2xl bg-sky-50 p-3">
-                <p className="text-xl text-sky-700">{insight?.offerCount ?? applicants.filter((a) => a.status === "offer").length}</p>
-                <p className="text-xs text-slate-500">Offers</p>
+              <div className="rounded-2xl bg-emerald-50 p-3 ring-1 ring-inset ring-emerald-200">
+                <p className="metric text-xl font-bold text-emerald-700">{insight?.offerCount ?? applicants.filter((a) => a.status === "offer").length}</p>
+                <p className="mt-0.5 text-xs font-semibold text-emerald-700">Offers</p>
               </div>
             </div>
           </div>
         </section>
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-[#2A6384] shadow-sm ring-1 ring-[#2A6384]/20">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
         <section className="mt-8 grid gap-4">
           <div className="flex items-center justify-between gap-4">
             <div>
               <h2 className="text-2xl font-bold text-ink">Applicants and interview signal</h2>
-              <p className="mt-1 text-sm font-bold text-slate-500">Visible profiles come from users who allow board sharing, accepted friends, or your own board.</p>
+              <p className="mt-1 text-sm font-medium text-slate-500">Visible profiles come from users who allow board sharing, accepted friends, or your own board.</p>
             </div>
           </div>
 
@@ -147,14 +149,14 @@ export default async function PostingInsightsPage({
               <div className="card grid gap-4 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-bold text-slate-500">Recruiting cycle</p>
-                    <p className="text-xs font-bold text-slate-600">Filter visible peers by application year.</p>
+                    <p className="text-sm font-medium text-slate-500">Recruiting cycle</p>
+                    <p className="text-xs font-medium text-slate-600">Filter visible peers by application year.</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <Link
                       href={buildInsightHref({ roleKey, company, role, returnTo, year: "all", signal: selectedSignal })}
                       className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-                        selectedYear === "all" ? "bg-white text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand"
+                        selectedYear === "all" ? "bg-white text-white shadow-lg shadow-slate-950/20" : "border border-slate-200 bg-white text-slate-600 hover:border-[#2A6384]/40 hover:text-brand"
                       }`}
                     >
                       All years
@@ -164,7 +166,7 @@ export default async function PostingInsightsPage({
                         key={year}
                         href={buildInsightHref({ roleKey, company, role, returnTo, year, signal: selectedSignal })}
                         className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-                          selectedYear === year ? "bg-sky text-white shadow-lg shadow-sky/10" : "border border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand"
+                          selectedYear === year ? "bg-sky text-white shadow-lg shadow-sky/10" : "border border-slate-200 bg-white text-slate-600 hover:border-[#2A6384]/40 hover:text-brand"
                         }`}
                       >
                         {year}
@@ -181,7 +183,7 @@ export default async function PostingInsightsPage({
                         key={tab.value}
                         href={buildInsightHref({ roleKey, company, role, returnTo, year: selectedYear, signal: tab.value })}
                         className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-bold transition ${
-                          selectedSignal === tab.value ? "border-brand bg-sky text-white shadow-lg shadow-sky/10" : "border-slate-200 bg-white text-slate-600 hover:border-sky/40 hover:text-brand"
+                          selectedSignal === tab.value ? "border-brand bg-sky text-white shadow-lg shadow-sky/10" : "border-slate-200 bg-white text-slate-600 hover:border-[#2A6384]/40 hover:text-brand"
                         }`}
                       >
                         <span className="inline-flex items-center gap-2">
@@ -202,14 +204,14 @@ export default async function PostingInsightsPage({
                       <div className="flex min-w-0 items-center gap-3">
                         <Link
                           href={`/u/${applicant.profileId}`}
-                          className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-100 text-lg font-bold text-sky-600 transition hover:ring-2 hover:ring-sky/40"
+                          className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-100 text-lg font-bold text-[#2A6384] transition hover:ring-2 hover:ring-sky/40"
                           aria-label={`Open ${applicant.name}'s profile`}
                         >
                           <ApplicantAvatar applicant={applicant} />
                         </Link>
                         <div className="min-w-0">
                           <ProfileLink profileId={applicant.profileId} name={applicant.name} />
-                          <p className="truncate text-sm font-bold text-slate-500">{applicant.school}</p>
+                          <p className="truncate text-sm font-medium text-slate-500">{applicant.school}</p>
                         </div>
                       </div>
                       <ApplicationStatusBadge status={applicant.status} />
@@ -231,7 +233,7 @@ export default async function PostingInsightsPage({
                       <input type="hidden" name="applicationId" value={applicant.applicationId} />
                       <input type="hidden" name="roleKey" value={roleKey} />
                       <input type="hidden" name="returnTo" value={`/postings/insights?${new URLSearchParams({ roleKey, company, role, returnTo }).toString()}`} />
-                      <label className="grid gap-1 text-xs font-bold uppercase text-slate-500">
+                      <label className="grid gap-1 text-xs font-medium uppercase text-slate-500">
                         Subject
                         <input
                           name="subject"
@@ -239,7 +241,7 @@ export default async function PostingInsightsPage({
                           className="field text-sm normal-case"
                         />
                       </label>
-                      <label className="grid gap-1 text-xs font-bold uppercase text-slate-500">
+                      <label className="grid gap-1 text-xs font-medium uppercase text-slate-500">
                         Message
                         <textarea
                           name="body"
@@ -253,7 +255,7 @@ export default async function PostingInsightsPage({
                       </button>
                     </form>
                   ) : (
-                    <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm font-bold text-slate-500">
+                    <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm font-medium text-slate-500">
                       <MessageSquareText className="mb-2 text-brand" size={22} />
                       This is your own application, so messaging is disabled here.
                     </div>
@@ -264,7 +266,7 @@ export default async function PostingInsightsPage({
                 <div className="rounded-3xl border border-dashed border-slate-200 bg-white/90 p-8 text-center">
                   <UsersRound className="mx-auto text-brand" size={34} />
                   <h2 className="mt-3 text-xl font-bold text-ink">No peers match this filter</h2>
-                  <p className="mt-2 text-sm font-bold text-slate-500">Try all years or all peers to broaden the signal.</p>
+                  <p className="mt-2 text-sm font-medium text-slate-500">Try all years or all peers to broaden the signal.</p>
                 </div>
               )}
             </div>
@@ -272,7 +274,7 @@ export default async function PostingInsightsPage({
             <div className="rounded-3xl border border-dashed border-slate-200 bg-white/90 p-8 text-center">
               <UsersRound className="mx-auto text-brand" size={34} />
               <h2 className="mt-3 text-xl font-bold text-ink">No visible peers yet</h2>
-              <p className="mt-2 text-sm font-bold text-slate-500">
+              <p className="mt-2 text-sm font-medium text-slate-500">
                 The role may still have aggregate interest, but no users with visible boards are available to message yet.
               </p>
             </div>

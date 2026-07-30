@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { ChallengeCard } from "@/components/ChallengeCard";
 import { Metric } from "@/components/Metric";
+import { bandStyle, fitBand, fitLabel, isFreshPosting } from "@/lib/signal";
 import { getApplications, getChallenges, getCurrentProfile } from "@/lib/data";
 import { searchCachedPostings, searchInternshipPostings } from "@/lib/postings";
 import type { PostingKind } from "@/lib/postings";
@@ -75,19 +76,27 @@ function TopFitPostings({ postings }: { postings: InternshipPosting[] }) {
                     </p>
                   </div>
                 </div>
-                <div className="shrink-0 text-right">
-                  <p className="metric font-display text-lg font-bold leading-none text-[#2A6384]">{posting.fitScore}%</p>
-                  <div className="mt-1.5 ml-auto h-1 w-14 meter-track">
+                {/* This list is already sorted by fit, so a band label would read the
+                    same on every row — the colour and the bar carry it instead. */}
+                <div className="shrink-0 text-right" title={fitLabel(posting.fitScore)}>
+                  <p className={`metric font-display text-lg font-bold leading-none ${bandStyle(fitBand(posting.fitScore)).text}`}>
+                    {posting.fitScore}%
+                  </p>
+                  <div className="meter-track ml-auto mt-1.5 h-1.5 w-14">
                     <div
-                      className="game-bar-fill"
-                      style={{ width: `${posting.fitScore}%`, ["--sweep-delay" as string]: `${360 + index * 70}ms` }}
+                      className={`h-full origin-left rounded-full ${bandStyle(fitBand(posting.fitScore)).fill} motion-safe:animate-[sweep_900ms_var(--ease-out)_both]`}
+                      style={{ width: `${posting.fitScore}%`, animationDelay: `${360 + index * 70}ms` }}
                     />
                   </div>
+                  <span className="sr-only">{fitLabel(posting.fitScore)}</span>
                 </div>
               </div>
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3 pl-9">
                 <p className="text-xs text-slate-500">
-                  {posting.source} · {posting.postedAt}
+                  {posting.source} ·{" "}
+                  <span className={isFreshPosting(posting.postedAt) ? "metric font-bold text-[#2A6384]" : "metric"}>
+                    {posting.postedAt}
+                  </span>
                 </p>
                 <a
                   href={posting.url}

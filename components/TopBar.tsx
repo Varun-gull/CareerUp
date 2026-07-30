@@ -38,8 +38,15 @@ export async function TopBar() {
       </Link>
 
       <div className="flex items-center gap-3">
-        <span className="metric inline-flex h-11 items-center gap-2 rounded-2xl bg-[#EAF2F8] px-4 text-sm font-semibold text-[#2A6384] shadow-sm ring-1 ring-inset ring-[#5E7681]/30">
-          <Flame size={16} className={profile && profile.streak > 0 ? "fill-[#2A6384] text-[#2A6384]" : "text-[#5E7681]"} />
+        {/* A dead streak should look dead — otherwise zero reads the same as twelve. */}
+        <span
+          className={
+            profile && profile.streak > 0
+              ? "metric inline-flex h-11 items-center gap-2 rounded-2xl bg-[#EAF2F8] px-4 text-sm font-bold text-[#214E69] shadow-sm ring-1 ring-inset ring-[#2A6384]/30"
+              : "metric inline-flex h-11 items-center gap-2 rounded-2xl bg-slate-100 px-4 text-sm font-semibold text-slate-500 shadow-sm ring-1 ring-inset ring-slate-200"
+          }
+        >
+          <Flame size={16} className={profile && profile.streak > 0 ? "fill-[#2A6384] text-[#2A6384]" : "text-slate-400"} />
           {profile?.streak ?? 0} day streak
         </span>
         <Link

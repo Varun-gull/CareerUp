@@ -5,14 +5,22 @@ import { getRewardPointsForXp } from "@/lib/gamification";
 import type { Challenge } from "@/lib/types";
 
 const TIER_LABELS = ["", "Bronze", "Silver", "Gold", "Platinum", "Diamond"];
+
+/* Tiers are a ladder you climb, so the chips actually ascend: warm metal, cool
+   metal, gold, then the two gem tiers. Each foreground clears 4.5:1 on its own
+   tint so the label reads at 12px. */
 const TIER_COLORS = [
   "",
-  "text-[#2A6384] bg-[#EAF2F8] ring-[#5E7681]/30",
-  "text-slate-500 bg-slate-100 ring-slate-300",
-  "text-yellow-600 bg-yellow-50 ring-yellow-200",
-  "text-sky-600 bg-sky-50 ring-sky-200",
-  "text-violet-600 bg-violet-50 ring-violet-200",
+  "text-orange-800 bg-orange-50 ring-orange-200",
+  "text-slate-600 bg-slate-100 ring-slate-300",
+  "text-amber-800 bg-amber-50 ring-amber-300",
+  "text-[#214E69] bg-[#EAF2F8] ring-[#2A6384]/30",
+  "text-violet-700 bg-violet-50 ring-violet-300",
 ];
+
+/* The pip that marks the tier you are on, matched to the chip above. */
+const TIER_PIPS = ["", "bg-orange-700", "bg-slate-500", "bg-amber-700", "bg-[#2A6384]", "bg-violet-700"];
+
 const TIER_ICONS: (LucideIcon | null)[] = [null, Medal, Medal, Medal, Gem, Crown];
 
 export function ChallengeCard({ challenge }: { challenge: Challenge }) {
@@ -57,11 +65,12 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
             return (
               <div
                 key={i}
-                className={clsx("h-1 flex-1 origin-left rounded-full", {
-                  "bg-emerald-400": isDone,
-                  "bg-[#2A6384]": isActive,
-                  "bg-slate-200": !isDone && !isActive,
-                })}
+                className={clsx(
+                  "h-1.5 flex-1 origin-left rounded-full",
+                  isDone && "bg-emerald-700",
+                  isActive && TIER_PIPS[tierNum],
+                  !isDone && !isActive && "bg-slate-200"
+                )}
               />
             );
           })}
@@ -79,7 +88,7 @@ export function ChallengeCard({ challenge }: { challenge: Challenge }) {
         </div>
         <div className="meter-track h-2">
           <div
-            className={clsx("game-bar-fill", challenge.completed && "!bg-emerald-500")}
+            className={clsx("game-bar-fill", challenge.completed && "!bg-emerald-700")}
             style={{ width: `${percent}%` }}
           />
         </div>

@@ -20,7 +20,7 @@ export default async function HomePage() {
           <span className="text-2xl">CareerUp</span>
         </Link>
 
-        <p className="mt-10 text-xs font-bold uppercase text-sky-600">Internship tracker</p>
+        <p className="mt-10 text-xs font-bold uppercase text-[#2A6384]">Internship tracker</p>
         <h1 className="mt-3 text-4xl font-bold leading-tight text-ink sm:text-5xl">Track applications without the clutter.</h1>
         <p className="mx-auto mt-4 max-w-md text-base leading-7 text-slate-600">
           Search roles, save applications, earn XP, and keep your recruiting progress organized in one place.

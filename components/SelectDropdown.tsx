@@ -59,10 +59,10 @@ export function SelectDropdown({ label, name, value, onChange, options }: Props)
           key={opt.value}
           type="button"
           onClick={() => { onChange(opt.value); setOpen(false); }}
-          className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-bold text-slate-700 transition hover:bg-sky/10 hover:text-slate-950"
+          className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-bold text-slate-700 transition hover:bg-[#EAF2F8] hover:text-slate-950"
         >
           {opt.label}
-          {opt.value === value && <Check size={14} className="text-sky-600" />}
+          {opt.value === value && <Check size={14} className="text-[#2A6384]" />}
         </button>
       ))}
     </div>,

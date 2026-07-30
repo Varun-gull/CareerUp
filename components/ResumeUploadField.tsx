@@ -38,11 +38,11 @@ export function ResumeUploadField() {
 
   return (
     <label className="group grid cursor-pointer gap-2 rounded-2xl border border-dashed border-slate-300 bg-white p-4 text-center transition hover:border-sky hover:bg-sky/5">
-      <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+      <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-[#EAF2F8] text-brand">
         {status === "uploading" ? <Loader2 size={20} className="animate-spin" /> : status === "saved" ? <CheckCircle2 size={20} /> : <UploadCloud size={20} />}
       </span>
       <span className="text-sm font-bold text-slate-800">{fileName || "Upload resume file"}</span>
-      <span className={`text-xs font-bold ${status === "error" ? "text-red-500" : status === "saved" ? "text-sky-600" : "text-slate-500"}`}>{message}</span>
+      <span className={`text-xs font-bold ${status === "error" ? "text-red-500" : status === "saved" ? "text-[#2A6384]" : "text-slate-500"}`}>{message}</span>
       <input
         name="resumeFile"
         type="file"

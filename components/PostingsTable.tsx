@@ -3,6 +3,7 @@ import Link from "next/link";
 import { savePostingApplication } from "@/lib/applications/actions";
 import { PostingApplyFollowUpPrompt, PostingApplyLink } from "@/components/PostingApplyFollowUp";
 import { SubmitButton } from "@/components/SubmitButton";
+import { bandStyle, fitBand, fitLabel, isFreshPosting } from "@/lib/signal";
 import { buildRoleKey } from "@/lib/role-key";
 import type { InternshipPosting, RolePeerInsight } from "@/lib/types";
 
@@ -15,53 +16,30 @@ const SAVE_BUTTON =
 const SAVED_BUTTON =
   "inline-flex min-h-9 w-full cursor-default items-center justify-center rounded-xl bg-emerald-50 px-2 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200";
 
+/** Work mode is a category, not a score, so it stays off the signal ramp. */
 function workModeTone(workMode: InternshipPosting["workMode"]) {
   if (workMode === "remote") {
-    return "bg-emerald-50 text-emerald-700 ring-emerald-200";
+    return "bg-[#EAF2F8] text-[#214E69] ring-[#2A6384]/25";
   }
 
   if (workMode === "hybrid") {
-    return "bg-sky/15 text-sky-700 ring-sky/30";
+    return "bg-[#8FB8D4]/25 text-[#214E69] ring-[#2A6384]/20";
   }
 
-  return "bg-slate-100 text-slate-700 ring-slate-200";
-}
-
-function fitTone(fitScore: number) {
-  if (fitScore >= 80) {
-    return "text-emerald-700";
-  }
-
-  if (fitScore >= 70) {
-    return "text-[#2A6384]";
-  }
-
-  return "text-slate-500";
-}
-
-function fitBarTone(fitScore: number) {
-  if (fitScore >= 80) {
-    return "bg-emerald-500";
-  }
-
-  if (fitScore >= 70) {
-    return "bg-[#2A6384]";
-  }
-
-  return "bg-slate-400";
+  return "bg-slate-100 text-slate-600 ring-slate-200";
 }
 
 /** Fit is a measurement, so it gets the same readout treatment everywhere. */
 function FitMeter({ fitScore }: { fitScore: number }) {
+  const band = bandStyle(fitBand(fitScore));
+
   return (
-    <div className="w-full">
-      <p className={`metric text-xs font-semibold ${fitTone(fitScore)}`}>{fitScore}%</p>
-      <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-slate-200/80">
-        <div
-          className={`h-full rounded-full ${fitBarTone(fitScore)}`}
-          style={{ width: `${fitScore}%` }}
-        />
+    <div className="w-full" title={fitLabel(fitScore)}>
+      <p className={`metric text-sm font-bold ${band.text}`}>{fitScore}%</p>
+      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-200/80">
+        <div className={`h-full rounded-full ${band.fill}`} style={{ width: `${fitScore}%` }} />
       </div>
+      <span className="sr-only">{fitLabel(fitScore)}</span>
     </div>
   );
 }
@@ -106,9 +84,19 @@ export function PostingsTable({
                   <p className="font-semibold leading-tight text-ink">{posting.title}</p>
                   <p className="mt-1 text-xs font-semibold text-[#2A6384]">{posting.company}</p>
                   <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-600">
-                    <span className={`rounded-full px-2.5 py-1 font-semibold ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
-                    <span className={`metric rounded-full bg-slate-100 px-2.5 py-1 font-semibold ${fitTone(posting.fitScore)}`}>{posting.fitScore}% fit</span>
-                    <span className="rounded-full bg-slate-100 px-2.5 py-1">{posting.postedAt}</span>
+                    <span className={`rounded-full px-2.5 py-1 font-semibold ring-1 ring-inset ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
+                    <span className={`metric rounded-full px-2.5 py-1 font-bold ring-1 ring-inset ${bandStyle(fitBand(posting.fitScore)).chip}`}>
+                      {posting.fitScore}% · {fitLabel(posting.fitScore)}
+                    </span>
+                    <span
+                      className={
+                        isFreshPosting(posting.postedAt)
+                          ? "metric rounded-full bg-[#EAF2F8] px-2.5 py-1 font-semibold text-[#214E69]"
+                          : "metric rounded-full bg-slate-100 px-2.5 py-1"
+                      }
+                    >
+                      {posting.postedAt}
+                    </span>
                   </div>
                   <p className="mt-3 line-clamp-2 text-sm text-slate-600">{posting.location}</p>
                 </div>
@@ -195,7 +183,7 @@ export function PostingsTable({
 
               return (
               <tr key={posting.id} className="data-row-tr align-middle">
-                <td className="metric hidden px-2 py-3 text-center font-medium text-slate-400 lg:table-cell">{index + 1}</td>
+                <td className="metric hidden px-2 py-3 text-center font-medium text-slate-500 lg:table-cell">{index + 1}</td>
                 <td className="px-3 py-3">
                   <p className="truncate font-semibold text-ink" title={posting.title}>
                     {posting.title}
@@ -204,7 +192,15 @@ export function PostingsTable({
                     {posting.company} · {posting.source}
                   </p>
                 </td>
-                <td className="metric hidden whitespace-nowrap px-2 py-3 text-slate-500 xl:table-cell">{posting.postedAt}</td>
+                <td
+                  className={
+                    isFreshPosting(posting.postedAt)
+                      ? "metric hidden whitespace-nowrap px-2 py-3 font-bold text-[#2A6384] xl:table-cell"
+                      : "metric hidden whitespace-nowrap px-2 py-3 text-slate-500 xl:table-cell"
+                  }
+                >
+                  {posting.postedAt}
+                </td>
                 <td className="px-2 py-3">
                   <PostingApplyLink
                     posting={{
@@ -221,7 +217,7 @@ export function PostingsTable({
                   </PostingApplyLink>
                 </td>
                 <td className="hidden whitespace-nowrap px-2 py-3 md:table-cell">
-                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
+                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${workModeTone(posting.workMode)}`}>{workModeLabel(posting.workMode)}</span>
                 </td>
                 <td className="px-3 py-3">
                   <p className="truncate text-slate-600" title={posting.location}>

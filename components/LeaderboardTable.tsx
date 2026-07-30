@@ -116,7 +116,7 @@ export function LeaderboardTable({ users, currentUserId, emptyMode = "global" }:
   if (sorted.length === 0) {
     return (
       <div className="card p-8 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#EAF2F8] text-brand">
           <UserPlus size={22} />
         </div>
         <h2 className="mt-4 text-2xl font-bold text-ink">{emptyMode === "friends" ? "No friends on the board yet" : "No leaderboard data yet"}</h2>

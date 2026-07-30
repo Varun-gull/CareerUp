@@ -153,8 +153,8 @@ export function InterviewModal({ company, role, initialDate, initialTime, initia
                     className={clsx(
                       "mx-auto flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition",
                       isSelected && "bg-sky font-bold text-white",
-                      !isSelected && isToday && "font-bold text-sky-600 ring-2 ring-sky",
-                      !isSelected && !isToday && !isPast && "text-slate-700 hover:bg-sky/15 hover:text-slate-900",
+                      !isSelected && isToday && "font-bold text-[#2A6384] ring-2 ring-sky",
+                      !isSelected && !isToday && !isPast && "text-slate-700 hover:bg-[#EAF2F8] hover:text-slate-900",
                       isPast && "cursor-not-allowed text-slate-300"
                     )}
                   >

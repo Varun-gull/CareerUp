@@ -123,7 +123,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
             </span>
           }
         />
-        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl border border-sky/20 bg-[#EAF2F8] p-3 text-sm font-bold text-[#2A6384]">{searchParams.message}</p>}
         <RolePeerSetupNotice status={peerFeatureStatus} />
 
         {selectedConversation ? (
@@ -157,7 +157,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                         <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-semibold text-[#2A6384] ring-1 ring-slate-200">
                           <Avatar conversation={conversation} />
                         </span>
-                        <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-sky-500" />
+                        <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#2A6384]" />
                         <span className="pointer-events-none absolute -top-10 left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-xl bg-[#173B55] px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100">
                           {conversation.otherName}
                         </span>
@@ -190,7 +190,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                       <div className="flex items-start gap-3">
                         <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-base font-bold text-[#2A6384]">
                           <Avatar conversation={conversation} />
-                          <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-sky-500" />
+                          <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#2A6384]" />
                         </span>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-2">
@@ -217,12 +217,12 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                   <div className="flex min-w-0 items-center gap-4">
                     <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-lg font-bold text-[#2A6384]">
                       <Avatar conversation={selectedConversation} />
-                      <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white bg-sky-500" />
+                      <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white bg-[#2A6384]" />
                     </span>
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <ProfileLink profileId={selectedConversation.otherProfileId} name={selectedConversation.otherName} />
-                        <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-200">Online</span>
+                        <span className="rounded-full bg-[#EAF2F8] px-2.5 py-1 text-xs font-semibold text-[#214E69] ring-1 ring-[#2A6384]/25">Online</span>
                       </div>
                       <p className="mt-1 truncate text-sm font-bold text-slate-600">
                         {selectedConversation.applicationRole} at {selectedConversation.applicationCompany}
@@ -304,7 +304,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                           <p className="whitespace-pre-wrap">{message.body}</p>
                         </div>
                         {outbound && (
-                          <div className={`mt-2 flex items-center justify-end gap-1 text-xs font-bold ${isRead ? "text-sky-600" : "text-slate-400"}`}>
+                          <div className={`mt-2 flex items-center justify-end gap-1 text-xs font-bold ${isRead ? "text-[#2A6384]" : "text-slate-400"}`}>
                             {isRead ? (
                               <><CheckCheck size={14} /> Read {message.readAt}</>
                             ) : (

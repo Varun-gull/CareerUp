@@ -2,14 +2,19 @@
 
 import { useState } from "react";
 import { CalendarDays, ChevronDown, ExternalLink, MapPin, Sparkles, Trash2 } from "lucide-react";
+import clsx from "clsx";
 import { ApplicationStatusBadge } from "./ApplicationStatusBadge";
 import { StatusUpdateForm } from "./StatusUpdateForm";
 import { deleteApplication } from "@/lib/applications/actions";
+import { bandStyle, deadlinePrefix, deadlineStyle, deadlineUrgency, fitBand, fitLabel } from "@/lib/signal";
 import type { Application } from "@/lib/types";
 
 export function ApplicationCard({ application, compact = false }: { application: Application; compact?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const sourceIsUrl = application.source.startsWith("http://") || application.source.startsWith("https://");
+  const fit = bandStyle(fitBand(application.fitScore));
+  const urgency = deadlineUrgency(application.deadline);
+  const isPressing = urgency === "overdue" || urgency === "today";
 
   if (compact) {
     return (
@@ -25,7 +30,18 @@ export function ApplicationCard({ application, compact = false }: { application:
             <h3 className="mt-0.5 truncate text-sm font-semibold text-ink">{application.role}</h3>
             <p className="mt-1 truncate text-xs text-slate-500">{application.location}</p>
           </div>
-          <div className="flex shrink-0 items-center">
+          <div className="flex shrink-0 items-center gap-2">
+            {/* Deadline pressure has to be visible before the card is opened. */}
+            {(isPressing || urgency === "soon") && (
+              <span
+                className={clsx(
+                  "h-2 w-2 rounded-full",
+                  isPressing ? "bg-rose-600" : "bg-amber-600"
+                )}
+                title={`${deadlinePrefix(urgency)} ${application.deadline}`}
+                aria-label={`${deadlinePrefix(urgency)} ${application.deadline}`}
+              />
+            )}
             <ChevronDown
               className={`text-slate-500 transition-transform duration-200 ease-out ${expanded ? "rotate-180" : ""}`}
               size={18}
@@ -39,8 +55,8 @@ export function ApplicationCard({ application, compact = false }: { application:
               <span className="inline-flex items-center gap-2">
                 <MapPin size={16} /> {application.location}
               </span>
-              <span className="inline-flex items-center gap-2">
-                <CalendarDays size={16} /> Due {application.deadline}
+              <span className={clsx("metric inline-flex items-center gap-2", deadlineStyle(urgency), isPressing && "font-bold")}>
+                <CalendarDays size={16} /> {deadlinePrefix(urgency)} {application.deadline}
               </span>
               {sourceIsUrl ? (
                 <a className="inline-flex items-center gap-2 font-semibold text-[#2A6384] hover:text-[#214E69]" href={application.source} target="_blank" rel="noreferrer">
@@ -51,8 +67,8 @@ export function ApplicationCard({ application, compact = false }: { application:
                   <ExternalLink size={16} /> {application.source}
                 </span>
               )}
-              <span className="metric inline-flex items-center gap-2 font-semibold text-[#2A6384]">
-                <Sparkles size={16} /> {application.fitScore}% fit
+              <span className={clsx("metric inline-flex items-center gap-2 font-bold", fit.text)}>
+                <Sparkles size={16} /> {application.fitScore}% · {fitLabel(application.fitScore)}
               </span>
             </div>
             <div className="mt-4 grid gap-3 border-t border-slate-200 pt-4">
@@ -83,8 +99,8 @@ export function ApplicationCard({ application, compact = false }: { application:
         <span className="inline-flex items-center gap-2">
           <MapPin size={16} /> {application.location}
         </span>
-        <span className="inline-flex items-center gap-2">
-          <CalendarDays size={16} /> Due {application.deadline}
+        <span className={clsx("metric inline-flex items-center gap-2", deadlineStyle(urgency), isPressing && "font-bold")}>
+          <CalendarDays size={16} /> {deadlinePrefix(urgency)} {application.deadline}
         </span>
         {sourceIsUrl ? (
           <a className="inline-flex items-center gap-2 font-semibold text-[#2A6384] hover:text-[#214E69]" href={application.source} target="_blank" rel="noreferrer">
@@ -95,8 +111,8 @@ export function ApplicationCard({ application, compact = false }: { application:
             <ExternalLink size={16} /> {application.source}
           </span>
         )}
-        <span className="metric inline-flex items-center gap-2 font-semibold text-[#2A6384]">
-          <Sparkles size={16} /> {application.fitScore}% fit
+        <span className={clsx("metric inline-flex items-center gap-2 font-bold", fit.text)}>
+          <Sparkles size={16} /> {application.fitScore}% · {fitLabel(application.fitScore)}
         </span>
       </div>
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">

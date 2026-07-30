@@ -88,7 +88,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
             <div>
               <h2 className="text-xl font-bold text-ink">Profile setup</h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">These preferences will power personalized internship recommendations later.</p>
-              {searchParams?.message && <p className="mt-4 rounded-2xl bg-sky/10 p-3 text-sm font-bold text-sky-600">{searchParams.message}</p>}
+              {searchParams?.message && <p className="mt-4 rounded-2xl bg-[#EAF2F8] p-3 text-sm font-bold text-[#2A6384]">{searchParams.message}</p>}
               <ProfileAutosaveForm
                 profile={profile}
                 schools={schoolOptions}
@@ -106,7 +106,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
               <div className="rounded-3xl border border-slate-200 bg-white/85 p-4">
                 <div className="rounded-2xl border border-[#5E7681]/30 bg-white p-4">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#EAF2F8] text-brand">
                       {profile.resumeFileName ? <FileCheck2 size={21} /> : <FileText size={21} />}
                     </div>
                     <div className="min-w-0">

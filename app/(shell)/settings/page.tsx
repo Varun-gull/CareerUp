@@ -21,11 +21,11 @@ export default async function SettingsPage({ searchParams }: { searchParams?: { 
           ]}
         />
 
-        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-sky-600 shadow-sm ring-1 ring-sky/20">{searchParams.message}</p>}
+        {searchParams?.message && <p className="mt-5 rounded-2xl bg-white/90 p-3 text-sm font-bold text-[#2A6384] shadow-sm ring-1 ring-[#2A6384]/20">{searchParams.message}</p>}
 
         <section className="card mt-8 max-w-2xl p-6">
           <div className="flex items-start gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-brand">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#EAF2F8] text-brand">
               {profile.shareApplicationBoard ? <UsersRound size={20} /> : <Lock size={20} />}
             </span>
             <div>
@@ -38,7 +38,7 @@ export default async function SettingsPage({ searchParams }: { searchParams?: { 
 
           <form action={updatePrivacySettings} className="mt-5 grid gap-4">
             <input type="hidden" name="returnTo" value="/settings" />
-            <label className="flex gap-3 rounded-2xl border border-sky/20 bg-sky/10 p-4 text-sm font-bold text-slate-700">
+            <label className="flex gap-3 rounded-2xl border border-sky/20 bg-[#EAF2F8] p-4 text-sm font-bold text-slate-700">
               <input name="shareApplicationBoard" type="checkbox" defaultChecked={profile.shareApplicationBoard} className="mt-1 h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand" />
               <span>
                 Let accepted friends view my application board.

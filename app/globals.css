@@ -139,6 +139,42 @@ textarea {
   }
 }
 
+@keyframes arrive-from-below {
+  from {
+    opacity: 0;
+    translate: 0 26px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes arrive-from-above {
+  from {
+    opacity: 0;
+    translate: 0 -26px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes leave-upward {
+  to {
+    opacity: 0;
+    translate: 0 -18px;
+  }
+}
+
+@keyframes leave-downward {
+  to {
+    opacity: 0;
+    translate: 0 18px;
+  }
+}
+
 @keyframes dock-in {
   from {
     opacity: 0;
@@ -194,7 +230,7 @@ textarea {
 
 @layer components {
   .page-shell {
-    @apply mx-auto w-full max-w-[106rem] px-4 pb-32 pt-6 sm:px-6 lg:px-8 lg:pb-36 xl:px-10;
+    @apply mx-auto w-full max-w-[106rem] px-4 pb-36 pt-6 sm:px-6 lg:px-8 lg:pb-40 xl:px-10;
   }
 
   /* Cards sit close to the page at rest so hover has somewhere to go. */
@@ -455,12 +491,12 @@ textarea {
 
   .dock-shell {
     max-width: calc(100vw - 1.5rem);
-    background: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.86);
     box-shadow:
       0 2px 6px rgba(19, 17, 45, 0.06),
       0 18px 44px -16px rgba(19, 17, 45, 0.34),
       0 1px 0 rgba(255, 255, 255, 0.9) inset;
-    @apply flex items-center gap-1 rounded-full p-1.5 ring-1 ring-inset ring-[#5E7681]/25 backdrop-blur-xl;
+    @apply flex items-center gap-1 rounded-full p-2 ring-1 ring-inset ring-[#5E7681]/25 backdrop-blur-xl sm:gap-1.5;
   }
 
   /* Once the page has moved, the dock sits a little prouder of the content. */
@@ -486,7 +522,7 @@ textarea {
   }
 
   .dock-item {
-    @apply relative flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-2.5 text-[#5E7681] sm:px-3;
+    @apply relative flex h-12 shrink-0 items-center justify-center gap-2 rounded-full px-3 text-[#5E7681] sm:h-14 sm:px-4;
     transition: color var(--dur-2) var(--ease-out), background-color var(--dur-2) var(--ease-out);
   }
 
@@ -511,7 +547,7 @@ textarea {
     overflow: hidden;
     white-space: nowrap;
     transition: max-width var(--dur-3) var(--ease-out), opacity var(--dur-2) var(--ease-out);
-    @apply text-sm font-semibold;
+    @apply text-[15px] font-semibold;
   }
 
   @media (min-width: 640px) {
@@ -542,6 +578,39 @@ textarea {
     }
   }
 
+  .dock-hint {
+    position: absolute;
+    bottom: calc(100% + 0.625rem);
+    left: 50%;
+    translate: -50% 8px;
+    opacity: 0;
+    pointer-events: none;
+    max-width: min(22rem, calc(100vw - 2rem));
+    background: rgba(23, 59, 85, 0.94);
+    transition: opacity var(--dur-2) var(--ease-out), translate var(--dur-2) var(--ease-out);
+    @apply flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-white shadow-lg backdrop-blur;
+  }
+
+  .dock-hint-on {
+    opacity: 1;
+    translate: -50% 0;
+  }
+
+  .dock-hint-track {
+    @apply block h-1 w-12 shrink-0 overflow-hidden rounded-full bg-white/25;
+  }
+
+  .dock-hint-fill {
+    transform-origin: left center;
+    @apply block h-full w-full rounded-full bg-white;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dock-hint {
+      transition: none;
+    }
+  }
+
   /* --- Scroll reveal ------------------------------------------------------
      Sections below the fold arrive as you reach them. The hidden state is set
      by script, so a page with no JavaScript renders fully visible. */
@@ -562,9 +631,22 @@ textarea {
       border-color var(--dur-2) var(--ease-out);
   }
 
-  /* A route change replays the same arrival for the whole page body. */
-  .page-enter {
-    animation: page-enter 420ms var(--ease-out) both;
+  /* A route change replays the same arrival for the whole page body, from the
+     direction you travelled. */
+  .page-arriving[data-flow="down"] {
+    animation: arrive-from-below 440ms var(--ease-out) both;
+  }
+
+  .page-arriving[data-flow="up"] {
+    animation: arrive-from-above 440ms var(--ease-out) both;
+  }
+
+  .page-leaving[data-flow="down"] {
+    animation: leave-upward 170ms ease-in both;
+  }
+
+  .page-leaving[data-flow="up"] {
+    animation: leave-downward 170ms ease-in both;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -573,7 +655,8 @@ textarea {
       translate: none;
     }
 
-    .page-enter {
+    .page-arriving,
+    .page-leaving {
       animation: none;
     }
   }

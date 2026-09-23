@@ -1,5 +1,5 @@
 import { AppDock } from "@/components/AppDock";
-import { ShellMotion } from "@/components/ShellMotion";
+import { PageBody, PageFlow } from "@/components/PageFlow";
 import { TopBar } from "@/components/TopBar";
 
 export default function ShellLayout({
@@ -8,10 +8,12 @@ export default function ShellLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="relative min-h-screen">
-      <TopBar />
-      <ShellMotion>{children}</ShellMotion>
-      <AppDock />
-    </div>
+    <PageFlow>
+      <div className="relative min-h-screen">
+        <TopBar />
+        <PageBody>{children}</PageBody>
+        <AppDock />
+      </div>
+    </PageFlow>
   );
 }

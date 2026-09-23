@@ -32,9 +32,9 @@ export async function TopBar() {
   const nextXp = progress.next?.minXp ?? currentXp;
 
   return (
-    <header className="sticky top-0 z-40 hidden items-center justify-between gap-4 border-b border-[#5E7681]/30 bg-[#F8FBFA]/92 px-7 py-3 backdrop-blur-xl lg:flex">
+    <header className="app-topbar sticky top-0 z-40 flex items-center justify-between gap-3 px-4 py-3 backdrop-blur-xl sm:px-6 lg:px-7">
       <Link href="/dashboard" className="group rounded-lg leading-none">
-        <span className="font-display block text-4xl font-bold tracking-tight text-[#2A6384] transition duration-150 group-hover:text-[#214E69]">CareerUp</span>
+        <span className="font-display block text-2xl font-bold tracking-tight text-[#2A6384] transition duration-150 group-hover:text-[#214E69] sm:text-3xl lg:text-4xl">CareerUp</span>
       </Link>
 
       <div className="flex items-center gap-3">
@@ -42,12 +42,15 @@ export async function TopBar() {
         <span
           className={
             profile && profile.streak > 0
-              ? "metric inline-flex h-11 items-center gap-2 rounded-2xl bg-[#EAF2F8] px-4 text-sm font-bold text-[#214E69] shadow-sm ring-1 ring-inset ring-[#2A6384]/30"
-              : "metric inline-flex h-11 items-center gap-2 rounded-2xl bg-slate-100 px-4 text-sm font-semibold text-slate-500 shadow-sm ring-1 ring-inset ring-slate-200"
+              ? "metric inline-flex h-11 items-center gap-2 rounded-2xl bg-[#EAF2F8] px-3 text-sm font-bold text-[#214E69] shadow-sm ring-1 ring-inset ring-[#2A6384]/30 sm:px-4"
+              : "metric inline-flex h-11 items-center gap-2 rounded-2xl bg-slate-100 px-3 text-sm font-semibold text-slate-500 shadow-sm ring-1 ring-inset ring-slate-200 sm:px-4"
           }
         >
           <Flame size={16} className={profile && profile.streak > 0 ? "fill-[#2A6384] text-[#2A6384]" : "text-slate-400"} />
-          {profile?.streak ?? 0} day streak
+          <span>
+            {profile?.streak ?? 0}
+            <span className="hidden sm:inline"> day streak</span>
+          </span>
         </span>
         <Link
           href="/leaderboard"

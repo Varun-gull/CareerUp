@@ -15,7 +15,7 @@ export type Section = {
  * This order is the dock's order and the order you travel by scrolling.
  */
 export const sections: Section[] = [
-  { href: "/dashboard", label: "Today", icon: Home },
+  { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/applications", label: "Applications", icon: ClipboardList },
   { href: "/postings/internships", label: "Postings", icon: Search, match: "/postings" },
   { href: "/messages", label: "Messages", icon: Mail },

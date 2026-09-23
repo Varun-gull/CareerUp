@@ -339,15 +339,23 @@ export function PageFlow({ children }: { children: ReactNode }) {
  * document instead of the viewport. Only the page body moves.
  */
 export function PageBody({ children }: { children: ReactNode }) {
-  const { direction, leaving, pathname } = usePageFlow();
+  const { direction, leaving, pathname, charge } = usePageFlow();
 
   return (
+    // Two layers on purpose. The outer one fades with the gesture; the inner
+    // one runs the arrival animation. Sharing a node would let the animation's
+    // filled opacity overwrite the gesture fade.
     <div
-      key={pathname}
-      data-flow={direction}
-      className={leaving ? "page-leaving min-w-0" : "page-arriving min-w-0"}
+      className="page-travel min-w-0"
+      style={{ ["--travel" as string]: leaving ? 1 : charge }}
     >
-      {children}
+      <div
+        key={pathname}
+        data-flow={direction}
+        className={leaving ? "page-leaving min-w-0" : "page-arriving min-w-0"}
+      >
+        {children}
+      </div>
     </div>
   );
 }

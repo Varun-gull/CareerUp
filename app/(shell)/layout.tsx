@@ -11,6 +11,7 @@ export default function ShellLayout({
     <PageFlow>
       <div className="relative min-h-screen">
         <TopBar />
+        <div className="app-topbar-spacer" aria-hidden />
         <PageBody>{children}</PageBody>
         <AppDock />
       </div>

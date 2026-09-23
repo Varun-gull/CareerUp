@@ -45,7 +45,7 @@ export function NavDock({ unreadMessages }: { unreadMessages: number }) {
               title={section.label}
               className="dock-item"
             >
-              <Icon size={22} className="shrink-0" aria-hidden />
+              <Icon size={24} className="shrink-0" aria-hidden />
               <span className="dock-label">{section.label}</span>
               {badge > 0 && (
                 <span

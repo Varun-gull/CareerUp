@@ -24,18 +24,18 @@ export function AuthShell({
       <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-6xl flex-col">
         <header className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#173B55] text-white shadow-sm">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#15314A] text-white shadow-sm">
               <BriefcaseBusiness size={22} />
             </span>
-            <span className="font-display text-2xl font-bold tracking-tight text-[#173B55]">CareerUp</span>
+            <span className="font-display text-2xl font-bold tracking-tight text-[#15314A]">CareerUp</span>
           </Link>
-          <Link href="/postings/internships" className="hidden rounded-full border border-[#5E7681]/30 bg-white px-4 py-2 text-sm font-semibold text-[#173B55] shadow-sm sm:inline-flex">
+          <Link href="/postings/internships" className="hidden rounded-full border border-[#5E7681]/30 bg-white px-4 py-2 text-sm font-semibold text-[#15314A] shadow-sm sm:inline-flex">
             Browse postings
           </Link>
         </header>
 
         <section className="grid flex-1 items-center gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_27rem]">
-          <div className="hero-3d relative isolate overflow-hidden rounded-[2rem] bg-[#173B55] p-6 text-white sm:p-8 lg:min-h-[32rem]">
+          <div className="hero-3d relative isolate overflow-hidden rounded-[2rem] bg-[#15314A] p-6 text-white sm:p-8 lg:min-h-[32rem]">
             <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden />
             <div className="hero-grid pointer-events-none absolute inset-0" aria-hidden />
             <div className="relative flex h-full flex-col justify-between gap-10">

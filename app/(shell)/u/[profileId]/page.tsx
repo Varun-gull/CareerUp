@@ -49,7 +49,7 @@ export default async function PublicProfilePage({
           </section>
         ) : (
           <section className="card mt-6 overflow-hidden">
-            <div className="relative isolate overflow-hidden bg-[#173B55] px-6 py-10 text-white">
+            <div className="relative isolate overflow-hidden bg-[#15314A] px-6 py-10 text-white">
               <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden />
               <div className="hero-grid pointer-events-none absolute inset-0" aria-hidden />
               <div className="relative flex flex-wrap items-center justify-between gap-5">

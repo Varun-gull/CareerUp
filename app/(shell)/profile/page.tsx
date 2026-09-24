@@ -52,7 +52,7 @@ export default async function ProfilePage({ searchParams }: { searchParams?: { m
     <>
       <main className="page-shell">
         <section className="card overflow-hidden">
-          <div className="relative isolate overflow-hidden border-b border-white/10 bg-[#173B55] px-6 py-10 text-white">
+          <div className="relative isolate overflow-hidden border-b border-white/10 bg-[#15314A] px-6 py-10 text-white">
             <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden />
             <div className="hero-grid pointer-events-none absolute inset-0" aria-hidden />
             <div className="relative flex flex-wrap items-center justify-between gap-6">

@@ -158,7 +158,7 @@ export default async function MessagesPage({ searchParams }: { searchParams?: { 
                           <Avatar conversation={conversation} />
                         </span>
                         <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#2A6384]" />
-                        <span className="pointer-events-none absolute -top-10 left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-xl bg-[#173B55] px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100">
+                        <span className="pointer-events-none absolute -top-10 left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-xl bg-[#15314A] px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100">
                           {conversation.otherName}
                         </span>
                       </Link>

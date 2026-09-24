@@ -7,7 +7,7 @@ import { usePageFlow } from "@/components/PageFlow";
 import { sections } from "@/lib/sections";
 
 export function NavDock({ unreadMessages }: { unreadMessages: number }) {
-  const { travelTo, charge, chargeDirection, index } = usePageFlow();
+  const { travelTo, charge, chargeDirection, index, pendingHref } = usePageFlow();
 
   const neighbour = chargeDirection === "down" ? sections[index + 1] : sections[index - 1];
   const showHint = charge > 0.04 && Boolean(neighbour);
@@ -28,7 +28,11 @@ export function NavDock({ unreadMessages }: { unreadMessages: number }) {
       <nav className="dock-shell" aria-label="Sections">
         {sections.map((section) => {
           const Icon = section.icon;
-          const active = index >= 0 && sections[index].href === section.href;
+          // Light up the destination the moment it is chosen, rather than
+          // waiting for the route to resolve. The dock never feels laggy.
+          const active = pendingHref
+            ? pendingHref === section.href
+            : index >= 0 && sections[index].href === section.href;
           const badge = section.href === "/messages" ? unreadMessages : 0;
 
           return (

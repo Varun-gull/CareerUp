@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import type { ReactNode } from "react";
 import { sectionIndex, sections } from "@/lib/sections";
 
@@ -14,10 +14,12 @@ type FlowValue = {
   charge: number;
   chargeDirection: FlowDirection;
   index: number;
-  /** Direction of the current move, and whether the outgoing page is lifting. */
+  /** Direction of the current move. */
   direction: FlowDirection;
-  leaving: boolean;
   pathname: string;
+  /** Where we are heading while the next route resolves, for an instant dock. */
+  pendingHref: string | null;
+  navigating: boolean;
 };
 
 const FlowContext = createContext<FlowValue | null>(null);
@@ -38,17 +40,16 @@ const CHARGE_TO_COMMIT = 260;
 const CHARGE_DECAY_MS = 260;
 /** Quiet period after a move, long enough to swallow trackpad momentum. */
 const COOLDOWN_MS = 900;
-/** Length of the outgoing lift before the route actually changes. */
-const EXIT_MS = 170;
 
 export function PageFlow({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
 
   const [direction, setDirection] = useState<FlowDirection>("down");
-  const [leaving, setLeaving] = useState(false);
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
   const [charge, setCharge] = useState(0);
   const [chargeDirection, setChargeDirection] = useState<FlowDirection>("down");
+  const [navigating, startNavigation] = useTransition();
 
   const index = sectionIndex(pathname);
   const busyUntil = useRef(0);
@@ -57,11 +58,10 @@ export function PageFlow({ children }: { children: ReactNode }) {
   const chargeDirRef = useRef<FlowDirection>("down");
   const decayTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // The outgoing page is only lifted until the new route lands. A section we
-  // travelled to always opens at its top; a Back navigation keeps whatever
-  // position the browser restored.
+  // A section we travelled to always opens at its top; a Back navigation keeps
+  // whatever position the browser restored.
   useEffect(() => {
-    setLeaving(false);
+    setPendingHref(null);
 
     if (travelled.current) {
       travelled.current = false;
@@ -73,21 +73,16 @@ export function PageFlow({ children }: { children: ReactNode }) {
     (href: string, nextDirection: FlowDirection) => {
       if (Date.now() < busyUntil.current) return;
 
-      busyUntil.current = Date.now() + COOLDOWN_MS + EXIT_MS;
+      busyUntil.current = Date.now() + COOLDOWN_MS;
       travelled.current = true;
       chargeRef.current = 0;
       setCharge(0);
       setDirection(nextDirection);
+      setPendingHref(href);
 
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        router.push(href);
-        return;
-      }
-
-      // Lift the outgoing page first, so the new one genuinely arrives from the
-      // direction you travelled rather than cross-fading in place.
-      setLeaving(true);
-      window.setTimeout(() => router.push(href), EXIT_MS);
+      // Inside a transition, React keeps the current page on screen until the
+      // next one is ready to paint. Nothing is ever swapped for a blank.
+      startNavigation(() => router.push(href));
     },
     [router]
   );
@@ -325,8 +320,8 @@ export function PageFlow({ children }: { children: ReactNode }) {
   }, [pathname]);
 
   const value = useMemo<FlowValue>(
-    () => ({ travelTo, charge, chargeDirection, index, direction, leaving, pathname }),
-    [travelTo, charge, chargeDirection, index, direction, leaving, pathname]
+    () => ({ travelTo, charge, chargeDirection, index, direction, pathname, pendingHref, navigating }),
+    [travelTo, charge, chargeDirection, index, direction, pathname, pendingHref, navigating]
   );
 
   return <FlowContext.Provider value={value}>{children}</FlowContext.Provider>;
@@ -339,7 +334,7 @@ export function PageFlow({ children }: { children: ReactNode }) {
  * document instead of the viewport. Only the page body moves.
  */
 export function PageBody({ children }: { children: ReactNode }) {
-  const { direction, leaving, pathname, charge } = usePageFlow();
+  const { direction, pathname, charge, navigating } = usePageFlow();
 
   return (
     // Two layers on purpose. The outer one fades with the gesture; the inner
@@ -347,13 +342,10 @@ export function PageBody({ children }: { children: ReactNode }) {
     // filled opacity overwrite the gesture fade.
     <div
       className="page-travel min-w-0"
-      style={{ ["--travel" as string]: leaving ? 1 : charge }}
+      data-pending={navigating ? "true" : undefined}
+      style={{ ["--travel" as string]: charge }}
     >
-      <div
-        key={pathname}
-        data-flow={direction}
-        className={leaving ? "page-leaving min-w-0" : "page-arriving min-w-0"}
-      >
+      <div key={pathname} data-flow={direction} className="page-arriving min-w-0">
         {children}
       </div>
     </div>

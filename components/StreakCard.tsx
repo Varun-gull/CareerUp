@@ -32,7 +32,7 @@ export function StreakCard({
       : `Your free revive has been used. Unlock another for ${PAID_STREAK_REVIVE_COST} Reward Points when you want a backup.`;
 
   return (
-    <section className="hero-3d relative isolate overflow-hidden rounded-3xl bg-[#173B55] p-5 text-white">
+    <section className="hero-3d relative isolate overflow-hidden rounded-3xl bg-[#15314A] p-5 text-white">
       <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden />
       <div className="relative flex items-center gap-4">
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-[#2A6384] shadow-lg shadow-black/20">

@@ -19,7 +19,7 @@ export function PageHero({
   compact?: boolean;
 }) {
   return (
-    <section className="hero-3d relative isolate overflow-hidden rounded-[1.75rem] bg-[#173B55] text-white">
+    <section className="hero-3d relative isolate overflow-hidden rounded-[1.75rem] bg-[#15314A] text-white">
       <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden />
       <div className="hero-grid pointer-events-none absolute inset-0" aria-hidden />
 
@@ -56,7 +56,7 @@ export function PageHero({
                   className={clsx(
                     "hero-tab",
                     tab.active
-                      ? "bg-white text-[#173B55] shadow-sm"
+                      ? "bg-white text-[#15314A] shadow-sm"
                       : "text-white/70 hover:bg-white/10 hover:text-white"
                   )}
                 >

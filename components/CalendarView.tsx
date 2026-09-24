@@ -32,7 +32,7 @@ const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "Ju
    Deadlines are the one type with a direction, so they take the urgency ramp. */
 const EVENT_STYLE: Record<CalendarEvent["eventType"], string> = {
   deadline: "border-slate-300 bg-slate-100 text-slate-700",
-  submitted: "border-[#8FB8D4]/60 bg-[#EDF5FA] text-[#173B55]",
+  submitted: "border-[#8FB8D4]/60 bg-[#EDF5FA] text-[#15314A]",
   interview: "border-[#2A6384]/50 bg-[#EAF2F8] text-[#214E69]",
   offer: "border-emerald-300 bg-emerald-50 text-emerald-800",
   custom: "border-slate-300 bg-white text-slate-700",
@@ -599,7 +599,7 @@ export function CalendarView({ applications, dbEvents }: { applications: Applica
                   <span
                     className={clsx(
                       "inline-flex h-7 min-w-7 items-center justify-center rounded-full px-2 text-xs font-bold",
-                      isToday ? "bg-[#173B55] text-white" : isSelected ? "bg-white text-[#173B55]" : "text-slate-600"
+                      isToday ? "bg-[#15314A] text-white" : isSelected ? "bg-white text-[#15314A]" : "text-slate-600"
                     )}
                   >
                     {day.getDate()}

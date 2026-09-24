@@ -21,7 +21,7 @@ export default async function SignupPage({ searchParams }: { searchParams?: { me
       description="Build a profile, save your first roles, and unlock the application board."
     >
       {!supabaseReady && (
-        <p className="mt-5 rounded-2xl border border-[#2A6384]/20 bg-[#EAF2F8] p-3 text-sm font-bold text-[#173B55]">
+        <p className="mt-5 rounded-2xl border border-[#2A6384]/20 bg-[#EAF2F8] p-3 text-sm font-bold text-[#15314A]">
           Supabase env vars are not connected yet. Account creation will be wired in the database step.
         </p>
       )}

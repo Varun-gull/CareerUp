@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
-import { NavigationProgress } from "@/components/NavigationProgress";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -19,12 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body>
-        <Suspense>
-          <NavigationProgress />
-        </Suspense>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

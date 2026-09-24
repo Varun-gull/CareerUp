@@ -21,7 +21,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: { mes
       description="Pick up where you left off and keep your application pipeline moving."
     >
       {!supabaseReady && (
-        <p className="mt-5 rounded-2xl border border-[#2A6384]/20 bg-[#EAF2F8] p-3 text-sm font-bold text-[#173B55]">
+        <p className="mt-5 rounded-2xl border border-[#2A6384]/20 bg-[#EAF2F8] p-3 text-sm font-bold text-[#15314A]">
           Supabase env vars are not connected yet. This form is ready for the next setup step.
         </p>
       )}

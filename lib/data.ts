@@ -212,6 +212,7 @@ export async function getCurrentProfile(): Promise<Profile> {
     graduationYear: data.graduation_year ?? "",
     targetRoles: data.target_roles ?? [],
     targetLocations: data.target_locations ?? [],
+    resumeText: data.resume_text ?? "",
     resumeKeywords: data.resume_keywords ?? [],
     resumeFileName: data.resume_file_name ?? "",
     resumeUpdatedAt: data.resume_updated_at ? new Date(data.resume_updated_at).toLocaleDateString() : "",

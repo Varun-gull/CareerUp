@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "evaluate:resume-scanner": "node scripts/evaluate-resume-scanner.mjs",
     "start": "next start",
     "lint": "eslint",
     "sync:postings": "node scripts/sync-postings.mjs",
+    "verify:fit-score": "node scripts/verify-fit-score.mjs",
     "verify:profile-messages": "node scripts/verify-profile-messages.mjs"
   },
   "dependencies": {

@@ -776,7 +776,7 @@ export async function searchCachedPostings({
   sort = "newest",
   limit = 600,
 }: CachedPostingSearchOptions = {}): Promise<PostingSearchResult | null> {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
 
   if (!supabase) {
     return null;

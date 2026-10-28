@@ -9,7 +9,7 @@ function redirectWithMessage(path: string, message: string): never {
 }
 
 export async function signUp(formData: FormData) {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const fullName = String(formData.get("fullName") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
@@ -43,7 +43,7 @@ export async function signUp(formData: FormData) {
 }
 
 export async function logIn(formData: FormData) {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
@@ -83,7 +83,7 @@ export async function logIn(formData: FormData) {
 }
 
 export async function logOut() {
-  const supabase = getSupabaseServerClient();
+  const supabase = await getSupabaseServerClient();
 
   if (supabase) {
     await supabase.auth.signOut();

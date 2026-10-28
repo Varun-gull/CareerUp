@@ -30,6 +30,7 @@ type MfaFactor = {
 function qrCodeSource(value: string) {
   return value.startsWith("data:") ? value : `data:image/svg+xml;utf-8,${encodeURIComponent(value)}`;
 }
+
 export function TwoFactorSettings() {
   const router = useRouter();
   const [factors, setFactors] = useState<FactorSummary[]>([]);

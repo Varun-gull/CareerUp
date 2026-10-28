@@ -51,6 +51,7 @@ const SECTION_WEIGHTS: Record<JobSection, number> = {
 function rule(pattern: RegExp, strength = 1): EvidenceRule {
   return { pattern, strength };
 }
+
 const CONCEPTS: ConceptDefinition[] = [
   {
     id: "machine-learning",

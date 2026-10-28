@@ -5,7 +5,8 @@ import { logOut } from "@/lib/auth/actions";
 import { getSafeRedirectPath } from "@/lib/auth/mfa";
 import { getCurrentUser } from "@/lib/data";
 
-export default async function MfaPage({ searchParams }: { searchParams?: { next?: string } }) {
+export default async function MfaPage({ searchParams: searchParamsInput }: { searchParams?: Promise<{ next?: string }> }) {
+  const searchParams = await searchParamsInput;
   const user = await getCurrentUser();
 
   if (!user) {

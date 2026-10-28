@@ -7,11 +7,12 @@ import { requiresMfaChallenge } from "@/lib/auth/mfa";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
-export default async function LoginPage({ searchParams }: { searchParams?: { message?: string } }) {
+export default async function LoginPage({ searchParams: searchParamsInput }: { searchParams?: Promise<{ message?: string }> }) {
+  const searchParams = await searchParamsInput;
   const user = await getCurrentUser();
 
   if (user) {
-    const supabase = getSupabaseServerClient();
+    const supabase = await getSupabaseServerClient();
     const { data: assurance } = supabase
       ? await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
       : { data: null };

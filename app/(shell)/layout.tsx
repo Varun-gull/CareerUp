@@ -1,4 +1,5 @@
 import { AppDock } from "@/components/AppDock";
+import { FloatingCareerCoach } from "@/components/FloatingCareerCoach";
 import { NavigationProgress } from "@/components/NavigationProgress";
 import { PageBody, PageFlow } from "@/components/PageFlow";
 import { TopBar } from "@/components/TopBar";
@@ -16,6 +17,7 @@ export default function ShellLayout({
         <div className="app-topbar-spacer" aria-hidden />
         <PageBody>{children}</PageBody>
         <AppDock />
+        <FloatingCareerCoach />
       </div>
     </PageFlow>
   );

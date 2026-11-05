@@ -3,15 +3,19 @@ import { FloatingCareerCoach } from "@/components/FloatingCareerCoach";
 import { NavigationProgress } from "@/components/NavigationProgress";
 import { PageBody, PageFlow } from "@/components/PageFlow";
 import { TopBar } from "@/components/TopBar";
+import { getCurrentUser } from "@/lib/data";
+import { rewardsSnapshot } from "@/lib/rewards/server";
 
-export default function ShellLayout({
+export default async function ShellLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getCurrentUser();
+  const appearance = user ? await rewardsSnapshot(user.id) : null;
   return (
     <PageFlow>
-      <div className="relative min-h-screen">
+      <div className="careerup-shell relative min-h-screen" data-theme={appearance?.preferences.theme ?? "ocean"}>
         <NavigationProgress />
         <TopBar />
         <div className="app-topbar-spacer" aria-hidden />

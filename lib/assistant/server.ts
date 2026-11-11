@@ -18,6 +18,8 @@ export async function assistantUser() {
   if (error || !user) throw new AssistantError("Sign in to use the career assistant.", 401);
   const { data, error: mfaError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
   if (mfaError || !data || requiresMfaChallenge(data.currentLevel, data.nextLevel)) throw new AssistantError("Complete two factor authentication first.", 403);
+  const { data: active, error: sessionError } = await supabase.rpc("careerup_session_valid");
+  if (sessionError || active !== true) throw new AssistantError("Your session expired. Sign in again.", 401);
   return { supabase, user };
 }
 type Session = Awaited<ReturnType<typeof assistantUser>>;

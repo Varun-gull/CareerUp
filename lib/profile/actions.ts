@@ -1,5 +1,6 @@
 "use server";
 
+import { ownedProfileWriter } from "@/lib/security/session";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { awardEligibleChallenges, awardXp, pointValues } from "@/lib/gamification";
@@ -70,7 +71,7 @@ export async function updateProfile(formData: FormData) {
   const isComplete = Boolean(school && major && graduationYear && targetRoles.length > 0 && targetLocations.length > 0);
   const shouldAwardProfileXp = isComplete && !currentProfile?.profile_completed_awarded;
 
-  const { error } = await supabase
+  const { error } = await (await ownedProfileWriter(user.id))
     .from("profiles")
     .update({
       full_name: fullName,
@@ -103,7 +104,8 @@ export async function updateProfile(formData: FormData) {
 
 export async function updatePrivacySettings(formData: FormData) {
   const supabase = await getSupabaseServerClient();
-  const returnTo = String(formData.get("returnTo") ?? "/settings");
+  const requestedReturnTo = String(formData.get("returnTo") ?? "/settings");
+  const returnTo = ["/settings", "/privacy", "/profile"].includes(requestedReturnTo) ? requestedReturnTo : "/settings";
 
   if (!supabase) {
     redirectWithMessage(returnTo, "Connect Supabase before updating privacy settings.");
@@ -118,7 +120,7 @@ export async function updatePrivacySettings(formData: FormData) {
   }
 
   const shareApplicationBoard = formData.get("shareApplicationBoard") === "on";
-  const { error } = await supabase
+  const { error } = await (await ownedProfileWriter(user.id))
     .from("profiles")
     .update({
       share_application_board: shareApplicationBoard,
@@ -207,14 +209,14 @@ export async function saveResumeProfile(formData: FormData) {
     resume_uploaded_awarded: shouldAwardResumeXp ? true : currentProfile?.resume_uploaded_awarded ?? false,
   };
 
-  let { error } = await supabase
+  let { error } = await (await ownedProfileWriter(user.id))
     .from("profiles")
     .update(updatePayload)
     .eq("id", user.id);
 
   if (error && /resume_uploaded_awarded/i.test(error.message)) {
     const { resume_uploaded_awarded, ...legacyPayload } = updatePayload;
-    const retry = await supabase.from("profiles").update(legacyPayload).eq("id", user.id);
+    const retry = await (await ownedProfileWriter(user.id)).from("profiles").update(legacyPayload).eq("id", user.id);
     error = retry.error;
   }
 

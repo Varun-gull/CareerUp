@@ -7,6 +7,7 @@ import { awardEligibleChallenges, awardXp, pointValues } from "@/lib/gamificatio
 import { extractResumeKeywords, extractResumeTextFromFile, normalizeResumeText } from "@/lib/resume";
 import { getSchoolLogoUrl } from "@/lib/schools";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { MAX_RESUME_BYTES, RESUME_SIZE_MESSAGE } from "@/lib/resume-upload-limits";
 
 function redirectWithMessage(path: string, message: string): never {
   redirect(`${path}?message=${encodeURIComponent(message)}`);
@@ -166,8 +167,8 @@ export async function saveResumeProfile(formData: FormData) {
     fileName = resumeFile.name;
     uploadedFile = true;
 
-    if (Number(resumeFile.size) > 8 * 1024 * 1024) {
-      redirectWithMessage("/profile", "Resume file is too large. Upload a file under 8 MB or paste the text instead.");
+    if (Number(resumeFile.size) > MAX_RESUME_BYTES) {
+      redirectWithMessage("/profile", RESUME_SIZE_MESSAGE);
     }
 
     try {

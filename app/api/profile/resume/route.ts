@@ -5,6 +5,7 @@ import { awardEligibleChallenges, awardXp, pointValues } from "@/lib/gamificatio
 import { extractResumeKeywords, extractResumeTextFromFile, normalizeResumeText } from "@/lib/resume";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { requireSameOrigin, requireScannerUser, ScannerError } from "@/lib/email-scanner/security";
+import { MAX_RESUME_BYTES, RESUME_SIZE_MESSAGE } from "@/lib/resume-upload-limits";
 
 export const runtime = "nodejs";
 
@@ -44,8 +45,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Choose a resume file before saving." }, { status: 400 });
   }
 
-  if (Number(resumeFile.size) > 8 * 1024 * 1024) {
-    return NextResponse.json({ error: "Resume file is too large. Upload a file under 8 MB." }, { status: 400 });
+  if (Number(resumeFile.size) > MAX_RESUME_BYTES) {
+    return NextResponse.json({ error: RESUME_SIZE_MESSAGE }, { status: 400 });
   }
 
   let fileReadFailed = false;

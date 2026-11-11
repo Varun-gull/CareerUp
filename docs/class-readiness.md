@@ -30,3 +30,13 @@ Progress awards use a server-only atomic RPC with row locking. End users cannot 
 `CAREERUP_PRIVATE_ENV=/private/path/.env.local npm run verify:class:load` requires a running app, creates disposable synthetic accounts and removes them afterward. Use the explicit deployed-test flag for a hosted target. Its report contains aggregate measurements only. It does not send real email or certify SMTP delivery, Gmail audience approval or AI recommendation accuracy.
 
 Provider quotas and SMTP configuration are independent of Supabase database capacity. Do not disable verification or auto-confirm ordinary student accounts as an email delivery workaround.
+
+## Shared AI capacity
+
+Google AI Studio was checked on November 11, 2026. The CareerUp project is on the free tier: Gemini 3.5 Flash Lite permits 15 text requests per minute, 250,000 input tokens per minute and 500 requests per day. Gemini voice has separate limits. These are project limits, shared by all students and deployments, not per-student allowances.
+
+The provider scheduler stores only a model bucket and next dispatch time in a private database table. A service-only RPC allocates slots under a row lock, 4.5 seconds apart. Chat and paid preparation reports use the same schedule across instances and both websites. The queue is bounded at 126 seconds; generation fits within a 240 second function deadline. Requests beyond that bound receive a clear busy response. Queued requests recheck the active session before sending context to Google. Failed preparation reports remain unused; their generation lock allows recovery after five minutes.
+
+This pacing addresses request bursts. It cannot increase Google's daily limit or guarantee provider availability. A class using more than 500 combined chat and report requests per day needs an appropriate Google project quota. Public signup and Gmail audience configuration remain independent release requirements.
+
+Resume uploads are limited to 4 MB in the browser and server, leaving multipart overhead below Vercel's 4.5 MB request limit. Text can also be pasted on the profile.

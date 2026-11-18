@@ -48,7 +48,7 @@ const config: Config = {
         ink: "#0f172a",
         navy: "#0f172a",
         panel: "#101722",
-        brand: "#2A6384",
+        brand: "#23675D",
         electric: "#8FB8D4",
         sky: {
           50: "#f4faf8",

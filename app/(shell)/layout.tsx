@@ -16,6 +16,7 @@ export default async function ShellLayout({
   return (
     <PageFlow>
       <div className="careerup-shell relative min-h-screen" data-theme={appearance?.preferences.theme ?? "ocean"}>
+        <a className="skip-link" href="#workspace-content">Skip to content</a>
         <NavigationProgress />
         <TopBar />
         <div className="app-topbar-spacer" aria-hidden />
